@@ -1,0 +1,310 @@
+swagger: "2.0"
+info:
+  title: Raktr
+  description: API description.
+  version: 0.0.1
+host: api.example.com
+basePath: "/api"
+tags:
+  - name: "device"
+    description: "Everything about devices"
+  - name: "rent"
+    description: "Everything about rents"
+schemes:
+  - http
+paths:
+  /device/all:
+    get:
+      tags:
+        - "device"
+      summary: "Returns a list of all devices including composite ones."
+      operationId: "listDevices"
+      produces:
+        - application/json
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/device'
+  /device/{deviceId}:
+    get:
+      tags:
+        - "device"
+      summary: "Returns a single device"
+      operationId: "getDevice"
+      produces:
+        - application/json
+      parameters:
+        - name: "deviceId"
+          in: query
+          description: "the id of the device you want to access"
+          required: true
+          type: integer
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/device'
+        400:
+          description: "Invalid ID supplied"
+    delete:
+      tags:
+        - "device"
+      summary: "Deletes a device"
+      operationId:  "deleteDevice"
+      parameters:
+        - name: "deviceId"
+          in: query
+          description: "the id of the device you want to delete"
+          required: true
+          type: integer
+      responses:
+        200:
+          description: "successfully deleted"
+        400:
+          description: "invalid id supplied"
+  /device:
+    put:
+      tags:
+        - "device"
+      summary: "Updates an existing device"
+      operationId: "updateDevice"
+      parameters:
+        - name: "device"
+          in: body
+          description: "the updated device"
+          required: true
+          schema:
+            $ref: '#/definitions/device'
+      responses:
+        200:
+          description: "updated successfully"
+        400:
+          description: "invalid id supplied"
+        404:
+          description: "no device data given"
+
+  /rent/new:
+    post:
+      tags:
+        - "rent"
+      summary: "Adding a new rent"
+      operationId: "newRent"
+      parameters:
+        - in: body
+          name: "rentToAdd"
+          required: true
+          description: "the rent you want to add"
+          schema:
+            $ref: '#/definitions/rent'
+      responses:
+        200:
+          description: "successfully added rent"
+  /rent/all:
+    get:
+      tags:
+        - "rent"
+      summary: "Returns all rents"
+      operationId: "getAllRents"
+      produces:
+        - application/json
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/rent'
+        404:
+          description: "no rents in the system"
+  /rent/{rentId}:
+    get:
+      tags:
+        - "rent"
+      summary: "returns the rent with the given id"
+      operationId: "getRent"
+      parameters:
+        - name: rentId
+          in: query
+          required: true
+          description: "the id of the rent you want to get"
+          type: integer
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: '#/definitions/rent'
+        400:
+          description: "invalid id supplied"
+    delete:
+      tags:
+        - "rent"
+      summary: "deletes the rent with given id"
+      operationId: "deleteRent"
+      parameters:
+        - name: rentId
+          in: query
+          required: true
+          description: "the id of the rent you want to delete"
+          type: integer
+      responses:
+        200:
+          description: "successful operation"
+        400:
+          description: "invalid id supplied"
+  /rent:
+    put:
+      tags:
+        - "rent"
+      summary: "updates an existing rent"
+      operationId: "updateRent"
+      parameters:
+        - name: "rent"
+          in: body
+          required: true
+          description: "the updated rent data"
+          schema:
+            $ref: '#/definitions/rent'
+      responses:
+        200:
+          description: "successful operation"
+        400:
+          description: "invalid id supplied"
+        404:
+          description: "no rent data supplied"
+
+
+definitions:
+  device:
+    type: "object"
+    required:
+      - name
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+        example: "Kamera"
+      maker:
+        type: string
+        example: "Sony"
+      type:
+        type: string
+        example: "PMW-320"
+      value:
+        type: integer
+      serial:
+        type: string
+        example: "00001111AABB"
+      barcode:
+        type: string
+        example: "B-320-01"
+      weight:
+        type: integer
+      place:
+        $ref: '#/definitions/place'
+      status:
+        description: "the status of the device on a scale from 1 to 5"
+        type: integer
+      category:
+        $ref: '#/definitions/category'
+
+  compositeDevice:
+    allOf:
+      - $ref: '#/definitions/device'
+      - type: object
+        properties:
+          devices:
+            type: array
+            items:
+              $ref: '#/definitions/device'
+
+  place:
+    type: object
+    description: "A place, where you can store devices"
+    required:
+      - name
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+        example: "110"
+
+  category:
+    type: object
+    required:
+      - name
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+        example: "videó"
+
+  user:
+    type: object
+    required:
+      - name
+    properties:
+      id:
+        type: integer
+      username:
+        type: string
+      familyName:
+        type: string
+      givenName:
+        type: string
+      rank:
+        type: string
+        enum:
+          - "újonc"
+          - "Stúdiós-jelölt-jelölt"
+          - "Stúdiós-jelölt"
+          - "Stúdiós"
+
+  deviceBackStatus:
+    description: "An object that is used to track inside a rent if a device arrived back or not"
+    type: object
+    required:
+      - device
+      - status
+    properties:
+      device:
+        $ref: '#/definitions/device'
+      status:
+        type: string
+        enum:
+          - "out"
+          - "back"
+
+  rent:
+    type: object
+    required:
+      - destination
+      - outDate
+      - expBackDate
+    properties:
+      id:
+        type: integer
+      destination:
+        description: "Where or to who the devices will go out"
+        type: string
+      issuer:
+        $ref: '#/definitions/user'
+        description: "The person, who gives out the devices"
+      outDate:
+        type: string
+        description: "The date, when the devices will leave the storage"
+      expBackDate:
+        type: string
+        description: "Expected date, when the devices will arrive back"
+      actBackDate:
+        type: string
+        description: "Actual date, when the devices arrived back"
+      devices:
+        type: array
+        items:
+          $ref: '#/definitions/deviceBackStatus'

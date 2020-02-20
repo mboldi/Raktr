@@ -1,3 +1,5 @@
+jdk:
+  - openjdk13
 script:
   - gradle check
   - gradle build

@@ -6,9 +6,9 @@ info:
 host: api.example.com
 basePath: "/api"
 tags:
-  - name: "device"
+  - name: "Device"
     description: "Everything about devices"
-  - name: "rent"
+  - name: "Rent"
     description: "Everything about rents"
 schemes:
   - http
@@ -16,7 +16,7 @@ paths:
   /device/all:
     get:
       tags:
-        - "device"
+        - "Device"
       summary: "Returns a list of all devices including composite ones."
       operationId: "listDevices"
       produces:
@@ -31,15 +31,15 @@ paths:
   /device/{deviceId}:
     get:
       tags:
-        - "device"
+        - "Device"
       summary: "Returns a single device"
       operationId: "getDevice"
       produces:
         - application/json
       parameters:
         - name: "deviceId"
-          in: query
-          description: "the id of the device you want to access"
+          in: path
+          description: "The id of the device you want to access"
           required: true
           type: integer
       responses:
@@ -51,129 +51,222 @@ paths:
           description: "Invalid ID supplied"
     delete:
       tags:
-        - "device"
+        - "Device"
       summary: "Deletes a device"
       operationId:  "deleteDevice"
       parameters:
         - name: "deviceId"
-          in: query
-          description: "the id of the device you want to delete"
+          in: path
+          description: "The id of the device you want to delete"
           required: true
           type: integer
       responses:
         200:
           description: "successfully deleted"
+          schema:
+            $ref: '#/definitions/device'
         400:
-          description: "invalid id supplied"
-  /device:
+          description: "Invalid id supplied"
+        409:
+          description: "The device has been modified before the request and after the last read of the client"
     put:
       tags:
-        - "device"
+        - "Device"
       summary: "Updates an existing device"
       operationId: "updateDevice"
       parameters:
+        - name: "deviceId"
+          in: path
+          description: "The id of the device you want to delete"
+          required: true
+          type: integer
         - name: "device"
           in: body
-          description: "the updated device"
+          description: "The updated device"
           required: true
           schema:
             $ref: '#/definitions/device'
       responses:
         200:
-          description: "updated successfully"
+          description: "Updated successfully"
         400:
-          description: "invalid id supplied"
+          description: "Invalid id supplied"
         404:
-          description: "no device data given"
+          description: "No device data given"
 
   /rent/new:
     post:
       tags:
-        - "rent"
+        - "Rent"
       summary: "Adding a new rent"
       operationId: "newRent"
       parameters:
         - in: body
           name: "rentToAdd"
           required: true
-          description: "the rent you want to add"
+          description: "The rent you want to add"
           schema:
             $ref: '#/definitions/rent'
       responses:
         200:
-          description: "successfully added rent"
+          description: "Successfully added rent"
   /rent/all:
     get:
       tags:
-        - "rent"
+        - "Rent"
       summary: "Returns all rents"
       operationId: "getAllRents"
       produces:
         - application/json
       responses:
         200:
-          description: "successful operation"
+          description: "Successful operation"
           schema:
             type: array
             items:
               $ref: '#/definitions/rent'
         404:
-          description: "no rents in the system"
+          description: "No rents in the system"
   /rent/{rentId}:
     get:
       tags:
-        - "rent"
+        - "Rent"
       summary: "returns the rent with the given id"
       operationId: "getRent"
       parameters:
         - name: rentId
-          in: query
+          in: path
           required: true
-          description: "the id of the rent you want to get"
+          description: "The id of the rent you want to get"
           type: integer
       responses:
         200:
-          description: "successful operation"
+          description: "Successful operation"
           schema:
             $ref: '#/definitions/rent'
         400:
-          description: "invalid id supplied"
+          description: "Invalid id supplied"
     delete:
       tags:
-        - "rent"
-      summary: "deletes the rent with given id"
+        - "Rent"
+      summary: "Deletes the rent with given id"
       operationId: "deleteRent"
       parameters:
         - name: rentId
-          in: query
+          in: path
           required: true
-          description: "the id of the rent you want to delete"
+          description: "The id of the rent you want to delete"
           type: integer
       responses:
         200:
-          description: "successful operation"
+          description: "Successful operation"
+          schema:
+            $ref: '#/definitions/rent'
         400:
-          description: "invalid id supplied"
-  /rent:
+          description: "Invalid id supplied"
+        409:
+          description: "The device has been modified before the request and after the last read of the client"
     put:
       tags:
-        - "rent"
-      summary: "updates an existing rent"
+        - "Rent"
+      summary: "Updates an existing rent"
       operationId: "updateRent"
       parameters:
+        - name: rentId
+          in: path
+          required: true
+          description: "The id of the rent you want to delete"
+          type: integer
         - name: "rent"
           in: body
           required: true
-          description: "the updated rent data"
+          description: "The updated rent data"
           schema:
             $ref: '#/definitions/rent'
       responses:
         200:
-          description: "successful operation"
+          description: "Successful operation"
         400:
-          description: "invalid id supplied"
+          description: "Invalid id supplied"
         404:
-          description: "no rent data supplied"
+          description: "No rent data supplied"
+  /rent/{rentId}/update/backDate:
+    put:
+      tags:
+        - "Rent"
+      summary: "Updates the backDate of the rent with given ID"
+      operationId: "updateRentBackDate"
+      parameters:
+        - name: "rentId"
+          in: path
+          required: true
+          description: "The id of the rent you want to modify"
+          type: integer
+        - name: "newBackDate"
+          in: body
+          required: true
+          description: "The rent containing the new backDate"
+          schema:
+            $ref: '#/definitions/rent'
+      responses:
+          200:
+            description: "Successful operation"
+            schema:
+              $ref: '#/definitions/rent'
+          400:
+            description: "Invalid id supplied"
+  /rent/{rentId}/add/device:
+    put:
+      tags:
+        - "Rent"
+      summary: "Adds a device to a rent"
+      operationId: "addDeviceToRent"
+      parameters:
+        - name: "rentId"
+          in: path
+          required: true
+          description: "The id of the rent you want to modify"
+          type: integer
+        - name: "deviceToAdd"
+          in: body
+          required: true
+          description: "The device you want to add to the rent"
+          schema:
+            $ref: '#/definitions/device'
+      responses:
+        200:
+          description: "Successful operation"
+          schema:
+            $ref: '#/definitions/rent'
+        400:
+          description: "Invalid id supplied"
+  /rent/{rentId}/update/status:
+    put:
+      tags:
+        - "Rent"
+      summary: "Updates the status of the rent with given id"
+      operationId: "updateRentStatus"
+      parameters:
+        - name: "rentId"
+          in: path
+          required: true
+          description: "The id of the rent you want to modify"
+          type: integer
+        - name: "newStatus"
+          in: body
+          required: true
+          description: "The new status of the rent"
+          schema:
+            $ref: '#/definitions/deviceBackStatus'
+      responses:
+        200:
+          description: "Successful operation"
+          schema:
+            $ref: '#/definitions/deviceBackStatus'
+        400:
+          description: "Invalid id supplied"
+
+
 
 
 definitions:
@@ -206,7 +299,7 @@ definitions:
       place:
         $ref: '#/definitions/place'
       status:
-        description: "the status of the device on a scale from 1 to 5"
+        description: "The status of the device on a scale from 1 to 5"
         type: integer
       category:
         $ref: '#/definitions/category'
@@ -260,7 +353,7 @@ definitions:
       rank:
         type: string
         enum:
-          - "újonc"
+          - "Újonc"
           - "Stúdiós-jelölt-jelölt"
           - "Stúdiós-jelölt"
           - "Stúdiós"
@@ -286,6 +379,7 @@ definitions:
       - destination
       - outDate
       - expBackDate
+      - issuer
     properties:
       id:
         type: integer

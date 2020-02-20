@@ -2,5 +2,4 @@ language: java
 jdk:
   - openjdk13
 script:
-  - gradle check
-  - gradle build
+  - gradlew clean -i --continue

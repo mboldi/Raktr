@@ -27,7 +27,7 @@ paths:
           schema:
             type: array
             items:
-              $ref: '#/definitions/device'
+              $ref: '#/definitions/Device'
   /device/{deviceId}:
     get:
       tags:
@@ -46,7 +46,7 @@ paths:
         200:
           description: OK
           schema:
-            $ref: '#/definitions/device'
+            $ref: '#/definitions/Device'
         400:
           description: "Invalid ID supplied"
     delete:
@@ -64,7 +64,7 @@ paths:
         200:
           description: "successfully deleted"
           schema:
-            $ref: '#/definitions/device'
+            $ref: '#/definitions/Device'
         400:
           description: "Invalid id supplied"
         409:
@@ -85,7 +85,7 @@ paths:
           description: "The updated device"
           required: true
           schema:
-            $ref: '#/definitions/device'
+            $ref: '#/definitions/Device'
       responses:
         200:
           description: "Updated successfully"
@@ -106,7 +106,7 @@ paths:
           required: true
           description: "The rent you want to add"
           schema:
-            $ref: '#/definitions/rent'
+            $ref: '#/definitions/Rent'
       responses:
         200:
           description: "Successfully added rent"
@@ -124,7 +124,7 @@ paths:
           schema:
             type: array
             items:
-              $ref: '#/definitions/rent'
+              $ref: '#/definitions/Rent'
         404:
           description: "No rents in the system"
   /rent/{rentId}:
@@ -143,7 +143,7 @@ paths:
         200:
           description: "Successful operation"
           schema:
-            $ref: '#/definitions/rent'
+            $ref: '#/definitions/Rent'
         400:
           description: "Invalid id supplied"
     delete:
@@ -161,7 +161,7 @@ paths:
         200:
           description: "Successful operation"
           schema:
-            $ref: '#/definitions/rent'
+            $ref: '#/definitions/Rent'
         400:
           description: "Invalid id supplied"
         409:
@@ -182,7 +182,7 @@ paths:
           required: true
           description: "The updated rent data"
           schema:
-            $ref: '#/definitions/rent'
+            $ref: '#/definitions/Rent'
       responses:
         200:
           description: "Successful operation"
@@ -207,12 +207,12 @@ paths:
           required: true
           description: "The rent containing the new backDate"
           schema:
-            $ref: '#/definitions/rent'
+            $ref: '#/definitions/Rent'
       responses:
           200:
             description: "Successful operation"
             schema:
-              $ref: '#/definitions/rent'
+              $ref: '#/definitions/Rent'
           400:
             description: "Invalid id supplied"
   /rent/{rentId}/add/device:
@@ -232,12 +232,12 @@ paths:
           required: true
           description: "The device you want to add to the rent"
           schema:
-            $ref: '#/definitions/device'
+            $ref: '#/definitions/Device'
       responses:
         200:
           description: "Successful operation"
           schema:
-            $ref: '#/definitions/rent'
+            $ref: '#/definitions/Rent'
         400:
           description: "Invalid id supplied"
   /rent/{rentId}/update/status:
@@ -257,12 +257,12 @@ paths:
           required: true
           description: "The new status of the rent"
           schema:
-            $ref: '#/definitions/deviceBackStatus'
+            $ref: '#/definitions/DeviceBackStatus'
       responses:
         200:
           description: "Successful operation"
           schema:
-            $ref: '#/definitions/deviceBackStatus'
+            $ref: '#/definitions/DeviceBackStatus'
         400:
           description: "Invalid id supplied"
 
@@ -270,7 +270,7 @@ paths:
 
 
 definitions:
-  device:
+  Device:
     type: "object"
     required:
       - name
@@ -296,25 +296,25 @@ definitions:
         example: "B-320-01"
       weight:
         type: integer
-      place:
-        $ref: '#/definitions/place'
+      location:
+        $ref: '#/definitions/Location'
       status:
         description: "The status of the device on a scale from 1 to 5"
         type: integer
       category:
-        $ref: '#/definitions/category'
+        $ref: '#/definitions/Category'
 
-  compositeDevice:
+  CompositeDevice:
     allOf:
-      - $ref: '#/definitions/device'
+      - $ref: '#/definitions/Device'
       - type: object
         properties:
           devices:
             type: array
             items:
-              $ref: '#/definitions/device'
+              $ref: '#/definitions/Device'
 
-  place:
+  Location:
     type: object
     description: "A place, where you can store devices"
     required:
@@ -326,7 +326,7 @@ definitions:
         type: string
         example: "110"
 
-  category:
+  Category:
     type: object
     required:
       - name
@@ -337,7 +337,7 @@ definitions:
         type: string
         example: "videó"
 
-  user:
+  User:
     type: object
     required:
       - name
@@ -358,7 +358,7 @@ definitions:
           - "Stúdiós-jelölt"
           - "Stúdiós"
 
-  deviceBackStatus:
+  DeviceBackStatus:
     description: "An object that is used to track inside a rent if a device arrived back or not"
     type: object
     required:
@@ -366,14 +366,14 @@ definitions:
       - status
     properties:
       device:
-        $ref: '#/definitions/device'
+        $ref: '#/definitions/Device'
       status:
         type: string
         enum:
           - "out"
           - "back"
 
-  rent:
+  Rent:
     type: object
     required:
       - destination
@@ -387,7 +387,7 @@ definitions:
         description: "Where or to who the devices will go out"
         type: string
       issuer:
-        $ref: '#/definitions/user'
+        $ref: '#/definitions/User'
         description: "The person, who gives out the devices"
       outDate:
         type: string
@@ -401,4 +401,4 @@ definitions:
       devices:
         type: array
         items:
-          $ref: '#/definitions/deviceBackStatus'
+          $ref: '#/definitions/DeviceBackStatus'

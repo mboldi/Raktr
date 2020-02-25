@@ -109,6 +109,25 @@ paths:
           description: "Invalid id supplied"
         404:
           description: "No device data given"
+  /device/{barcode}:
+    get:
+      tags:
+        - "Device"
+      summary: "Return a device with given barcode value"
+      operationId: "getDeviceByBarcode"
+      parameters:
+        - name: "barcode"
+          in: path
+          description: "The barcode of the device you want to get"
+          required: true
+          type: string
+      responses:
+        200:
+          description: "Successfully found device"
+          schema:
+            $ref: '#/definitions/Device'
+        400:
+          description: "Device with given barcode not found"
 
   /rent/new:
     post:
@@ -225,12 +244,12 @@ paths:
           schema:
             $ref: '#/definitions/Rent'
       responses:
-          200:
-            description: "Successful operation"
-            schema:
-              $ref: '#/definitions/Rent'
-          400:
-            description: "Invalid id supplied"
+        200:
+          description: "Successful operation"
+          schema:
+            $ref: '#/definitions/Rent'
+        400:
+          description: "Invalid id supplied"
   /rent/{rentId}/add/device:
     put:
       tags:

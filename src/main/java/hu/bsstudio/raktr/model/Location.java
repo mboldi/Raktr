@@ -31,7 +31,7 @@ public final class Location extends DomainAuditModel {
 
     @JsonIgnore
     @Setter(AccessLevel.NONE)
-    @OneToMany(targetEntity = Device.class, cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "locations")
+    @OneToMany(targetEntity = Device.class, cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "location")
     private Set<Device> devices;
 
     public Location(final Builder builder) {

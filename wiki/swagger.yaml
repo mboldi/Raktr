@@ -13,6 +13,22 @@ tags:
 schemes:
   - http
 paths:
+  /device/new:
+    post:
+      tags:
+        - "Device"
+      summary: "Adds a new device"
+      operationId: "createDevice"
+      parameters:
+        - name: "device"
+          in: body
+          description: "The new device that will be added to the system"
+          schema:
+            $ref: '#/definitions/Device'
+      responses:
+        201:
+          description: "Successfully created"
+
   /device/all:
     get:
       tags:
@@ -108,8 +124,8 @@ paths:
           schema:
             $ref: '#/definitions/Rent'
       responses:
-        200:
-          description: "Successfully added rent"
+        201:
+          description: "Successfully created rent"
   /rent/all:
     get:
       tags:

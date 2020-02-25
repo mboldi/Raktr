@@ -2,21 +2,21 @@ package hu.bsstudio.raktr.model;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "devices")
-@JsonSerialize
+@JsonSerialize()
 @JsonDeserialize(builder = Device.Builder.class)
 @NoArgsConstructor
-@Data()
+@Data
 public class Device extends DomainAuditModel {
 
     @Id
@@ -27,31 +27,39 @@ public class Device extends DomainAuditModel {
     @NotBlank
     private String name;
 
+    @NotNull
     private String maker;
 
+    @NotNull
     private String type;
 
+    @NotNull
     private String serial;
 
-    private int value;
+    @NotNull
+    private Integer value;
 
+    @NotNull
     private String barcode;
 
-    private int weight;
-
+    @Min(0)
+    private Integer weight;
+/*
     @NotNull
     @ManyToOne
     @JoinColumn
-    private Location location;
+    private Location location;*/
 
+    @Min(0)
+    @Max(5)
     private int status;
-
+/*
     @NotNull
     @ManyToOne
     @JoinColumn
     private Category category;
-
-    private Device(Builder builder) {
+*/
+    private Device(final Builder builder) {
         this.name = builder.name;
         this.maker = builder.maker;
         this.type = builder.type;
@@ -59,9 +67,9 @@ public class Device extends DomainAuditModel {
         this.value = builder.value;
         this.barcode = builder.barcode;
         this.weight = builder.weight;
-        this.location = builder.location;
+        //this.location = builder.location;
         this.status = builder.status;
-        this.category = builder.category;
+        //this.category = builder.category;
     }
 
     public static Builder builder() {
@@ -74,62 +82,62 @@ public class Device extends DomainAuditModel {
         private String maker;
         private String type;
         private String serial;
-        private int value;
+        private Integer value;
         private String barcode;
-        private int weight;
-        private Location location;
-        private int status;
-        private Category category;
+        private Integer weight;
+        //private Location location;
+        private Integer status;
+        //private Category category;
 
-        public Builder withName(String name) {
+        public Builder withName(final String name) {
             this.name = name;
             return this;
         }
 
-        public Builder withMaker(String maker) {
+        public Builder withMaker(final String maker) {
             this.maker = maker;
             return this;
         }
 
-        public Builder withType(String type) {
+        public Builder withType(final String type) {
             this.type = type;
             return this;
         }
 
-        public Builder withSerial(String serial) {
+        public Builder withSerial(final String serial) {
             this.serial = serial;
             return this;
         }
 
-        public Builder withValue(int value) {
+        public Builder withValue(final Integer value) {
             this.value = value;
             return this;
         }
 
-        public Builder withBarcode(String barcode) {
+        public Builder withBarcode(final String barcode) {
             this.barcode = barcode;
             return this;
         }
 
-        private Builder withWeight(int weight) {
+        public Builder withWeight(final Integer weight) {
             this.weight = weight;
             return this;
         }
-
-        private Builder withLocation(Location location) {
+/*
+        public Builder withLocation(final Location location) {
             this.location = location;
             return this;
-        }
+        }*/
 
-        private Builder withStatus(int status) {
+        public Builder withStatus(final Integer status) {
             this.status = status;
             return this;
         }
-
-        private Builder withCategory(Category category) {
+/*
+        public Builder withCategory(final Category category) {
             this.category = category;
             return this;
-        }
+        }*/
 
         public Device build() {
             return new Device(this);

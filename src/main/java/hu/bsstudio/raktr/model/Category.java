@@ -27,11 +27,11 @@ public final class Category extends DomainAuditModel {
 
     @NotBlank
     private String name;
-
+/*
     @JsonIgnore
     @Setter(AccessLevel.NONE)
     @OneToMany(targetEntity = Device.class, cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "category")
-    private Set<Device> devices;
+    private Set<Device> devices;*/
 
     public Category(final Builder builder) {
         this.name = builder.name;

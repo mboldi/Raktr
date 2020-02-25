@@ -1,18 +1,24 @@
 package hu.bsstudio.raktr.service;
 
+import hu.bsstudio.raktr.dao.DeviceDao;
+import hu.bsstudio.raktr.model.Device;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 @Service
-public class DeviceService {
+@Slf4j
+public final class DeviceService {
 
-    public static final String HELLO_WORLD = "Hello world!";
+    private final DeviceDao deviceDao;
 
-    public String helloWorld(){
-        return HELLO_WORLD;
+    public DeviceService(DeviceDao deviceDao) {
+        this.deviceDao = deviceDao;
     }
 
-    public String helloWorld(String name) {
-        return "Hello " + name + "!";
+    public Device create(Device device) {
+        final Device saved = deviceDao.save(device);
+        log.info("Device created: {}", device);
+        return saved;
     }
 
 }

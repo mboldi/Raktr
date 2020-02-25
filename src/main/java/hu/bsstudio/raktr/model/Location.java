@@ -28,11 +28,11 @@ public final class Location extends DomainAuditModel {
     @NotBlank
     @Column(unique = true, nullable = false)
     private String name;
-
+/*
     @JsonIgnore
     @Setter(AccessLevel.NONE)
     @OneToMany(targetEntity = Device.class, cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "location")
-    private Set<Device> devices;
+    private Set<Device> devices;*/
 
     public Location(final Builder builder) {
         this.name = builder.name;

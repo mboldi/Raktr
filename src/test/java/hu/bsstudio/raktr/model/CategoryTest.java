@@ -19,7 +19,7 @@ public class CategoryTest {
     private static final String NAME2 = "category2";
 
     private Category underTest;
-
+/*
     @Test
     void testConstructorAndGetters() {
         //given
@@ -34,7 +34,7 @@ public class CategoryTest {
                 () -> assertEquals(NAME, underTest.getName()),
                 () -> assertNull(underTest.getDevices())
         );
-    }
+    }*/
 
     @Test
     void testNoArgsConstructor() {

@@ -10,10 +10,14 @@ tags:
     description: "Everything about devices"
   - name: "Rent"
     description: "Everything about rents"
+  - name: "Category"
+    description: "Everything about categories"
+  - name: "Location"
+    description: "Everything about locations"
 schemes:
-  - http
+  - https
 paths:
-  /device/new:
+  /device:
     post:
       tags:
         - "Device"
@@ -28,8 +32,6 @@ paths:
       responses:
         201:
           description: "Successfully created"
-
-  /device/all:
     get:
       tags:
         - "Device"
@@ -129,7 +131,7 @@ paths:
         400:
           description: "Device with given barcode not found"
 
-  /rent/new:
+  /rent:
     post:
       tags:
         - "Rent"
@@ -145,7 +147,6 @@ paths:
       responses:
         201:
           description: "Successfully created rent"
-  /rent/all:
     get:
       tags:
         - "Rent"
@@ -225,43 +226,13 @@ paths:
           description: "Invalid id supplied"
         404:
           description: "No rent data supplied"
-  /rent/{rentId}/update/backDate:
-    put:
-      tags:
-        - "Rent"
-      summary: "Updates the backDate of the rent with given ID"
-      operationId: "updateRentBackDate"
-      parameters:
-        - name: "rentId"
-          in: path
-          required: true
-          description: "The id of the rent you want to modify"
-          type: integer
-        - name: "newBackDate"
-          in: body
-          required: true
-          description: "The rent containing the new backDate"
-          schema:
-            $ref: '#/definitions/Rent'
-      responses:
-        200:
-          description: "Successful operation"
-          schema:
-            $ref: '#/definitions/Rent'
-        400:
-          description: "Invalid id supplied"
-  /rent/{rentId}/add/device:
+  /rent/addDevice:
     put:
       tags:
         - "Rent"
       summary: "Adds a device to a rent"
       operationId: "addDeviceToRent"
       parameters:
-        - name: "rentId"
-          in: path
-          required: true
-          description: "The id of the rent you want to modify"
-          type: integer
         - name: "deviceToAdd"
           in: body
           required: true
@@ -275,31 +246,152 @@ paths:
             $ref: '#/definitions/Rent'
         400:
           description: "Invalid id supplied"
-  /rent/{rentId}/update/status:
-    put:
+
+  /category:
+    post:
       tags:
-        - "Rent"
-      summary: "Updates the status of the rent with given id"
-      operationId: "updateRentStatus"
+        - "Category"
+      summary: "Adds a category"
+      operationId: "addCategory"
       parameters:
-        - name: "rentId"
-          in: path
-          required: true
-          description: "The id of the rent you want to modify"
-          type: integer
-        - name: "newStatus"
+        - name: "category"
           in: body
           required: true
-          description: "The new status of the rent"
+          description: "The category you want to add"
           schema:
-            $ref: '#/definitions/DeviceBackStatus'
+            $ref: '#/definitions/Category'
+      responses:
+        200:
+          description: "Successfully added"
+          schema:
+            $ref: '#/definitions/Category'
+    get:
+      tags:
+        - "Category"
+      summary: "Returns all categories"
+      operationId: "getCategories"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Category'
+    put:
+      tags:
+        - "Category"
+      summary: "Updates a category"
+      operationId: "updateCategory"
+      parameters:
+        - name: "category"
+          in: body
+          required: true
+          description: "The category you want to update"
+          schema:
+            $ref: '#/definitions/Category'
       responses:
         200:
           description: "Successful operation"
           schema:
-            $ref: '#/definitions/DeviceBackStatus'
+            $ref: '#/definitions/Category'
         400:
-          description: "Invalid id supplied"
+          description: "Category not found"
+          schema:
+            $ref: '#/definitions/Category'
+    delete:
+      tags:
+        - "Category"
+      summary: "Deletes a category"
+      operationId: "deleteCategory"
+      parameters:
+        - name: "category"
+          in: body
+          required: true
+          description: "The category you want to delete"
+          schema:
+            $ref: '#/definitions/Category'
+      responses:
+        200:
+          description: "Successful operation"
+          schema:
+            $ref: '#/definitions/Category'
+        400:
+          description: "Category not found"
+          schema:
+            $ref: '#/definitions/Category'
+
+  /location:
+    post:
+      tags:
+        - "Location"
+      summary: "Adds a location"
+      operationId: "addLocation"
+      parameters:
+        - name: "location"
+          in: body
+          required: true
+          description: "The location you want to add"
+          schema:
+            $ref: '#/definitions/Location'
+      responses:
+        200:
+          description: "Successfully added"
+          schema:
+            $ref: '#/definitions/Location'
+    get:
+      tags:
+        - "Location"
+      summary: "Returns all locations"
+      operationId: "getLocations"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Location'
+    put:
+      tags:
+        - "Location"
+      summary: "Updates a location"
+      operationId: "updateLocation"
+      parameters:
+        - name: "location"
+          in: body
+          required: true
+          description: "The location you want to update"
+          schema:
+            $ref: '#/definitions/Location'
+      responses:
+        200:
+          description: "Successful operation"
+          schema:
+            $ref: '#/definitions/Location'
+        400:
+          description: "Category not found"
+          schema:
+            $ref: '#/definitions/Location'
+    delete:
+      tags:
+        - "Location"
+      summary: "Deletes a location"
+      operationId: "deleteLocation"
+      parameters:
+        - name: "location"
+          in: body
+          required: true
+          description: "The location you want to delete"
+          schema:
+            $ref: '#/definitions/Location'
+      responses:
+        200:
+          description: "Successful operation"
+          schema:
+            $ref: '#/definitions/Location'
+        400:
+          description: "Location not found"
+          schema:
+            $ref: '#/definitions/Location'
 
 
 

@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @Slf4j
 @RequestMapping("/api/location")
-public class LocationController {
+public final class LocationController {
 
     private final LocationService locationService;
 
@@ -25,25 +25,25 @@ public class LocationController {
     }
 
     @PostMapping
-    public final Location createLocation(@Valid @RequestBody final Location locationRequest) {
+    public Location createLocation(@Valid @RequestBody final Location locationRequest) {
         log.info("Incoming request for new location: {}", locationRequest);
         return locationService.create(locationRequest);
     }
 
     @GetMapping
-    public final List<Location> locationList() {
+    public List<Location> locationList() {
         log.info("Incoming request for all locations");
         return locationService.getAll();
     }
 
     @PutMapping
-    public final Location updateLocation(@Valid @RequestBody final Location locationRequest) {
+    public Location updateLocation(@Valid @RequestBody final Location locationRequest) {
         log.info("Incoming request for updating a location: {}", locationRequest);
         return locationService.update(locationRequest);
     }
 
     @DeleteMapping
-    public final Location deleteLocation(@Valid @RequestBody final  Location locationRequest) {
+    public Location deleteLocation(@Valid @RequestBody final  Location locationRequest) {
         log.info("Incoming request to delete location: {}", locationRequest);
         return locationService.delete(locationRequest);
     }

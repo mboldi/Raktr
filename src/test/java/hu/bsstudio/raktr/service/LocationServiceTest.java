@@ -1,16 +1,18 @@
 package hu.bsstudio.raktr.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
+import static org.mockito.MockitoAnnotations.initMocks;
+
 import hu.bsstudio.raktr.dao.LocationDao;
 import hu.bsstudio.raktr.model.Location;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.*;
-import static org.mockito.MockitoAnnotations.initMocks;
 
 final class LocationServiceTest {
 
@@ -35,8 +37,8 @@ final class LocationServiceTest {
         given(mockLocationRequest.getName()).willReturn(NAME);
 
         location = spy(Location.builder()
-                .withName(NAME)
-                .build());
+            .withName(NAME)
+            .build());
     }
 
     @Test

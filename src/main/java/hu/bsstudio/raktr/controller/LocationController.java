@@ -30,4 +30,16 @@ public class LocationController {
         log.info("Incoming request for all locations");
         return locationService.getAll();
     }
+
+    @PutMapping
+    public Location updateLocation(@Valid @RequestBody final Location locationRequest) {
+        log.info("Incoming request for updating a location: {}", locationRequest);
+        return locationService.update(locationRequest);
+    }
+
+    @DeleteMapping
+    public Location deleteLocation(@Valid @RequestBody final  Location locationRequest) {
+        log.info("Incoming request to delete location: {}", locationRequest);
+        return locationService.delete(locationRequest);
+    }
 }

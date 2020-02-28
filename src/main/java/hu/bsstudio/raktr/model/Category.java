@@ -32,6 +32,7 @@ public final class Category extends DomainAuditModel {
     private Set<Device> devices;
 
     public Category(final Builder builder) {
+        this.id = builder.id;
         this.name = builder.name;
     }
 
@@ -41,7 +42,13 @@ public final class Category extends DomainAuditModel {
 
     @SuppressWarnings("hiddenfield")
     public static final class Builder {
+        private Long id;
         private String name;
+
+        public Builder withId(Long id) {
+            this.id = id;
+            return this;
+        }
 
         public Builder withName(String name) {
             this.name = name;

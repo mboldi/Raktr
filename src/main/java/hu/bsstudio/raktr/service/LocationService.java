@@ -28,4 +28,19 @@ public class LocationService {
         log.info("Locations fetched from DB: {}", fetched);
         return fetched;
     }
+
+    public Location update(Location locationRequest) {
+        final Location locationToUpdate = locationDao.getOne(locationRequest.getId());
+        locationToUpdate.setName(locationRequest.getName());
+        final Location updated = locationDao.save(locationToUpdate);
+        log.info("Location updated in DB: {}", updated);
+        return updated;
+    }
+
+    public Location delete(Location locationRequest) {
+        final Location locationToDelete = locationDao.getOne(locationRequest.getId());
+        locationDao.delete(locationToDelete);
+        log.info("Location deleted: {}", locationToDelete);
+        return locationToDelete;
+    }
 }

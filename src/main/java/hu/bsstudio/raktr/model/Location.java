@@ -9,9 +9,11 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.util.Set;
 
+import static javax.persistence.CascadeType.ALL;
+
 @EqualsAndHashCode(callSuper = true)
 @Entity
-@Table(name = "locations")
+@Table(name = "location")
 @JsonSerialize
 @JsonDeserialize(builder = Location.Builder.class)
 @NoArgsConstructor
@@ -29,7 +31,7 @@ public final class Location extends DomainAuditModel {
 
     @JsonIgnore
     @Setter(AccessLevel.NONE)
-    @OneToMany(targetEntity = Device.class, cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "location")
+    @OneToMany(targetEntity = Device.class, cascade = ALL, fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "location")
     private Set<Device> devices;
 
     public Location(final Builder builder) {

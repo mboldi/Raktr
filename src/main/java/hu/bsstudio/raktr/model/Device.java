@@ -40,6 +40,7 @@ public class Device extends DomainAuditModel {
     private Integer value;
 
     @NotNull
+    @Column(unique = true)
     private String barcode;
 
     @Min(0)
@@ -55,8 +56,8 @@ public class Device extends DomainAuditModel {
     private int status;
 
     @NotNull
-    @ManyToOne
     @JoinColumn
+    @ManyToOne
     private Category category;
 
     private Device(final Builder builder) {

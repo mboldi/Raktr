@@ -11,7 +11,7 @@ import java.util.Set;
 
 @EqualsAndHashCode(callSuper = true)
 @Entity
-@Table(name = "device_categories")
+@Table(name = "category")
 @JsonSerialize
 @JsonDeserialize(builder = Category.Builder.class)
 @NoArgsConstructor

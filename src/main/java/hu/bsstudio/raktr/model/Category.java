@@ -3,11 +3,22 @@ package hu.bsstudio.raktr.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import lombok.*;
-
-import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
 import java.util.Set;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @EqualsAndHashCode(callSuper = true)
 @Entity
@@ -16,7 +27,7 @@ import java.util.Set;
 @JsonDeserialize(builder = Category.Builder.class)
 @NoArgsConstructor
 @Data
-public final class Category extends DomainAuditModel {
+public class Category extends DomainAuditModel {
 
     @Id
     @Setter(AccessLevel.NONE)
@@ -27,6 +38,8 @@ public final class Category extends DomainAuditModel {
     private String name;
 
     @JsonIgnore
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     @Setter(AccessLevel.NONE)
     @OneToMany(targetEntity = Device.class, cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "category")
     private Set<Device> devices;
@@ -45,12 +58,12 @@ public final class Category extends DomainAuditModel {
         private Long id;
         private String name;
 
-        public Builder withId(Long id) {
+        public Builder withId(final Long id) {
             this.id = id;
             return this;
         }
 
-        public Builder withName(String name) {
+        public Builder withName(final String name) {
             this.name = name;
             return this;
         }

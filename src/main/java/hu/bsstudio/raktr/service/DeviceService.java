@@ -11,11 +11,11 @@ public final class DeviceService {
 
     private final DeviceDao deviceDao;
 
-    public DeviceService(DeviceDao deviceDao) {
+    public DeviceService(final DeviceDao deviceDao) {
         this.deviceDao = deviceDao;
     }
 
-    public Device create(Device device) {
+    public Device create(final Device device) {
         final Device saved = deviceDao.save(device);
         log.info("Device created: {}", device);
         return saved;

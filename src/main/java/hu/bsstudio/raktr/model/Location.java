@@ -3,13 +3,22 @@ package hu.bsstudio.raktr.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import lombok.*;
-
-import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
 import java.util.Set;
-
-import static javax.persistence.CascadeType.ALL;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @EqualsAndHashCode(callSuper = true)
 @Entity
@@ -18,7 +27,7 @@ import static javax.persistence.CascadeType.ALL;
 @JsonDeserialize(builder = Location.Builder.class)
 @NoArgsConstructor
 @Data
-public final class Location extends DomainAuditModel {
+public class Location extends DomainAuditModel {
 
     @Id
     @Setter(AccessLevel.NONE)
@@ -30,8 +39,11 @@ public final class Location extends DomainAuditModel {
     private String name;
 
     @JsonIgnore
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     @Setter(AccessLevel.NONE)
-    @OneToMany(targetEntity = Device.class, cascade = ALL, fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "location")
+    @OneToMany(targetEntity = Device.class, fetch = FetchType.EAGER,
+        cascade = javax.persistence.CascadeType.ALL, orphanRemoval = true, mappedBy = "location")
     private Set<Device> devices;
 
     public Location(final Builder builder) {
@@ -48,12 +60,12 @@ public final class Location extends DomainAuditModel {
         private Long id;
         private String name;
 
-        public Builder withId(Long id) {
+        public Builder withId(final Long id) {
             this.id = id;
             return this;
         }
 
-        public Builder withName(String name) {
+        public Builder withName(final String name) {
             this.name = name;
             return this;
         }

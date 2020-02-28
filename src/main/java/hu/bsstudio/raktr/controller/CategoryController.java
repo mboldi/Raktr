@@ -2,22 +2,21 @@ package hu.bsstudio.raktr.controller;
 
 import hu.bsstudio.raktr.model.Category;
 import hu.bsstudio.raktr.service.CategoryService;
+import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
-
 @RestController
 @Slf4j
 @RequestMapping("/api/category")
-public class CategoryController {
+public final class CategoryController {
 
-    private final CategoryService categoryService;
+    private transient CategoryService categoryService;
 
-    public CategoryController(CategoryService categoryService) {
+    public CategoryController(final CategoryService categoryService) {
         this.categoryService = categoryService;
     }
 

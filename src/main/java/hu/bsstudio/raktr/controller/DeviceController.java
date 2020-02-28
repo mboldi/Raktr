@@ -2,10 +2,12 @@ package hu.bsstudio.raktr.controller;
 
 import hu.bsstudio.raktr.model.Device;
 import hu.bsstudio.raktr.service.DeviceService;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.*;
-
 import javax.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @Slf4j
@@ -14,12 +16,12 @@ public class DeviceController {
 
     private final DeviceService deviceService;
 
-    public DeviceController(DeviceService deviceService) {
+    public DeviceController(final DeviceService deviceService) {
         this.deviceService = deviceService;
     }
 
     @PostMapping()
-    public Device createDevice(@Valid @RequestBody final Device deviceRequest) {
+    public final Device createDevice(@Valid @RequestBody final Device deviceRequest) {
         log.info("Incoming request for new device: {}", deviceRequest);
         return deviceService.create(deviceRequest);
     }

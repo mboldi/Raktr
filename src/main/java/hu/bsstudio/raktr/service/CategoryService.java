@@ -11,11 +11,11 @@ public class CategoryService {
 
     private final CategoryDao categoryDao;
 
-    public CategoryService(CategoryDao categoryDao) {
+    public CategoryService(final CategoryDao categoryDao) {
         this.categoryDao = categoryDao;
     }
 
-    public Category create(Category category) {
+    public final Category create(final Category category) {
         final Category saved = categoryDao.save(category);
         log.info("Category created: {}", saved);
         return saved;

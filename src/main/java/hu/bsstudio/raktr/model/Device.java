@@ -2,13 +2,24 @@ package hu.bsstudio.raktr.model;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import lombok.*;
-
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @EqualsAndHashCode(callSuper = true)
 @Entity
@@ -17,8 +28,10 @@ import javax.validation.constraints.NotNull;
 @JsonDeserialize(builder = Device.Builder.class)
 @NoArgsConstructor
 @Data
-public class Device extends DomainAuditModel {
+public final class Device extends DomainAuditModel {
 
+    public static final int MAX_STATUS_RATING = 5;
+    public static final int MIN_STATUS_RATING = 0;
     @Id
     @Setter(AccessLevel.NONE)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -49,15 +62,21 @@ public class Device extends DomainAuditModel {
     @NotNull
     @ManyToOne
     @JoinColumn
+    @Setter(AccessLevel.NONE)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private Location location;
 
-    @Min(0)
-    @Max(5)
+    @Min(MIN_STATUS_RATING)
+    @Max(MAX_STATUS_RATING)
     private int status;
 
     @NotNull
     @JoinColumn
     @ManyToOne
+    @Setter(AccessLevel.NONE)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private Category category;
 
     private Device(final Builder builder) {

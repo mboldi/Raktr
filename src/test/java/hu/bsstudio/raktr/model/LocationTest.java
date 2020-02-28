@@ -13,7 +13,7 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class LocationTest {
+final class LocationTest {
 
     private static final Validator VALIDATOR = Validation.buildDefaultValidatorFactory().getValidator();
 
@@ -21,7 +21,7 @@ public class LocationTest {
     private static final String NAME2 = "location2";
 
     private Location underTest;
-/*
+
     @Test
     void testConstructorAndGetters() {
         //given
@@ -36,7 +36,7 @@ public class LocationTest {
                 () -> assertEquals(NAME, underTest.getName()),
                 () -> assertNull(underTest.getDevices())
         );
-    }*/
+    }
 
     @Test
     void noArgsConstructor() {

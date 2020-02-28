@@ -37,6 +37,7 @@ public class LocationService {
     }
 
     public final Location delete(final Location locationRequest) {
+        locationDao.delete(locationRequest);
         log.info("Location deleted: {}", locationRequest);
         return locationRequest;
     }

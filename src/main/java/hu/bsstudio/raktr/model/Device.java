@@ -44,21 +44,21 @@ public class Device extends DomainAuditModel {
 
     @Min(0)
     private Integer weight;
-/*
+
     @NotNull
     @ManyToOne
     @JoinColumn
-    private Location location;*/
+    private Location location;
 
     @Min(0)
     @Max(5)
     private int status;
-/*
+
     @NotNull
     @ManyToOne
     @JoinColumn
     private Category category;
-*/
+
     private Device(final Builder builder) {
         this.name = builder.name;
         this.maker = builder.maker;
@@ -67,9 +67,9 @@ public class Device extends DomainAuditModel {
         this.value = builder.value;
         this.barcode = builder.barcode;
         this.weight = builder.weight;
-        //this.location = builder.location;
+        this.location = builder.location;
         this.status = builder.status;
-        //this.category = builder.category;
+        this.category = builder.category;
     }
 
     public static Builder builder() {
@@ -85,9 +85,9 @@ public class Device extends DomainAuditModel {
         private Integer value;
         private String barcode;
         private Integer weight;
-        //private Location location;
+        private Location location;
         private Integer status;
-        //private Category category;
+        private Category category;
 
         public Builder withName(final String name) {
             this.name = name;
@@ -123,21 +123,21 @@ public class Device extends DomainAuditModel {
             this.weight = weight;
             return this;
         }
-/*
+
         public Builder withLocation(final Location location) {
             this.location = location;
             return this;
-        }*/
+        }
 
         public Builder withStatus(final Integer status) {
             this.status = status;
             return this;
         }
-/*
+
         public Builder withCategory(final Category category) {
             this.category = category;
             return this;
-        }*/
+        }
 
         public Device build() {
             return new Device(this);

@@ -3,17 +3,15 @@ package hu.bsstudio.raktr.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.util.Set;
 
+@EqualsAndHashCode(callSuper = true)
 @Entity
-@Table(name = "device_category")
+@Table(name = "device_categories")
 @JsonSerialize
 @JsonDeserialize(builder = Category.Builder.class)
 @NoArgsConstructor
@@ -27,11 +25,11 @@ public final class Category extends DomainAuditModel {
 
     @NotBlank
     private String name;
-/*
+
     @JsonIgnore
     @Setter(AccessLevel.NONE)
     @OneToMany(targetEntity = Device.class, cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "category")
-    private Set<Device> devices;*/
+    private Set<Device> devices;
 
     public Category(final Builder builder) {
         this.name = builder.name;

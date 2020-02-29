@@ -112,7 +112,7 @@ public final class Device extends DomainAuditModel {
         private Integer status;
         private Category category;
 
-        public Device.Builder withId(Long id) {
+        public Device.Builder withId(final Long id) {
             this.id = id;
             return this;
         }

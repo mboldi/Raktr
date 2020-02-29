@@ -47,6 +47,7 @@ public final class Device extends DomainAuditModel {
     private String type;
 
     @NotNull
+    @Column(unique = true)
     private String serial;
 
     @NotNull
@@ -80,6 +81,7 @@ public final class Device extends DomainAuditModel {
     private Category category;
 
     private Device(final Builder builder) {
+        this.id = builder.id;
         this.name = builder.name;
         this.maker = builder.maker;
         this.type = builder.type;
@@ -98,6 +100,7 @@ public final class Device extends DomainAuditModel {
 
     @SuppressWarnings("hiddenfield")
     public static final class Builder {
+        private Long id;
         private String name;
         private String maker;
         private String type;
@@ -108,6 +111,11 @@ public final class Device extends DomainAuditModel {
         private Location location;
         private Integer status;
         private Category category;
+
+        public Device.Builder withId(Long id) {
+            this.id = id;
+            return this;
+        }
 
         public Builder withName(final String name) {
             this.name = name;

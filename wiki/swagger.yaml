@@ -46,6 +46,46 @@ paths:
             type: array
             items:
               $ref: '#/definitions/Device'
+    delete:
+      tags:
+        - "Device"
+      summary: "Deletes a device"
+      operationId:  "deleteDevice"
+      parameters:
+        - name: "device"
+          in: body
+          description: "The updated device"
+          required: true
+          schema:
+            $ref: '#/definitions/Device'
+      responses:
+        200:
+          description: "successfully deleted"
+          schema:
+            $ref: '#/definitions/Device'
+        400:
+          description: "Device with invalid id supplied"
+        409:
+          description: "The device has been modified before the request and after the last read of the client"
+    put:
+      tags:
+        - "Device"
+      summary: "Updates an existing device"
+      operationId: "updateDevice"
+      parameters:
+        - name: "device"
+          in: body
+          description: "The updated device"
+          required: true
+          schema:
+            $ref: '#/definitions/Device'
+      responses:
+        200:
+          description: "Updated successfully"
+        400:
+          description: "Device with invalid id supplied"
+        404:
+          description: "No device data given"
   /device/{deviceId}:
     get:
       tags:
@@ -67,50 +107,6 @@ paths:
             $ref: '#/definitions/Device'
         400:
           description: "Invalid ID supplied"
-    delete:
-      tags:
-        - "Device"
-      summary: "Deletes a device"
-      operationId:  "deleteDevice"
-      parameters:
-        - name: "deviceId"
-          in: path
-          description: "The id of the device you want to delete"
-          required: true
-          type: integer
-      responses:
-        200:
-          description: "successfully deleted"
-          schema:
-            $ref: '#/definitions/Device'
-        400:
-          description: "Invalid id supplied"
-        409:
-          description: "The device has been modified before the request and after the last read of the client"
-    put:
-      tags:
-        - "Device"
-      summary: "Updates an existing device"
-      operationId: "updateDevice"
-      parameters:
-        - name: "deviceId"
-          in: path
-          description: "The id of the device you want to delete"
-          required: true
-          type: integer
-        - name: "device"
-          in: body
-          description: "The updated device"
-          required: true
-          schema:
-            $ref: '#/definitions/Device'
-      responses:
-        200:
-          description: "Updated successfully"
-        400:
-          description: "Invalid id supplied"
-        404:
-          description: "No device data given"
   /device/{barcode}:
     get:
       tags:
@@ -163,11 +159,51 @@ paths:
               $ref: '#/definitions/Rent'
         404:
           description: "No rents in the system"
+    delete:
+      tags:
+        - "Rent"
+      summary: "Deletes the rent with given id"
+      operationId: "deleteRent"
+      parameters:
+        - name: rent
+          in: body
+          required: true
+          description: "The rent you want to delete"
+          schema:
+            $ref: '#/definitions/Rent'
+      responses:
+        200:
+          description: "Successful operation"
+          schema:
+            $ref: '#/definitions/Rent'
+        400:
+          description: "Rent with invalid id supplied"
+        409:
+          description: "The device has been modified before the request and after the last read of the client"
+    put:
+      tags:
+        - "Rent"
+      summary: "Updates an existing rent"
+      operationId: "updateRent"
+      parameters:
+        - name: "rent"
+          in: body
+          required: true
+          description: "The updated rent data"
+          schema:
+            $ref: '#/definitions/Rent'
+      responses:
+        200:
+          description: "Successful operation"
+        400:
+          description: "Rent with invalid id supplied"
+        404:
+          description: "No rent data supplied"
   /rent/{rentId}:
     get:
       tags:
         - "Rent"
-      summary: "returns the rent with the given id"
+      summary: "Returns the rent with the given id"
       operationId: "getRent"
       parameters:
         - name: rentId
@@ -182,50 +218,6 @@ paths:
             $ref: '#/definitions/Rent'
         400:
           description: "Invalid id supplied"
-    delete:
-      tags:
-        - "Rent"
-      summary: "Deletes the rent with given id"
-      operationId: "deleteRent"
-      parameters:
-        - name: rentId
-          in: path
-          required: true
-          description: "The id of the rent you want to delete"
-          type: integer
-      responses:
-        200:
-          description: "Successful operation"
-          schema:
-            $ref: '#/definitions/Rent'
-        400:
-          description: "Invalid id supplied"
-        409:
-          description: "The device has been modified before the request and after the last read of the client"
-    put:
-      tags:
-        - "Rent"
-      summary: "Updates an existing rent"
-      operationId: "updateRent"
-      parameters:
-        - name: rentId
-          in: path
-          required: true
-          description: "The id of the rent you want to delete"
-          type: integer
-        - name: "rent"
-          in: body
-          required: true
-          description: "The updated rent data"
-          schema:
-            $ref: '#/definitions/Rent'
-      responses:
-        200:
-          description: "Successful operation"
-        400:
-          description: "Invalid id supplied"
-        404:
-          description: "No rent data supplied"
   /rent/addDevice:
     put:
       tags:
@@ -233,6 +225,12 @@ paths:
       summary: "Adds a device to a rent"
       operationId: "addDeviceToRent"
       parameters:
+        - name: "rent"
+          in: body
+          required: true
+          description: "The rent you want to add the device to"
+          schema:
+            $ref: '#/definitions/Rent'
         - name: "deviceToAdd"
           in: body
           required: true

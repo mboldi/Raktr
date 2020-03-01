@@ -21,6 +21,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+@SuppressWarnings("checkstyle:FinalClass")
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "devices")
@@ -28,7 +29,7 @@ import lombok.ToString;
 @JsonDeserialize(builder = Device.Builder.class)
 @NoArgsConstructor
 @Data
-public final class Device extends DomainAuditModel {
+public class Device extends DomainAuditModel {
 
     public static final int MAX_STATUS_RATING = 5;
     public static final int MIN_STATUS_RATING = 0;
@@ -70,7 +71,7 @@ public final class Device extends DomainAuditModel {
 
     @Min(MIN_STATUS_RATING)
     @Max(MAX_STATUS_RATING)
-    private int status;
+    private Integer status;
 
     @NotNull
     @JoinColumn

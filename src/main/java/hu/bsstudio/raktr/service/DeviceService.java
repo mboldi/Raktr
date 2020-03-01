@@ -75,6 +75,7 @@ public final class DeviceService {
         if (foundDevice == null) {
             throw new ObjectNotFoundException();
         }
+
         log.info("Device with barcode {} found: {}", barcode, foundDevice);
         return foundDevice;
     }

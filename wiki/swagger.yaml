@@ -107,7 +107,7 @@ paths:
             $ref: '#/definitions/Device'
         400:
           description: "Invalid ID supplied"
-  /device/{barcode}:
+  /device/barcode/{barcode}:
     get:
       tags:
         - "Device"

@@ -1,8 +1,10 @@
 package hu.bsstudio.raktr.service;
 
 import hu.bsstudio.raktr.dao.LocationDao;
+import hu.bsstudio.raktr.exception.ObjectNotFoundException;
 import hu.bsstudio.raktr.model.Location;
 import java.util.List;
+import javax.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -29,8 +31,14 @@ public class LocationService {
     }
 
     public final Location update(final Location locationRequest) {
-        final Location locationToUpdate = locationDao.getOne(locationRequest.getId());
-        locationToUpdate.setName(locationRequest.getName());
+        final Location locationToUpdate;
+        try {
+            locationToUpdate = locationDao.getOne(locationRequest.getId());
+            locationToUpdate.setName(locationRequest.getName());
+        } catch (EntityNotFoundException e) {
+            throw new ObjectNotFoundException();
+        }
+
         final Location updated = locationDao.save(locationToUpdate);
         log.info("Location updated in DB: {}", updated);
         return updated;

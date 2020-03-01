@@ -1,5 +1,7 @@
 package hu.bsstudio.raktr.model;
 
+import static javax.persistence.CascadeType.REFRESH;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -43,7 +45,7 @@ public class Location extends DomainAuditModel {
     @ToString.Exclude
     @Setter(AccessLevel.NONE)
     @OneToMany(targetEntity = Device.class, fetch = FetchType.EAGER,
-        cascade = javax.persistence.CascadeType.ALL, orphanRemoval = true, mappedBy = "location")
+        cascade = REFRESH, mappedBy = "location")
     private Set<Device> devices;
 
     public Location(final Builder builder) {

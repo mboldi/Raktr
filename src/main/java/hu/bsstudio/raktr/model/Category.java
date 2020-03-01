@@ -1,10 +1,11 @@
 package hu.bsstudio.raktr.model;
 
+import static javax.persistence.CascadeType.REFRESH;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.util.Set;
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -41,7 +42,7 @@ public class Category extends DomainAuditModel {
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     @Setter(AccessLevel.NONE)
-    @OneToMany(targetEntity = Device.class, cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "category")
+    @OneToMany(targetEntity = Device.class, cascade = REFRESH, fetch = FetchType.EAGER, mappedBy = "category")
     private Set<Device> devices;
 
     public Category(final Builder builder) {

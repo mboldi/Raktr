@@ -1,8 +1,10 @@
 package hu.bsstudio.raktr.service;
 
 import hu.bsstudio.raktr.dao.CategoryDao;
+import hu.bsstudio.raktr.exception.ObjectNotFoundException;
 import hu.bsstudio.raktr.model.Category;
 import java.util.List;
+import javax.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -29,8 +31,14 @@ public class CategoryService {
     }
 
     public final Category update(final Category categoryRequest) {
-        final Category categoryToUpdate = categoryDao.getOne(categoryRequest.getId());
-        categoryToUpdate.setName(categoryRequest.getName());
+        final Category categoryToUpdate;
+        try {
+            categoryToUpdate = categoryDao.getOne(categoryRequest.getId());
+            categoryToUpdate.setName(categoryRequest.getName());
+        } catch (EntityNotFoundException e) {
+            throw new ObjectNotFoundException();
+        }
+
         final Category updated = categoryDao.save(categoryToUpdate);
         log.info("Category updated in DB: {}", updated);
         return updated;

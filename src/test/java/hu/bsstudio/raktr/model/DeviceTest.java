@@ -12,6 +12,7 @@ import javax.validation.Validator;
 import org.junit.jupiter.api.Test;
 
 final class DeviceTest {
+    public static final Integer TOO_LOW_QUANTITY = 0;
     private static final Validator VALIDATOR = javax.validation.Validation.buildDefaultValidatorFactory().getValidator();
 
     private static final Long ID = 1L;
@@ -23,8 +24,9 @@ final class DeviceTest {
     private static final String BARCODE = "barcode";
     private static final Integer WEIGHT = 1000;
     private static final String LOCATION_NAME = "location";
-    private static final Integer STATUS = 5;
+    private static final DeviceStatus STATUS = DeviceStatus.GOOD;
     private static final String CATEGORY_NAME = "category";
+    public static final Integer QUANTITY = 1;
 
     private static final String OTHER_NAME = "device2";
     private static final String OTHER_MAKER = "maker2";
@@ -33,9 +35,8 @@ final class DeviceTest {
     private static final Integer OTHER_VALUE = 102;
     private static final String OTHER_BARCODE = "barcode2";
     private static final Integer OTHER_WEIGHT = 1002;
-    private static final Integer OTHER_STATUS = 4;
-    public static final int STATUS_NEGATIV = -4;
-    public static final int STATUS_TOO_BIG = 10;
+    private static final DeviceStatus OTHER_STATUS = DeviceStatus.NEEDS_REPAIR;
+    public static final Integer OTHER_QUANTITY = 1;
 
     private Device underTest;
     private Location location = Location.builder()
@@ -56,7 +57,8 @@ final class DeviceTest {
         .withWeight(WEIGHT)
         .withLocation(location)
         .withStatus(STATUS)
-        .withCategory(category);
+        .withCategory(category)
+        .withQuantity(QUANTITY);
 
     @Test
     void testConstructorAndGetters() {
@@ -77,7 +79,8 @@ final class DeviceTest {
             () -> assertEquals(WEIGHT, underTest.getWeight()),
             () -> assertEquals(STATUS, underTest.getStatus()),
             () -> assertEquals(CATEGORY_NAME, underTest.getCategory().getName()),
-            () -> assertEquals(LOCATION_NAME, underTest.getLocation().getName())
+            () -> assertEquals(LOCATION_NAME, underTest.getLocation().getName()),
+            () -> assertEquals(QUANTITY, underTest.getQuantity())
         );
     }
 
@@ -98,6 +101,7 @@ final class DeviceTest {
             () -> assertNull(underTest.getValue()),
             () -> assertNull(underTest.getBarcode()),
             () -> assertNull(underTest.getWeight()),
+            () -> assertNull(underTest.getQuantity()),
             () -> assertNull(underTest.getStatus())
         );
     }
@@ -117,31 +121,31 @@ final class DeviceTest {
     }
 
     @Test
-    void testValidationShouldFailForToSmallStatus() {
+    void testValidationShouldFailForToSmallQuantity() {
         //given
         underTest = defaultBuilder
-            .withStatus(STATUS_NEGATIV)
+            .withQuantity(TOO_LOW_QUANTITY)
             .build();
 
         //when
         Set<ConstraintViolation<Device>> violations = VALIDATOR.validate(underTest);
 
         //then
-        validationFails(violations, "must be greater than or equal to 0", "status");
+        validationFails(violations, "must be greater than or equal to 1", "quantity");
     }
 
     @Test
-    void testValidationShouldFailForToBigStatus() {
+    void testValidationShouldFailForNullQuantity() {
         //given
         underTest = defaultBuilder
-            .withStatus(STATUS_TOO_BIG)
+            .withQuantity(null)
             .build();
 
         //when
         Set<ConstraintViolation<Device>> violations = VALIDATOR.validate(underTest);
 
         //then
-        validationFails(violations, "must be less than or equal to 5", "status");
+        validationFails(violations, "must not be null", "quantity");
     }
 
     @Test
@@ -275,7 +279,8 @@ final class DeviceTest {
             () -> assertEquals(VALUE, underTest.getValue()),
             () -> assertEquals(BARCODE, underTest.getBarcode()),
             () -> assertEquals(WEIGHT, underTest.getWeight()),
-            () -> assertEquals(STATUS, underTest.getStatus())
+            () -> assertEquals(STATUS, underTest.getStatus()),
+            () -> assertEquals(QUANTITY, underTest.getQuantity())
         );
     }
 
@@ -298,7 +303,8 @@ final class DeviceTest {
             () -> assertEquals(VALUE, underTest.getValue()),
             () -> assertEquals(BARCODE, underTest.getBarcode()),
             () -> assertEquals(WEIGHT, underTest.getWeight()),
-            () -> assertEquals(STATUS, underTest.getStatus())
+            () -> assertEquals(STATUS, underTest.getStatus()),
+            () -> assertEquals(QUANTITY, underTest.getQuantity())
         );
     }
 
@@ -321,7 +327,8 @@ final class DeviceTest {
             () -> assertEquals(VALUE, underTest.getValue()),
             () -> assertEquals(BARCODE, underTest.getBarcode()),
             () -> assertEquals(WEIGHT, underTest.getWeight()),
-            () -> assertEquals(STATUS, underTest.getStatus())
+            () -> assertEquals(STATUS, underTest.getStatus()),
+            () -> assertEquals(QUANTITY, underTest.getQuantity())
         );
     }
 
@@ -344,7 +351,8 @@ final class DeviceTest {
             () -> assertEquals(VALUE, underTest.getValue()),
             () -> assertEquals(BARCODE, underTest.getBarcode()),
             () -> assertEquals(WEIGHT, underTest.getWeight()),
-            () -> assertEquals(STATUS, underTest.getStatus())
+            () -> assertEquals(STATUS, underTest.getStatus()),
+            () -> assertEquals(QUANTITY, underTest.getQuantity())
         );
     }
 
@@ -367,7 +375,8 @@ final class DeviceTest {
             () -> assertEquals(OTHER_VALUE, underTest.getValue()),
             () -> assertEquals(BARCODE, underTest.getBarcode()),
             () -> assertEquals(WEIGHT, underTest.getWeight()),
-            () -> assertEquals(STATUS, underTest.getStatus())
+            () -> assertEquals(STATUS, underTest.getStatus()),
+            () -> assertEquals(QUANTITY, underTest.getQuantity())
         );
     }
 
@@ -390,7 +399,8 @@ final class DeviceTest {
             () -> assertEquals(VALUE, underTest.getValue()),
             () -> assertEquals(OTHER_BARCODE, underTest.getBarcode()),
             () -> assertEquals(WEIGHT, underTest.getWeight()),
-            () -> assertEquals(STATUS, underTest.getStatus())
+            () -> assertEquals(STATUS, underTest.getStatus()),
+            () -> assertEquals(QUANTITY, underTest.getQuantity())
         );
     }
 
@@ -413,7 +423,8 @@ final class DeviceTest {
             () -> assertEquals(VALUE, underTest.getValue()),
             () -> assertEquals(BARCODE, underTest.getBarcode()),
             () -> assertEquals(OTHER_WEIGHT, underTest.getWeight()),
-            () -> assertEquals(STATUS, underTest.getStatus())
+            () -> assertEquals(STATUS, underTest.getStatus()),
+            () -> assertEquals(QUANTITY, underTest.getQuantity())
         );
     }
 
@@ -436,7 +447,32 @@ final class DeviceTest {
             () -> assertEquals(VALUE, underTest.getValue()),
             () -> assertEquals(BARCODE, underTest.getBarcode()),
             () -> assertEquals(WEIGHT, underTest.getWeight()),
-            () -> assertEquals(OTHER_STATUS, underTest.getStatus())
+            () -> assertEquals(OTHER_STATUS, underTest.getStatus()),
+            () -> assertEquals(QUANTITY, underTest.getQuantity())
+        );
+    }
+
+    @Test
+    void testSetQuantity() {
+        //given
+        underTest = defaultBuilder
+            .build();
+
+        //when
+        underTest.setQuantity(OTHER_QUANTITY);
+
+        //then
+        assertAll(
+            () -> assertEquals(ID, underTest.getId()),
+            () -> assertEquals(NAME, underTest.getName()),
+            () -> assertEquals(MAKER, underTest.getMaker()),
+            () -> assertEquals(TYPE, underTest.getType()),
+            () -> assertEquals(SERIAL, underTest.getSerial()),
+            () -> assertEquals(VALUE, underTest.getValue()),
+            () -> assertEquals(BARCODE, underTest.getBarcode()),
+            () -> assertEquals(WEIGHT, underTest.getWeight()),
+            () -> assertEquals(STATUS, underTest.getStatus()),
+            () -> assertEquals(OTHER_QUANTITY, underTest.getQuantity())
         );
     }
 

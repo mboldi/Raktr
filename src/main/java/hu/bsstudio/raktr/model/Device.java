@@ -10,7 +10,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -69,9 +68,8 @@ public class Device extends DomainAuditModel {
     @ToString.Exclude
     private Location location;
 
-    @Min(MIN_STATUS_RATING)
-    @Max(MAX_STATUS_RATING)
-    private Integer status;
+    @NotNull
+    private DeviceStatus status;
 
     @NotNull
     @JoinColumn
@@ -80,6 +78,10 @@ public class Device extends DomainAuditModel {
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private Category category;
+
+    @NotNull
+    @Min(1)
+    private Integer quantity;
 
     private Device(final Builder builder) {
         this.id = builder.id;
@@ -93,6 +95,7 @@ public class Device extends DomainAuditModel {
         this.location = builder.location;
         this.status = builder.status;
         this.category = builder.category;
+        this.quantity = builder.quantity;
     }
 
     public static Builder builder() {
@@ -110,8 +113,9 @@ public class Device extends DomainAuditModel {
         private String barcode;
         private Integer weight;
         private Location location;
-        private Integer status;
+        private DeviceStatus status;
         private Category category;
+        private Integer quantity;
 
         public Device.Builder withId(final Long id) {
             this.id = id;
@@ -158,13 +162,18 @@ public class Device extends DomainAuditModel {
             return this;
         }
 
-        public Builder withStatus(final Integer status) {
+        public Builder withStatus(final DeviceStatus status) {
             this.status = status;
             return this;
         }
 
         public Builder withCategory(final Category category) {
             this.category = category;
+            return this;
+        }
+
+        public Builder withQuantity(final Integer quantity) {
+            this.quantity = quantity;
             return this;
         }
 

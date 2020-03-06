@@ -425,9 +425,16 @@ definitions:
         $ref: '#/definitions/Location'
       status:
         description: "The status of the device on a scale from 1 to 5"
-        type: integer
+        type: string
+        enum:
+          - "GOOD"
+          - "NEEDS_REPAIR"
+          - "SCRAPPED"
       category:
         $ref: '#/definitions/Category'
+      quantity:
+        description: "The amount there is of a device"
+        type: integer
 
   CompositeDevice:
     allOf:

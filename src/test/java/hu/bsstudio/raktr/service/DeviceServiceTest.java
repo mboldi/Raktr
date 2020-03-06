@@ -15,6 +15,7 @@ import hu.bsstudio.raktr.dao.DeviceDao;
 import hu.bsstudio.raktr.exception.ObjectNotFoundException;
 import hu.bsstudio.raktr.model.Category;
 import hu.bsstudio.raktr.model.Device;
+import hu.bsstudio.raktr.model.DeviceStatus;
 import hu.bsstudio.raktr.model.Location;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,8 +36,9 @@ final class DeviceServiceTest {
     private static final String BARCODE = "barcode";
     private static final Integer WEIGHT = 1000;
     private static final String LOCATION_NAME = "location";
-    private static final Integer STATUS = 5;
+    private static final DeviceStatus STATUS = DeviceStatus.GOOD;
     private static final String CATEGORY_NAME = "category";
+    public static final int QUANTITY = 1;
 
     private static final String OTHER_NAME = "device2";
     private static final String OTHER_MAKER = "maker2";
@@ -45,7 +47,8 @@ final class DeviceServiceTest {
     private static final Integer OTHER_VALUE = 102;
     private static final String OTHER_BARCODE = "barcode2";
     private static final Integer OTHER_WEIGHT = 1002;
-    private static final Integer OTHER_STATUS = 4;
+    private static final DeviceStatus OTHER_STATUS = DeviceStatus.NEEDS_REPAIR;
+    public static final int OTHER_QUANTITY = 2;
 
     @Mock
     private DeviceDao mockDeviceDao;
@@ -72,6 +75,7 @@ final class DeviceServiceTest {
         given(deviceRequest.getBarcode()).willReturn(BARCODE);
         given(deviceRequest.getWeight()).willReturn(WEIGHT);
         given(deviceRequest.getStatus()).willReturn(STATUS);
+        given(deviceRequest.getQuantity()).willReturn(QUANTITY);
 
         location = Location.builder()
             .withName(LOCATION_NAME)
@@ -90,7 +94,8 @@ final class DeviceServiceTest {
             .withWeight(WEIGHT)
             .withStatus(STATUS)
             .withLocation(location)
-            .withCategory(category);
+            .withCategory(category)
+            .withQuantity(QUANTITY);
 
         device = spy(defaultBuilder.build());
     }
@@ -114,7 +119,8 @@ final class DeviceServiceTest {
             () -> assertEquals(deviceRequest.getValue(), saved.getValue()),
             () -> assertEquals(deviceRequest.getBarcode(), saved.getBarcode()),
             () -> assertEquals(deviceRequest.getWeight(), saved.getWeight()),
-            () -> assertEquals(deviceRequest.getStatus(), saved.getStatus())
+            () -> assertEquals(deviceRequest.getStatus(), saved.getStatus()),
+            () -> assertEquals(deviceRequest.getQuantity(), saved.getQuantity())
         );
     }
 
@@ -130,6 +136,7 @@ final class DeviceServiceTest {
             .withBarcode(BARCODE)
             .withWeight(WEIGHT)
             .withStatus(STATUS)
+            .withQuantity(QUANTITY)
             .build());
 
         final Device updatedDevice = Device.builder()
@@ -141,6 +148,7 @@ final class DeviceServiceTest {
             .withBarcode(OTHER_BARCODE)
             .withWeight(OTHER_WEIGHT)
             .withStatus(OTHER_STATUS)
+            .withQuantity(OTHER_QUANTITY)
             .build();
 
         given(mockDeviceDao.save(device)).willReturn(updatedDevice);
@@ -158,6 +166,7 @@ final class DeviceServiceTest {
         verify(deviceRequest).getBarcode();
         verify(deviceRequest).getWeight();
         verify(deviceRequest).getStatus();
+        verify(deviceRequest).getQuantity();
 
         verify(device).setName(any());
         verify(device).setMaker(any());
@@ -167,6 +176,7 @@ final class DeviceServiceTest {
         verify(device).setBarcode(any());
         verify(device).setWeight(any());
         verify(device).setStatus(any());
+        verify(device).setQuantity(any());
 
         assertAll(
             () -> assertNotNull(updated),
@@ -177,7 +187,8 @@ final class DeviceServiceTest {
             () -> assertEquals(OTHER_VALUE, updated.getValue()),
             () -> assertEquals(OTHER_BARCODE, updated.getBarcode()),
             () -> assertEquals(OTHER_WEIGHT, updated.getWeight()),
-            () -> assertEquals(OTHER_STATUS, updated.getStatus())
+            () -> assertEquals(OTHER_STATUS, updated.getStatus()),
+            () -> assertEquals(OTHER_QUANTITY, updated.getQuantity())
         );
     }
 

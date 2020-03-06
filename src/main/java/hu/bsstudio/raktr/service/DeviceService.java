@@ -52,6 +52,7 @@ public final class DeviceService {
         deviceToUpdate.setStatus(deviceRequest.getStatus());
         deviceToUpdate.setValue(deviceRequest.getValue());
         deviceToUpdate.setWeight(deviceRequest.getWeight());
+        deviceToUpdate.setQuantity(deviceRequest.getQuantity());
 
         Device saved = deviceDao.save(deviceToUpdate);
         log.info("Device updated in DB: {}", saved);

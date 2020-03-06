@@ -4,11 +4,10 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.CALLS_REAL_METHODS;
 import static org.mockito.Mockito.mock;
 
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class DomainAuditModelTest {
+public final class DomainAuditModelTest {
 
     private static DomainAuditModel mockDomainAuditModel;
 

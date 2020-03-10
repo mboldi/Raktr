@@ -490,7 +490,7 @@ definitions:
           - "Stúdiós-jelölt"
           - "Stúdiós"
 
-  DeviceBackStatus:
+  DeviceRentItem:
     description: "An object that is used to track inside a rent if a device arrived back or not"
     type: object
     required:
@@ -499,11 +499,14 @@ definitions:
     properties:
       device:
         $ref: '#/definitions/Device'
-      status:
+      backStatus:
         type: string
         enum:
-          - "out"
-          - "back"
+          - "OUT"
+          - "BACK"
+      outQuantity:
+        type: integer
+        description: "Specifies how many of a certain device will be rented"
 
   Rent:
     type: object
@@ -533,4 +536,4 @@ definitions:
       devices:
         type: array
         items:
-          $ref: '#/definitions/DeviceBackStatus'
+          $ref: '#/definitions/DeviceRentItem'

@@ -30,8 +30,6 @@ import lombok.ToString;
 @Data
 public class Device extends DomainAuditModel {
 
-    public static final int MAX_STATUS_RATING = 5;
-    public static final int MIN_STATUS_RATING = 0;
     @Id
     @Setter(AccessLevel.NONE)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -117,7 +115,7 @@ public class Device extends DomainAuditModel {
         private Category category;
         private Integer quantity;
 
-        public Device.Builder withId(final Long id) {
+        public Builder withId(final Long id) {
             this.id = id;
             return this;
         }

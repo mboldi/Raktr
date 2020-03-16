@@ -218,25 +218,23 @@ paths:
             $ref: '#/definitions/Rent'
         400:
           description: "Invalid id supplied"
-  /rent/addDevice:
     put:
       tags:
         - "Rent"
-      summary: "Adds a device to a rent"
+      summary: "Adds a device to a rent, if device is in the rent updates it. If 0 quantity is given, the device is removed from the rent"
       operationId: "addDeviceToRent"
       parameters:
-        - name: "rent"
-          in: body
+        - name: "rentId"
+          in: path
           required: true
-          description: "The rent you want to add the device to"
-          schema:
-            $ref: '#/definitions/Rent'
+          description: "The id of the rent you want to add the device to"
+          type: integer
         - name: "deviceToAdd"
           in: body
           required: true
-          description: "The device you want to add to the rent"
+          description: "The device you want to add to the rent or update"
           schema:
-            $ref: '#/definitions/Device'
+            $ref: '#/definitions/DeviceRentItem'
       responses:
         200:
           description: "Successful operation"
@@ -244,6 +242,8 @@ paths:
             $ref: '#/definitions/Rent'
         400:
           description: "Invalid id supplied"
+        409:
+          description: "Given amount is not available of the given device"
 
   /category:
     post:
@@ -421,6 +421,8 @@ definitions:
         example: "B-320-01"
       weight:
         type: integer
+        default: 1000
+        description: "The weight of the device in grams"
       location:
         $ref: '#/definitions/Location'
       status:
@@ -435,6 +437,7 @@ definitions:
       quantity:
         description: "The amount there is of a device"
         type: integer
+        default: 1
 
   CompositeDevice:
     allOf:
@@ -506,6 +509,7 @@ definitions:
           - "BACK"
       outQuantity:
         type: integer
+        default: 1
         description: "Specifies how many of a certain device will be rented"
 
   Rent:

@@ -49,7 +49,7 @@ public class Rent extends DomainAuditModel {
     @NotNull
     private String actBackDate;
 
-    @OneToMany(targetEntity = DeviceRentItem.class, cascade = REFRESH, fetch = EAGER)
+    @OneToMany(targetEntity = DeviceRentItem.class, cascade = REFRESH, fetch = EAGER, orphanRemoval = true)
     @Setter(AccessLevel.NONE)
     private List<DeviceRentItem> devices;
 

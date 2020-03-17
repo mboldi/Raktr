@@ -51,7 +51,7 @@ public class Rent extends DomainAuditModel {
 
     @OneToMany(targetEntity = DeviceRentItem.class, cascade = REFRESH, fetch = EAGER, orphanRemoval = true)
     @Setter(AccessLevel.NONE)
-    private List<DeviceRentItem> devices;
+    private List<DeviceRentItem> rentItems;
 
     public Rent(final Builder builder) {
         this.id = builder.id;
@@ -59,12 +59,22 @@ public class Rent extends DomainAuditModel {
         this.outDate = builder.outDate;
         this.expBackDate = builder.expBackDate;
         this.actBackDate = builder.actBackDate;
-        this.devices = builder.devices;
+        this.rentItems = builder.devices;
         this.issuer = builder.issuer;
     }
 
     public static Builder builder() {
         return new Builder();
+    }
+
+    public final DeviceRentItem getRentItemOfDevice(final Device deviceToFind) {
+        for (DeviceRentItem rentItem : rentItems) {
+            if (rentItem.getDevice().getId().equals(deviceToFind.getId())) {
+                return rentItem;
+            }
+        }
+
+        return null;
     }
 
     @SuppressWarnings("hiddenfield")

@@ -152,7 +152,7 @@ final class DeviceServiceTest {
             .build();
 
         given(mockDeviceDao.save(device)).willReturn(updatedDevice);
-        given(mockDeviceDao.getOne(any())).willReturn(device);
+        given(mockDeviceDao.findById(any())).willReturn(java.util.Optional.ofNullable(device));
 
         //when
         final Device updated = underTest.update(deviceRequest);

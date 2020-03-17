@@ -40,6 +40,6 @@ public final class RentController {
     @PutMapping("/{rentId}")
     public Rent addDeviceToRent(@PathVariable final Long rentId, @RequestBody @Valid final DeviceRentItem deviceRentItemRequest) {
         log.info("Incoming request to add device {} to rent with id {}", deviceRentItemRequest, rentId);
-        return rentService.addDeviceToRent(rentId, deviceRentItemRequest);
+        return rentService.updateDeviceInRent(rentId, deviceRentItemRequest);
     }
 }

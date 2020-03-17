@@ -56,9 +56,10 @@ final class RentServiceTest {
         doReturn(new ArrayList<DeviceRentItem>()).when(mockDeviceRentItemDao).findAll();
         doReturn(device).when(mockDeviceDao).getOne(any());
         doReturn(1).when(mockDeviceRentItemRequest).getOutQuantity();
+        doReturn(device).when(mockDeviceRentItemRequest).getDevice();
 
         //when
-        boolean isAvailable = underTest.checkIfAvailable(mockDeviceRentItemRequest);
+        boolean isAvailable = underTest.checkIfAvailable(mockDeviceRentItemRequest, null);
 
         //then
         assertTrue(isAvailable);
@@ -75,9 +76,10 @@ final class RentServiceTest {
         doReturn(device).when(mockDeviceDao).getOne(any());
         doReturn(new ArrayList<DeviceRentItem>()).when(mockDeviceRentItemDao).findAll();
         doReturn(2).when(mockDeviceRentItemRequest).getOutQuantity();
+        doReturn(device).when(mockDeviceRentItemRequest).getDevice();
 
         //when
-        boolean isAvailable = underTest.checkIfAvailable(mockDeviceRentItemRequest);
+        boolean isAvailable = underTest.checkIfAvailable(mockDeviceRentItemRequest, null);
 
         //then
         assertFalse(isAvailable);
@@ -102,11 +104,9 @@ final class RentServiceTest {
 
         doReturn(device).when(mockDeviceDao).getOne(any());
         doReturn(deviceRentItems).when(mockDeviceRentItemDao).findAll();
-        doReturn(REQUEST_ID).when(mockDeviceRentItemRequest).getId();
-        doReturn(1).when(mockDeviceRentItemRequest).getOutQuantity();
 
         //when
-        boolean isAvailable = underTest.checkIfAvailable(mockDeviceRentItemRequest);
+        boolean isAvailable = underTest.checkIfAvailable(rentItem, null);
 
         //then
         assertFalse(isAvailable);
@@ -131,11 +131,9 @@ final class RentServiceTest {
 
         doReturn(device).when(mockDeviceDao).getOne(any());
         doReturn(deviceRentItems).when(mockDeviceRentItemDao).findAll();
-        doReturn(REQUEST_ID).when(mockDeviceRentItemRequest).getId();
-        doReturn(1).when(mockDeviceRentItemRequest).getOutQuantity();
 
         //when
-        boolean isAvailable = underTest.checkIfAvailable(mockDeviceRentItemRequest);
+        boolean isAvailable = underTest.checkIfAvailable(rentItem, null);
 
         //then
         assertTrue(isAvailable);
@@ -160,11 +158,9 @@ final class RentServiceTest {
 
         doReturn(device).when(mockDeviceDao).getOne(any());
         doReturn(deviceRentItems).when(mockDeviceRentItemDao).findAll();
-        doReturn(REQUEST_ID).when(mockDeviceRentItemRequest).getId();
-        doReturn(1).when(mockDeviceRentItemRequest).getOutQuantity();
 
         //when
-        boolean isAvailable = underTest.checkIfAvailable(mockDeviceRentItemRequest);
+        boolean isAvailable = underTest.checkIfAvailable(rentItem, null);
 
         //then
         assertTrue(isAvailable);

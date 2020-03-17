@@ -38,9 +38,9 @@ public final class DeviceService {
 
     public Device update(final Device deviceRequest) {
         Device deviceToUpdate;
-        try {
-            deviceToUpdate = deviceDao.getOne(deviceRequest.getId());
-        } catch (JpaObjectRetrievalFailureException e) {
+        deviceToUpdate = deviceDao.findById(deviceRequest.getId()).orElse(null);
+
+        if (deviceToUpdate == null) {
             throw new ObjectNotFoundException();
         }
 

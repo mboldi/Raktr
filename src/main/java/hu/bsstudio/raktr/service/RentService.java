@@ -4,6 +4,7 @@ import hu.bsstudio.raktr.dao.DeviceDao;
 import hu.bsstudio.raktr.dao.DeviceRentItemDao;
 import hu.bsstudio.raktr.dao.RentDao;
 import hu.bsstudio.raktr.exception.NotAvailableQuantityException;
+import hu.bsstudio.raktr.exception.ObjectNotFoundException;
 import hu.bsstudio.raktr.model.BackStatus;
 import hu.bsstudio.raktr.model.DeviceRentItem;
 import hu.bsstudio.raktr.model.Rent;
@@ -25,21 +26,24 @@ public class RentService {
         this.deviceDao = deviceDao;
     }
 
-    public final boolean checkIfAvailable(final DeviceRentItem device) {
-        Integer maxAvailableQuantity = deviceDao.getOne(device.getId()).getQuantity();
+    public final boolean checkIfAvailable(final DeviceRentItem deviceRentItem, final DeviceRentItem rentItemToUpdate) {
+        Integer maxAvailableQuantity = deviceDao.getOne(deviceRentItem.getDevice().getId()).getQuantity();
         List<DeviceRentItem> deviceRentItems = deviceRentItemDao.findAll();
         Integer sumOut = 0;
 
-        if (device.getOutQuantity() > maxAvailableQuantity) {
+        if (deviceRentItem.getOutQuantity() > maxAvailableQuantity) {
             return false;
         }
 
         for (DeviceRentItem rentItem : deviceRentItems) {
-            if (rentItem.getBackStatus().equals(BackStatus.OUT) && rentItem.getDevice().getId().equals(device.getId())) {
+            if (rentItem.getBackStatus().equals(BackStatus.OUT)
+                && rentItem.getDevice().getId().equals(deviceRentItem.getDevice().getId())
+                && (rentItemToUpdate == null || !rentItem.getId().equals(rentItemToUpdate.getId()))) {
                 sumOut += rentItem.getOutQuantity();
-                if (sumOut + device.getOutQuantity() > maxAvailableQuantity) {
-                    return false;
-                }
+            }
+
+            if (sumOut + deviceRentItem.getOutQuantity() > maxAvailableQuantity) {
+                return false;
             }
         }
 
@@ -52,25 +56,36 @@ public class RentService {
         return saved;
     }
 
-    public final Rent addDeviceToRent(final Long rentId, final DeviceRentItem newDevice) {
-        Rent rentToUpdate = rentDao.getOne(rentId);
+    public final Rent updateDeviceInRent(final Long rentId, final DeviceRentItem newDeviceRentItem) {
+        Rent rentToUpdate = rentDao.findById(rentId).orElse(null);
         DeviceRentItem savedDeviceItem;
+        DeviceRentItem rentItemToUpdate;
 
-        if (!checkIfAvailable(newDevice)) {
+        if (rentToUpdate == null) {
+            throw new ObjectNotFoundException();
+        }
+
+        rentItemToUpdate = rentToUpdate.getRentItemOfDevice(newDeviceRentItem.getDevice());
+
+        if (!checkIfAvailable(newDeviceRentItem, rentItemToUpdate)) {
             throw new NotAvailableQuantityException();
         }
 
-        if (rentToUpdate.getDevices().contains(newDevice)) {
-            if (newDevice.getOutQuantity() == 0) {
-                rentToUpdate.getDevices().remove(newDevice);
+        if (rentItemToUpdate != null) {
+            if (newDeviceRentItem.getOutQuantity() == 0) {
+                rentToUpdate.getRentItems().remove(rentItemToUpdate);
+                deviceRentItemDao.delete(rentItemToUpdate);
             } else {
-                DeviceRentItem deviceRentItemToModify = deviceRentItemDao.getOne(newDevice.getId());
-                deviceRentItemToModify.setOutQuantity(newDevice.getOutQuantity());
-                deviceRentItemDao.save(deviceRentItemToModify);
+                rentItemToUpdate.setOutQuantity(newDeviceRentItem.getOutQuantity());
+                rentItemToUpdate.setBackStatus(newDeviceRentItem.getBackStatus());
+
+                deviceRentItemDao.save(rentItemToUpdate);
             }
         } else {
-            savedDeviceItem = deviceRentItemDao.save(newDevice);
-            rentToUpdate.getDevices().add(savedDeviceItem);
+            if (newDeviceRentItem.getOutQuantity() != 0) {
+                savedDeviceItem = deviceRentItemDao.save(newDeviceRentItem);
+                rentToUpdate.getRentItems().add(savedDeviceItem);
+            }
         }
 
         Rent saved = rentDao.save(rentToUpdate);

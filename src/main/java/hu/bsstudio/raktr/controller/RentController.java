@@ -6,6 +6,7 @@ import hu.bsstudio.raktr.service.RentService;
 import java.util.List;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -42,4 +43,17 @@ public final class RentController {
         log.info("Incoming request to add device {} to rent with id {}", deviceRentItemRequest, rentId);
         return rentService.updateDeviceInRent(rentId, deviceRentItemRequest);
     }
+
+    @PutMapping
+    public Rent updateRent(@RequestBody @Valid final Rent rentRequest) {
+        log.info("Incoming request to update rent: {}", rentRequest);
+        return rentService.update(rentRequest);
+    }
+
+    @DeleteMapping
+    public Rent deleteRent(@RequestBody @Valid final Rent rentRequest) {
+        log.info("Incoming request to delete rent {}", rentRequest);
+        return rentService.delete(rentRequest);
+    }
+
 }

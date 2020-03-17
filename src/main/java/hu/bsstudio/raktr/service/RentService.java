@@ -98,4 +98,28 @@ public class RentService {
         log.info("Rents fetched from DB: {}", all);
         return all;
     }
+
+    public final Rent update(final Rent rentRequest) {
+        Rent rentToUpdate = rentDao.findById(rentRequest.getId()).orElse(null);
+
+        if (rentToUpdate == null) {
+            throw new ObjectNotFoundException();
+        }
+
+        rentToUpdate.setDestination(rentRequest.getDestination());
+        rentToUpdate.setIssuer(rentRequest.getIssuer());
+        rentToUpdate.setOutDate(rentRequest.getOutDate());
+        rentToUpdate.setExpBackDate(rentRequest.getExpBackDate());
+        rentToUpdate.setActBackDate(rentRequest.getActBackDate());
+
+        Rent saved = rentDao.save(rentToUpdate);
+        log.info("Rent updated: {}", saved);
+        return saved;
+    }
+
+    public final Rent delete(final Rent rentRequest) {
+        rentDao.delete(rentRequest);
+        log.info("Rent deleted: {}", rentRequest);
+        return rentRequest;
+    }
 }

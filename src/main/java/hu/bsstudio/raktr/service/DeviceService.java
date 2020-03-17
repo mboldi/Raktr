@@ -37,8 +37,7 @@ public final class DeviceService {
     }
 
     public Device update(final Device deviceRequest) {
-        Device deviceToUpdate;
-        deviceToUpdate = deviceDao.findById(deviceRequest.getId()).orElse(null);
+        Device deviceToUpdate = deviceDao.findById(deviceRequest.getId()).orElse(null);
 
         if (deviceToUpdate == null) {
             throw new ObjectNotFoundException();

@@ -183,7 +183,7 @@ paths:
     put:
       tags:
         - "Rent"
-      summary: "Updates an existing rent"
+      summary: "Updates an existing rent, if the actBackDate field is not empty, the rent is considered to be back."
       operationId: "updateRent"
       parameters:
         - name: "rent"
@@ -200,24 +200,6 @@ paths:
         404:
           description: "No rent data supplied"
   /rent/{rentId}:
-    get:
-      tags:
-        - "Rent"
-      summary: "Returns the rent with the given id"
-      operationId: "getRent"
-      parameters:
-        - name: rentId
-          in: path
-          required: true
-          description: "The id of the rent you want to get"
-          type: integer
-      responses:
-        200:
-          description: "Successful operation"
-          schema:
-            $ref: '#/definitions/Rent'
-        400:
-          description: "Invalid id supplied"
     put:
       tags:
         - "Rent"

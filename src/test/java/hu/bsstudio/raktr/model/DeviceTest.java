@@ -476,7 +476,6 @@ final class DeviceTest {
         );
     }
 
-
     private <T> void validationFails(final Set<ConstraintViolation<T>> violations, final String expectedMessage, final String expectedProperty) {
         assertThat(violations.size(), is(1));
         ConstraintViolation<T> violation = violations.stream().findFirst().get();

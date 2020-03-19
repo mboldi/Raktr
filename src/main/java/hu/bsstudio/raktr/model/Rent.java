@@ -59,7 +59,7 @@ public class Rent extends DomainAuditModel {
         this.outDate = builder.outDate;
         this.expBackDate = builder.expBackDate;
         this.actBackDate = builder.actBackDate;
-        this.rentItems = builder.devices;
+        this.rentItems = builder.rentItems;
         this.issuer = builder.issuer;
     }
 
@@ -86,7 +86,7 @@ public class Rent extends DomainAuditModel {
         private String outDate;
         private String expBackDate;
         private String actBackDate;
-        private List<DeviceRentItem> devices;
+        private List<DeviceRentItem> rentItems;
 
         public Builder withId(final Long id) {
             this.id = id;
@@ -118,8 +118,8 @@ public class Rent extends DomainAuditModel {
             return this;
         }
 
-        public Builder withDevices(final List<DeviceRentItem> devices) {
-            this.devices = devices;
+        public Builder withRentItems(final List<DeviceRentItem> rentItems) {
+            this.rentItems = rentItems;
             return this;
         }
 

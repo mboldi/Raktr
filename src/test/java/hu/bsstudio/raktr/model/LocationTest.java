@@ -1,19 +1,18 @@
 package hu.bsstudio.raktr.model;
 
-import org.junit.jupiter.api.Test;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
+import java.util.Set;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
+import org.junit.jupiter.api.Test;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
-
-import java.util.Set;
-
-import static org.junit.jupiter.api.Assertions.*;
-
-public class LocationTest {
+final class LocationTest {
 
     private static final Validator VALIDATOR = Validation.buildDefaultValidatorFactory().getValidator();
 
@@ -21,22 +20,22 @@ public class LocationTest {
     private static final String NAME2 = "location2";
 
     private Location underTest;
-/*
+
     @Test
     void testConstructorAndGetters() {
         //given
 
         //when
         underTest = Location.builder()
-                .withName(NAME)
-                .build();
+            .withName(NAME)
+            .build();
 
         //then
         assertAll(
-                () -> assertEquals(NAME, underTest.getName()),
-                () -> assertNull(underTest.getDevices())
+            () -> assertEquals(NAME, underTest.getName()),
+            () -> assertNull(underTest.getDevices())
         );
-    }*/
+    }
 
     @Test
     void noArgsConstructor() {
@@ -54,7 +53,7 @@ public class LocationTest {
     void testValidationShouldFailForMissingName() {
         //given
         underTest = Location.builder()
-                .build();
+            .build();
 
         //when
         final Set<ConstraintViolation<Location>> violations = VALIDATOR.validate(underTest);
@@ -67,11 +66,11 @@ public class LocationTest {
     }
 
     @Test
-    void testSetName(){
+    void testSetName() {
         //given
         underTest = Location.builder()
-                .withName(NAME)
-                .build();
+            .withName(NAME)
+            .build();
 
         //when
         underTest.setName(NAME2);

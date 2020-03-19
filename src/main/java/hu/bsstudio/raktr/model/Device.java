@@ -2,14 +2,25 @@ package hu.bsstudio.raktr.model;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import lombok.*;
-
-import javax.persistence.*;
-import javax.validation.constraints.Max;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
+@SuppressWarnings("checkstyle:FinalClass")
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "devices")
@@ -34,32 +45,44 @@ public class Device extends DomainAuditModel {
     private String type;
 
     @NotNull
+    @Column(unique = true)
     private String serial;
 
     @NotNull
     private Integer value;
 
     @NotNull
+    @Column(unique = true)
     private String barcode;
 
     @Min(0)
     private Integer weight;
-/*
-    @NotNull
-    @ManyToOne
-    @JoinColumn
-    private Location location;*/
 
-    @Min(0)
-    @Max(5)
-    private int status;
-/*
     @NotNull
     @ManyToOne
     @JoinColumn
+    @Setter(AccessLevel.NONE)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private Location location;
+
+    @NotNull
+    private DeviceStatus status;
+
+    @NotNull
+    @JoinColumn
+    @ManyToOne
+    @Setter(AccessLevel.NONE)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private Category category;
-*/
+
+    @NotNull
+    @Min(1)
+    private Integer quantity;
+
     private Device(final Builder builder) {
+        this.id = builder.id;
         this.name = builder.name;
         this.maker = builder.maker;
         this.type = builder.type;
@@ -67,9 +90,10 @@ public class Device extends DomainAuditModel {
         this.value = builder.value;
         this.barcode = builder.barcode;
         this.weight = builder.weight;
-        //this.location = builder.location;
+        this.location = builder.location;
         this.status = builder.status;
-        //this.category = builder.category;
+        this.category = builder.category;
+        this.quantity = builder.quantity;
     }
 
     public static Builder builder() {
@@ -78,6 +102,7 @@ public class Device extends DomainAuditModel {
 
     @SuppressWarnings("hiddenfield")
     public static final class Builder {
+        private Long id;
         private String name;
         private String maker;
         private String type;
@@ -85,9 +110,15 @@ public class Device extends DomainAuditModel {
         private Integer value;
         private String barcode;
         private Integer weight;
-        //private Location location;
-        private Integer status;
-        //private Category category;
+        private Location location;
+        private DeviceStatus status;
+        private Category category;
+        private Integer quantity;
+
+        public Builder withId(final Long id) {
+            this.id = id;
+            return this;
+        }
 
         public Builder withName(final String name) {
             this.name = name;
@@ -123,21 +154,26 @@ public class Device extends DomainAuditModel {
             this.weight = weight;
             return this;
         }
-/*
+
         public Builder withLocation(final Location location) {
             this.location = location;
             return this;
-        }*/
+        }
 
-        public Builder withStatus(final Integer status) {
+        public Builder withStatus(final DeviceStatus status) {
             this.status = status;
             return this;
         }
-/*
+
         public Builder withCategory(final Category category) {
             this.category = category;
             return this;
-        }*/
+        }
+
+        public Builder withQuantity(final Integer quantity) {
+            this.quantity = quantity;
+            return this;
+        }
 
         public Device build() {
             return new Device(this);

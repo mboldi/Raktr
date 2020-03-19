@@ -26,7 +26,8 @@ public class RentService {
         this.deviceDao = deviceDao;
     }
 
-    public final boolean checkIfAvailable(final DeviceRentItem deviceRentItem, final DeviceRentItem rentItemToUpdate) {
+    @SuppressWarnings("checkstyle:DesignForExtension")
+    public boolean checkIfAvailable(final DeviceRentItem deviceRentItem, final DeviceRentItem rentItemToUpdate) {
         Integer maxAvailableQuantity = deviceDao.getOne(deviceRentItem.getDevice().getId()).getQuantity();
         List<DeviceRentItem> deviceRentItems = deviceRentItemDao.findAll();
         Integer sumOut = 0;
@@ -121,5 +122,17 @@ public class RentService {
         rentDao.delete(rentRequest);
         log.info("Rent deleted: {}", rentRequest);
         return rentRequest;
+    }
+
+    public final Rent getById(final Long rentId) {
+        Rent foundRent = rentDao.findById(rentId).orElse(null);
+
+        if (foundRent == null) {
+            log.error("Rent not found with ID {}", rentId);
+            throw new ObjectNotFoundException();
+        }
+
+        log.info("Rent found: {}", foundRent);
+        return foundRent;
     }
 }

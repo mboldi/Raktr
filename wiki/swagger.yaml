@@ -132,6 +132,7 @@ paths:
       tags:
         - "Rent"
       summary: "Adding a new rent"
+      description: "Adds the rent, devices included in this request will be ignored!"
       operationId: "newRent"
       parameters:
         - in: body
@@ -226,6 +227,24 @@ paths:
           description: "Invalid id supplied"
         409:
           description: "Given amount is not available of the given device"
+    get:
+      tags:
+        - "Rent"
+      summary: "Returns a single rent with given ID"
+      operationId: "getRentById"
+      parameters:
+        - name: "rentId"
+          in: path
+          required: true
+          description: "The id of the rent you want to add the device to"
+          type: integer
+      responses:
+        200:
+          description: "Successful operation"
+          schema:
+            $ref: '#/definitions/Rent'
+        400:
+          description: "Invalid id supplied"
 
   /category:
     post:

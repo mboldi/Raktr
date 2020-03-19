@@ -19,6 +19,7 @@ import hu.bsstudio.raktr.model.DeviceStatus;
 import hu.bsstudio.raktr.model.Location;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import javax.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -195,7 +196,7 @@ final class DeviceServiceTest {
     @Test
     void testUpdateFindsNoDeviceToUpdate() {
         //given
-        given(mockDeviceDao.getOne(any())).willThrow(new JpaObjectRetrievalFailureException(new EntityNotFoundException()));
+        given(mockDeviceDao.findById(any())).willReturn(Optional.empty());
 
         //when
 

@@ -44,6 +44,12 @@ public final class RentController {
         return rentService.updateDeviceInRent(rentId, deviceRentItemRequest);
     }
 
+    @GetMapping("/{rentId}")
+    public Rent getDeviceById(@PathVariable final Long rentId) {
+        log.info("Imcoming request for rent with id {}", rentId);
+        return rentService.getById(rentId);
+    }
+
     @PutMapping
     public Rent updateRent(@RequestBody @Valid final Rent rentRequest) {
         log.info("Incoming request to update rent: {}", rentRequest);

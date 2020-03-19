@@ -67,7 +67,8 @@ public class Rent extends DomainAuditModel {
         return new Builder();
     }
 
-    public final DeviceRentItem getRentItemOfDevice(final Device deviceToFind) {
+    @SuppressWarnings("checkstyle:DesignForExtension")
+    public DeviceRentItem getRentItemOfDevice(final Device deviceToFind) {
         for (DeviceRentItem rentItem : rentItems) {
             if (rentItem.getDevice().getId().equals(deviceToFind.getId())) {
                 return rentItem;

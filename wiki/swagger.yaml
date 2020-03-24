@@ -442,8 +442,6 @@ paths:
             $ref: '#/definitions/CompositeItem'
         404:
           description: "CompositeItem not found"
-          schema:
-            $ref: '#/definitions/CompositeItem'
     delete:
       tags:
         - "CompositeItem"
@@ -463,8 +461,6 @@ paths:
             $ref: '#/definitions/CompositeItem'
         404:
           description: "CompositeItem not found"
-          schema:
-            $ref: '#/definitions/CompositeItem'
   /composite/{compositeId}:
     get:
       tags:
@@ -484,13 +480,11 @@ paths:
             $ref: '#/definitions/CompositeItem'
         404:
           description: "CompositeItem not found"
-          schema:
-            $ref: '#/definitions/CompositeItem'
     put:
       tags:
         - "CompositeItem"
-      summary: "Updates a device in a composite item"
-      operationId: "updateDeviceInComposite"
+      summary: "Add device to a composite item"
+      operationId: "addDeviceToComposite"
       parameters:
         - name: "compositeId"
           in: path
@@ -509,9 +503,7 @@ paths:
           schema:
             $ref: '#/definitions/CompositeItem'
         404:
-          description: "CompositeItem not found"
-          schema:
-            $ref: '#/definitions/CompositeItem'
+          description: "CompositeItem or Device not found"
         409:
           description: "Device already in an other composite item"
     delete:
@@ -538,8 +530,6 @@ paths:
             $ref: '#/definitions/CompositeItem'
         404:
           description: "CompositeItem not found"
-          schema:
-            $ref: '#/definitions/CompositeItem'
 
 
 definitions:

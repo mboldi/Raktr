@@ -3,6 +3,7 @@ package hu.bsstudio.raktr.model;
 import static javax.persistence.CascadeType.REFRESH;
 import static javax.persistence.FetchType.EAGER;
 
+
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.util.List;
@@ -40,9 +41,21 @@ public class CompositeItem extends Scannable {
     public CompositeItem(final Builder builder) {
         this.id = builder.id;
         this.barcode = builder.barcode;
-        this.name = builder.barcode;
+        this.name = builder.name;
         this.devices = builder.devices;
         this.location = builder.location;
+    }
+
+    @SuppressWarnings("checkstyle:DesignForExtension")
+    @Override
+    public String toString() {
+        return "CompositeItem{"
+            + "id=" + id
+            + ", name='" + name + '\''
+            + ", barcode='" + barcode + '\''
+            + ",devices=" + devices
+            + ", location=" + location
+            + '}';
     }
 
     @SuppressWarnings("hiddenField")

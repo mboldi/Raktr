@@ -231,7 +231,7 @@ final class DeviceServiceTest {
     @Test
     void testGetByBarcode() {
         //given
-        given(mockDeviceDao.findByBarcode(any())).willReturn(device);
+        given(mockDeviceDao.findByBarcode(any())).willReturn(Optional.ofNullable(device));
 
         //when
         Device foundDevice = underTest.getByBarcode(BARCODE);
@@ -244,7 +244,7 @@ final class DeviceServiceTest {
     @Test
     void testGetByBarcodeFindNoDevice() {
         //given
-        given(mockDeviceDao.findByBarcode(any())).willReturn(null);
+        given(mockDeviceDao.findByBarcode(any())).willReturn(Optional.empty());
 
         //when
 

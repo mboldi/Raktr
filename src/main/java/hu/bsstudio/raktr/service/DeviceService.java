@@ -71,7 +71,7 @@ public final class DeviceService {
     }
 
     public Device getByBarcode(final String barcode) {
-        Device foundDevice = deviceDao.findByBarcode(barcode);
+        Device foundDevice = deviceDao.findByBarcode(barcode).orElse(null);
         if (foundDevice == null) {
             throw new ObjectNotFoundException();
         }

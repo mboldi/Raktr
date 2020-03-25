@@ -1,6 +1,7 @@
 package hu.bsstudio.raktr.dao;
 
 import hu.bsstudio.raktr.model.Device;
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -14,5 +15,5 @@ public interface DeviceDao extends JpaRepository<Device, Long> {
     String FIND_BY_BARCODE_QUERY = "SELECT device FROM Device device WHERE device.barcode = :barcode";
 
     @Query(FIND_BY_BARCODE_QUERY)
-    Device findByBarcode(@Param("barcode") String barcode);
+    Optional<Device> findByBarcode(@Param("barcode") String barcode);
 }

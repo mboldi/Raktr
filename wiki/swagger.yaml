@@ -8,14 +8,14 @@ basePath: "/api"
 tags:
   - name: "Device"
     description: "Everything about devices"
+  - name: "CompositeItem"
+    description: "Everything about composite items"
   - name: "Rent"
     description: "Everything about rents"
   - name: "Category"
     description: "Everything about categories"
   - name: "Location"
     description: "Everything about locations"
-  - name: "CompositeItem"
-    description: "Everything about composite items"
 schemes:
   - https
 paths:
@@ -109,25 +109,183 @@ paths:
             $ref: '#/definitions/Device'
         400:
           description: "Invalid ID supplied"
-  /device/barcode/{barcode}:
+#  /device/barcode/{barcode}:
+#    get:
+#      tags:
+#        - "Device"
+#      summary: "Return a device with given barcode value"
+#      operationId: "getDeviceByBarcode"
+#      parameters:
+#        - name: "barcode"
+#          in: path
+#          description: "The barcode of the device you want to get"
+#          required: true
+#          type: string
+#      responses:
+#        200:
+#          description: "Successfully found device"
+#          schema:
+#            $ref: '#/definitions/Device'
+#        400:
+#          description: "Device with given barcode not found"
+
+  /composite:
+    get:
+      tags:
+        - "CompositeItem"
+      summary: "Returns all composite items"
+      operationId: "getAllComposite"
+      responses:
+        200:
+          description: "Successful operation"
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/CompositeItem'
+    post:
+      tags:
+        - "CompositeItem"
+      summary: "Adds a composite item to the system"
+      operationId: "addComposite"
+      parameters:
+        - name: "compositeItem"
+          in: body
+          required: true
+          description: "The composite item you want to add to the system"
+          schema:
+            $ref: '#/definitions/CompositeItem'
+      responses:
+        200:
+          description: "Successful operation"
+          schema:
+            $ref: '#/definitions/CompositeItem'
+    put:
+      tags:
+        - "CompositeItem"
+      summary: "Updates a Composite item"
+      operationId: "updateComposite"
+      parameters:
+        - name: "compositeItem"
+          in: body
+          required: true
+          description: "The composite item you want to update in the system"
+          schema:
+            $ref: '#/definitions/CompositeItem'
+      responses:
+        200:
+          description: "Successful operation"
+          schema:
+            $ref: '#/definitions/CompositeItem'
+        404:
+          description: "CompositeItem not found"
+    delete:
+      tags:
+        - "CompositeItem"
+      summary: "Deletes a composite item"
+      operationId: "deleteComposite"
+      parameters:
+        - name: "compositeItem"
+          in: body
+          required: true
+          description: "The composite item you want to update in the system"
+          schema:
+            $ref: '#/definitions/CompositeItem'
+      responses:
+        200:
+          description: "Successful operation"
+          schema:
+            $ref: '#/definitions/CompositeItem'
+        404:
+          description: "CompositeItem not found"
+  /composite/{compositeId}:
+    get:
+      tags:
+        - "CompositeItem"
+      summary: "Returns a single composite item with given ID"
+      operationId: "getOneComposite"
+      parameters:
+        - name: "compositeId"
+          in: path
+          description: "The id of the composite item you want to get"
+          required: true
+          type: integer
+      responses:
+        200:
+          description: "Successful operation"
+          schema:
+            $ref: '#/definitions/CompositeItem'
+        404:
+          description: "CompositeItem not found"
+    put:
+      tags:
+        - "CompositeItem"
+      summary: "Add device to a composite item"
+      operationId: "addDeviceToComposite"
+      parameters:
+        - name: "compositeId"
+          in: path
+          description: "The id of the composite item you want to get"
+          required: true
+          type: integer
+        - name: "device"
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Device'
+          description: "The device you want to update in the rent"
+      responses:
+        200:
+          description: "Successful operation"
+          schema:
+            $ref: '#/definitions/CompositeItem'
+        404:
+          description: "CompositeItem or Device not found"
+        409:
+          description: "Device already in an other composite item"
+    delete:
+      tags:
+        - "CompositeItem"
+      summary: "Deletes a device from a composite item"
+      operationId: "deleteDeviceFromComposite"
+      parameters:
+        - name: "compositeId"
+          in: path
+          description: "The id of the composite item you want to get"
+          required: true
+          type: integer
+        - name: "device"
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Device'
+          description: "The device you want to delete from the rent"
+      responses:
+        200:
+          description: "Successful operation"
+          schema:
+            $ref: '#/definitions/CompositeItem'
+        404:
+          description: "CompositeItem not found"
+
+  /scannable/{barcode}:
     get:
       tags:
         - "Device"
-      summary: "Return a device with given barcode value"
-      operationId: "getDeviceByBarcode"
+        - "CompositeItem"
+      summary: "Returns the item with given barcode"
+      operationId: "getScannableByBarcode"
       parameters:
         - name: "barcode"
           in: path
-          description: "The barcode of the device you want to get"
-          required: true
           type: string
+          required: true
       responses:
         200:
-          description: "Successfully found device"
+          description: "Successful operation"
           schema:
-            $ref: '#/definitions/Device'
-        400:
-          description: "Device with given barcode not found"
+            $ref: '#/definitions/Scannable'
+        404:
+          description: "No item found with given barcode"
 
   /rent:
     post:
@@ -393,143 +551,6 @@ paths:
           description: "Location not found"
           schema:
             $ref: '#/definitions/Location'
-  /composite:
-    get:
-      tags:
-        - "CompositeItem"
-      summary: "Returns all composite items"
-      operationId: "getAllComposite"
-      responses:
-        200:
-          description: "Successful operation"
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/CompositeItem'
-    post:
-      tags:
-        - "CompositeItem"
-      summary: "Adds a composite item to the system"
-      operationId: "addComposite"
-      parameters:
-        - name: "compositeItem"
-          in: body
-          required: true
-          description: "The composite item you want to add to the system"
-          schema:
-            $ref: '#/definitions/CompositeItem'
-      responses:
-        200:
-          description: "Successful operation"
-          schema:
-            $ref: '#/definitions/CompositeItem'
-    put:
-      tags:
-        - "CompositeItem"
-      summary: "Updates a Composite item"
-      operationId: "updateComposite"
-      parameters:
-        - name: "compositeItem"
-          in: body
-          required: true
-          description: "The composite item you want to update in the system"
-          schema:
-            $ref: '#/definitions/CompositeItem'
-      responses:
-        200:
-          description: "Successful operation"
-          schema:
-            $ref: '#/definitions/CompositeItem'
-        404:
-          description: "CompositeItem not found"
-    delete:
-      tags:
-        - "CompositeItem"
-      summary: "Deletes a composite item"
-      operationId: "deleteComposite"
-      parameters:
-        - name: "compositeItem"
-          in: body
-          required: true
-          description: "The composite item you want to update in the system"
-          schema:
-            $ref: '#/definitions/CompositeItem'
-      responses:
-        200:
-          description: "Successful operation"
-          schema:
-            $ref: '#/definitions/CompositeItem'
-        404:
-          description: "CompositeItem not found"
-  /composite/{compositeId}:
-    get:
-      tags:
-        - "CompositeItem"
-      summary: "Returns a single composite item with given ID"
-      operationId: "getOneComposite"
-      parameters:
-        - name: "compositeId"
-          in: path
-          description: "The id of the composite item you want to get"
-          required: true
-          type: integer
-      responses:
-        200:
-          description: "Successful operation"
-          schema:
-            $ref: '#/definitions/CompositeItem'
-        404:
-          description: "CompositeItem not found"
-    put:
-      tags:
-        - "CompositeItem"
-      summary: "Add device to a composite item"
-      operationId: "addDeviceToComposite"
-      parameters:
-        - name: "compositeId"
-          in: path
-          description: "The id of the composite item you want to get"
-          required: true
-          type: integer
-        - name: "device"
-          in: body
-          required: true
-          schema:
-            $ref: '#/definitions/Device'
-          description: "The device you want to update in the rent"
-      responses:
-        200:
-          description: "Successful operation"
-          schema:
-            $ref: '#/definitions/CompositeItem'
-        404:
-          description: "CompositeItem or Device not found"
-        409:
-          description: "Device already in an other composite item"
-    delete:
-      tags:
-        - "CompositeItem"
-      summary: "Deletes a device from a composite item"
-      operationId: "deleteDeviceFromComposite"
-      parameters:
-        - name: "compositeId"
-          in: path
-          description: "The id of the composite item you want to get"
-          required: true
-          type: integer
-        - name: "device"
-          in: body
-          required: true
-          schema:
-            $ref: '#/definitions/Device'
-          description: "The device you want to delete from the rent"
-      responses:
-        200:
-          description: "Successful operation"
-          schema:
-            $ref: '#/definitions/CompositeItem'
-        404:
-          description: "CompositeItem not found"
 
 
 definitions:

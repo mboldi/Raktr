@@ -69,14 +69,4 @@ public final class DeviceService {
         log.info("Device with id {} found: {}", id, foundDevice);
         return foundDevice;
     }
-
-    public Device getByBarcode(final String barcode) {
-        Device foundDevice = deviceDao.findByBarcode(barcode).orElse(null);
-        if (foundDevice == null) {
-            throw new ObjectNotFoundException();
-        }
-
-        log.info("Device with barcode {} found: {}", barcode, foundDevice);
-        return foundDevice;
-    }
 }

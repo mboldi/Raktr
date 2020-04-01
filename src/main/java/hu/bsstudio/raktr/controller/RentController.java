@@ -45,8 +45,8 @@ public final class RentController {
     }
 
     @GetMapping("/{rentId}")
-    public Rent getDeviceById(@PathVariable final Long rentId) {
-        log.info("Imcoming request for rent with id {}", rentId);
+    public Rent getRentById(@PathVariable final Long rentId) {
+        log.info("Incoming request for rent with id {}", rentId);
         return rentService.getById(rentId);
     }
 

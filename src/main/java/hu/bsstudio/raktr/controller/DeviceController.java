@@ -54,10 +54,4 @@ public final class DeviceController {
         log.info("Incoming request for device with id {}", id);
         return deviceService.getById(id);
     }
-
-    @GetMapping("/barcode/{barcode}")
-    public Device getDeviceByBarcode(@PathVariable final String barcode) {
-        log.info("Incoming request for device with barcode: {}", barcode);
-        return deviceService.getByBarcode(barcode);
-    }
 }

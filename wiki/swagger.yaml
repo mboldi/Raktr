@@ -361,6 +361,25 @@ paths:
         404:
           description: "No rent data supplied"
   /rent/{rentId}:
+    get:
+      tags:
+        - "Rent"
+      summary: "Returns a single rent with given ID"
+      operationId: "getRentById"
+      parameters:
+        - name: "rentId"
+          in: path
+          required: true
+          description: "The id of the rent you want to add the device to"
+          type: integer
+      responses:
+        200:
+          description: "Successful operation"
+          schema:
+            $ref: '#/definitions/Rent'
+        404:
+          description: "Invalid id supplied"
+  /rent/{rentId}/device:
     put:
       tags:
         - "Rent"
@@ -387,17 +406,24 @@ paths:
           description: "Invalid id supplied"
         409:
           description: "Given amount is not available of the given device"
-    get:
+  /rent/{rentId}/composite:
+    put:
       tags:
         - "Rent"
-      summary: "Returns a single rent with given ID"
-      operationId: "getRentById"
+      summary: "Adds a composite item to a rent."
+      operationId: "addCompositeToRent"
       parameters:
         - name: "rentId"
           in: path
           required: true
           description: "The id of the rent you want to add the device to"
           type: integer
+        - name: "compositeToAdd"
+          in: body
+          required: true
+          description: "The composite item you want to add to the rent or update"
+          schema:
+            $ref: '#/definitions/CompositeItem'
       responses:
         200:
           description: "Successful operation"
@@ -405,6 +431,8 @@ paths:
             $ref: '#/definitions/Rent'
         404:
           description: "Invalid id supplied"
+        409:
+          description: "Given amount is not available of the given device"
 
   /category:
     post:
@@ -696,8 +724,8 @@ definitions:
         description: "Where or to who the devices will go out"
         type: string
       issuer:
-        $ref: '#/definitions/User'
-        description: "The person, who gives out the devices"
+        description: "The name of the person, who gives out the devices"
+        type: string
       outDate:
         type: string
         description: "The date, when the devices will leave the storage"

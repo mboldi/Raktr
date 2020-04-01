@@ -20,9 +20,9 @@ import lombok.Setter;
 @Entity
 @Data
 @JsonSerialize
-@JsonDeserialize(builder = DeviceRentItem.Builder.class)
+@JsonDeserialize(builder = RentItem.Builder.class)
 @NoArgsConstructor
-public class DeviceRentItem extends DomainAuditModel {
+public class RentItem extends DomainAuditModel {
 
     @Id
     @Setter(AccessLevel.NONE)
@@ -32,7 +32,7 @@ public class DeviceRentItem extends DomainAuditModel {
     @NotNull
     @JoinColumn
     @ManyToOne
-    private Device device;
+    private Scannable scannable;
 
     @NotNull
     private BackStatus backStatus;
@@ -40,10 +40,10 @@ public class DeviceRentItem extends DomainAuditModel {
     @NotNull
     private Integer outQuantity;
 
-    private DeviceRentItem(final Builder builder) {
+    private RentItem(final Builder builder) {
         this.id = builder.id;
         this.backStatus = builder.backStatus;
-        this.device = builder.device;
+        this.scannable = builder.device;
         this.outQuantity = builder.outQuantity;
     }
 
@@ -78,8 +78,8 @@ public class DeviceRentItem extends DomainAuditModel {
             return this;
         }
 
-        public DeviceRentItem build() {
-            return new DeviceRentItem(this);
+        public RentItem build() {
+            return new RentItem(this);
         }
     }
 }

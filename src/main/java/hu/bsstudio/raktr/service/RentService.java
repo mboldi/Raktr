@@ -1,13 +1,13 @@
 package hu.bsstudio.raktr.service;
 
 import hu.bsstudio.raktr.dao.DeviceDao;
-import hu.bsstudio.raktr.dao.DeviceRentItemDao;
 import hu.bsstudio.raktr.dao.RentDao;
+import hu.bsstudio.raktr.dao.RentItemDao;
 import hu.bsstudio.raktr.exception.NotAvailableQuantityException;
 import hu.bsstudio.raktr.exception.ObjectNotFoundException;
 import hu.bsstudio.raktr.model.BackStatus;
-import hu.bsstudio.raktr.model.DeviceRentItem;
 import hu.bsstudio.raktr.model.Rent;
+import hu.bsstudio.raktr.model.RentItem;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -17,28 +17,28 @@ import org.springframework.stereotype.Service;
 public class RentService {
 
     private final RentDao rentDao;
-    private final DeviceRentItemDao deviceRentItemDao;
+    private final RentItemDao rentItemDao;
     private final DeviceDao deviceDao;
 
-    public RentService(final RentDao rentDao, final DeviceRentItemDao deviceRentItemDao, final DeviceDao deviceDao) {
+    public RentService(final RentDao rentDao, final RentItemDao rentItemDao, final DeviceDao deviceDao) {
         this.rentDao = rentDao;
-        this.deviceRentItemDao = deviceRentItemDao;
+        this.rentItemDao = rentItemDao;
         this.deviceDao = deviceDao;
     }
 
     @SuppressWarnings("checkstyle:DesignForExtension")
-    public boolean checkIfAvailable(final DeviceRentItem deviceRentItem, final DeviceRentItem rentItemToUpdate) {
-        Integer maxAvailableQuantity = deviceDao.getOne(deviceRentItem.getDevice().getId()).getQuantity();
-        List<DeviceRentItem> deviceRentItems = deviceRentItemDao.findAll();
+    public boolean checkIfAvailable(final RentItem deviceRentItem, final RentItem rentItemToUpdate) {
+        Integer maxAvailableQuantity = deviceDao.getOne(deviceRentItem.getScannable().getId()).getQuantity();
+        List<RentItem> rentItems = rentItemDao.findAll();
         Integer sumOut = 0;
 
         if (deviceRentItem.getOutQuantity() > maxAvailableQuantity) {
             return false;
         }
 
-        for (DeviceRentItem rentItem : deviceRentItems) {
+        for (RentItem rentItem : rentItems) {
             if (rentItem.getBackStatus().equals(BackStatus.OUT)
-                && rentItem.getDevice().getId().equals(deviceRentItem.getDevice().getId())
+                && rentItem.getScannable().getId().equals(deviceRentItem.getScannable().getId())
                 && (rentItemToUpdate == null || !rentItem.getId().equals(rentItemToUpdate.getId()))) {
                 sumOut += rentItem.getOutQuantity();
             }
@@ -57,34 +57,34 @@ public class RentService {
         return saved;
     }
 
-    public final Rent updateDeviceInRent(final Long rentId, final DeviceRentItem newDeviceRentItem) {
+    public final Rent updateDeviceInRent(final Long rentId, final RentItem newRentItem) {
         Rent rentToUpdate = rentDao.findById(rentId).orElse(null);
-        DeviceRentItem savedDeviceItem;
-        DeviceRentItem rentItemToUpdate;
+        RentItem savedDeviceItem;
+        RentItem rentItemToUpdate;
 
         if (rentToUpdate == null) {
             throw new ObjectNotFoundException();
         }
 
-        rentItemToUpdate = rentToUpdate.getRentItemOfDevice(newDeviceRentItem.getDevice());
+        rentItemToUpdate = rentToUpdate.getRentItemOfScannable(newRentItem.getScannable());
 
-        if (!checkIfAvailable(newDeviceRentItem, rentItemToUpdate)) {
+        if (!checkIfAvailable(newRentItem, rentItemToUpdate)) {
             throw new NotAvailableQuantityException();
         }
 
         if (rentItemToUpdate != null) {
-            if (newDeviceRentItem.getOutQuantity() == 0) {
+            if (newRentItem.getOutQuantity() == 0) {
                 rentToUpdate.getRentItems().remove(rentItemToUpdate);
-                deviceRentItemDao.delete(rentItemToUpdate);
+                rentItemDao.delete(rentItemToUpdate);
             } else {
-                rentItemToUpdate.setOutQuantity(newDeviceRentItem.getOutQuantity());
-                rentItemToUpdate.setBackStatus(newDeviceRentItem.getBackStatus());
+                rentItemToUpdate.setOutQuantity(newRentItem.getOutQuantity());
+                rentItemToUpdate.setBackStatus(newRentItem.getBackStatus());
 
-                deviceRentItemDao.save(rentItemToUpdate);
+                rentItemDao.save(rentItemToUpdate);
             }
         } else {
-            if (newDeviceRentItem.getOutQuantity() != 0) {
-                savedDeviceItem = deviceRentItemDao.save(newDeviceRentItem);
+            if (newRentItem.getOutQuantity() != 0) {
+                savedDeviceItem = rentItemDao.save(newRentItem);
                 rentToUpdate.getRentItems().add(savedDeviceItem);
             }
         }

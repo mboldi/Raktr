@@ -13,7 +13,7 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 import org.junit.jupiter.api.Test;
 
-public class DeviceRentItemTest {
+public class RentItemTest {
     private static final Validator VALIDATOR = javax.validation.Validation.buildDefaultValidatorFactory().getValidator();
 
     public static final Long ID = 1L;
@@ -35,9 +35,9 @@ public class DeviceRentItemTest {
         .withId(OTHER_DEVICE_ID)
         .build();
 
-    private DeviceRentItem underTest;
+    private RentItem underTest;
 
-    private DeviceRentItem.Builder defaultBuilder = DeviceRentItem.builder()
+    private RentItem.Builder defaultBuilder = RentItem.builder()
         .withId(ID)
         .withBackStatus(BACK_STATUS)
         .withOutQuantity(OUT_QUANTITY)
@@ -56,14 +56,14 @@ public class DeviceRentItemTest {
             () -> assertEquals(ID, underTest.getId()),
             () -> assertEquals(BACK_STATUS, underTest.getBackStatus()),
             () -> assertEquals(OUT_QUANTITY, underTest.getOutQuantity()),
-            () -> assertEquals(device, underTest.getDevice())
+            () -> assertEquals(device, underTest.getScannable())
         );
     }
 
     @Test
     void testDefaultConstructor() {
         //given
-        underTest = new DeviceRentItem();
+        underTest = new RentItem();
 
         //when
 
@@ -72,7 +72,7 @@ public class DeviceRentItemTest {
             () -> assertNull(underTest.getId()),
             () -> assertNull(underTest.getBackStatus()),
             () -> assertNull(underTest.getOutQuantity()),
-            () -> assertNull(underTest.getDevice())
+            () -> assertNull(underTest.getScannable())
         );
     }
 
@@ -84,7 +84,7 @@ public class DeviceRentItemTest {
             .build();
 
         //when
-        Set<ConstraintViolation<DeviceRentItem>> violations = VALIDATOR.validate(underTest);
+        Set<ConstraintViolation<RentItem>> violations = VALIDATOR.validate(underTest);
 
         //then
         validationFails(violations, "must not be null", "backStatus");
@@ -98,7 +98,7 @@ public class DeviceRentItemTest {
             .build();
 
         //when
-        Set<ConstraintViolation<DeviceRentItem>> violations = VALIDATOR.validate(underTest);
+        Set<ConstraintViolation<RentItem>> violations = VALIDATOR.validate(underTest);
 
         //then
         validationFails(violations, "must not be null", "outQuantity");
@@ -111,12 +111,12 @@ public class DeviceRentItemTest {
             .build();
 
         //when
-        underTest.setDevice(otherDevice);
+        underTest.setScannable(otherDevice);
 
         //then
         assertAll(
             () -> assertEquals(ID, underTest.getId()),
-            () -> assertEquals(otherDevice, underTest.getDevice()),
+            () -> assertEquals(otherDevice, underTest.getScannable()),
             () -> assertEquals(BACK_STATUS, underTest.getBackStatus()),
             () -> assertEquals(OUT_QUANTITY, underTest.getOutQuantity())
         );
@@ -134,7 +134,7 @@ public class DeviceRentItemTest {
         //then
         assertAll(
             () -> assertEquals(ID, underTest.getId()),
-            () -> assertEquals(device, underTest.getDevice()),
+            () -> assertEquals(device, underTest.getScannable()),
             () -> assertEquals(OTHER_BACK_STATUS, underTest.getBackStatus()),
             () -> assertEquals(OUT_QUANTITY, underTest.getOutQuantity())
         );
@@ -152,7 +152,7 @@ public class DeviceRentItemTest {
         //then
         assertAll(
             () -> assertEquals(ID, underTest.getId()),
-            () -> assertEquals(device, underTest.getDevice()),
+            () -> assertEquals(device, underTest.getScannable()),
             () -> assertEquals(BACK_STATUS, underTest.getBackStatus()),
             () -> assertEquals(OTHER_OUT_QUANTITY, underTest.getOutQuantity())
         );

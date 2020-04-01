@@ -49,9 +49,9 @@ public class Rent extends DomainAuditModel {
     @NotNull
     private String actBackDate;
 
-    @OneToMany(targetEntity = DeviceRentItem.class, cascade = REFRESH, fetch = EAGER, orphanRemoval = true)
+    @OneToMany(targetEntity = RentItem.class, cascade = REFRESH, fetch = EAGER, orphanRemoval = true)
     @Setter(AccessLevel.NONE)
-    private List<DeviceRentItem> rentItems;
+    private List<RentItem> rentItems;
 
     public Rent(final Builder builder) {
         this.id = builder.id;
@@ -68,9 +68,9 @@ public class Rent extends DomainAuditModel {
     }
 
     @SuppressWarnings("checkstyle:DesignForExtension")
-    public DeviceRentItem getRentItemOfDevice(final Device deviceToFind) {
-        for (DeviceRentItem rentItem : rentItems) {
-            if (rentItem.getDevice().getId().equals(deviceToFind.getId())) {
+    public RentItem getRentItemOfScannable(final Scannable scannableToFind) {
+        for (RentItem rentItem : rentItems) {
+            if (rentItem.getScannable().getId().equals(scannableToFind.getId())) {
                 return rentItem;
             }
         }
@@ -86,7 +86,7 @@ public class Rent extends DomainAuditModel {
         private String outDate;
         private String expBackDate;
         private String actBackDate;
-        private List<DeviceRentItem> rentItems;
+        private List<RentItem> rentItems;
 
         public Builder withId(final Long id) {
             this.id = id;
@@ -118,7 +118,7 @@ public class Rent extends DomainAuditModel {
             return this;
         }
 
-        public Builder withRentItems(final List<DeviceRentItem> rentItems) {
+        public Builder withRentItems(final List<RentItem> rentItems) {
             this.rentItems = rentItems;
             return this;
         }

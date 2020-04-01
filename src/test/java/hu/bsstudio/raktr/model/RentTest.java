@@ -35,7 +35,7 @@ public class RentTest {
         .withId(DEVICE_ID)
         .build();
 
-    private DeviceRentItem rentItem = DeviceRentItem.builder()
+    private RentItem rentItem = RentItem.builder()
         .withId(RENT_ITEM_ID)
         .withDevice(device)
         .build();
@@ -52,7 +52,7 @@ public class RentTest {
     @Test
     void testConstructorAndGetters() {
         //given
-        List<DeviceRentItem> rentItems = new ArrayList<>();
+        List<RentItem> rentItems = new ArrayList<>();
         rentItems.add(rentItem);
 
         underTest = defaultBuilder
@@ -270,7 +270,7 @@ public class RentTest {
         underTest.getRentItems().add(rentItem);
 
         //when
-        DeviceRentItem rentItemOfDevice = underTest.getRentItemOfDevice(device);
+        RentItem rentItemOfDevice = underTest.getRentItemOfScannable(device);
 
         //then
         assertEquals(rentItem, rentItemOfDevice);
@@ -283,7 +283,7 @@ public class RentTest {
             .build();
 
         //when
-        DeviceRentItem rentItemOfDevice = underTest.getRentItemOfDevice(device);
+        RentItem rentItemOfDevice = underTest.getRentItemOfScannable(device);
 
         //then
         assertNull(rentItemOfDevice);

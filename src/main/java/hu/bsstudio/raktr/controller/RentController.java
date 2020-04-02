@@ -1,6 +1,5 @@
 package hu.bsstudio.raktr.controller;
 
-import hu.bsstudio.raktr.model.CompositeItem;
 import hu.bsstudio.raktr.model.Rent;
 import hu.bsstudio.raktr.model.RentItem;
 import hu.bsstudio.raktr.service.RentService;
@@ -40,15 +39,9 @@ public final class RentController {
     }
 
     @PutMapping("/{rentId}")
-    public Rent addDeviceToRent(@PathVariable final Long rentId, @RequestBody @Valid final RentItem rentItemRequest) {
+    public Rent addItemToRent(@PathVariable final Long rentId, @RequestBody @Valid final RentItem rentItemRequest) {
         log.info("Incoming request to add device {} to rent with id {}", rentItemRequest, rentId);
-        return rentService.updateDeviceInRent(rentId, rentItemRequest);
-    }
-
-    @PutMapping("/{rentId}")
-    public Rent addCompositeToRent(@PathVariable final Long rentId, @RequestBody @Valid final CompositeItem compositeItemRequest) {
-        log.info("Incoming request to add composite item {} to rent with id {}", compositeItemRequest, rentId);
-        return null;
+        return rentService.updateItem(rentId, rentItemRequest);
     }
 
     @GetMapping("/{rentId}")

@@ -6,6 +6,7 @@ import hu.bsstudio.raktr.dao.RentItemDao;
 import hu.bsstudio.raktr.exception.NotAvailableQuantityException;
 import hu.bsstudio.raktr.exception.ObjectNotFoundException;
 import hu.bsstudio.raktr.model.BackStatus;
+import hu.bsstudio.raktr.model.Device;
 import hu.bsstudio.raktr.model.Rent;
 import hu.bsstudio.raktr.model.RentItem;
 import java.util.List;
@@ -57,7 +58,7 @@ public class RentService {
         return saved;
     }
 
-    public final Rent updateDeviceInRent(final Long rentId, final RentItem newRentItem) {
+    public final Rent updateItem(final Long rentId, final RentItem newRentItem) {
         Rent rentToUpdate = rentDao.findById(rentId).orElse(null);
         RentItem savedDeviceItem;
         RentItem rentItemToUpdate;
@@ -68,7 +69,7 @@ public class RentService {
 
         rentItemToUpdate = rentToUpdate.getRentItemOfScannable(newRentItem.getScannable());
 
-        if (!checkIfAvailable(newRentItem, rentItemToUpdate)) {
+        if (newRentItem.getScannable().getClass() == Device.class && !checkIfAvailable(newRentItem, rentItemToUpdate)) {
             throw new NotAvailableQuantityException();
         }
 

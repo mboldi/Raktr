@@ -37,7 +37,7 @@ public class RentTest {
 
     private RentItem rentItem = RentItem.builder()
         .withId(RENT_ITEM_ID)
-        .withDevice(device)
+        .withScannable(device)
         .build();
 
     private Rent.Builder defaultBuilder = Rent.builder()

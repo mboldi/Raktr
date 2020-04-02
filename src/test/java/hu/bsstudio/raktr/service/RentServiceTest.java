@@ -142,7 +142,7 @@ final class RentServiceTest {
         //given
         RentItem rentItem = RentItem.builder()
             .withBackStatus(OUT)
-            .withDevice(device)
+            .withScannable(device)
             .withOutQuantity(1)
             .build();
 
@@ -163,7 +163,7 @@ final class RentServiceTest {
         //given
         RentItem rentItem = RentItem.builder()
             .withBackStatus(BACK)
-            .withDevice(device)
+            .withScannable(device)
             .withOutQuantity(1)
             .build();
 
@@ -189,7 +189,7 @@ final class RentServiceTest {
 
         RentItem rentItem = RentItem.builder()
             .withBackStatus(OUT)
-            .withDevice(deviceMultiple)
+            .withScannable(deviceMultiple)
             .withOutQuantity(1)
             .build();
 
@@ -212,7 +212,7 @@ final class RentServiceTest {
         RentItem rentItem = RentItem.builder()
             .withId(2L)
             .withBackStatus(OUT)
-            .withDevice(device)
+            .withScannable(device)
             .withOutQuantity(1)
             .build();
 
@@ -361,7 +361,7 @@ final class RentServiceTest {
         //when
 
         //then
-        assertThrows(ObjectNotFoundException.class, () -> underTest.updateDeviceInRent(RENT_ID, mockRentItemRequest));
+        assertThrows(ObjectNotFoundException.class, () -> underTest.updateItem(RENT_ID, mockRentItemRequest));
     }
 
     @Test
@@ -374,7 +374,7 @@ final class RentServiceTest {
         //when
 
         //then
-        assertThrows(NotAvailableQuantityException.class, () -> underTest.updateDeviceInRent(RENT_ID, mockRentItemRequest));
+        assertThrows(NotAvailableQuantityException.class, () -> underTest.updateItem(RENT_ID, mockRentItemRequest));
     }
 
     @Test
@@ -390,7 +390,7 @@ final class RentServiceTest {
         doReturn(rentItems).when(rent).getRentItems();
 
         //when
-        Rent updatedRent = underTest.updateDeviceInRent(RENT_ID, mockRentItemRequest);
+        Rent updatedRent = underTest.updateItem(RENT_ID, mockRentItemRequest);
 
         //then
         assertNotNull(updatedRent);
@@ -423,7 +423,7 @@ final class RentServiceTest {
         doReturn(rentItems).when(rent).getRentItems();
 
         //when
-        Rent updatedRent = underTest.updateDeviceInRent(RENT_ID, mockRentItemRequest);
+        Rent updatedRent = underTest.updateItem(RENT_ID, mockRentItemRequest);
 
         //then
         verify(rentItemToUpdate).setBackStatus(OTHER_RENT_ITEM_BACK_STATUS);
@@ -453,7 +453,7 @@ final class RentServiceTest {
         doReturn(rentItems).when(rent).getRentItems();
 
         //when
-        Rent updatedRent = underTest.updateDeviceInRent(RENT_ID, mockRentItemRequest);
+        Rent updatedRent = underTest.updateItem(RENT_ID, mockRentItemRequest);
 
         //then
         assertEquals(0, updatedRent.getRentItems().size());

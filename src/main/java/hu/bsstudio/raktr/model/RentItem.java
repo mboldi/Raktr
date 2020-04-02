@@ -43,7 +43,7 @@ public class RentItem extends DomainAuditModel {
     private RentItem(final Builder builder) {
         this.id = builder.id;
         this.backStatus = builder.backStatus;
-        this.scannable = builder.device;
+        this.scannable = builder.scannable;
         this.outQuantity = builder.outQuantity;
     }
 
@@ -54,7 +54,7 @@ public class RentItem extends DomainAuditModel {
     @SuppressWarnings("hiddenfield")
     public static final class Builder {
         private Long id;
-        private Device device;
+        private Scannable scannable;
         private BackStatus backStatus;
         private Integer outQuantity;
 
@@ -63,8 +63,8 @@ public class RentItem extends DomainAuditModel {
             return this;
         }
 
-        public Builder withDevice(final Device device) {
-            this.device = device;
+        public Builder withScannable(final Scannable scannable) {
+            this.scannable = scannable;
             return this;
         }
 

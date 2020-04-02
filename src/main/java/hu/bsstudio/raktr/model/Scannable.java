@@ -1,6 +1,8 @@
 package hu.bsstudio.raktr.model;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -19,9 +21,14 @@ import lombok.Setter;
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @NoArgsConstructor
-@JsonSerialize
 @Data
 @Inheritance(strategy = InheritanceType.JOINED)
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME)
+@JsonSubTypes({
+    @JsonSubTypes.Type(value = Device.class, name = "device"),
+    @JsonSubTypes.Type(value = CompositeItem.class, name = "compositeItem")
+})
 @SuppressWarnings("checkstyle:VisibilityModifier")
 public abstract class Scannable extends DomainAuditModel {
     @Id

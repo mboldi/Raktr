@@ -379,7 +379,6 @@ paths:
             $ref: '#/definitions/Rent'
         404:
           description: "Invalid id supplied"
-  /rent/{rentId}/device:
     put:
       tags:
         - "Rent"
@@ -396,34 +395,7 @@ paths:
           required: true
           description: "The device you want to add to the rent or update"
           schema:
-            $ref: '#/definitions/DeviceRentItem'
-      responses:
-        200:
-          description: "Successful operation"
-          schema:
-            $ref: '#/definitions/Rent'
-        404:
-          description: "Invalid id supplied"
-        409:
-          description: "Given amount is not available of the given device"
-  /rent/{rentId}/composite:
-    put:
-      tags:
-        - "Rent"
-      summary: "Adds a composite item to a rent."
-      operationId: "addCompositeToRent"
-      parameters:
-        - name: "rentId"
-          in: path
-          required: true
-          description: "The id of the rent you want to add the device to"
-          type: integer
-        - name: "compositeToAdd"
-          in: body
-          required: true
-          description: "The composite item you want to add to the rent or update"
-          schema:
-            $ref: '#/definitions/CompositeItem'
+            $ref: '#/definitions/RentItem'
       responses:
         200:
           description: "Successful operation"
@@ -691,15 +663,15 @@ definitions:
           - "Stúdiós-jelölt"
           - "Stúdiós"
 
-  DeviceRentItem:
-    description: "An object that is used to track inside a rent if a device arrived back or not"
+  RentItem:
+    description: "An object that is used to track inside a rent if an item arrived back or not"
     type: object
     required:
       - device
       - status
     properties:
-      device:
-        $ref: '#/definitions/Device'
+      scannable:
+        $ref: '#/definitions/Scannable'
       backStatus:
         type: string
         enum:
@@ -708,7 +680,7 @@ definitions:
       outQuantity:
         type: integer
         default: 1
-        description: "Specifies how many of a certain device will be rented"
+        description: "Specifies how many of a certain item will be rented"
 
   Rent:
     type: object
@@ -738,4 +710,4 @@ definitions:
       devices:
         type: array
         items:
-          $ref: '#/definitions/DeviceRentItem'
+          $ref: '#/definitions/RentItem'

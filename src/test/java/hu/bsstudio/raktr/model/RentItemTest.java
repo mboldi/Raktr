@@ -41,7 +41,7 @@ public class RentItemTest {
         .withId(ID)
         .withBackStatus(BACK_STATUS)
         .withOutQuantity(OUT_QUANTITY)
-        .withDevice(device);
+        .withScannable(device);
 
     @Test
     void testConstructorAndGetters() {

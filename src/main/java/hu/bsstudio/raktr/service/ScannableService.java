@@ -21,7 +21,6 @@ public class ScannableService {
         this.compositeItemDao = compositeItemDao;
     }
 
-
     public final Scannable getByBarcode(final String barcode) {
         Device foundDevice = deviceDao.findByBarcode(barcode).orElse(null);
 

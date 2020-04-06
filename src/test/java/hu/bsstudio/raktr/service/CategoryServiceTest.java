@@ -1,6 +1,7 @@
 package hu.bsstudio.raktr.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doReturn;
@@ -9,9 +10,11 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 import hu.bsstudio.raktr.dao.CategoryDao;
+import hu.bsstudio.raktr.exception.ObjectNotFoundException;
 import hu.bsstudio.raktr.model.Category;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -75,7 +78,7 @@ final class CategoryServiceTest {
             .withName(UPDATED_NAME)
             .build();
 
-        doReturn(category).when(mockCategoryDao).getOne(CATEGORY_ID);
+        given(mockCategoryDao.findById(CATEGORY_ID)).willReturn(Optional.ofNullable(category));
         doReturn(category).when(mockCategoryDao).save(category);
 
         //when
@@ -85,6 +88,17 @@ final class CategoryServiceTest {
         verify(category).setName(UPDATED_NAME);
         verify(mockCategoryDao).save(category);
         assertEquals(UPDATED_NAME, category.getName());
+    }
+
+    @Test
+    void testUpdateCategoryNotFound() {
+        //given
+        given(mockCategoryDao.findById(CATEGORY_ID)).willReturn(Optional.empty());
+
+        //when
+
+        //then
+        assertThrows(ObjectNotFoundException.class, () -> underTest.update(mockCategoryRequest));
     }
 
     @Test

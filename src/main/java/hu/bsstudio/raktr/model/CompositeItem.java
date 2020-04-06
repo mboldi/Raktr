@@ -34,7 +34,6 @@ public class CompositeItem extends Scannable {
     @NotNull
     @ManyToOne
     @JoinColumn
-    @Setter(AccessLevel.NONE)
     private Location location;
 
     public CompositeItem(final Builder builder) {
@@ -45,6 +44,10 @@ public class CompositeItem extends Scannable {
         this.location = builder.location;
     }
 
+    public static Builder builder() {
+        return new Builder();
+    }
+
     @SuppressWarnings("checkstyle:DesignForExtension")
     @Override
     public String toString() {
@@ -52,7 +55,7 @@ public class CompositeItem extends Scannable {
             + "id=" + id
             + ", name='" + name + '\''
             + ", barcode='" + barcode + '\''
-            + ",devices=" + devices
+            + ", devices=" + devices
             + ", location=" + location
             + '}';
     }

@@ -42,6 +42,7 @@ public class CompositeService {
 
         compositeItemToUpdate.setName(compositeItemRequest.getName());
         compositeItemToUpdate.setBarcode(compositeItemRequest.getBarcode());
+        compositeItemToUpdate.setLocation(compositeItemRequest.getLocation());
 
         CompositeItem saved = compositeItemDao.save(compositeItemToUpdate);
         log.info("Saved composite item: {}", saved);

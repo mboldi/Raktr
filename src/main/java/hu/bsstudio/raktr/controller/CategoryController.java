@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/category")
 public final class CategoryController {
 
-    private transient CategoryService categoryService;
+    private final CategoryService categoryService;
 
     public CategoryController(final CategoryService categoryService) {
         this.categoryService = categoryService;

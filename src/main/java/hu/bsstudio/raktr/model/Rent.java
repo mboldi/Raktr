@@ -38,6 +38,9 @@ public class Rent extends DomainAuditModel {
     private String destination;
 
     @NotBlank
+    private String renter;
+
+    @NotBlank
     private String issuer;
 
     @NotBlank
@@ -56,11 +59,12 @@ public class Rent extends DomainAuditModel {
     public Rent(final Builder builder) {
         this.id = builder.id;
         this.destination = builder.destination;
+        this.issuer = builder.issuer;
+        this.renter = builder.renter;
         this.outDate = builder.outDate;
         this.expBackDate = builder.expBackDate;
         this.actBackDate = builder.actBackDate;
         this.rentItems = builder.rentItems;
-        this.issuer = builder.issuer;
     }
 
     public static Builder builder() {
@@ -83,6 +87,7 @@ public class Rent extends DomainAuditModel {
         private Long id;
         private String destination;
         private String issuer;
+        private String renter;
         private String outDate;
         private String expBackDate;
         private String actBackDate;
@@ -100,6 +105,11 @@ public class Rent extends DomainAuditModel {
 
         public Builder withIssuer(final String issuer) {
             this.issuer = issuer;
+            return this;
+        }
+
+        public Builder withRenter(final String renter) {
+            this.renter = renter;
             return this;
         }
 

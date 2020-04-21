@@ -17,12 +17,13 @@ public class RentTest {
     public static final long ID = 1L;
     public static final String DESTINATION = "destination";
     public static final String ISSUER = "issuer";
+    public static final String RENTER = "renter";
     public static final String OUTDATE = "outdate";
     public static final String EXPBACKDATE = "expbackdate";
     public static final String ACTBACKDATE = "actbackdate";
-    public static final long OTHER_ID = 2L;
     public static final String OTHER_DESTINATION = "destination2";
     public static final String OTHER_ISSUER = "issuer2";
+    public static final String OTHER_RENTER = "renter2";
     public static final String OTHER_OUTDATE = "outdate2";
     public static final String OTHER_EXPBACKDATE = "expbackdate2";
     public static final String OTHER_ACTBACKDATE = "actbackdate2";
@@ -31,19 +32,20 @@ public class RentTest {
     private static final Validator VALIDATOR = javax.validation.Validation.buildDefaultValidatorFactory().getValidator();
     private Rent underTest;
 
-    private Device device = Device.builder()
+    private final Device device = Device.builder()
         .withId(DEVICE_ID)
         .build();
 
-    private RentItem rentItem = RentItem.builder()
+    private final RentItem rentItem = RentItem.builder()
         .withId(RENT_ITEM_ID)
         .withScannable(device)
         .build();
 
-    private Rent.Builder defaultBuilder = Rent.builder()
+    private final Rent.Builder defaultBuilder = Rent.builder()
         .withId(ID)
         .withDestination(DESTINATION)
         .withIssuer(ISSUER)
+        .withRenter(RENTER)
         .withOutDate(OUTDATE)
         .withExpBackDate(EXPBACKDATE)
         .withActBackDate(ACTBACKDATE)
@@ -65,6 +67,7 @@ public class RentTest {
         assertAll(
             () -> assertEquals(ID, underTest.getId()),
             () -> assertEquals(ISSUER, underTest.getIssuer()),
+            () -> assertEquals(RENTER, underTest.getRenter()),
             () -> assertEquals(DESTINATION, underTest.getDestination()),
             () -> assertEquals(OUTDATE, underTest.getOutDate()),
             () -> assertEquals(EXPBACKDATE, underTest.getExpBackDate()),
@@ -84,6 +87,7 @@ public class RentTest {
         assertAll(
             () -> assertNull(underTest.getId()),
             () -> assertNull(underTest.getIssuer()),
+            () -> assertNull(underTest.getRenter()),
             () -> assertNull(underTest.getDestination()),
             () -> assertNull(underTest.getOutDate()),
             () -> assertNull(underTest.getExpBackDate()),
@@ -118,6 +122,20 @@ public class RentTest {
 
         //then
         validationFails(violations, "must not be blank", "issuer");
+    }
+
+    @Test
+    void testValidationFailsForEmptyRenter() {
+        //given
+        underTest = defaultBuilder
+            .withRenter("")
+            .build();
+
+        //when
+        Set<ConstraintViolation<Rent>> violations = VALIDATOR.validate(underTest);
+
+        //then
+        validationFails(violations, "must not be blank", "renter");
     }
 
     @Test

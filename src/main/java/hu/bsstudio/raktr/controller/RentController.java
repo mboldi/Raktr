@@ -2,10 +2,13 @@ package hu.bsstudio.raktr.controller;
 
 import hu.bsstudio.raktr.model.Rent;
 import hu.bsstudio.raktr.model.RentItem;
+import hu.bsstudio.raktr.pdfgeneration.RentPdfRequest;
 import hu.bsstudio.raktr.service.RentService;
+import java.io.IOException;
 import java.util.List;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -60,6 +63,13 @@ public final class RentController {
     public Rent deleteRent(@RequestBody @Valid final Rent rentRequest) {
         log.info("Incoming request to delete rent {}", rentRequest);
         return rentService.delete(rentRequest);
+    }
+
+    @PostMapping("/pdf/{rentId}")
+    public ResponseEntity<byte[]> getRentPdf(@PathVariable final Long rentId,
+                                             @RequestBody @Valid final RentPdfRequest rentPdfRequest) throws IOException {
+        log.info("Incoming request for pdf of rent with id: {}", rentId);
+        return rentService.getPdf(rentId, rentPdfRequest);
     }
 
 }

@@ -9,8 +9,18 @@ import hu.bsstudio.raktr.model.BackStatus;
 import hu.bsstudio.raktr.model.Device;
 import hu.bsstudio.raktr.model.Rent;
 import hu.bsstudio.raktr.model.RentItem;
+import hu.bsstudio.raktr.pdfgeneration.RentPdfCreator;
+import hu.bsstudio.raktr.pdfgeneration.RentPdfData;
+import hu.bsstudio.raktr.pdfgeneration.RentPdfRequest;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.HashMap;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -135,5 +145,44 @@ public class RentService {
 
         log.info("Rent found: {}", foundRent);
         return foundRent;
+    }
+
+    public final ResponseEntity<byte[]> getPdf(final Long rentId, final RentPdfRequest rentPdfRequest) throws IOException {
+        Rent rentToGenerate = rentDao.findById(rentId).orElse(null);
+
+        if (rentToGenerate == null) {
+            log.error("Rent not found with ID {}", rentId);
+            throw new ObjectNotFoundException();
+        }
+
+        String fileName = "pdf/rent_" + rentToGenerate.getId();
+
+        RentPdfData rentPdfData = RentPdfData.builder()
+            .withTeamName(rentPdfRequest.getTeamName())
+            .withTeamLeaderName(rentPdfRequest.getTeamLeaderName())
+            .withOutDate(rentToGenerate.getOutDate())
+            .withBackDate(rentToGenerate.getExpBackDate())
+            .withFileName(fileName)
+            .withRenterName(rentPdfRequest.getRenterFullName())
+            .withRenterId(rentPdfRequest.getRenterId())
+            .withItems(new HashMap<>())
+            .build();
+
+        for (var item : rentToGenerate.getRentItems()) {
+            rentPdfData.getItems().put(
+                item.getScannable().getName(),
+                item.getOutQuantity()
+            );
+        }
+
+        RentPdfCreator.generatePdf(rentPdfData);
+
+        byte[] pdf = Files.readAllBytes(Paths.get(fileName + ".pdf"));
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentDispositionFormData(fileName + ".pdf", fileName + ".pdf");
+        headers.setCacheControl("must-revalidate, post-check=0, pre-check=0");
+
+        return new ResponseEntity<>(pdf, headers, HttpStatus.OK);
     }
 }

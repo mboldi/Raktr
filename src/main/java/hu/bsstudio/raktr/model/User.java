@@ -103,5 +103,9 @@ public class User {
             this.rank = rank;
             return this;
         }
+
+        public User build() {
+            return new User(this);
+        }
     }
 }

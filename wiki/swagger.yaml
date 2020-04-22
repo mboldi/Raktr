@@ -405,6 +405,28 @@ paths:
           description: "Invalid id supplied"
         409:
           description: "Given amount is not available of the given device"
+  /rent/pdf/{rentId}:
+    post:
+      summary: "Renturns a pdf version of the rent"
+      tags:
+        - "Rent"
+      operationId: "getPdf"
+      parameters:
+        - name: "rentId"
+          required: true
+          type: integer
+          in: path
+        - name: "rentPdfRequest"
+          required: true
+          in: body
+          schema:
+            $ref: '#/definitions/RentPdfRequest'
+      responses:
+        200:
+          description: "Successful operation, returns the generated pdf"
+        404:
+          description: "Invalid id supplied"
+
 
   /category:
     post:
@@ -641,6 +663,23 @@ definitions:
       name:
         type: string
         example: "videó"
+
+  RentPdfRequest:
+    type: object
+    required:
+      - teamName
+      - teamLeaderName
+      - renterFullName
+      - renterId
+    properties:
+      teamName:
+        type: string
+      teamLeaderName:
+        type: string
+      renterFullName:
+        type: string
+      renterId:
+        type: string
 
   User:
     type: object

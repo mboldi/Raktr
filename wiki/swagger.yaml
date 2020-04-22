@@ -649,11 +649,15 @@ definitions:
     properties:
       id:
         type: integer
-      username:
+      ldapUid:
+        type: string
+      nickname:
         type: string
       familyName:
         type: string
       givenName:
+        type: string
+      personalId:
         type: string
       rank:
         type: string

@@ -36,6 +36,10 @@ dependencies {
 
     compile 'com.itextpdf:itext7-core:7.1.10'
 
+    compile("org.springframework.boot:spring-boot-starter-security")
+    compile("org.springframework.ldap:spring-ldap-core")
+    compile("org.springframework.security:spring-security-ldap")
+
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     runtimeOnly 'org.postgresql:postgresql'
     developmentOnly 'org.mockito:mockito-core:3.2.4'

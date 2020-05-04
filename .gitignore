@@ -32,3 +32,5 @@ out/
 .vscode/
 
 pdf/
+
+src/main/resources/ldap.properties

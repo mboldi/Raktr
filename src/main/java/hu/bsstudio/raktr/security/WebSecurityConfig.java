@@ -30,10 +30,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Value("${ldap.password}")
     private String password;
 
-    private final UserDetailsService userDetailsService;
+    private final UserDetailsMapper userDetailsMapper;
 
-    public WebSecurityConfig(final UserDetailsService userDetailsService) {
-        this.userDetailsService = userDetailsService;
+    public WebSecurityConfig(final UserDetailsMapper userDetailsMapper) {
+        this.userDetailsMapper = userDetailsMapper;
     }
 
     @Override
@@ -43,7 +43,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
         adProvider.setConvertSubErrorCodesToExceptions(true);
         adProvider.setUseAuthenticationRequestCredentials(true);
-        adProvider.setUserDetailsContextMapper(userDetailsService);
+        adProvider.setUserDetailsContextMapper(userDetailsMapper);
 
         auth.authenticationProvider(adProvider);
     }

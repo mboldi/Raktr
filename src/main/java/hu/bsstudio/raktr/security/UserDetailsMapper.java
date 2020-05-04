@@ -15,14 +15,14 @@ import org.springframework.security.ldap.userdetails.UserDetailsContextMapper;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UserDetailsService implements UserDetailsContextMapper {
+public class UserDetailsMapper implements UserDetailsContextMapper {
 
     private final UserDao userDao;
     private final UserRoleDao roleDao;
 
     private final InetOrgPersonContextMapper ldapUserDetailsMapper = new InetOrgPersonContextMapper();
 
-    public UserDetailsService(final UserDao userDao, final UserRoleDao roleDao) {
+    public UserDetailsMapper(final UserDao userDao, final UserRoleDao roleDao) {
         this.userDao = userDao;
         this.roleDao = roleDao;
     }
@@ -54,7 +54,7 @@ public class UserDetailsService implements UserDetailsContextMapper {
         for (int i = 0; i < authorities.size(); i++) {
             UserRole role = new UserRole();
             GrantedAuthority authority = (GrantedAuthority) authorities.toArray()[i];
-            String authString = authority.getAuthority();
+            String authString = "ROLE_" + authority.getAuthority();
             role.setRoleName(authString);
 
             UserRole foundRole = roleDao.findByRoleName(authString).orElse(null);

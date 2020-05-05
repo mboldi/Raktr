@@ -10,8 +10,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @Slf4j
+@SuppressWarnings("checkstyle:DesignForExtension")
 @RequestMapping("/api/scannable")
-public final class ScannableController {
+public class ScannableController {
 
     private final ScannableService scannableService;
 

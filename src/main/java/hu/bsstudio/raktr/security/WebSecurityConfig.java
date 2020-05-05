@@ -37,7 +37,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Override
-    protected final void configure(final AuthenticationManagerBuilder auth) throws Exception {
+    protected final void configure(final AuthenticationManagerBuilder auth) {
         ActiveDirectoryLdapAuthenticationProvider adProvider =
             new ActiveDirectoryLdapAuthenticationProvider(domain, url, rootDn);
 
@@ -55,5 +55,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .anyRequest().fullyAuthenticated()
             .and()
             .formLogin().defaultSuccessUrl("/api/device");
+        http.csrf().disable();
     }
 }

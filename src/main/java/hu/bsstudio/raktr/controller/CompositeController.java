@@ -6,6 +6,7 @@ import hu.bsstudio.raktr.service.CompositeService;
 import java.util.List;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,8 +18,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @Slf4j
+@SuppressWarnings("checkstyle:DesignForExtension")
 @RequestMapping("/api/composite")
-public final class CompositeController {
+public class CompositeController {
 
     private final CompositeService compositeService;
 
@@ -45,6 +47,7 @@ public final class CompositeController {
     }
 
     @DeleteMapping
+    @Secured("ROLE_Stúdiós")
     public CompositeItem deleteCompositeItem(@Valid @RequestBody final CompositeItem compositeItemRequest) {
         log.info("Incoming request to delete composite item: {}", compositeItemRequest);
         return compositeService.delete(compositeItemRequest);

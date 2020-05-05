@@ -5,6 +5,7 @@ import hu.bsstudio.raktr.service.CategoryService;
 import java.util.List;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,7 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @Slf4j
 @RequestMapping("/api/category")
-public final class CategoryController {
+@SuppressWarnings("checkstyle:DesignForExtension")
+public class CategoryController {
 
     private final CategoryService categoryService;
 
@@ -43,6 +45,7 @@ public final class CategoryController {
     }
 
     @DeleteMapping
+    @Secured("ROLE_Stúdiós")
     public Category deleteCategory(@Valid @RequestBody final Category categoryRequest) {
         log.info("Incoming request to delete category: {}", categoryRequest);
         return categoryService.delete(categoryRequest);

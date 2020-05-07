@@ -17,6 +17,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import hu.bsstudio.raktr.RaktrApplication;
 import hu.bsstudio.raktr.dao.LocationDao;
 import hu.bsstudio.raktr.model.Location;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -51,6 +52,11 @@ public class LocationControllerIntegrationTest {
 
     @BeforeEach
     public final void init() {
+        locationDao.deleteAll();
+    }
+
+    @AfterEach
+    public final void after() {
         locationDao.deleteAll();
     }
 

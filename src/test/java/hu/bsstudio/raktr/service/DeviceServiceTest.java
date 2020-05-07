@@ -20,11 +20,9 @@ import hu.bsstudio.raktr.model.Location;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import javax.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 
 final class DeviceServiceTest {
 
@@ -207,20 +205,20 @@ final class DeviceServiceTest {
     @Test
     void testGetById() {
         //given
-        given(mockDeviceDao.getOne(any())).willReturn(device);
+        given(mockDeviceDao.findById(any())).willReturn(Optional.ofNullable(device));
 
         //when
         Device foundDevice = underTest.getById(ID);
 
         //then
-        verify(mockDeviceDao).getOne(ID);
+        verify(mockDeviceDao).findById(ID);
         assertEquals(device, foundDevice);
     }
 
     @Test
     void testGetByIdFindNoDevice() {
         //given
-        given(mockDeviceDao.getOne(any())).willThrow(new JpaObjectRetrievalFailureException(new EntityNotFoundException()));
+        given(mockDeviceDao.findById(any())).willReturn(Optional.empty());
 
         //when
 

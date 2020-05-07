@@ -16,7 +16,12 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import hu.bsstudio.raktr.RaktrApplication;
 import hu.bsstudio.raktr.dao.CategoryDao;
+import hu.bsstudio.raktr.dao.DeviceDao;
+import hu.bsstudio.raktr.dao.LocationDao;
 import hu.bsstudio.raktr.model.Category;
+import hu.bsstudio.raktr.model.Device;
+import hu.bsstudio.raktr.model.DeviceStatus;
+import hu.bsstudio.raktr.model.Location;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -39,165 +44,198 @@ import org.springframework.web.util.NestedServletException;
 @TestPropertySource(
     locations = "classpath:application-integrationtest.properties"
 )
-public class CategoryControllerIntegrationTest {
+public class DeviceControllerIntegrationTest {
 
     private static final String CATEGORY_NAME = "category";
-    public static final String CATEGORY_NAME_2 = "category2";
+    private static final String LOCATION_NAME = "location";
+    public static final String COMPOSITE_BARCODE = "composite_barcode";
+    public static final String COMPOSITE_ITEM_NAME = "compositeitem";
+    public static final String DEVICE_NAME = "device";
+    public static final String DEVICE_BARCODE = "device_barcode";
+    public static final String DEVICE_NAME_2 = "device2";
+    public static final int DEVICE_WEIGHT = 1000;
+    public static final int DEVICE_VALUE = 1200;
 
     @Autowired
     private MockMvc mvc;
 
     @Autowired
+    private DeviceDao deviceDao;
+
+    @Autowired
     private CategoryDao categoryDao;
+
+    @Autowired
+    private LocationDao locationDao;
+
+    private Device.Builder defaultBuilder;
 
     @BeforeEach
     public final void init() {
-        categoryDao.deleteAll();
+        Category category = Category.builder()
+            .withName(CATEGORY_NAME)
+            .build();
+
+        Location location = Location.builder()
+            .withName(LOCATION_NAME)
+            .build();
+
+        defaultBuilder = Device.builder()
+            .withName(DEVICE_NAME)
+            .withBarcode(DEVICE_BARCODE)
+            .withMaker("maker")
+            .withType("type")
+            .withQuantity(1)
+            .withSerial("serial")
+            .withWeight(DEVICE_WEIGHT)
+            .withCategory(category)
+            .withLocation(location)
+            .withStatus(DeviceStatus.GOOD)
+            .withValue(DEVICE_VALUE);
     }
 
     @AfterEach
     public final void after() {
+        deviceDao.deleteAll();
         categoryDao.deleteAll();
+        locationDao.deleteAll();
     }
 
     @Test
-    public void testGetCategory() throws Exception {
-        Category category = Category.builder()
-            .withName(CATEGORY_NAME)
+    public void testGetDevice() throws Exception {
+        Device device = defaultBuilder
             .build();
 
-        categoryDao.save(category);
+        deviceDao.save(device);
 
-        mvc.perform(get("/api/category")
-            .contentType(MediaType.APPLICATION_JSON))
-            .andExpect(status().isOk())
-            .andExpect(content()
-                .contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$[0].name", is(CATEGORY_NAME)));
-    }
-
-    @Test
-    public void testCreateCategory() throws Exception {
-        Category category = Category.builder()
-            .withName(CATEGORY_NAME)
-            .build();
-
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
-        ObjectWriter writer = mapper.writer().withDefaultPrettyPrinter();
-        String requestBody = writer.writeValueAsString(category);
-
-        requestBody = "{ \"Category\": " + requestBody + "}";
-
-        mvc.perform(post("/api/category")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(requestBody))
-            .andExpect(status().isOk())
-            .andExpect(content()
-                .contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$.name", is(CATEGORY_NAME)));
-
-        mvc.perform(get("/api/category")
+        mvc.perform(get("/api/device")
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(content()
                 .contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$", hasSize(1)))
-            .andExpect(jsonPath("$[0].name", is(CATEGORY_NAME)));
+            .andExpect(jsonPath("$[0].name", is(DEVICE_NAME)));
     }
 
     @Test
-    public void testCreateCategoryFailsNameNotUnique() throws Exception {
-        Category category = Category.builder()
-            .withName(CATEGORY_NAME)
+    public void testAddDevice() throws Exception {
+        Device device = defaultBuilder
             .build();
 
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
         ObjectWriter writer = mapper.writer().withDefaultPrettyPrinter();
-        String requestBody = writer.writeValueAsString(category);
+        String requestBody = writer.writeValueAsString(device);
 
-        requestBody = "{ \"Category\": " + requestBody + "}";
+        requestBody = "{ \"Device\": " + requestBody + "}";
 
-        mvc.perform(post("/api/category")
+        mvc.perform(post("/api/device")
             .contentType(MediaType.APPLICATION_JSON)
             .content(requestBody))
             .andExpect(status().isOk())
             .andExpect(content()
                 .contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$.name", is(CATEGORY_NAME)));
+            .andExpect(jsonPath("$.name", is(DEVICE_NAME)));
+    }
+
+    @Test
+    public void testAddDeviceFailsDeviceNotUnique() throws Exception {
+        Device device = defaultBuilder
+            .build();
+
+        deviceDao.save(device);
+
+        Device device2 = defaultBuilder
+            .build();
+
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
+        ObjectWriter writer = mapper.writer().withDefaultPrettyPrinter();
+        String requestBody = writer.writeValueAsString(device2);
+
+        requestBody = "{ \"Device\": " + requestBody + "}";
 
         String finalRequestBody = requestBody;
         assertThrows(NestedServletException.class, () ->
-            mvc.perform(post("/api/category")
+            mvc.perform(post("/api/device")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(finalRequestBody))
         );
     }
 
     @Test
-    public void testUpdateCategory() throws Exception {
-        Category category = Category.builder()
-            .withName(CATEGORY_NAME)
+    public void testUpdateDevice() throws Exception {
+        Device device = defaultBuilder
             .build();
 
-        Category category2 = categoryDao.save(category);
-
-        category2.setName(CATEGORY_NAME_2);
+        Device device2 = deviceDao.save(device);
+        device2.setName(DEVICE_NAME_2);
 
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
         ObjectWriter writer = mapper.writer().withDefaultPrettyPrinter();
+        String requestBody = writer.writeValueAsString(device2);
 
-        String updateBody = writer.writeValueAsString(category2);
-        updateBody = "{ \"Category\": " + updateBody + "}";
+        requestBody = "{ \"Device\": " + requestBody + "}";
 
-        mvc.perform(put("/api/category")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(updateBody))
-            .andExpect(status().isOk())
-            .andExpect(content()
-                .contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$.name", is(CATEGORY_NAME_2)));
-
-        mvc.perform(get("/api/category")
-            .contentType(MediaType.APPLICATION_JSON))
-            .andExpect(status().isOk())
-            .andExpect(content()
-                .contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$[0].name", is(CATEGORY_NAME_2)));
-    }
-
-    @Test
-    public void testDeleteCategory() throws Exception {
-        Category category = Category.builder()
-            .withName(CATEGORY_NAME)
-            .build();
-
-        category = categoryDao.save(category);
-
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
-        ObjectWriter writer = mapper.writer().withDefaultPrettyPrinter();
-        String requestBody = writer.writeValueAsString(category);
-
-        requestBody = "{ \"Category\": " + requestBody + "}";
-
-        mvc.perform(delete("/api/category")
+        mvc.perform(put("/api/device")
             .contentType(MediaType.APPLICATION_JSON)
             .content(requestBody))
             .andExpect(status().isOk())
             .andExpect(content()
                 .contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$.name", is(CATEGORY_NAME)));
+            .andExpect(jsonPath("$.name", is(DEVICE_NAME_2)));
 
-        mvc.perform(get("/api/category")
+        mvc.perform(get("/api/device")
+            .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(content()
+                .contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$", hasSize(1)));
+    }
+
+    @Test
+    public void testGetDeviceById() throws Exception {
+        Device device = defaultBuilder
+            .build();
+
+        device = deviceDao.save(device);
+
+        mvc.perform(get("/api/device/" + device.getId()))
+            .andExpect(status().isOk())
+            .andExpect(content()
+                .contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.name", is(DEVICE_NAME)));
+    }
+
+    @Test
+    public void testDeleteDevice() throws Exception {
+        Device device = defaultBuilder
+            .build();
+
+        device = deviceDao.save(device);
+
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
+        ObjectWriter writer = mapper.writer().withDefaultPrettyPrinter();
+        String requestBody = writer.writeValueAsString(device);
+
+        requestBody = "{ \"Device\": " + requestBody + "}";
+
+        mvc.perform(delete("/api/device/")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(requestBody))
+            .andExpect(status().isOk())
+            .andExpect(content()
+                .contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.name", is(DEVICE_NAME)));
+
+        mvc.perform(get("/api/device/")
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(content()
                 .contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$", hasSize(0)));
     }
-
 
 }

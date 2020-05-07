@@ -2,7 +2,6 @@ package hu.bsstudio.raktr.model;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -35,7 +34,6 @@ public class Device extends Scannable {
     private String type;
 
     @NotNull
-    @Column(unique = true)
     private String serial;
 
     @NotNull

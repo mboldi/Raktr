@@ -48,8 +48,6 @@ public class DeviceControllerIntegrationTest {
 
     private static final String CATEGORY_NAME = "category";
     private static final String LOCATION_NAME = "location";
-    public static final String COMPOSITE_BARCODE = "composite_barcode";
-    public static final String COMPOSITE_ITEM_NAME = "compositeitem";
     public static final String DEVICE_NAME = "device";
     public static final String DEVICE_BARCODE = "device_barcode";
     public static final String DEVICE_NAME_2 = "device2";
@@ -76,9 +74,13 @@ public class DeviceControllerIntegrationTest {
             .withName(CATEGORY_NAME)
             .build();
 
+        category = categoryDao.save(category);
+
         Location location = Location.builder()
             .withName(LOCATION_NAME)
             .build();
+
+        location = locationDao.save(location);
 
         defaultBuilder = Device.builder()
             .withName(DEVICE_NAME)

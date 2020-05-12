@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>hu.bsstudio.raktr.controller.CategoryController</OriginalElement>
+  <nodes>
+    <node x="-30.5" y="231.0">hu.bsstudio.raktr.model.Category</node>
+    <node x="212.5" y="885.0">hu.bsstudio.raktr.model.Device</node>
+    <node x="1259.5" y="677.25">hu.bsstudio.raktr.model.User</node>
+    <node x="392.0" y="242.0">hu.bsstudio.raktr.model.DomainAuditModel</node>
+    <node x="1204.5" y="-20.0">hu.bsstudio.raktr.model.RentItem</node>
+    <node x="916.5" y="176.0">hu.bsstudio.raktr.model.Rent</node>
+    <node x="409.5" y="631.0">hu.bsstudio.raktr.model.Location</node>
+    <node x="1352.5" y="507.25">hu.bsstudio.raktr.model.UserRole</node>
+    <node x="940.0" y="471.0">hu.bsstudio.raktr.model.Scannable</node>
+    <node x="684.0" y="642.0">hu.bsstudio.raktr.model.CompositeItem</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="hu.bsstudio.raktr.model.CompositeItem" target="hu.bsstudio.raktr.model.Location">
+      <point x="-76.0" y="0.0" />
+      <point x="70.5" y="0.0" />
+    </edge>
+    <edge source="hu.bsstudio.raktr.model.Location" target="hu.bsstudio.raktr.model.Device">
+      <point x="70.5" y="40.0" />
+      <point x="600.0" y="720.0" />
+      <point x="600.0" y="933.3333333333334" />
+      <point x="67.5" y="-66.66666666666663" />
+    </edge>
+    <edge source="hu.bsstudio.raktr.model.Device" target="hu.bsstudio.raktr.model.Location">
+      <point x="67.5" y="-80.0" />
+      <point x="480.0" y="920.0" />
+      <point x="0.0" y="49.0" />
+    </edge>
+    <edge source="hu.bsstudio.raktr.model.Scannable" target="hu.bsstudio.raktr.model.CompositeItem">
+      <point x="-60.0" y="40.0" />
+      <point x="880.0" y="560.0" />
+      <point x="880.0" y="653.3333333333334" />
+      <point x="76.0" y="-26.66666666666663" />
+    </edge>
+    <edge source="hu.bsstudio.raktr.model.Category" target="hu.bsstudio.raktr.model.DomainAuditModel">
+      <point x="70.5" y="0.0" />
+      <point x="-88.0" y="0.0" />
+    </edge>
+    <edge source="hu.bsstudio.raktr.model.User" target="hu.bsstudio.raktr.model.UserRole">
+      <point x="0.0" y="-159.0" />
+      <point x="0.0" y="49.0" />
+    </edge>
+    <edge source="hu.bsstudio.raktr.model.Rent" target="hu.bsstudio.raktr.model.RentItem">
+      <point x="0.0" y="-104.0" />
+      <point x="1000.0" y="80.0" />
+      <point x="-75.5" y="40.0" />
+    </edge>
+    <edge source="hu.bsstudio.raktr.model.RentItem" target="hu.bsstudio.raktr.model.DomainAuditModel">
+      <point x="-75.5" y="0.0" />
+      <point x="480.0" y="40.0" />
+      <point x="0.0" y="-38.0" />
+    </edge>
+    <edge source="hu.bsstudio.raktr.model.Location" target="hu.bsstudio.raktr.model.DomainAuditModel">
+      <point x="0.0" y="-49.0" />
+      <point x="0.0" y="38.0" />
+    </edge>
+    <edge source="hu.bsstudio.raktr.model.Scannable" target="hu.bsstudio.raktr.model.DomainAuditModel">
+      <point x="-60.0" y="-40.0" />
+      <point x="520.0" y="480.0" />
+      <point x="40.0" y="38.0" />
+    </edge>
+    <edge source="hu.bsstudio.raktr.model.Rent" target="hu.bsstudio.raktr.model.Scannable">
+      <point x="0.0" y="104.0" />
+      <point x="0.0" y="-49.0" />
+    </edge>
+    <edge source="hu.bsstudio.raktr.model.RentItem" target="hu.bsstudio.raktr.model.Scannable">
+      <point x="0.0" y="60.0" />
+      <point x="1280.0" y="480.0" />
+      <point x="60.0" y="-40.0" />
+    </edge>
+    <edge source="hu.bsstudio.raktr.model.Rent" target="hu.bsstudio.raktr.model.DomainAuditModel">
+      <point x="-83.5" y="0.0" />
+      <point x="88.0" y="0.0" />
+    </edge>
+    <edge source="hu.bsstudio.raktr.model.Scannable" target="hu.bsstudio.raktr.model.Device">
+      <point x="60.0" y="0.0" />
+      <point x="1160.0" y="520.0" />
+      <point x="1160.0" y="1000.0" />
+      <point x="67.5" y="0.0" />
+    </edge>
+    <edge source="hu.bsstudio.raktr.model.CompositeItem" target="hu.bsstudio.raktr.model.Device">
+      <point x="0.0" y="38.0" />
+      <point x="760.0" y="960.0" />
+      <point x="67.5" y="-40.0" />
+    </edge>
+    <edge source="hu.bsstudio.raktr.model.Device" target="hu.bsstudio.raktr.model.Category">
+      <point x="-40.0" y="-115.0" />
+      <point x="240.0" y="320.0" />
+      <point x="70.5" y="40.0" />
+    </edge>
+    <edge source="hu.bsstudio.raktr.model.Category" target="hu.bsstudio.raktr.model.Device">
+      <point x="0.0" y="49.0" />
+      <point x="40.0" y="1160.0" />
+      <point x="280.0" y="1160.0" />
+      <point x="0.0" y="115.0" />
+    </edge>
+    <edge source="hu.bsstudio.raktr.model.Device" target="hu.bsstudio.raktr.model.Scannable">
+      <point x="67.5" y="-26.66666666666663" />
+      <point x="1000.0" y="973.3333333333334" />
+      <point x="0.0" y="49.0" />
+    </edge>
+    <edge source="hu.bsstudio.raktr.model.UserRole" target="hu.bsstudio.raktr.model.User">
+      <point x="60.0" y="0.0" />
+      <point x="1612.5" y="556.25" />
+      <point x="1612.5" y="836.25" />
+      <point x="153.0" y="0.0" />
+    </edge>
+    <edge source="hu.bsstudio.raktr.model.CompositeItem" target="hu.bsstudio.raktr.model.Scannable">
+      <point x="76.0" y="0.0" />
+      <point x="960.0" y="680.0" />
+      <point x="-40.0" y="49.0" />
+    </edge>
+  </edges>
+  <settings layout="Orthogonal" zoom="0.8" x="868.375" y="535.75" />
+  <SelectedNodes />
+  <Categories>
+    <Category>Fields</Category>
+    <Category>Properties</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+

@@ -31,6 +31,6 @@ out/
 ### VS Code ###
 .vscode/
 
-pdf/
+pdf/*.pdf
 
 src/main/resources/ldap.properties

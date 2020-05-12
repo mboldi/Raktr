@@ -16,14 +16,14 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 import hu.bsstudio.raktr.dao.DeviceDao;
-import hu.bsstudio.raktr.dao.DeviceRentItemDao;
 import hu.bsstudio.raktr.dao.RentDao;
+import hu.bsstudio.raktr.dao.RentItemDao;
 import hu.bsstudio.raktr.exception.NotAvailableQuantityException;
 import hu.bsstudio.raktr.exception.ObjectNotFoundException;
 import hu.bsstudio.raktr.model.BackStatus;
 import hu.bsstudio.raktr.model.Device;
-import hu.bsstudio.raktr.model.DeviceRentItem;
 import hu.bsstudio.raktr.model.Rent;
+import hu.bsstudio.raktr.model.RentItem;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -33,8 +33,6 @@ import org.mockito.Mock;
 
 final class RentServiceTest {
 
-    private static final long DEVICE_ID = 1L;
-
     public static final long RENT_ID = 2L;
     public static final BackStatus RENT_ITEM_BACK_STATUS = OUT;
     public static final int RENT_ITEM_OUT_QUANTITY = 1;
@@ -43,7 +41,6 @@ final class RentServiceTest {
     public static final String OUTDATE = "outdate";
     public static final String EXPBACKDATE = "expbackdate";
     public static final String ACTBACKDATE = "actbackdate";
-
     public static final long OTHER_RENT_ID = 3L;
     public static final BackStatus OTHER_RENT_ITEM_BACK_STATUS = BACK;
     public static final int OTHER_RENT_ITEM_OUT_QUANTITY = 2;
@@ -55,18 +52,18 @@ final class RentServiceTest {
     public static final int OTHER_OUT_QUANTITY = 2;
     public static final int OUT_QUANTITY = 1;
     public static final int ZERO_OUT_QUANTITY = 0;
-
+    private static final long DEVICE_ID = 1L;
     @Mock
     private RentDao mockRentDao;
 
     @Mock
-    private DeviceRentItemDao mockDeviceRentItemDao;
+    private RentItemDao mockRentItemDao;
 
     @Mock
     private DeviceDao mockDeviceDao;
 
     @Mock
-    private DeviceRentItem mockDeviceRentItemRequest;
+    private RentItem mockRentItemRequest;
 
     @Mock
     private Rent mockRentRequest;
@@ -79,7 +76,7 @@ final class RentServiceTest {
     @BeforeEach
     void init() {
         initMocks(this);
-        underTest = spy(new RentService(mockRentDao, mockDeviceRentItemDao, mockDeviceDao));
+        underTest = spy(new RentService(mockRentDao, mockRentItemDao, mockDeviceDao));
 
         device = Device.builder()
             .withId(DEVICE_ID)
@@ -88,10 +85,10 @@ final class RentServiceTest {
 
         doReturn(device).when(mockDeviceDao).getOne(any());
 
-        given(mockDeviceRentItemRequest.getId()).willReturn(DEVICE_ID);
-        given(mockDeviceRentItemRequest.getBackStatus()).willReturn(RENT_ITEM_BACK_STATUS);
-        given(mockDeviceRentItemRequest.getDevice()).willReturn(device);
-        given(mockDeviceRentItemRequest.getOutQuantity()).willReturn(RENT_ITEM_OUT_QUANTITY);
+        given(mockRentItemRequest.getId()).willReturn(DEVICE_ID);
+        given(mockRentItemRequest.getBackStatus()).willReturn(RENT_ITEM_BACK_STATUS);
+        given(mockRentItemRequest.getScannable()).willReturn(device);
+        given(mockRentItemRequest.getOutQuantity()).willReturn(RENT_ITEM_OUT_QUANTITY);
 
         defaultBuilder = Rent.builder()
             .withId(RENT_ID)
@@ -114,13 +111,13 @@ final class RentServiceTest {
     @Test
     void checkIfAvailableTrue() {
         //given
-        doReturn(new ArrayList<DeviceRentItem>()).when(mockDeviceRentItemDao).findAll();
-        doReturn(1).when(mockDeviceRentItemRequest).getOutQuantity();
-        doReturn(device).when(mockDeviceRentItemRequest).getDevice();
+        doReturn(new ArrayList<RentItem>()).when(mockRentItemDao).findAll();
+        doReturn(1).when(mockRentItemRequest).getOutQuantity();
+        doReturn(device).when(mockRentItemRequest).getScannable();
 
 
         //when
-        boolean isAvailable = underTest.checkIfAvailable(mockDeviceRentItemRequest, null);
+        boolean isAvailable = underTest.checkIfAvailable(mockRentItemRequest, null);
 
         //then
         assertTrue(isAvailable);
@@ -129,12 +126,12 @@ final class RentServiceTest {
     @Test
     void checkIfAvailableFalseTooManyDevicesRequested() {
         //given
-        doReturn(new ArrayList<DeviceRentItem>()).when(mockDeviceRentItemDao).findAll();
-        doReturn(2).when(mockDeviceRentItemRequest).getOutQuantity();
-        doReturn(device).when(mockDeviceRentItemRequest).getDevice();
+        doReturn(new ArrayList<RentItem>()).when(mockRentItemDao).findAll();
+        doReturn(2).when(mockRentItemRequest).getOutQuantity();
+        doReturn(device).when(mockRentItemRequest).getScannable();
 
         //when
-        boolean isAvailable = underTest.checkIfAvailable(mockDeviceRentItemRequest, null);
+        boolean isAvailable = underTest.checkIfAvailable(mockRentItemRequest, null);
 
         //then
         assertFalse(isAvailable);
@@ -143,16 +140,16 @@ final class RentServiceTest {
     @Test
     void checkIfAvailableFalseMaxAmountIsOut() {
         //given
-        DeviceRentItem rentItem = DeviceRentItem.builder()
+        RentItem rentItem = RentItem.builder()
             .withBackStatus(OUT)
-            .withDevice(device)
+            .withScannable(device)
             .withOutQuantity(1)
             .build();
 
-        ArrayList<DeviceRentItem> deviceRentItems = new ArrayList<>();
-        deviceRentItems.add(rentItem);
+        ArrayList<RentItem> rentItems = new ArrayList<>();
+        rentItems.add(rentItem);
 
-        doReturn(deviceRentItems).when(mockDeviceRentItemDao).findAll();
+        doReturn(rentItems).when(mockRentItemDao).findAll();
 
         //when
         boolean isAvailable = underTest.checkIfAvailable(rentItem, null);
@@ -164,16 +161,16 @@ final class RentServiceTest {
     @Test
     void checkIfAvailableTrueMaxAmountIsOutButBack() {
         //given
-        DeviceRentItem rentItem = DeviceRentItem.builder()
+        RentItem rentItem = RentItem.builder()
             .withBackStatus(BACK)
-            .withDevice(device)
+            .withScannable(device)
             .withOutQuantity(1)
             .build();
 
-        ArrayList<DeviceRentItem> deviceRentItems = new ArrayList<>();
-        deviceRentItems.add(rentItem);
+        ArrayList<RentItem> rentItems = new ArrayList<>();
+        rentItems.add(rentItem);
 
-        doReturn(deviceRentItems).when(mockDeviceRentItemDao).findAll();
+        doReturn(rentItems).when(mockRentItemDao).findAll();
 
         //when
         boolean isAvailable = underTest.checkIfAvailable(rentItem, null);
@@ -190,17 +187,17 @@ final class RentServiceTest {
             .withQuantity(2)
             .build();
 
-        DeviceRentItem rentItem = DeviceRentItem.builder()
+        RentItem rentItem = RentItem.builder()
             .withBackStatus(OUT)
-            .withDevice(deviceMultiple)
+            .withScannable(deviceMultiple)
             .withOutQuantity(1)
             .build();
 
-        ArrayList<DeviceRentItem> deviceRentItems = new ArrayList<>();
-        deviceRentItems.add(rentItem);
+        ArrayList<RentItem> rentItems = new ArrayList<>();
+        rentItems.add(rentItem);
 
         doReturn(deviceMultiple).when(mockDeviceDao).getOne(any());
-        doReturn(deviceRentItems).when(mockDeviceRentItemDao).findAll();
+        doReturn(rentItems).when(mockRentItemDao).findAll();
 
         //when
         boolean isAvailable = underTest.checkIfAvailable(rentItem, null);
@@ -212,17 +209,17 @@ final class RentServiceTest {
     @Test
     void checkIfAvailableTrueRentItemToUpdateNotNull() {
         //given
-        DeviceRentItem rentItem = DeviceRentItem.builder()
+        RentItem rentItem = RentItem.builder()
             .withId(2L)
             .withBackStatus(OUT)
-            .withDevice(device)
+            .withScannable(device)
             .withOutQuantity(1)
             .build();
 
-        ArrayList<DeviceRentItem> deviceRentItems = new ArrayList<>();
-        deviceRentItems.add(rentItem);
+        ArrayList<RentItem> rentItems = new ArrayList<>();
+        rentItems.add(rentItem);
 
-        doReturn(deviceRentItems).when(mockDeviceRentItemDao).findAll();
+        doReturn(rentItems).when(mockRentItemDao).findAll();
 
         //when
         boolean isAvailable = underTest.checkIfAvailable(rentItem, rentItem);
@@ -364,7 +361,7 @@ final class RentServiceTest {
         //when
 
         //then
-        assertThrows(ObjectNotFoundException.class, () -> underTest.updateDeviceInRent(RENT_ID, mockDeviceRentItemRequest));
+        assertThrows(ObjectNotFoundException.class, () -> underTest.updateItem(RENT_ID, mockRentItemRequest));
     }
 
     @Test
@@ -372,12 +369,12 @@ final class RentServiceTest {
         //given
         given(mockRentDao.findById(any())).willReturn(Optional.ofNullable(rent));
         doReturn(false).when(underTest).checkIfAvailable(any(), any());
-        doReturn(mockDeviceRentItemRequest).when(rent).getRentItemOfDevice(any());
+        doReturn(mockRentItemRequest).when(rent).getRentItemOfScannable(any());
 
         //when
 
         //then
-        assertThrows(NotAvailableQuantityException.class, () -> underTest.updateDeviceInRent(RENT_ID, mockDeviceRentItemRequest));
+        assertThrows(NotAvailableQuantityException.class, () -> underTest.updateItem(RENT_ID, mockRentItemRequest));
     }
 
     @Test
@@ -385,48 +382,48 @@ final class RentServiceTest {
         //given
         given(mockRentDao.findById(any())).willReturn(Optional.ofNullable(rent));
         given(mockRentDao.save(any())).willReturn(rent);
-        given(mockDeviceRentItemDao.save(any())).willReturn(mockDeviceRentItemRequest);
+        given(mockRentItemDao.save(any())).willReturn(mockRentItemRequest);
         doReturn(true).when(underTest).checkIfAvailable(any(), any());
-        doReturn(null).when(rent).getRentItemOfDevice(any());
+        doReturn(null).when(rent).getRentItemOfScannable(any());
 
-        ArrayList<DeviceRentItem> rentItems = spy(new ArrayList<>());
+        ArrayList<RentItem> rentItems = spy(new ArrayList<>());
         doReturn(rentItems).when(rent).getRentItems();
 
         //when
-        Rent updatedRent = underTest.updateDeviceInRent(RENT_ID, mockDeviceRentItemRequest);
+        Rent updatedRent = underTest.updateItem(RENT_ID, mockRentItemRequest);
 
         //then
         assertNotNull(updatedRent);
         assertEquals(rent, updatedRent);
 
-        verify(mockDeviceRentItemDao).save(mockDeviceRentItemRequest);
-        verify(rentItems).add(mockDeviceRentItemRequest);
+        verify(mockRentItemDao).save(mockRentItemRequest);
+        verify(rentItems).add(mockRentItemRequest);
         assertEquals(1, rentItems.size());
     }
 
     @Test
     void testAddDeviceToRentUpdateOutQuantity() {
         //given
-        given(mockDeviceRentItemRequest.getBackStatus()).willReturn(OTHER_RENT_ITEM_BACK_STATUS);
-        given(mockDeviceRentItemRequest.getOutQuantity()).willReturn(OTHER_RENT_ITEM_OUT_QUANTITY);
+        given(mockRentItemRequest.getBackStatus()).willReturn(OTHER_RENT_ITEM_BACK_STATUS);
+        given(mockRentItemRequest.getOutQuantity()).willReturn(OTHER_RENT_ITEM_OUT_QUANTITY);
 
-        DeviceRentItem rentItemToUpdate = spy(DeviceRentItem.builder()
+        RentItem rentItemToUpdate = spy(RentItem.builder()
             .withOutQuantity(OUT_QUANTITY)
             .withBackStatus(BACK)
             .build());
 
         given(mockRentDao.findById(any())).willReturn(Optional.ofNullable(rent));
         given(mockRentDao.save(any())).willReturn(rent);
-        given(mockDeviceRentItemDao.save(any())).willReturn(mockDeviceRentItemRequest);
+        given(mockRentItemDao.save(any())).willReturn(mockRentItemRequest);
         doReturn(true).when(underTest).checkIfAvailable(any(), any());
-        doReturn(rentItemToUpdate).when(rent).getRentItemOfDevice(any());
+        doReturn(rentItemToUpdate).when(rent).getRentItemOfScannable(any());
 
-        ArrayList<DeviceRentItem> rentItems = spy(new ArrayList<>());
+        ArrayList<RentItem> rentItems = spy(new ArrayList<>());
         rentItems.add(rentItemToUpdate);
         doReturn(rentItems).when(rent).getRentItems();
 
         //when
-        Rent updatedRent = underTest.updateDeviceInRent(RENT_ID, mockDeviceRentItemRequest);
+        Rent updatedRent = underTest.updateItem(RENT_ID, mockRentItemRequest);
 
         //then
         verify(rentItemToUpdate).setBackStatus(OTHER_RENT_ITEM_BACK_STATUS);
@@ -438,29 +435,29 @@ final class RentServiceTest {
     @Test
     void testAddDeviceToRentOutQuantityZero() {
         //given
-        given(mockDeviceRentItemRequest.getOutQuantity()).willReturn(ZERO_OUT_QUANTITY);
+        given(mockRentItemRequest.getOutQuantity()).willReturn(ZERO_OUT_QUANTITY);
 
-        DeviceRentItem rentItemToUpdate = spy(DeviceRentItem.builder()
+        RentItem rentItemToUpdate = spy(RentItem.builder()
             .withOutQuantity(OUT_QUANTITY)
             .withBackStatus(BACK)
             .build());
 
         given(mockRentDao.findById(any())).willReturn(Optional.ofNullable(rent));
         given(mockRentDao.save(any())).willReturn(rent);
-        given(mockDeviceRentItemDao.save(any())).willReturn(mockDeviceRentItemRequest);
+        given(mockRentItemDao.save(any())).willReturn(mockRentItemRequest);
         doReturn(true).when(underTest).checkIfAvailable(any(), any());
-        doReturn(rentItemToUpdate).when(rent).getRentItemOfDevice(any());
+        doReturn(rentItemToUpdate).when(rent).getRentItemOfScannable(any());
 
-        ArrayList<DeviceRentItem> rentItems = spy(new ArrayList<>());
+        ArrayList<RentItem> rentItems = spy(new ArrayList<>());
         rentItems.add(rentItemToUpdate);
         doReturn(rentItems).when(rent).getRentItems();
 
         //when
-        Rent updatedRent = underTest.updateDeviceInRent(RENT_ID, mockDeviceRentItemRequest);
+        Rent updatedRent = underTest.updateItem(RENT_ID, mockRentItemRequest);
 
         //then
         assertEquals(0, updatedRent.getRentItems().size());
-        verify(mockDeviceRentItemDao).delete(any());
+        verify(mockRentItemDao).delete(any());
         verify(mockRentDao).save(rent);
     }
 

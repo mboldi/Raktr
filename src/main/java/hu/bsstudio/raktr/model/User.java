@@ -1,0 +1,159 @@
+package hu.bsstudio.raktr.model;
+
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+@Entity
+@Table(name = "users")
+@JsonSerialize
+@JsonDeserialize(builder = User.Builder.class)
+@NoArgsConstructor
+@Data
+@SuppressWarnings("checkstyle:DesignForExtension")
+public class User implements UserDetails {
+
+    @Id
+    @Setter(AccessLevel.PROTECTED)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @NotBlank
+    @Column(unique = true)
+    private String username;
+
+    @NotBlank
+    private String nickName;
+
+    @NotNull
+    private String familyName;
+
+    @NotNull
+    private String givenName;
+
+    @NotNull
+    private String personalId;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+        name = "users_roles",
+        joinColumns = @JoinColumn(name = "role_id"),
+        inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    private List<UserRole> roles;
+
+    public final void addRole(final UserRole newRole) {
+        if (roles == null) {
+            roles = new ArrayList<>();
+        }
+
+        roles.add(newRole);
+    }
+
+    public User(final Builder builder) {
+        this.id = builder.id;
+        this.username = builder.username;
+        this.nickName = builder.nickName;
+        this.familyName = builder.familyName;
+        this.givenName = builder.givenName;
+        this.personalId = builder.personalId;
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return null;
+    }
+
+    @Override
+    public String getPassword() {
+        return null;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+
+    @SuppressWarnings("hiddenfield")
+    public static final class Builder {
+        private Long id;
+        private String username;
+        private String nickName;
+        private String familyName;
+        private String givenName;
+        private String personalId;
+
+        public Builder withId(final Long id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder withUsername(final String ldapUid) {
+            this.username = ldapUid;
+            return this;
+        }
+
+        public Builder withNickName(final String nickName) {
+            this.nickName = nickName;
+            return this;
+        }
+
+        public Builder withFamilyName(final String familyName) {
+            this.familyName = familyName;
+            return this;
+        }
+
+        public Builder withGivenName(final String givenName) {
+            this.givenName = givenName;
+            return this;
+        }
+
+        public Builder withPersonalId(final String personalId) {
+            this.personalId = personalId;
+            return this;
+        }
+
+        public User build() {
+            return new User(this);
+        }
+    }
+}

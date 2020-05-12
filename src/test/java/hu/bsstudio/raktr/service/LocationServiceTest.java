@@ -1,6 +1,7 @@
 package hu.bsstudio.raktr.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doReturn;
@@ -9,9 +10,11 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 import hu.bsstudio.raktr.dao.LocationDao;
+import hu.bsstudio.raktr.exception.ObjectNotFoundException;
 import hu.bsstudio.raktr.model.Location;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -75,7 +78,7 @@ final class LocationServiceTest {
             .withName(UPDATED_NAME)
             .build();
 
-        doReturn(location).when(mockLocationDao).getOne(LOCATION_ID);
+        given(mockLocationDao.findById(LOCATION_ID)).willReturn(java.util.Optional.ofNullable(location));
         doReturn(location).when(mockLocationDao).save(location);
 
         //when
@@ -99,5 +102,16 @@ final class LocationServiceTest {
 
         //then
         assertEquals(locations, fetchedLocations);
+    }
+
+    @Test
+    void testUpdateLocationNotFound() {
+        //given
+        given(mockLocationDao.findById(LOCATION_ID)).willReturn(Optional.empty());
+
+        //when
+
+        //then
+        assertThrows(ObjectNotFoundException.class, () -> underTest.update(mockLocationRequest));
     }
 }

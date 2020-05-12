@@ -229,30 +229,6 @@ final class DeviceServiceTest {
     }
 
     @Test
-    void testGetByBarcode() {
-        //given
-        given(mockDeviceDao.findByBarcode(any())).willReturn(device);
-
-        //when
-        Device foundDevice = underTest.getByBarcode(BARCODE);
-
-        //then
-        verify(mockDeviceDao).findByBarcode(BARCODE);
-        assertEquals(device, foundDevice);
-    }
-
-    @Test
-    void testGetByBarcodeFindNoDevice() {
-        //given
-        given(mockDeviceDao.findByBarcode(any())).willReturn(null);
-
-        //when
-
-        //then
-        assertThrows(ObjectNotFoundException.class, () -> underTest.getByBarcode(BARCODE));
-    }
-
-    @Test
     void testDelete() {
         //given
 

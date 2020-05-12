@@ -1,6 +1,6 @@
 package hu.bsstudio.raktr.dao;
 
-import hu.bsstudio.raktr.model.Device;
+import hu.bsstudio.raktr.model.UserRole;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -10,10 +10,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 @Transactional
-public interface DeviceDao extends JpaRepository<Device, Long> {
+public interface UserRoleDao extends JpaRepository<UserRole, Long> {
 
-    String FIND_BY_BARCODE_QUERY = "SELECT device FROM Device device WHERE device.barcode = :barcode";
+    String FIND_BY_ROLENAME_QUERY = "SELECT userRole FROM UserRole userRole WHERE userRole.roleName = :rolename";
 
-    @Query(FIND_BY_BARCODE_QUERY)
-    Optional<Device> findByBarcode(@Param("barcode") String barcode);
+    @Query(FIND_BY_ROLENAME_QUERY)
+    Optional<UserRole> findByRoleName(@Param("rolename") String rolename);
 }

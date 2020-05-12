@@ -5,6 +5,7 @@ import hu.bsstudio.raktr.service.LocationService;
 import java.util.List;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,8 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @Slf4j
+@SuppressWarnings("checkstyle:DesignForExtension")
 @RequestMapping("/api/location")
-public final class LocationController {
+public class LocationController {
 
     private final LocationService locationService;
 
@@ -43,6 +45,7 @@ public final class LocationController {
     }
 
     @DeleteMapping
+    @Secured("ROLE_Stúdiós")
     public Location deleteLocation(@Valid @RequestBody final  Location locationRequest) {
         log.info("Incoming request to delete location: {}", locationRequest);
         return locationService.delete(locationRequest);

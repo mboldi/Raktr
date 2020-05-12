@@ -5,6 +5,7 @@ import hu.bsstudio.raktr.service.DeviceService;
 import java.util.List;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,8 +17,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @Slf4j
+@SuppressWarnings("checkstyle:DesignForExtension")
 @RequestMapping("/api/device")
-public final class DeviceController {
+public class DeviceController {
 
     private final DeviceService deviceService;
 
@@ -38,6 +40,7 @@ public final class DeviceController {
     }
 
     @DeleteMapping
+    @Secured("ROLE_Stúdiós")
     public Device deleteDevice(@Valid @RequestBody final Device deviceRequest) {
         log.info("Incoming request to delete device: {}", deviceRequest);
         return deviceService.delete(deviceRequest);
@@ -53,11 +56,5 @@ public final class DeviceController {
     public Device getDeviceById(@PathVariable final Long id) {
         log.info("Incoming request for device with id {}", id);
         return deviceService.getById(id);
-    }
-
-    @GetMapping("/barcode/{barcode}")
-    public Device getDeviceByBarcode(@PathVariable final String barcode) {
-        log.info("Incoming request for device with barcode: {}", barcode);
-        return deviceService.getByBarcode(barcode);
     }
 }

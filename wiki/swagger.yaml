@@ -8,6 +8,8 @@ basePath: "/api"
 tags:
   - name: "Device"
     description: "Everything about devices"
+  - name: "CompositeItem"
+    description: "Everything about composite items"
   - name: "Rent"
     description: "Everything about rents"
   - name: "Category"
@@ -107,25 +109,183 @@ paths:
             $ref: '#/definitions/Device'
         400:
           description: "Invalid ID supplied"
-  /device/barcode/{barcode}:
+#  /device/barcode/{barcode}:
+#    get:
+#      tags:
+#        - "Device"
+#      summary: "Return a device with given barcode value"
+#      operationId: "getDeviceByBarcode"
+#      parameters:
+#        - name: "barcode"
+#          in: path
+#          description: "The barcode of the device you want to get"
+#          required: true
+#          type: string
+#      responses:
+#        200:
+#          description: "Successfully found device"
+#          schema:
+#            $ref: '#/definitions/Device'
+#        400:
+#          description: "Device with given barcode not found"
+
+  /composite:
+    get:
+      tags:
+        - "CompositeItem"
+      summary: "Returns all composite items"
+      operationId: "getAllComposite"
+      responses:
+        200:
+          description: "Successful operation"
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/CompositeItem'
+    post:
+      tags:
+        - "CompositeItem"
+      summary: "Adds a composite item to the system"
+      operationId: "addComposite"
+      parameters:
+        - name: "compositeItem"
+          in: body
+          required: true
+          description: "The composite item you want to add to the system"
+          schema:
+            $ref: '#/definitions/CompositeItem'
+      responses:
+        200:
+          description: "Successful operation"
+          schema:
+            $ref: '#/definitions/CompositeItem'
+    put:
+      tags:
+        - "CompositeItem"
+      summary: "Updates a Composite item"
+      operationId: "updateComposite"
+      parameters:
+        - name: "compositeItem"
+          in: body
+          required: true
+          description: "The composite item you want to update in the system"
+          schema:
+            $ref: '#/definitions/CompositeItem'
+      responses:
+        200:
+          description: "Successful operation"
+          schema:
+            $ref: '#/definitions/CompositeItem'
+        404:
+          description: "CompositeItem not found"
+    delete:
+      tags:
+        - "CompositeItem"
+      summary: "Deletes a composite item"
+      operationId: "deleteComposite"
+      parameters:
+        - name: "compositeItem"
+          in: body
+          required: true
+          description: "The composite item you want to update in the system"
+          schema:
+            $ref: '#/definitions/CompositeItem'
+      responses:
+        200:
+          description: "Successful operation"
+          schema:
+            $ref: '#/definitions/CompositeItem'
+        404:
+          description: "CompositeItem not found"
+  /composite/{compositeId}:
+    get:
+      tags:
+        - "CompositeItem"
+      summary: "Returns a single composite item with given ID"
+      operationId: "getOneComposite"
+      parameters:
+        - name: "compositeId"
+          in: path
+          description: "The id of the composite item you want to get"
+          required: true
+          type: integer
+      responses:
+        200:
+          description: "Successful operation"
+          schema:
+            $ref: '#/definitions/CompositeItem'
+        404:
+          description: "CompositeItem not found"
+    put:
+      tags:
+        - "CompositeItem"
+      summary: "Add device to a composite item"
+      operationId: "addDeviceToComposite"
+      parameters:
+        - name: "compositeId"
+          in: path
+          description: "The id of the composite item you want to get"
+          required: true
+          type: integer
+        - name: "device"
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Device'
+          description: "The device you want to update in the rent"
+      responses:
+        200:
+          description: "Successful operation"
+          schema:
+            $ref: '#/definitions/CompositeItem'
+        404:
+          description: "CompositeItem or Device not found"
+        409:
+          description: "Device already in an other composite item"
+    delete:
+      tags:
+        - "CompositeItem"
+      summary: "Deletes a device from a composite item"
+      operationId: "deleteDeviceFromComposite"
+      parameters:
+        - name: "compositeId"
+          in: path
+          description: "The id of the composite item you want to get"
+          required: true
+          type: integer
+        - name: "device"
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Device'
+          description: "The device you want to delete from the rent"
+      responses:
+        200:
+          description: "Successful operation"
+          schema:
+            $ref: '#/definitions/CompositeItem'
+        404:
+          description: "CompositeItem not found"
+
+  /scannable/{barcode}:
     get:
       tags:
         - "Device"
-      summary: "Return a device with given barcode value"
-      operationId: "getDeviceByBarcode"
+        - "CompositeItem"
+      summary: "Returns the item with given barcode"
+      operationId: "getScannableByBarcode"
       parameters:
         - name: "barcode"
           in: path
-          description: "The barcode of the device you want to get"
-          required: true
           type: string
+          required: true
       responses:
         200:
-          description: "Successfully found device"
+          description: "Successful operation"
           schema:
-            $ref: '#/definitions/Device'
-        400:
-          description: "Device with given barcode not found"
+            $ref: '#/definitions/Scannable'
+        404:
+          description: "No item found with given barcode"
 
   /rent:
     post:
@@ -201,32 +361,6 @@ paths:
         404:
           description: "No rent data supplied"
   /rent/{rentId}:
-    put:
-      tags:
-        - "Rent"
-      summary: "Adds a device to a rent, if device is in the rent updates it. If 0 quantity is given, the device is removed from the rent"
-      operationId: "addDeviceToRent"
-      parameters:
-        - name: "rentId"
-          in: path
-          required: true
-          description: "The id of the rent you want to add the device to"
-          type: integer
-        - name: "deviceToAdd"
-          in: body
-          required: true
-          description: "The device you want to add to the rent or update"
-          schema:
-            $ref: '#/definitions/DeviceRentItem'
-      responses:
-        200:
-          description: "Successful operation"
-          schema:
-            $ref: '#/definitions/Rent'
-        400:
-          description: "Invalid id supplied"
-        409:
-          description: "Given amount is not available of the given device"
     get:
       tags:
         - "Rent"
@@ -243,8 +377,56 @@ paths:
           description: "Successful operation"
           schema:
             $ref: '#/definitions/Rent'
-        400:
+        404:
           description: "Invalid id supplied"
+    put:
+      tags:
+        - "Rent"
+      summary: "Adds a device to a rent, if device is in the rent updates it. If 0 quantity is given, the device is removed from the rent"
+      operationId: "addDeviceToRent"
+      parameters:
+        - name: "rentId"
+          in: path
+          required: true
+          description: "The id of the rent you want to add the device to"
+          type: integer
+        - name: "deviceToAdd"
+          in: body
+          required: true
+          description: "The device you want to add to the rent or update"
+          schema:
+            $ref: '#/definitions/RentItem'
+      responses:
+        200:
+          description: "Successful operation"
+          schema:
+            $ref: '#/definitions/Rent'
+        404:
+          description: "Invalid id supplied"
+        409:
+          description: "Given amount is not available of the given device"
+  /rent/pdf/{rentId}:
+    post:
+      summary: "Renturns a pdf version of the rent"
+      tags:
+        - "Rent"
+      operationId: "getPdf"
+      parameters:
+        - name: "rentId"
+          required: true
+          type: integer
+          in: path
+        - name: "rentPdfRequest"
+          required: true
+          in: body
+          schema:
+            $ref: '#/definitions/RentPdfRequest'
+      responses:
+        200:
+          description: "Successful operation, returns the generated pdf"
+        404:
+          description: "Invalid id supplied"
+
 
   /category:
     post:
@@ -293,7 +475,7 @@ paths:
           description: "Successful operation"
           schema:
             $ref: '#/definitions/Category'
-        400:
+        404:
           description: "Category not found"
           schema:
             $ref: '#/definitions/Category'
@@ -314,7 +496,7 @@ paths:
           description: "Successful operation"
           schema:
             $ref: '#/definitions/Category'
-        400:
+        404:
           description: "Category not found"
           schema:
             $ref: '#/definitions/Category'
@@ -366,7 +548,7 @@ paths:
           description: "Successful operation"
           schema:
             $ref: '#/definitions/Location'
-        400:
+        404:
           description: "Category not found"
           schema:
             $ref: '#/definitions/Location'
@@ -387,25 +569,34 @@ paths:
           description: "Successful operation"
           schema:
             $ref: '#/definitions/Location'
-        400:
+        404:
           description: "Location not found"
           schema:
             $ref: '#/definitions/Location'
 
 
-
-
 definitions:
-  Device:
+  Scannable:
+    description: "An abstract class for scannable objects"
     type: "object"
     required:
       - name
+      - id
     properties:
       id:
         type: integer
       name:
         type: string
         example: "Kamera"
+      barcode:
+        type: string
+        example: "B-320-01"
+
+  Device:
+    type: "object"
+    allOf:
+      - $ref: '#/definitions/Scannable'
+    properties:
       maker:
         type: string
         example: "Sony"
@@ -417,9 +608,6 @@ definitions:
       serial:
         type: string
         example: "00001111AABB"
-      barcode:
-        type: string
-        example: "B-320-01"
       weight:
         type: integer
         default: 1000
@@ -440,15 +628,18 @@ definitions:
         type: integer
         default: 1
 
-  CompositeDevice:
+  CompositeItem:
+    type: object
+    description: "An item that contains multiple devices"
     allOf:
-      - $ref: '#/definitions/Device'
-      - type: object
-        properties:
-          devices:
-            type: array
-            items:
-              $ref: '#/definitions/Device'
+      - $ref: '#/definitions/Scannable'
+    properties:
+      location:
+        $ref: '#/definitions/Location'
+      devices:
+        type: array
+        items:
+          $ref: '#/definitions/Device'
 
   Location:
     type: object
@@ -473,6 +664,23 @@ definitions:
         type: string
         example: "videó"
 
+  RentPdfRequest:
+    type: object
+    required:
+      - teamName
+      - teamLeaderName
+      - renterFullName
+      - renterId
+    properties:
+      teamName:
+        type: string
+      teamLeaderName:
+        type: string
+      renterFullName:
+        type: string
+      renterId:
+        type: string
+
   User:
     type: object
     required:
@@ -480,11 +688,15 @@ definitions:
     properties:
       id:
         type: integer
-      username:
+      ldapUid:
+        type: string
+      nickname:
         type: string
       familyName:
         type: string
       givenName:
+        type: string
+      personalId:
         type: string
       rank:
         type: string
@@ -494,15 +706,15 @@ definitions:
           - "Stúdiós-jelölt"
           - "Stúdiós"
 
-  DeviceRentItem:
-    description: "An object that is used to track inside a rent if a device arrived back or not"
+  RentItem:
+    description: "An object that is used to track inside a rent if an item arrived back or not"
     type: object
     required:
       - device
       - status
     properties:
-      device:
-        $ref: '#/definitions/Device'
+      scannable:
+        $ref: '#/definitions/Scannable'
       backStatus:
         type: string
         enum:
@@ -511,7 +723,7 @@ definitions:
       outQuantity:
         type: integer
         default: 1
-        description: "Specifies how many of a certain device will be rented"
+        description: "Specifies how many of a certain item will be rented"
 
   Rent:
     type: object
@@ -527,8 +739,8 @@ definitions:
         description: "Where or to who the devices will go out"
         type: string
       issuer:
-        $ref: '#/definitions/User'
-        description: "The person, who gives out the devices"
+        description: "The name of the person, who gives out the devices"
+        type: string
       outDate:
         type: string
         description: "The date, when the devices will leave the storage"
@@ -541,4 +753,4 @@ definitions:
       devices:
         type: array
         items:
-          $ref: '#/definitions/DeviceRentItem'
+          $ref: '#/definitions/RentItem'

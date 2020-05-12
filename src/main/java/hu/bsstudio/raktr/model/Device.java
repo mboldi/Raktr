@@ -4,14 +4,11 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Data;
@@ -28,15 +25,8 @@ import lombok.ToString;
 @JsonDeserialize(builder = Device.Builder.class)
 @NoArgsConstructor
 @Data
-public class Device extends DomainAuditModel {
-
-    @Id
-    @Setter(AccessLevel.NONE)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @NotBlank
-    private String name;
+@PrimaryKeyJoinColumn(name = "id")
+public class Device extends Scannable {
 
     @NotNull
     private String maker;
@@ -50,10 +40,6 @@ public class Device extends DomainAuditModel {
 
     @NotNull
     private Integer value;
-
-    @NotNull
-    @Column(unique = true)
-    private String barcode;
 
     @Min(0)
     private Integer weight;
@@ -98,6 +84,24 @@ public class Device extends DomainAuditModel {
 
     public static Builder builder() {
         return new Builder();
+    }
+
+    @Override
+    public String toString() {
+        return "Device{"
+            + "id=" + id
+            + ", name='" + name + '\''
+            + ", barcode='" + barcode + '\''
+            + ", maker='" + maker + '\''
+            + ", type='" + type + '\''
+            + ", serial='" + serial + '\''
+            + ", value=" + value
+            + ", weight=" + weight
+            + ", location=" + location
+            + ", status=" + status
+            + ", category=" + category
+            + ", quantity=" + quantity
+            + '}';
     }
 
     @SuppressWarnings("hiddenfield")
@@ -179,5 +183,4 @@ public class Device extends DomainAuditModel {
             return new Device(this);
         }
     }
-
 }

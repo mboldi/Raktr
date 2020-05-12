@@ -38,6 +38,9 @@ public class Rent extends DomainAuditModel {
     private String destination;
 
     @NotBlank
+    private String renter;
+
+    @NotBlank
     private String issuer;
 
     @NotBlank
@@ -49,18 +52,19 @@ public class Rent extends DomainAuditModel {
     @NotNull
     private String actBackDate;
 
-    @OneToMany(targetEntity = DeviceRentItem.class, cascade = REFRESH, fetch = EAGER, orphanRemoval = true)
+    @OneToMany(targetEntity = RentItem.class, cascade = REFRESH, fetch = EAGER, orphanRemoval = true)
     @Setter(AccessLevel.NONE)
-    private List<DeviceRentItem> rentItems;
+    private List<RentItem> rentItems;
 
     public Rent(final Builder builder) {
         this.id = builder.id;
         this.destination = builder.destination;
+        this.issuer = builder.issuer;
+        this.renter = builder.renter;
         this.outDate = builder.outDate;
         this.expBackDate = builder.expBackDate;
         this.actBackDate = builder.actBackDate;
         this.rentItems = builder.rentItems;
-        this.issuer = builder.issuer;
     }
 
     public static Builder builder() {
@@ -68,9 +72,9 @@ public class Rent extends DomainAuditModel {
     }
 
     @SuppressWarnings("checkstyle:DesignForExtension")
-    public DeviceRentItem getRentItemOfDevice(final Device deviceToFind) {
-        for (DeviceRentItem rentItem : rentItems) {
-            if (rentItem.getDevice().getId().equals(deviceToFind.getId())) {
+    public RentItem getRentItemOfScannable(final Scannable scannableToFind) {
+        for (RentItem rentItem : rentItems) {
+            if (rentItem.getScannable().getId().equals(scannableToFind.getId())) {
                 return rentItem;
             }
         }
@@ -83,10 +87,11 @@ public class Rent extends DomainAuditModel {
         private Long id;
         private String destination;
         private String issuer;
+        private String renter;
         private String outDate;
         private String expBackDate;
         private String actBackDate;
-        private List<DeviceRentItem> rentItems;
+        private List<RentItem> rentItems;
 
         public Builder withId(final Long id) {
             this.id = id;
@@ -100,6 +105,11 @@ public class Rent extends DomainAuditModel {
 
         public Builder withIssuer(final String issuer) {
             this.issuer = issuer;
+            return this;
+        }
+
+        public Builder withRenter(final String renter) {
+            this.renter = renter;
             return this;
         }
 
@@ -118,7 +128,7 @@ public class Rent extends DomainAuditModel {
             return this;
         }
 
-        public Builder withRentItems(final List<DeviceRentItem> rentItems) {
+        public Builder withRentItems(final List<RentItem> rentItems) {
             this.rentItems = rentItems;
             return this;
         }

@@ -6,7 +6,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-
 import hu.bsstudio.raktr.RaktrApplication;
 import hu.bsstudio.raktr.dao.CategoryDao;
 import hu.bsstudio.raktr.dao.CompositeItemDao;

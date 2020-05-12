@@ -5,7 +5,6 @@ import hu.bsstudio.raktr.exception.ObjectNotFoundException;
 import hu.bsstudio.raktr.model.Device;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -59,10 +58,9 @@ public final class DeviceService {
     }
 
     public Device getById(final Long id) {
-        Device foundDevice;
-        try {
-            foundDevice = deviceDao.getOne(id);
-        } catch (JpaObjectRetrievalFailureException e) {
+        Device foundDevice = deviceDao.findById(id).orElse(null);
+
+        if (foundDevice == null) {
             throw new ObjectNotFoundException();
         }
 

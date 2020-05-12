@@ -178,7 +178,7 @@ public class RentPdfCreator {
             permissionSch
                 .setFont(timesBold)
                 .setFontSize(12)
-                .add("Schönherz kollégiumból ");
+                .add("Schönherz Kollégiumból ");
 
             Paragraph permissionText = new Paragraph();
             permissionText

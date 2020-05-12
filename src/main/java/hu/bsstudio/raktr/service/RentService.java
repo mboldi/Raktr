@@ -163,7 +163,7 @@ public class RentService {
             .withOutDate(rentToGenerate.getOutDate())
             .withBackDate(rentToGenerate.getExpBackDate())
             .withFileName(fileName)
-            .withRenterName(rentPdfRequest.getRenterFullName())
+            .withRenterName(rentToGenerate.getRenter())
             .withRenterId(rentPdfRequest.getRenterId())
             .withItems(new HashMap<>())
             .build();

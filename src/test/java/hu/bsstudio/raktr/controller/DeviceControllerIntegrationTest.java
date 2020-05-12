@@ -211,6 +211,12 @@ public class DeviceControllerIntegrationTest {
     }
 
     @Test
+    public void testGetDeviceByIdFails() throws Exception {
+        mvc.perform(get("/api/device/1"))
+            .andExpect(status().isNotFound());
+    }
+
+    @Test
     public void testDeleteDevice() throws Exception {
         Device device = defaultBuilder
             .build();

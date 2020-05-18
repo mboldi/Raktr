@@ -32,7 +32,7 @@ paths:
           schema:
             $ref: '#/definitions/Device'
       responses:
-        201:
+        200:
           description: "Successfully created"
     get:
       tags:

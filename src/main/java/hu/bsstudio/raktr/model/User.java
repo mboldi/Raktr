@@ -42,7 +42,6 @@ public class User implements UserDetails {
     @Column(unique = true)
     private String username;
 
-    @NotBlank
     private String nickName;
 
     @NotNull

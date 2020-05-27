@@ -1,8 +1,12 @@
 package hu.bsstudio.raktr.service;
 
+import hu.bsstudio.raktr.dao.CategoryDao;
 import hu.bsstudio.raktr.dao.DeviceDao;
+import hu.bsstudio.raktr.dao.LocationDao;
 import hu.bsstudio.raktr.exception.ObjectNotFoundException;
+import hu.bsstudio.raktr.model.Category;
 import hu.bsstudio.raktr.model.Device;
+import hu.bsstudio.raktr.model.Location;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -12,14 +16,20 @@ import org.springframework.stereotype.Service;
 public final class DeviceService {
 
     private final DeviceDao deviceDao;
+    private final CategoryDao categoryDao;
+    private final LocationDao locationDao;
 
-    public DeviceService(final DeviceDao deviceDao) {
+    public DeviceService(final DeviceDao deviceDao, final CategoryDao categoryDao, final LocationDao locationDao) {
         this.deviceDao = deviceDao;
+        this.categoryDao = categoryDao;
+        this.locationDao = locationDao;
     }
 
-    public Device create(final Device device) {
-        var saved = deviceDao.save(device);
-        log.info("Device created: {}", device);
+    public Device create(final Device deviceRequest) {
+        checkCategoryAndLocation(deviceRequest);
+
+        var saved = deviceDao.save(deviceRequest);
+        log.info("Device created: {}", deviceRequest);
         return saved;
     }
 
@@ -36,6 +46,8 @@ public final class DeviceService {
     }
 
     public Device update(final Device deviceRequest) {
+        checkCategoryAndLocation(deviceRequest);
+
         Device deviceToUpdate = deviceDao.findById(deviceRequest.getId()).orElse(null);
 
         if (deviceToUpdate == null) {
@@ -51,6 +63,8 @@ public final class DeviceService {
         deviceToUpdate.setValue(deviceRequest.getValue());
         deviceToUpdate.setWeight(deviceRequest.getWeight());
         deviceToUpdate.setQuantity(deviceRequest.getQuantity());
+        deviceToUpdate.setCategory(deviceRequest.getCategory());
+        deviceToUpdate.setLocation(deviceRequest.getLocation());
 
         Device saved = deviceDao.save(deviceToUpdate);
         log.info("Device updated in DB: {}", saved);
@@ -66,5 +80,25 @@ public final class DeviceService {
 
         log.info("Device with id {} found: {}", id, foundDevice);
         return foundDevice;
+    }
+
+    private void checkCategoryAndLocation(final Device deviceRequest) {
+        Category category = categoryDao.findByName(deviceRequest.getCategory().getName()).orElse(null);
+
+        if (category == null) {
+            category = categoryDao.save(Category.builder()
+                .withName(deviceRequest.getCategory().getName())
+                .build());
+        }
+        deviceRequest.setCategory(category);
+
+        Location location = locationDao.findByName(deviceRequest.getLocation().getName()).orElse(null);
+
+        if (location == null) {
+            location = locationDao.save(Location.builder()
+                .withName(deviceRequest.getLocation().getName())
+                .build());
+        }
+        deviceRequest.setLocation(location);
     }
 }

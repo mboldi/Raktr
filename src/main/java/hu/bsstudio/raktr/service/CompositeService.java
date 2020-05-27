@@ -2,9 +2,11 @@ package hu.bsstudio.raktr.service;
 
 import hu.bsstudio.raktr.dao.CompositeItemDao;
 import hu.bsstudio.raktr.dao.DeviceDao;
+import hu.bsstudio.raktr.dao.LocationDao;
 import hu.bsstudio.raktr.exception.ObjectNotFoundException;
 import hu.bsstudio.raktr.model.CompositeItem;
 import hu.bsstudio.raktr.model.Device;
+import hu.bsstudio.raktr.model.Location;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -15,10 +17,12 @@ public class CompositeService {
 
     private final CompositeItemDao compositeItemDao;
     private final DeviceDao deviceDao;
+    private final LocationDao locationDao;
 
-    public CompositeService(final CompositeItemDao compositeItemDao, final DeviceDao deviceDao) {
+    public CompositeService(final CompositeItemDao compositeItemDao, final DeviceDao deviceDao, final LocationDao locationDao) {
         this.compositeItemDao = compositeItemDao;
         this.deviceDao = deviceDao;
+        this.locationDao = locationDao;
     }
 
     public final List<CompositeItem> getAll() {
@@ -28,12 +32,16 @@ public class CompositeService {
     }
 
     public final CompositeItem create(final CompositeItem compositeItemRequest) {
+        checkLocation(compositeItemRequest);
+
         CompositeItem saved = compositeItemDao.save(compositeItemRequest);
         log.info("Composite item saved: {}", saved);
         return saved;
     }
 
     public final CompositeItem update(final CompositeItem compositeItemRequest) {
+        checkLocation(compositeItemRequest);
+
         CompositeItem compositeItemToUpdate = compositeItemDao.findById(compositeItemRequest.getId()).orElse(null);
 
         if (compositeItemToUpdate == null) {
@@ -91,5 +99,16 @@ public class CompositeService {
         CompositeItem saved = compositeItemDao.save(compositeItemToUpdate);
         log.info("Device removed from rent: {}", saved);
         return saved;
+    }
+
+    private void checkLocation(final CompositeItem compositeRequest) {
+        Location location = locationDao.findByName(compositeRequest.getLocation().getName()).orElse(null);
+
+        if (location == null) {
+            location = locationDao.save(Location.builder()
+                .withName(compositeRequest.getLocation().getName())
+                .build());
+        }
+        compositeRequest.setLocation(location);
     }
 }

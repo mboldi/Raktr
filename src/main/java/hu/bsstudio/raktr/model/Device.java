@@ -9,11 +9,9 @@ import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.ToString;
 
 @SuppressWarnings("checkstyle:FinalClass")
@@ -45,7 +43,6 @@ public class Device extends Scannable {
     @NotNull
     @ManyToOne
     @JoinColumn
-    @Setter(AccessLevel.NONE)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private Location location;
@@ -56,7 +53,6 @@ public class Device extends Scannable {
     @NotNull
     @JoinColumn
     @ManyToOne
-    @Setter(AccessLevel.NONE)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private Category category;

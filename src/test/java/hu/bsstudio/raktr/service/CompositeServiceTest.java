@@ -55,7 +55,7 @@ final class CompositeServiceTest {
     void init() {
         initMocks(this);
 
-        underTest = new CompositeService(mockCompositeDao, mockDeviceDao);
+        underTest = new CompositeService(mockCompositeDao, mockDeviceDao, locationDao);
 
         location = Location.builder()
             .withId(LOCATION_ID)

@@ -64,7 +64,7 @@ final class DeviceServiceTest {
     void init() {
         initMocks(this);
 
-        underTest = new DeviceService(mockDeviceDao);
+        underTest = new DeviceService(mockDeviceDao, categoryDao, locationDao);
 
         given(deviceRequest.getName()).willReturn(DEVICE_NAME);
         given(deviceRequest.getMaker()).willReturn(MAKER);

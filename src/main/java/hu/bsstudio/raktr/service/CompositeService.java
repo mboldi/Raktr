@@ -83,7 +83,7 @@ public class CompositeService {
 
         compositeItemToUpdate.getDevices().add(deviceRequest);
         CompositeItem saved = compositeItemDao.save(compositeItemToUpdate);
-        log.info("Device added to rent: {}", saved);
+        log.info("Device added to composite item: {}", saved);
         return saved;
     }
 
@@ -97,7 +97,7 @@ public class CompositeService {
 
         compositeItemToUpdate.getDevices().remove(deviceToRemove);
         CompositeItem saved = compositeItemDao.save(compositeItemToUpdate);
-        log.info("Device removed from rent: {}", saved);
+        log.info("Device removed from composite item: {}", saved);
         return saved;
     }
 

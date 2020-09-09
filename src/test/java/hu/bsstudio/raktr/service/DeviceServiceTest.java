@@ -11,7 +11,9 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
 
+import hu.bsstudio.raktr.dao.CategoryDao;
 import hu.bsstudio.raktr.dao.DeviceDao;
+import hu.bsstudio.raktr.dao.LocationDao;
 import hu.bsstudio.raktr.exception.ObjectNotFoundException;
 import hu.bsstudio.raktr.model.Category;
 import hu.bsstudio.raktr.model.Device;
@@ -54,6 +56,12 @@ final class DeviceServiceTest {
     @Mock
     private Device deviceRequest;
 
+    @Mock
+    private CategoryDao mockCategoryDao;
+
+    @Mock
+    private LocationDao mockLocationDao;
+
     private Device device;
     private Location location;
     private Category category;
@@ -64,17 +72,7 @@ final class DeviceServiceTest {
     void init() {
         initMocks(this);
 
-        underTest = new DeviceService(mockDeviceDao, categoryDao, locationDao);
-
-        given(deviceRequest.getName()).willReturn(DEVICE_NAME);
-        given(deviceRequest.getMaker()).willReturn(MAKER);
-        given(deviceRequest.getType()).willReturn(TYPE);
-        given(deviceRequest.getSerial()).willReturn(SERIAL);
-        given(deviceRequest.getValue()).willReturn(VALUE);
-        given(deviceRequest.getBarcode()).willReturn(BARCODE);
-        given(deviceRequest.getWeight()).willReturn(WEIGHT);
-        given(deviceRequest.getStatus()).willReturn(STATUS);
-        given(deviceRequest.getQuantity()).willReturn(QUANTITY);
+        underTest = new DeviceService(mockDeviceDao, mockCategoryDao, mockLocationDao);
 
         location = Location.builder()
             .withName(LOCATION_NAME)
@@ -96,6 +94,8 @@ final class DeviceServiceTest {
             .withCategory(category)
             .withQuantity(QUANTITY);
 
+        deviceRequest = spy(defaultBuilder.build());
+
         device = spy(defaultBuilder.build());
     }
 
@@ -103,6 +103,8 @@ final class DeviceServiceTest {
     void testCreateDevice() {
         //given
         doReturn(device).when(mockDeviceDao).save(deviceRequest);
+        given(mockCategoryDao.findByName(CATEGORY_NAME)).willReturn(Optional.ofNullable(category));
+        given(mockLocationDao.findByName(LOCATION_NAME)).willReturn(Optional.ofNullable(location));
 
         //when
         final Device saved = underTest.create(deviceRequest);
@@ -136,6 +138,8 @@ final class DeviceServiceTest {
             .withWeight(WEIGHT)
             .withStatus(STATUS)
             .withQuantity(QUANTITY)
+            .withCategory(category)
+            .withLocation(location)
             .build());
 
         final Device updatedDevice = Device.builder()
@@ -152,6 +156,9 @@ final class DeviceServiceTest {
 
         given(mockDeviceDao.save(device)).willReturn(updatedDevice);
         given(mockDeviceDao.findById(any())).willReturn(java.util.Optional.ofNullable(device));
+
+        given(mockCategoryDao.findByName(CATEGORY_NAME)).willReturn(Optional.ofNullable(category));
+        given(mockLocationDao.findByName(LOCATION_NAME)).willReturn(Optional.ofNullable(location));
 
         //when
         final Device updated = underTest.update(deviceRequest);
@@ -195,6 +202,9 @@ final class DeviceServiceTest {
     void testUpdateFindsNoDeviceToUpdate() {
         //given
         given(mockDeviceDao.findById(any())).willReturn(Optional.empty());
+        given(mockCategoryDao.findByName(CATEGORY_NAME)).willReturn(Optional.ofNullable(category));
+        given(mockLocationDao.findByName(LOCATION_NAME)).willReturn(Optional.ofNullable(location));
+
 
         //when
 

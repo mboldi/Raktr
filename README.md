@@ -1,6 +1,6 @@
 # Raktr [![Build Status](https://api.travis-ci.org/mboldi/Raktr.svg?branch=master)](https://travis-ci.org/mboldi/Raktr)
 
-This is an inventory and rent manager for a university studio.
+This is an inventory and rental management software backent for a university studio.
 
 ### Database
 

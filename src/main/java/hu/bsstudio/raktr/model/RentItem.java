@@ -1,8 +1,10 @@
 package hu.bsstudio.raktr.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -29,9 +31,10 @@ public class RentItem extends DomainAuditModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @NotNull
     @JoinColumn
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     private Scannable scannable;
 
     @NotNull
@@ -39,6 +42,11 @@ public class RentItem extends DomainAuditModel {
 
     @NotNull
     private Integer outQuantity;
+    /*
+    @ManyToOne
+    @JsonIgnore
+    @JoinColumn(name = "rent_id")
+    private Rent rent;*/
 
     private RentItem(final Builder builder) {
         this.id = builder.id;

@@ -1,8 +1,9 @@
 package hu.bsstudio.raktr.model;
 
-import static javax.persistence.CascadeType.REFRESH;
+import static javax.persistence.CascadeType.PERSIST;
 import static javax.persistence.FetchType.EAGER;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.util.List;
@@ -52,7 +53,8 @@ public class Rent extends DomainAuditModel {
     @NotNull
     private String actBackDate;
 
-    @OneToMany(targetEntity = RentItem.class, cascade = REFRESH, fetch = EAGER, orphanRemoval = true)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    @OneToMany(targetEntity = RentItem.class, cascade = PERSIST, fetch = EAGER, orphanRemoval = true)
     @Setter(AccessLevel.NONE)
     private List<RentItem> rentItems;
 

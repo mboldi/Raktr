@@ -10,6 +10,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 
 import hu.bsstudio.raktr.dao.CompositeItemDao;
 import hu.bsstudio.raktr.dao.DeviceDao;
+import hu.bsstudio.raktr.dao.LocationDao;
 import hu.bsstudio.raktr.exception.ObjectNotFoundException;
 import hu.bsstudio.raktr.model.CompositeItem;
 import hu.bsstudio.raktr.model.Device;
@@ -42,6 +43,9 @@ final class CompositeServiceTest {
     private DeviceDao mockDeviceDao;
 
     @Mock
+    private LocationDao mockLocationDao;
+
+    @Mock
     private CompositeItem mockCompositeRequest;
 
     private CompositeItem compositeItem;
@@ -55,7 +59,7 @@ final class CompositeServiceTest {
     void init() {
         initMocks(this);
 
-        underTest = new CompositeService(mockCompositeDao, mockDeviceDao);
+        underTest = new CompositeService(mockCompositeDao, mockDeviceDao, mockLocationDao);
 
         location = Location.builder()
             .withId(LOCATION_ID)

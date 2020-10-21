@@ -4,7 +4,6 @@ import static javax.persistence.CascadeType.REFRESH;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -25,7 +24,6 @@ import lombok.ToString;
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "category")
-@JsonSerialize
 @JsonDeserialize(builder = Category.Builder.class)
 @NoArgsConstructor
 @Data

@@ -8,6 +8,7 @@ import hu.bsstudio.raktr.model.Category;
 import hu.bsstudio.raktr.model.Device;
 import hu.bsstudio.raktr.model.Location;
 import java.util.List;
+import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -72,14 +73,14 @@ public final class DeviceService {
     }
 
     public Device getById(final Long id) {
-        Device foundDevice = deviceDao.findById(id).orElse(null);
+        Optional<Device> foundDevice = deviceDao.findById(id);
 
-        if (foundDevice == null) {
+        if (foundDevice.isEmpty()) {
             throw new ObjectNotFoundException();
         }
 
-        log.info("Device with id {} found: {}", id, foundDevice);
-        return foundDevice;
+        log.info("Device with id {} found: {}", id, foundDevice.get());
+        return foundDevice.get();
     }
 
     private void checkCategoryAndLocation(final Device deviceRequest) {

@@ -33,4 +33,4 @@ out/
 
 pdf/*.pdf
 
-src/main/resources/ldap.properties
+/src/main/resources/ldap.properties

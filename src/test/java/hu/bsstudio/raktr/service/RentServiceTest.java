@@ -16,6 +16,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 import hu.bsstudio.raktr.dao.DeviceDao;
+import hu.bsstudio.raktr.dao.GeneralDataDao;
 import hu.bsstudio.raktr.dao.RentDao;
 import hu.bsstudio.raktr.dao.RentItemDao;
 import hu.bsstudio.raktr.exception.NotAvailableQuantityException;
@@ -63,6 +64,9 @@ final class RentServiceTest {
     private DeviceDao mockDeviceDao;
 
     @Mock
+    private GeneralDataDao mockGeneralDataDao;
+
+    @Mock
     private RentItem mockRentItemRequest;
 
     @Mock
@@ -76,7 +80,7 @@ final class RentServiceTest {
     @BeforeEach
     void init() {
         initMocks(this);
-        underTest = spy(new RentService(mockRentDao, mockRentItemDao, mockDeviceDao));
+        underTest = spy(new RentService(mockRentDao, mockRentItemDao, mockDeviceDao, mockGeneralDataDao));
 
         device = Device.builder()
             .withId(DEVICE_ID)

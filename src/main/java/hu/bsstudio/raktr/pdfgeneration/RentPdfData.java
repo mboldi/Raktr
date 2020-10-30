@@ -11,6 +11,11 @@ public class RentPdfData {
     private String teamName;
     private String teamLeaderName;
 
+    private String firstSignerName;
+    private String firstSignerTitle;
+    private String secondSignerName;
+    private String secondSignerTitle;
+
     private String renterName;
     private String renterId;
 
@@ -24,6 +29,10 @@ public class RentPdfData {
     public RentPdfData(final Builder builder) {
         this.teamName = builder.teamName;
         this.teamLeaderName = builder.teamLeaderName;
+        this.firstSignerName = builder.firstSignerName;
+        this.firstSignerTitle = builder.firstSignerTitle;
+        this.secondSignerName = builder.secondSignerName;
+        this.secondSignerTitle = builder.secondSignerTitle;
         this.renterName = builder.renterName;
         this.renterId = builder.renterId;
         this.outDate = builder.outDate;
@@ -40,6 +49,10 @@ public class RentPdfData {
     public static final class Builder {
         private String teamName;
         private String teamLeaderName;
+        private String firstSignerName;
+        private String firstSignerTitle;
+        private String secondSignerName;
+        private String secondSignerTitle;
         private String renterName;
         private String renterId;
         private String outDate;
@@ -59,6 +72,26 @@ public class RentPdfData {
 
         public Builder withRenterName(final String renterName) {
             this.renterName = renterName;
+            return this;
+        }
+
+        public Builder withFirstSignerName(final String firstSignerName) {
+            this.firstSignerName = firstSignerName;
+            return this;
+        }
+
+        public Builder withFirstSignerTitle(final String firstSignerTitle) {
+            this.firstSignerTitle = firstSignerTitle;
+            return this;
+        }
+
+        public Builder withSecondSignerName(final String secondSignerName) {
+            this.secondSignerName = secondSignerName;
+            return this;
+        }
+
+        public Builder withSecondSignerTitle(final String secondSignerTitle) {
+            this.secondSignerTitle = secondSignerTitle;
             return this;
         }
 

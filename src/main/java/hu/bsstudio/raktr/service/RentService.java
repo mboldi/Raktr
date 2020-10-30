@@ -1,12 +1,14 @@
 package hu.bsstudio.raktr.service;
 
 import hu.bsstudio.raktr.dao.DeviceDao;
+import hu.bsstudio.raktr.dao.GeneralDataDao;
 import hu.bsstudio.raktr.dao.RentDao;
 import hu.bsstudio.raktr.dao.RentItemDao;
 import hu.bsstudio.raktr.exception.NotAvailableQuantityException;
 import hu.bsstudio.raktr.exception.ObjectNotFoundException;
 import hu.bsstudio.raktr.model.BackStatus;
 import hu.bsstudio.raktr.model.Device;
+import hu.bsstudio.raktr.model.GeneralData;
 import hu.bsstudio.raktr.model.Rent;
 import hu.bsstudio.raktr.model.RentItem;
 import hu.bsstudio.raktr.pdfgeneration.RentPdfCreator;
@@ -17,6 +19,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -27,14 +30,23 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class RentService {
 
+    private static final String GROUP_NAME_KEY = "groupName";
+    private static final String GROUP_LEADER_NAME_KEY = "groupLeader";
+    private static final String FIRST_SIGNER_NAME_KEY = "firstSignerName";
+    private static final String FIRST_SIGNER_TITLE_KEY = "firstSignerTitle";
+    private static final String SECOND_SIGNER_NAME_KEY = "secondSignerName";
+    private static final String SECOND_SIGNER_TITLE_KEY = "secondSignerTitle";
+
     private final RentDao rentDao;
     private final RentItemDao rentItemDao;
     private final DeviceDao deviceDao;
+    private final GeneralDataDao generalDataDao;
 
-    public RentService(final RentDao rentDao, final RentItemDao rentItemDao, final DeviceDao deviceDao) {
+    public RentService(final RentDao rentDao, final RentItemDao rentItemDao, final DeviceDao deviceDao, final GeneralDataDao generalDataDao) {
         this.rentDao = rentDao;
         this.rentItemDao = rentItemDao;
         this.deviceDao = deviceDao;
+        this.generalDataDao = generalDataDao;
     }
 
     @SuppressWarnings("checkstyle:DesignForExtension")
@@ -147,6 +159,7 @@ public class RentService {
         return foundRent;
     }
 
+    @SuppressWarnings({"checkstyle:InnerAssignment", "checkstyle:AvoidInlineConditionals"})
     public final ResponseEntity<byte[]> getPdf(final Long rentId, final RentPdfRequest rentPdfRequest) throws IOException {
         Rent rentToGenerate = rentDao.findById(rentId).orElse(null);
 
@@ -157,9 +170,22 @@ public class RentService {
 
         String fileName = "pdf/rent_" + rentToGenerate.getId();
 
+        Optional<GeneralData> foundData;
+        String groupName = (foundData = generalDataDao.findById(GROUP_NAME_KEY)).isPresent()
+            ? foundData.get().getData() : "Budavári Schönherz Stúdió";
+        String groupLeaderName = (foundData = generalDataDao.findById(GROUP_LEADER_NAME_KEY)).isPresent() ? foundData.get().getData() : "";
+        String firstSignerName = (foundData = generalDataDao.findById(FIRST_SIGNER_NAME_KEY)).isPresent() ? foundData.get().getData() : "";
+        String firstSignerTitle = (foundData = generalDataDao.findById(FIRST_SIGNER_TITLE_KEY)).isPresent() ? foundData.get().getData() : "";
+        String secondSignerName = (foundData = generalDataDao.findById(SECOND_SIGNER_NAME_KEY)).isPresent() ? foundData.get().getData() : "";
+        String secondSignerTitle = (foundData = generalDataDao.findById(SECOND_SIGNER_TITLE_KEY)).isPresent() ? foundData.get().getData() : "";
+
         RentPdfData rentPdfData = RentPdfData.builder()
-            .withTeamName(rentPdfRequest.getTeamName())
-            .withTeamLeaderName(rentPdfRequest.getTeamLeaderName())
+            .withTeamName(groupName)
+            .withTeamLeaderName(groupLeaderName)
+            .withFirstSignerName(firstSignerName)
+            .withFirstSignerTitle(firstSignerTitle)
+            .withSecondSignerName(secondSignerName)
+            .withSecondSignerTitle(secondSignerTitle)
             .withOutDate(rentToGenerate.getOutDate())
             .withBackDate(rentToGenerate.getExpBackDate())
             .withFileName(fileName)

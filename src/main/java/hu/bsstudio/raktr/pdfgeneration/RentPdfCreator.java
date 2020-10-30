@@ -33,6 +33,10 @@ public class RentPdfCreator {
         String teamLeaderName = rentData.getTeamLeaderName();
         String renterName = rentData.getRenterName();
         String renterId = rentData.getRenterId();
+        String firstSignerName = rentData.getFirstSignerName();
+        String firstSignerTitle = rentData.getFirstSignerTitle();
+        String secondSignerName = rentData.getSecondSignerName();
+        String secondSignerTitle = rentData.getSecondSignerTitle();
 
         String outDate = rentData.getOutDate();
         String backDate = rentData.getBackDate();
@@ -263,9 +267,9 @@ public class RentPdfCreator {
                 .setFontSize(12)
                 .setFont(timesBold)
                 .add(new Tab())
-                .add("Varga Dániel")
+                .add(firstSignerName)
                 .add(new Tab())
-                .add("Németh Ákos Zoltán")
+                .add(secondSignerName)
                 .setFixedLeading(35);
 
             Paragraph secondSignsTitles = new Paragraph();
@@ -274,9 +278,9 @@ public class RentPdfCreator {
                 .setFontSize(12)
                 .setFont(timesBold)
                 .add(new Tab())
-                .add("Üzemeltetési felelős")
+                .add(firstSignerTitle)
                 .add(new Tab())
-                .add("BME- Hallgatói és Kollégiumi Erőforrások Osztálya")
+                .add(secondSignerTitle)
                 .setFixedLeading(-20);
 
             document.add(secondSignsNames);

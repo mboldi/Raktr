@@ -38,7 +38,7 @@ public class UserDetailsMapper implements UserDetailsContextMapper {
         if (foundUser == null) {
             foundUser = User.builder()
                 .withUsername(username)
-                .withNickName(username)
+                .withNickName(ldapPerson.getGivenName())
                 .withPersonalId("")
                 .withFamilyName(ldapPerson.getSn())
                 .withGivenName(ldapPerson.getGivenName())

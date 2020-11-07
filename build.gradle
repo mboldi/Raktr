@@ -38,6 +38,8 @@ dependencies {
     implementation "org.springframework.ldap:spring-ldap-core"
     implementation "org.springframework.security:spring-security-ldap"
 
+    compile("com.auth0:java-jwt:3.4.0")
+
     compileOnly 'org.projectlombok:lombok'
     implementation 'com.itextpdf:itext7-core:7.1.10'
 

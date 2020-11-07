@@ -5,7 +5,6 @@ import static hu.bsstudio.raktr.security.SecurityConstants.HEADER_STRING;
 import static hu.bsstudio.raktr.security.SecurityConstants.SECRET;
 import static hu.bsstudio.raktr.security.SecurityConstants.TOKEN_PREFIX;
 
-
 import com.auth0.jwt.JWT;
 import java.io.IOException;
 import javax.servlet.FilterChain;
@@ -23,7 +22,7 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
 
     private final MyUserDetailsService userDetailsService;
 
-    public JWTAuthorizationFilter(final AuthenticationManager authManager, MyUserDetailsService userDetailsService) {
+    public JWTAuthorizationFilter(final AuthenticationManager authManager, final MyUserDetailsService userDetailsService) {
         super(authManager);
         this.userDetailsService = userDetailsService;
     }

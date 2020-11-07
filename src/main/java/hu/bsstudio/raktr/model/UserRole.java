@@ -1,5 +1,6 @@
 package hu.bsstudio.raktr.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.util.List;
@@ -34,8 +35,9 @@ public class UserRole {
     @Column(unique = true)
     private String roleName;
 
-    @ToString.Exclude
     @ManyToMany(mappedBy = "roles")
+    @ToString.Exclude
+    @JsonIgnore
     private List<User> users;
 
     public UserRole(final Builder builder) {

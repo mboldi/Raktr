@@ -6,7 +6,6 @@ import static hu.bsstudio.raktr.security.SecurityConstants.HEADER_STRING;
 import static hu.bsstudio.raktr.security.SecurityConstants.SECRET;
 import static hu.bsstudio.raktr.security.SecurityConstants.TOKEN_PREFIX;
 
-
 import com.auth0.jwt.JWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hu.bsstudio.raktr.model.UserLoginData;
@@ -58,9 +57,6 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                                             final HttpServletResponse res,
                                             final FilterChain chain,
                                             final Authentication auth) throws IOException, ServletException {
-
-
-        log.info("principle: {}, username: {}", auth.getPrincipal(), ((LdapUser) auth.getPrincipal()).getUsername());
 
         String token = JWT.create()
             .withSubject(((LdapUser) auth.getPrincipal()).getUsername())

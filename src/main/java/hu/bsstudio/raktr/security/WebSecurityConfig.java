@@ -1,6 +1,7 @@
 package hu.bsstudio.raktr.security;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
@@ -8,7 +9,11 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.ldap.authentication.ad.ActiveDirectoryLdapAuthenticationProvider;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 @SuppressWarnings("checkstyle:StaticVariableName")
@@ -34,8 +39,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final UserDetailsMapper userDetailsMapper;
 
-    public WebSecurityConfig(final UserDetailsMapper userDetailsMapper) {
+    private final MyUserDetailsService userDetailsService;
+
+    public WebSecurityConfig(final UserDetailsMapper userDetailsMapper, final MyUserDetailsService userDetailsService) {
         this.userDetailsMapper = userDetailsMapper;
+        this.userDetailsService = userDetailsService;
     }
 
     @Override
@@ -53,10 +61,21 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected final void configure(final HttpSecurity http) throws Exception {
         http
+            .cors().and().csrf().disable()
             .authorizeRequests()
-            .anyRequest().fullyAuthenticated()
+            .antMatchers("/login").permitAll()
+            .anyRequest().authenticated()
             .and()
-            .formLogin().defaultSuccessUrl("/api/device");
-        http.csrf().disable();
+            .addFilter(new JWTAuthenticationFilter(authenticationManager()))
+            .addFilter(new JWTAuthorizationFilter(authenticationManager(), userDetailsService))
+            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+    }
+
+    @SuppressWarnings("checkstyle:DesignForExtension")
+    @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", new CorsConfiguration().applyPermitDefaultValues());
+        return source;
     }
 }

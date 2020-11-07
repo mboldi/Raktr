@@ -16,6 +16,7 @@ public class LdapUser extends User implements LdapUserDetails {
     public LdapUser(final User user) {
         if (user != null) {
             this.setId(user.getId());
+            this.setUsername(user.getUsername());
             this.setFamilyName(user.getFamilyName());
             this.setGivenName(user.getGivenName());
             this.setNickName(user.getNickName());

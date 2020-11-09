@@ -3,6 +3,7 @@ package hu.bsstudio.raktr.controller;
 import hu.bsstudio.raktr.model.User;
 import hu.bsstudio.raktr.service.UserDataService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequestMapping("/api/user")
 @SuppressWarnings("checkstyle:DesignForExtension")
 public class UserDataController {

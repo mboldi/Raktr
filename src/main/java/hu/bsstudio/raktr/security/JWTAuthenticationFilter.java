@@ -10,6 +10,8 @@ import com.auth0.jwt.JWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hu.bsstudio.raktr.model.UserLoginData;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import javax.servlet.FilterChain;
@@ -40,6 +42,8 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             UserLoginData creds = new ObjectMapper()
                 .readValue(req.getInputStream(), UserLoginData.class);
 
+            //log.info("User credentials wanting to sign in: {}", creds);
+
             return authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                     creds.getUsername(),
@@ -58,11 +62,16 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                                             final FilterChain chain,
                                             final Authentication auth) throws IOException, ServletException {
 
+        Date expiresAt = new Date(System.currentTimeMillis() + EXPIRATION_TIME);
+
         String token = JWT.create()
             .withSubject(((LdapUser) auth.getPrincipal()).getUsername())
-            .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
+            .withExpiresAt(expiresAt)
             .sign(HMAC512(SECRET.getBytes()));
 
+        DateFormat df = new SimpleDateFormat("yyyy.MM.dd HH:mm a z");
+
         res.addHeader(HEADER_STRING, TOKEN_PREFIX + token);
+        res.getWriter().println("{\"token\": \"" + token + "\", \n\"expiresAt\": \"" + df.format(expiresAt) + "\" }");
     }
 }

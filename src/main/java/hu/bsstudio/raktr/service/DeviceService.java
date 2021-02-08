@@ -76,6 +76,7 @@ public final class DeviceService {
         Optional<Device> foundDevice = deviceDao.findById(id);
 
         if (foundDevice.isEmpty()) {
+            log.error("Device not found with id: {}", id);
             throw new ObjectNotFoundException();
         }
 
@@ -101,5 +102,17 @@ public final class DeviceService {
                 .build());
         }
         deviceRequest.setLocation(location);
+    }
+
+    public Device deleteById(final Long id) {
+        Optional<Device> deviceToDelete = deviceDao.findById(id);
+
+        if (deviceToDelete.isEmpty()) {
+            throw new ObjectNotFoundException();
+        } else {
+            deviceDao.deleteById(id);
+            log.info("Device by id deleted: {}", deviceToDelete.get());
+            return deviceToDelete.get();
+        }
     }
 }

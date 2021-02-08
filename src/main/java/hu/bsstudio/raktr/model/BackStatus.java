@@ -1,5 +1,5 @@
 package hu.bsstudio.raktr.model;
 
 public enum BackStatus {
-    OUT, BACK
+    OUT, BACK, PACKED_IN
 }

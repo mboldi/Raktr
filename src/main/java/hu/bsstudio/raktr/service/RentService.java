@@ -132,6 +132,7 @@ public class RentService {
 
         rentToUpdate.setDestination(rentRequest.getDestination());
         rentToUpdate.setIssuer(rentRequest.getIssuer());
+        rentToUpdate.setRenter(rentRequest.getRenter());
         rentToUpdate.setOutDate(rentRequest.getOutDate());
         rentToUpdate.setExpBackDate(rentRequest.getExpBackDate());
         rentToUpdate.setActBackDate(rentRequest.getActBackDate());
@@ -189,7 +190,7 @@ public class RentService {
             .withOutDate(rentToGenerate.getOutDate())
             .withBackDate(rentToGenerate.getExpBackDate())
             .withFileName(fileName)
-            .withRenterName(rentToGenerate.getRenter())
+            .withRenterName(rentPdfRequest.getRenterFullName())
             .withRenterId(rentPdfRequest.getRenterId())
             .withItems(new HashMap<>())
             .build();

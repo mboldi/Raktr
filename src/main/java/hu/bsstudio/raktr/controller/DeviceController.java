@@ -48,6 +48,13 @@ public class DeviceController {
         return deviceService.delete(deviceRequest);
     }
 
+    @DeleteMapping("/{id}")
+    @Secured("ROLE_Stúdiós")
+    public Device deleteDeviceById(@PathVariable final Long id) {
+        log.info("Incoming request to delete device with id: {}", id);
+        return deviceService.deleteById(id);
+    }
+
     @PutMapping
     public Device updateDevice(@Valid @RequestBody final Device deviceRequest) {
         log.info("Incoming request to update device: {}", deviceRequest);

@@ -29,9 +29,11 @@ public class ScannableService {
             if (foundCompositeItem == null) {
                 throw new ObjectNotFoundException();
             } else {
+                log.info("Composite Item found by barcode: {}", foundCompositeItem);
                 return foundCompositeItem;
             }
         } else {
+            log.info("Device found by barcode: {}", foundDevice);
             return foundDevice;
         }
     }

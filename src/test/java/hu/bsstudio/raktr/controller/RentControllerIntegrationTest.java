@@ -15,11 +15,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import hu.bsstudio.raktr.RaktrApplication;
-import hu.bsstudio.raktr.dao.CategoryDao;
-import hu.bsstudio.raktr.dao.CompositeItemDao;
-import hu.bsstudio.raktr.dao.DeviceDao;
-import hu.bsstudio.raktr.dao.LocationDao;
-import hu.bsstudio.raktr.dao.RentDao;
+import hu.bsstudio.raktr.repository.CategoryRepository;
+import hu.bsstudio.raktr.repository.CompositeItemRepository;
+import hu.bsstudio.raktr.repository.DeviceRepository;
+import hu.bsstudio.raktr.repository.LocationRepository;
+import hu.bsstudio.raktr.repository.RentRepository;
 import hu.bsstudio.raktr.model.BackStatus;
 import hu.bsstudio.raktr.model.Category;
 import hu.bsstudio.raktr.model.CompositeItem;
@@ -79,19 +79,19 @@ public class RentControllerIntegrationTest {
     private MockMvc mvc;
 
     @Autowired
-    private CompositeItemDao compositeItemDao;
+    private CompositeItemRepository compositeItemRepository;
 
     @Autowired
-    private RentDao rentDao;
+    private RentRepository rentRepository;
 
     @Autowired
-    private DeviceDao deviceDao;
+    private DeviceRepository deviceRepository;
 
     @Autowired
-    private CategoryDao categoryDao;
+    private CategoryRepository categoryRepository;
 
     @Autowired
-    private LocationDao locationDao;
+    private LocationRepository locationRepository;
 
     private Rent.Builder defaultBuilder;
     private Device.Builder defaultDeviceBuilder;
@@ -103,13 +103,13 @@ public class RentControllerIntegrationTest {
             .withName(CATEGORY_NAME)
             .build();
 
-        category = categoryDao.save(category);
+        category = categoryRepository.save(category);
 
         Location location = Location.builder()
             .withName(LOCATION_NAME)
             .build();
 
-        location = locationDao.save(location);
+        location = locationRepository.save(location);
 
         defaultDeviceBuilder = Device.builder()
             .withName(DEVICE_NAME)
@@ -140,16 +140,16 @@ public class RentControllerIntegrationTest {
 
     @AfterEach
     public final void after() {
-        rentDao.deleteAll();
-        compositeItemDao.deleteAll();
-        deviceDao.deleteAll();
-        categoryDao.deleteAll();
-        locationDao.deleteAll();
+        rentRepository.deleteAll();
+        compositeItemRepository.deleteAll();
+        deviceRepository.deleteAll();
+        categoryRepository.deleteAll();
+        locationRepository.deleteAll();
     }
 
     @Test
     public void testGetRent() throws Exception {
-        rentDao.save(defaultBuilder.build());
+        rentRepository.save(defaultBuilder.build());
 
         mvc.perform(get("/api/rent")
             .contentType(MediaType.APPLICATION_JSON))
@@ -179,14 +179,14 @@ public class RentControllerIntegrationTest {
                 .contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.destination", is(DESTINATION)));
 
-        assertEquals(1, rentDao.findAll().size());
+        assertEquals(1, rentRepository.findAll().size());
     }
 
     @Test
     public void testUpdateRent() throws Exception {
         Rent rent = defaultBuilder.build();
 
-        Rent rent2 = rentDao.save(rent);
+        Rent rent2 = rentRepository.save(rent);
         rent2.setDestination(DESTINATION_2);
 
         ObjectMapper mapper = new ObjectMapper();
@@ -215,7 +215,7 @@ public class RentControllerIntegrationTest {
 
     @Test
     public void testGetRentById() throws Exception {
-        Rent savedRent = rentDao.save(defaultBuilder.build());
+        Rent savedRent = rentRepository.save(defaultBuilder.build());
 
         mvc.perform(get("/api/rent/" + savedRent.getId())
             .contentType(MediaType.APPLICATION_JSON))
@@ -233,7 +233,7 @@ public class RentControllerIntegrationTest {
 
     @Test
     public void testDeleteRent() throws Exception {
-        Rent rent = rentDao.save(defaultBuilder.build());
+        Rent rent = rentRepository.save(defaultBuilder.build());
 
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
@@ -250,13 +250,13 @@ public class RentControllerIntegrationTest {
                 .contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.destination", is(DESTINATION)));
 
-        assertEquals(0, rentDao.findAll().size());
+        assertEquals(0, rentRepository.findAll().size());
     }
 
     @Test
     public void testAddItemToRent() throws Exception {
-        Rent rent = rentDao.save(defaultBuilder.build());
-        Device device = deviceDao.save(defaultDeviceBuilder.build());
+        Rent rent = rentRepository.save(defaultBuilder.build());
+        Device device = deviceRepository.save(defaultDeviceBuilder.build());
 
         RentItem rentItem = RentItem.builder()
             .withOutQuantity(1)
@@ -283,8 +283,8 @@ public class RentControllerIntegrationTest {
 
     @Test
     public void testUpdateItemInRent() throws Exception {
-        Rent rent = rentDao.save(defaultBuilder.build());
-        Device device = deviceDao.save(defaultDeviceBuilder.build());
+        Rent rent = rentRepository.save(defaultBuilder.build());
+        Device device = deviceRepository.save(defaultDeviceBuilder.build());
 
         RentItem rentItem = RentItem.builder()
             .withOutQuantity(1)
@@ -325,8 +325,8 @@ public class RentControllerIntegrationTest {
 
     @Test
     public void testRemoveItemFromRent() throws Exception {
-        Rent rent = rentDao.save(defaultBuilder.build());
-        Device device = deviceDao.save(defaultDeviceBuilder.build());
+        Rent rent = rentRepository.save(defaultBuilder.build());
+        Device device = deviceRepository.save(defaultDeviceBuilder.build());
 
         RentItem rentItem = RentItem.builder()
             .withOutQuantity(1)
@@ -366,8 +366,8 @@ public class RentControllerIntegrationTest {
 
     @Test
     public void testAddItemToRentFailsTooMany() throws Exception {
-        Rent rent = rentDao.save(defaultBuilder.build());
-        Device device = deviceDao.save(defaultDeviceBuilder.build());
+        Rent rent = rentRepository.save(defaultBuilder.build());
+        Device device = deviceRepository.save(defaultDeviceBuilder.build());
 
         RentItem rentItem = RentItem.builder()
             .withOutQuantity(INVALID_OUT_QUANTITY)
@@ -390,7 +390,7 @@ public class RentControllerIntegrationTest {
 
     @Test
     public void testGetRentPdf() throws Exception {
-        Rent rent = rentDao.save(defaultBuilder.build());
+        Rent rent = rentRepository.save(defaultBuilder.build());
 
         RentPdfRequest rentPdfRequest = RentPdfRequest.builder()
             .withRenterFullName(RENTER_NAME)

@@ -1,4 +1,4 @@
-package hu.bsstudio.raktr.dao;
+package hu.bsstudio.raktr.repository;
 
 import hu.bsstudio.raktr.model.UserRole;
 import java.util.Optional;
@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 @Transactional
-public interface UserRoleDao extends JpaRepository<UserRole, Long> {
+public interface UserRoleRepository extends JpaRepository<UserRole, Long> {
 
     String FIND_BY_ROLENAME_QUERY = "SELECT userRole FROM UserRole userRole WHERE userRole.roleName = :rolename";
 

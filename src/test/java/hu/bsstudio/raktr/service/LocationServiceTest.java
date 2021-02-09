@@ -9,7 +9,7 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
 
-import hu.bsstudio.raktr.dao.LocationDao;
+import hu.bsstudio.raktr.repository.LocationRepository;
 import hu.bsstudio.raktr.exception.ObjectNotFoundException;
 import hu.bsstudio.raktr.model.Location;
 import java.util.ArrayList;
@@ -26,7 +26,7 @@ final class LocationServiceTest {
     private static final String UPDATED_NAME = "location2";
 
     @Mock
-    private LocationDao mockLocationDao;
+    private LocationRepository mockLocationRepository;
 
     @Mock
     private Location mockLocationRequest;
@@ -37,7 +37,7 @@ final class LocationServiceTest {
     @BeforeEach
     void init() {
         initMocks(this);
-        underTest = spy(new LocationService(mockLocationDao));
+        underTest = spy(new LocationService(mockLocationRepository));
 
         given(mockLocationRequest.getName()).willReturn(NAME);
 
@@ -49,13 +49,13 @@ final class LocationServiceTest {
     @Test
     void testCreateLocation() {
         //given
-        doReturn(location).when(mockLocationDao).save(any(Location.class));
+        doReturn(location).when(mockLocationRepository).save(any(Location.class));
 
         //when
         final Location result = underTest.create(mockLocationRequest);
 
         //then
-        verify(mockLocationDao).save(mockLocationRequest);
+        verify(mockLocationRepository).save(mockLocationRequest);
         assertEquals(result.getName(), mockLocationRequest.getName());
     }
 
@@ -67,7 +67,7 @@ final class LocationServiceTest {
         underTest.delete(location);
 
         //then
-        verify(mockLocationDao).delete(location);
+        verify(mockLocationRepository).delete(location);
     }
 
     @Test
@@ -78,15 +78,15 @@ final class LocationServiceTest {
             .withName(UPDATED_NAME)
             .build();
 
-        given(mockLocationDao.findById(LOCATION_ID)).willReturn(java.util.Optional.ofNullable(location));
-        doReturn(location).when(mockLocationDao).save(location);
+        given(mockLocationRepository.findById(LOCATION_ID)).willReturn(java.util.Optional.ofNullable(location));
+        doReturn(location).when(mockLocationRepository).save(location);
 
         //when
         location = underTest.update(mockLocationRequest);
 
         //then
         verify(location).setName(UPDATED_NAME);
-        verify(mockLocationDao).save(location);
+        verify(mockLocationRepository).save(location);
         assertEquals(UPDATED_NAME, location.getName());
     }
 
@@ -95,7 +95,7 @@ final class LocationServiceTest {
         //given
         List<Location> locations = new ArrayList<>();
         locations.add(location);
-        doReturn(locations).when(mockLocationDao).findAll();
+        doReturn(locations).when(mockLocationRepository).findAll();
 
         //when
         List<Location> fetchedLocations = underTest.getAll();
@@ -107,7 +107,7 @@ final class LocationServiceTest {
     @Test
     void testUpdateLocationNotFound() {
         //given
-        given(mockLocationDao.findById(LOCATION_ID)).willReturn(Optional.empty());
+        given(mockLocationRepository.findById(LOCATION_ID)).willReturn(Optional.empty());
 
         //when
 

@@ -7,10 +7,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import hu.bsstudio.raktr.RaktrApplication;
-import hu.bsstudio.raktr.dao.CategoryDao;
-import hu.bsstudio.raktr.dao.CompositeItemDao;
-import hu.bsstudio.raktr.dao.DeviceDao;
-import hu.bsstudio.raktr.dao.LocationDao;
+import hu.bsstudio.raktr.repository.CategoryRepository;
+import hu.bsstudio.raktr.repository.CompositeItemRepository;
+import hu.bsstudio.raktr.repository.DeviceRepository;
+import hu.bsstudio.raktr.repository.LocationRepository;
 import hu.bsstudio.raktr.model.Category;
 import hu.bsstudio.raktr.model.CompositeItem;
 import hu.bsstudio.raktr.model.Device;
@@ -54,16 +54,16 @@ public class ScannableControllerIntegrationTest {
     private MockMvc mvc;
 
     @Autowired
-    private DeviceDao deviceDao;
+    private DeviceRepository deviceRepository;
 
     @Autowired
-    private CompositeItemDao compositeItemDao;
+    private CompositeItemRepository compositeItemRepository;
 
     @Autowired
-    private CategoryDao categoryDao;
+    private CategoryRepository categoryRepository;
 
     @Autowired
-    private LocationDao locationDao;
+    private LocationRepository locationRepository;
 
     @BeforeEach
     public final void init() {
@@ -71,13 +71,13 @@ public class ScannableControllerIntegrationTest {
             .withName(CATEGORY_NAME)
             .build();
 
-        category = categoryDao.save(category);
+        category = categoryRepository.save(category);
 
         Location location = Location.builder()
             .withName(LOCATION_NAME)
             .build();
 
-        location = locationDao.save(location);
+        location = locationRepository.save(location);
 
         Device device = Device.builder()
             .withName(DEVICE_NAME)
@@ -93,7 +93,7 @@ public class ScannableControllerIntegrationTest {
             .withValue(DEVICE_VALUE)
             .build();
 
-        deviceDao.save(device);
+        deviceRepository.save(device);
 
         CompositeItem compositeItem = CompositeItem.builder()
             .withBarcode(COMPOSITE_BARCODE)
@@ -101,15 +101,15 @@ public class ScannableControllerIntegrationTest {
             .withLocation(location)
             .build();
 
-        compositeItemDao.save(compositeItem);
+        compositeItemRepository.save(compositeItem);
     }
 
     @AfterEach
     public final void after() {
-        deviceDao.deleteAll();
-        compositeItemDao.deleteAll();
-        categoryDao.deleteAll();
-        locationDao.deleteAll();
+        deviceRepository.deleteAll();
+        compositeItemRepository.deleteAll();
+        categoryRepository.deleteAll();
+        locationRepository.deleteAll();
     }
 
     @Test

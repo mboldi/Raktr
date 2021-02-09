@@ -15,7 +15,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import hu.bsstudio.raktr.RaktrApplication;
-import hu.bsstudio.raktr.dao.LocationDao;
+import hu.bsstudio.raktr.repository.LocationRepository;
 import hu.bsstudio.raktr.model.Location;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -50,16 +50,16 @@ public class LocationControllerIntegrationTest {
     private MockMvc mvc;
 
     @Autowired
-    private LocationDao locationDao;
+    private LocationRepository locationRepository;
 
     @BeforeEach
     public final void init() {
-        locationDao.deleteAll();
+        locationRepository.deleteAll();
     }
 
     @AfterEach
     public final void after() {
-        locationDao.deleteAll();
+        locationRepository.deleteAll();
     }
 
     @Test
@@ -68,7 +68,7 @@ public class LocationControllerIntegrationTest {
             .withName(LOCATION_NAME)
             .build();
 
-        locationDao.save(location);
+        locationRepository.save(location);
 
         mvc.perform(get("/api/location")
             .contentType(MediaType.APPLICATION_JSON))
@@ -143,7 +143,7 @@ public class LocationControllerIntegrationTest {
             .withName(LOCATION_NAME)
             .build();
 
-        location = locationDao.save(location);
+        location = locationRepository.save(location);
 
         location.setName(LOCATION_NAME_2);
 
@@ -177,7 +177,7 @@ public class LocationControllerIntegrationTest {
             .withName(LOCATION_NAME)
             .build();
 
-        location = locationDao.save(location);
+        location = locationRepository.save(location);
 
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);

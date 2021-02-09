@@ -1,9 +1,9 @@
 package hu.bsstudio.raktr.service;
 
-import hu.bsstudio.raktr.dao.DeviceDao;
-import hu.bsstudio.raktr.dao.GeneralDataDao;
-import hu.bsstudio.raktr.dao.RentDao;
-import hu.bsstudio.raktr.dao.RentItemDao;
+import hu.bsstudio.raktr.repository.DeviceRepository;
+import hu.bsstudio.raktr.repository.GeneralDataRepository;
+import hu.bsstudio.raktr.repository.RentRepository;
+import hu.bsstudio.raktr.repository.RentItemDao;
 import hu.bsstudio.raktr.exception.NotAvailableQuantityException;
 import hu.bsstudio.raktr.exception.ObjectNotFoundException;
 import hu.bsstudio.raktr.model.BackStatus;
@@ -37,21 +37,21 @@ public class RentService {
     private static final String SECOND_SIGNER_NAME_KEY = "secondSignerName";
     private static final String SECOND_SIGNER_TITLE_KEY = "secondSignerTitle";
 
-    private final RentDao rentDao;
+    private final RentRepository rentRepository;
     private final RentItemDao rentItemDao;
-    private final DeviceDao deviceDao;
-    private final GeneralDataDao generalDataDao;
+    private final DeviceRepository deviceRepository;
+    private final GeneralDataRepository generalDataRepository;
 
-    public RentService(final RentDao rentDao, final RentItemDao rentItemDao, final DeviceDao deviceDao, final GeneralDataDao generalDataDao) {
-        this.rentDao = rentDao;
+    public RentService(final RentRepository rentRepository, final RentItemDao rentItemDao, final DeviceRepository deviceRepository, final GeneralDataRepository generalDataRepository) {
+        this.rentRepository = rentRepository;
         this.rentItemDao = rentItemDao;
-        this.deviceDao = deviceDao;
-        this.generalDataDao = generalDataDao;
+        this.deviceRepository = deviceRepository;
+        this.generalDataRepository = generalDataRepository;
     }
 
     @SuppressWarnings("checkstyle:DesignForExtension")
     public boolean checkIfAvailable(final RentItem deviceRentItem, final RentItem rentItemToUpdate) {
-        Integer maxAvailableQuantity = deviceDao.getOne(deviceRentItem.getScannable().getId()).getQuantity();
+        Integer maxAvailableQuantity = deviceRepository.getOne(deviceRentItem.getScannable().getId()).getQuantity();
         List<RentItem> rentItems = rentItemDao.findAll();
         Integer sumOut = 0;
 
@@ -75,13 +75,13 @@ public class RentService {
     }
 
     public final Rent create(final Rent rentRequest) {
-        Rent saved = rentDao.save(rentRequest);
+        Rent saved = rentRepository.save(rentRequest);
         log.info("Rent saved: {}", saved);
         return saved;
     }
 
     public final Rent updateItem(final Long rentId, final RentItem newRentItem) {
-        Rent rentToUpdate = rentDao.findById(rentId).orElse(null);
+        Rent rentToUpdate = rentRepository.findById(rentId).orElse(null);
         RentItem savedDeviceItem;
         RentItem rentItemToUpdate;
 
@@ -112,19 +112,19 @@ public class RentService {
             }
         }
 
-        Rent saved = rentDao.save(rentToUpdate);
+        Rent saved = rentRepository.save(rentToUpdate);
         log.info("Rent updated: {}", saved);
         return saved;
     }
 
     public final List<Rent> getAll() {
-        List<Rent> all = rentDao.findAll();
+        List<Rent> all = rentRepository.findAll();
         log.info("Rents fetched from DB: {}", all);
         return all;
     }
 
     public final Rent update(final Rent rentRequest) {
-        Rent rentToUpdate = rentDao.findById(rentRequest.getId()).orElse(null);
+        Rent rentToUpdate = rentRepository.findById(rentRequest.getId()).orElse(null);
 
         if (rentToUpdate == null) {
             throw new ObjectNotFoundException();
@@ -137,19 +137,19 @@ public class RentService {
         rentToUpdate.setExpBackDate(rentRequest.getExpBackDate());
         rentToUpdate.setActBackDate(rentRequest.getActBackDate());
 
-        Rent saved = rentDao.save(rentToUpdate);
+        Rent saved = rentRepository.save(rentToUpdate);
         log.info("Rent updated: {}", saved);
         return saved;
     }
 
     public final Rent delete(final Rent rentRequest) {
-        rentDao.delete(rentRequest);
+        rentRepository.delete(rentRequest);
         log.info("Rent deleted: {}", rentRequest);
         return rentRequest;
     }
 
     public final Rent getById(final Long rentId) {
-        Rent foundRent = rentDao.findById(rentId).orElse(null);
+        Rent foundRent = rentRepository.findById(rentId).orElse(null);
 
         if (foundRent == null) {
             log.error("Rent not found with ID {}", rentId);
@@ -162,7 +162,7 @@ public class RentService {
 
     @SuppressWarnings({"checkstyle:InnerAssignment", "checkstyle:AvoidInlineConditionals"})
     public final ResponseEntity<byte[]> getPdf(final Long rentId, final RentPdfRequest rentPdfRequest) throws IOException {
-        Rent rentToGenerate = rentDao.findById(rentId).orElse(null);
+        Rent rentToGenerate = rentRepository.findById(rentId).orElse(null);
 
         if (rentToGenerate == null) {
             log.error("Rent not found with ID {}", rentId);
@@ -172,13 +172,13 @@ public class RentService {
         String fileName = "pdf/rent_" + rentToGenerate.getId();
 
         Optional<GeneralData> foundData;
-        String groupName = (foundData = generalDataDao.findById(GROUP_NAME_KEY)).isPresent()
+        String groupName = (foundData = generalDataRepository.findById(GROUP_NAME_KEY)).isPresent()
             ? foundData.get().getData() : "Budavári Schönherz Stúdió";
-        String groupLeaderName = (foundData = generalDataDao.findById(GROUP_LEADER_NAME_KEY)).isPresent() ? foundData.get().getData() : "";
-        String firstSignerName = (foundData = generalDataDao.findById(FIRST_SIGNER_NAME_KEY)).isPresent() ? foundData.get().getData() : "";
-        String firstSignerTitle = (foundData = generalDataDao.findById(FIRST_SIGNER_TITLE_KEY)).isPresent() ? foundData.get().getData() : "";
-        String secondSignerName = (foundData = generalDataDao.findById(SECOND_SIGNER_NAME_KEY)).isPresent() ? foundData.get().getData() : "";
-        String secondSignerTitle = (foundData = generalDataDao.findById(SECOND_SIGNER_TITLE_KEY)).isPresent() ? foundData.get().getData() : "";
+        String groupLeaderName = (foundData = generalDataRepository.findById(GROUP_LEADER_NAME_KEY)).isPresent() ? foundData.get().getData() : "";
+        String firstSignerName = (foundData = generalDataRepository.findById(FIRST_SIGNER_NAME_KEY)).isPresent() ? foundData.get().getData() : "";
+        String firstSignerTitle = (foundData = generalDataRepository.findById(FIRST_SIGNER_TITLE_KEY)).isPresent() ? foundData.get().getData() : "";
+        String secondSignerName = (foundData = generalDataRepository.findById(SECOND_SIGNER_NAME_KEY)).isPresent() ? foundData.get().getData() : "";
+        String secondSignerTitle = (foundData = generalDataRepository.findById(SECOND_SIGNER_TITLE_KEY)).isPresent() ? foundData.get().getData() : "";
 
         RentPdfData rentPdfData = RentPdfData.builder()
             .withTeamName(groupName)

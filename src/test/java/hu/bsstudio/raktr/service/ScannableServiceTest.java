@@ -8,8 +8,8 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.spy;
 import static org.mockito.MockitoAnnotations.initMocks;
 
-import hu.bsstudio.raktr.dao.CompositeItemDao;
-import hu.bsstudio.raktr.dao.DeviceDao;
+import hu.bsstudio.raktr.repository.CompositeItemRepository;
+import hu.bsstudio.raktr.repository.DeviceRepository;
 import hu.bsstudio.raktr.exception.ObjectNotFoundException;
 import hu.bsstudio.raktr.model.CompositeItem;
 import hu.bsstudio.raktr.model.Device;
@@ -26,10 +26,10 @@ final class ScannableServiceTest {
     private static final String COMPOSITE_BARCODE = "barcode-composite-01";
 
     @Mock
-    private DeviceDao mockDeviceDao;
+    private DeviceRepository mockDeviceRepository;
 
     @Mock
-    private CompositeItemDao mockCompositeDao;
+    private CompositeItemRepository mockCompositeDao;
 
     private CompositeItem compositeItem;
     private Device device;
@@ -50,13 +50,13 @@ final class ScannableServiceTest {
             .withBarcode(COMPOSITE_BARCODE)
             .build());
 
-        underTest = new ScannableService(mockDeviceDao, mockCompositeDao);
+        underTest = new ScannableService(mockDeviceRepository, mockCompositeDao);
     }
 
     @Test
     void testGetDeviceByBarcode() {
         //given
-        given(mockDeviceDao.findByBarcode(DEVICE_BARCODE)).willReturn(ofNullable(device));
+        given(mockDeviceRepository.findByBarcode(DEVICE_BARCODE)).willReturn(ofNullable(device));
 
         //when
         Scannable byBarcode = underTest.getByBarcode(DEVICE_BARCODE);
@@ -68,7 +68,7 @@ final class ScannableServiceTest {
     @Test
     void testGetDeviceByBarcodeGetComposite() {
         //given
-        given(mockDeviceDao.findByBarcode(COMPOSITE_BARCODE)).willReturn(empty());
+        given(mockDeviceRepository.findByBarcode(COMPOSITE_BARCODE)).willReturn(empty());
         given(mockCompositeDao.findByBarcode(COMPOSITE_BARCODE)).willReturn(java.util.Optional.ofNullable(compositeItem));
 
         //when
@@ -81,7 +81,7 @@ final class ScannableServiceTest {
     @Test
     void testGetDeviceByBarcodeNothingFound() {
         //given
-        given(mockDeviceDao.findByBarcode(COMPOSITE_BARCODE)).willReturn(empty());
+        given(mockDeviceRepository.findByBarcode(COMPOSITE_BARCODE)).willReturn(empty());
         given(mockCompositeDao.findByBarcode(COMPOSITE_BARCODE)).willReturn(empty());
 
         //when

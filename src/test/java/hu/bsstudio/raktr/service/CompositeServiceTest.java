@@ -8,9 +8,9 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
 
-import hu.bsstudio.raktr.dao.CompositeItemDao;
-import hu.bsstudio.raktr.dao.DeviceDao;
-import hu.bsstudio.raktr.dao.LocationDao;
+import hu.bsstudio.raktr.repository.CompositeItemRepository;
+import hu.bsstudio.raktr.repository.DeviceRepository;
+import hu.bsstudio.raktr.repository.LocationRepository;
 import hu.bsstudio.raktr.exception.ObjectNotFoundException;
 import hu.bsstudio.raktr.model.CompositeItem;
 import hu.bsstudio.raktr.model.Device;
@@ -37,13 +37,13 @@ final class CompositeServiceTest {
     private static final Long DEVICE_ID = 3L;
 
     @Mock
-    private CompositeItemDao mockCompositeDao;
+    private CompositeItemRepository mockCompositeDao;
 
     @Mock
-    private DeviceDao mockDeviceDao;
+    private DeviceRepository mockDeviceRepository;
 
     @Mock
-    private LocationDao mockLocationDao;
+    private LocationRepository mockLocationRepository;
 
     @Mock
     private CompositeItem mockCompositeRequest;
@@ -59,7 +59,7 @@ final class CompositeServiceTest {
     void init() {
         initMocks(this);
 
-        underTest = new CompositeService(mockCompositeDao, mockDeviceDao, mockLocationDao);
+        underTest = new CompositeService(mockCompositeDao, mockDeviceRepository, mockLocationRepository);
 
         location = Location.builder()
             .withId(LOCATION_ID)
@@ -219,7 +219,7 @@ final class CompositeServiceTest {
     void testDeleteDevice() {
         //given
         given(mockCompositeDao.findById(ID)).willReturn(Optional.ofNullable(compositeItem));
-        given(mockDeviceDao.findById(DEVICE_ID)).willReturn(Optional.ofNullable(device));
+        given(mockDeviceRepository.findById(DEVICE_ID)).willReturn(Optional.ofNullable(device));
         given(mockCompositeDao.save(any())).willReturn(compositeItem);
 
         //when
@@ -230,7 +230,7 @@ final class CompositeServiceTest {
         assertEquals(compositeItem, updatedCompositeItem);
 
         verify(mockCompositeDao).findById(ID);
-        verify(mockDeviceDao).findById(DEVICE_ID);
+        verify(mockDeviceRepository).findById(DEVICE_ID);
         verify(devices).remove(device);
         verify(mockCompositeDao).save(this.compositeItem);
     }
@@ -239,7 +239,7 @@ final class CompositeServiceTest {
     void testDeleteDeviceDeviceNotFound() {
         //given
         given(mockCompositeDao.findById(ID)).willReturn(Optional.ofNullable(compositeItem));
-        given(mockDeviceDao.findById(DEVICE_ID)).willReturn(Optional.empty());
+        given(mockDeviceRepository.findById(DEVICE_ID)).willReturn(Optional.empty());
 
         //when
 
@@ -251,7 +251,7 @@ final class CompositeServiceTest {
     void testDeleteDeviceCompositeNotFound() {
         //given
         given(mockCompositeDao.findById(ID)).willReturn(Optional.empty());
-        given(mockDeviceDao.findById(DEVICE_ID)).willReturn(Optional.ofNullable(device));
+        given(mockDeviceRepository.findById(DEVICE_ID)).willReturn(Optional.ofNullable(device));
 
         //when
 

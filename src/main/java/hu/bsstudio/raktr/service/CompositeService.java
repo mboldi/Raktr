@@ -1,8 +1,8 @@
 package hu.bsstudio.raktr.service;
 
-import hu.bsstudio.raktr.dao.CompositeItemDao;
-import hu.bsstudio.raktr.dao.DeviceDao;
-import hu.bsstudio.raktr.dao.LocationDao;
+import hu.bsstudio.raktr.repository.CompositeItemRepository;
+import hu.bsstudio.raktr.repository.DeviceRepository;
+import hu.bsstudio.raktr.repository.LocationRepository;
 import hu.bsstudio.raktr.exception.ObjectNotFoundException;
 import hu.bsstudio.raktr.model.CompositeItem;
 import hu.bsstudio.raktr.model.Device;
@@ -15,18 +15,18 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class CompositeService {
 
-    private final CompositeItemDao compositeItemDao;
-    private final DeviceDao deviceDao;
-    private final LocationDao locationDao;
+    private final CompositeItemRepository compositeItemRepository;
+    private final DeviceRepository deviceRepository;
+    private final LocationRepository locationRepository;
 
-    public CompositeService(final CompositeItemDao compositeItemDao, final DeviceDao deviceDao, final LocationDao locationDao) {
-        this.compositeItemDao = compositeItemDao;
-        this.deviceDao = deviceDao;
-        this.locationDao = locationDao;
+    public CompositeService(final CompositeItemRepository compositeItemRepository, final DeviceRepository deviceRepository, final LocationRepository locationRepository) {
+        this.compositeItemRepository = compositeItemRepository;
+        this.deviceRepository = deviceRepository;
+        this.locationRepository = locationRepository;
     }
 
     public final List<CompositeItem> getAll() {
-        List<CompositeItem> compositeItems = compositeItemDao.findAll();
+        List<CompositeItem> compositeItems = compositeItemRepository.findAll();
         log.info("Composite items fetched from db: {}", compositeItems);
         return compositeItems;
     }
@@ -34,7 +34,7 @@ public class CompositeService {
     public final CompositeItem create(final CompositeItem compositeItemRequest) {
         checkLocation(compositeItemRequest);
 
-        CompositeItem saved = compositeItemDao.save(compositeItemRequest);
+        CompositeItem saved = compositeItemRepository.save(compositeItemRequest);
         log.info("Composite item saved: {}", saved);
         return saved;
     }
@@ -42,7 +42,7 @@ public class CompositeService {
     public final CompositeItem update(final CompositeItem compositeItemRequest) {
         checkLocation(compositeItemRequest);
 
-        CompositeItem compositeItemToUpdate = compositeItemDao.findById(compositeItemRequest.getId()).orElse(null);
+        CompositeItem compositeItemToUpdate = compositeItemRepository.findById(compositeItemRequest.getId()).orElse(null);
 
         if (compositeItemToUpdate == null) {
             throw new ObjectNotFoundException();
@@ -52,19 +52,19 @@ public class CompositeService {
         compositeItemToUpdate.setBarcode(compositeItemRequest.getBarcode());
         compositeItemToUpdate.setLocation(compositeItemRequest.getLocation());
 
-        CompositeItem saved = compositeItemDao.save(compositeItemToUpdate);
+        CompositeItem saved = compositeItemRepository.save(compositeItemToUpdate);
         log.info("Saved composite item: {}", saved);
         return saved;
     }
 
     public final CompositeItem delete(final CompositeItem compositeItemRequest) {
-        compositeItemDao.delete(compositeItemRequest);
+        compositeItemRepository.delete(compositeItemRequest);
         log.info("Composite item deleted: {}", compositeItemRequest);
         return compositeItemRequest;
     }
 
     public final CompositeItem getOne(final Long compositeId) {
-        CompositeItem foundCompositeItem = compositeItemDao.findById(compositeId).orElse(null);
+        CompositeItem foundCompositeItem = compositeItemRepository.findById(compositeId).orElse(null);
 
         if (foundCompositeItem == null) {
             throw new ObjectNotFoundException();
@@ -75,37 +75,37 @@ public class CompositeService {
     }
 
     public final CompositeItem addDevice(final Long compositeId, final Device deviceRequest) {
-        CompositeItem compositeItemToUpdate = compositeItemDao.findById(compositeId).orElse(null);
+        CompositeItem compositeItemToUpdate = compositeItemRepository.findById(compositeId).orElse(null);
 
         if (compositeItemToUpdate == null) {
             throw new ObjectNotFoundException();
         }
 
         compositeItemToUpdate.getDevices().add(deviceRequest);
-        CompositeItem saved = compositeItemDao.save(compositeItemToUpdate);
+        CompositeItem saved = compositeItemRepository.save(compositeItemToUpdate);
         log.info("Device added to composite item: {}", saved);
         return saved;
     }
 
     public final CompositeItem deleteDevice(final Long compositeId, final Device deviceRequest) {
-        CompositeItem compositeItemToUpdate = compositeItemDao.findById(compositeId).orElse(null);
-        Device deviceToRemove = deviceDao.findById(deviceRequest.getId()).orElse(null);
+        CompositeItem compositeItemToUpdate = compositeItemRepository.findById(compositeId).orElse(null);
+        Device deviceToRemove = deviceRepository.findById(deviceRequest.getId()).orElse(null);
 
         if (compositeItemToUpdate == null || deviceToRemove == null) {
             throw new ObjectNotFoundException();
         }
 
         compositeItemToUpdate.getDevices().remove(deviceToRemove);
-        CompositeItem saved = compositeItemDao.save(compositeItemToUpdate);
+        CompositeItem saved = compositeItemRepository.save(compositeItemToUpdate);
         log.info("Device removed from composite item: {}", saved);
         return saved;
     }
 
     private void checkLocation(final CompositeItem compositeRequest) {
-        Location location = locationDao.findByName(compositeRequest.getLocation().getName()).orElse(null);
+        Location location = locationRepository.findByName(compositeRequest.getLocation().getName()).orElse(null);
 
         if (location == null) {
-            location = locationDao.save(Location.builder()
+            location = locationRepository.save(Location.builder()
                 .withName(compositeRequest.getLocation().getName())
                 .build());
         }

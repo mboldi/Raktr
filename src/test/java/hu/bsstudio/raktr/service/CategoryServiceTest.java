@@ -9,7 +9,7 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
 
-import hu.bsstudio.raktr.dao.CategoryDao;
+import hu.bsstudio.raktr.repository.CategoryRepository;
 import hu.bsstudio.raktr.exception.ObjectNotFoundException;
 import hu.bsstudio.raktr.model.Category;
 import java.util.ArrayList;
@@ -26,7 +26,7 @@ final class CategoryServiceTest {
     private static final String UPDATED_NAME = "category2";
 
     @Mock
-    private CategoryDao mockCategoryDao;
+    private CategoryRepository mockCategoryRepository;
 
     @Mock
     private Category mockCategoryRequest;
@@ -37,7 +37,7 @@ final class CategoryServiceTest {
     @BeforeEach
     void init() {
         initMocks(this);
-        underTest = spy(new CategoryService(mockCategoryDao));
+        underTest = spy(new CategoryService(mockCategoryRepository));
 
         given(mockCategoryRequest.getName()).willReturn(NAME);
 
@@ -49,13 +49,13 @@ final class CategoryServiceTest {
     @Test
     void testCreateCategory() {
         //given
-        doReturn(category).when(mockCategoryDao).save(any(Category.class));
+        doReturn(category).when(mockCategoryRepository).save(any(Category.class));
 
         //when
         final Category result = underTest.create(mockCategoryRequest);
 
         //then
-        verify(mockCategoryDao).save(mockCategoryRequest);
+        verify(mockCategoryRepository).save(mockCategoryRequest);
         assertEquals(result.getName(), mockCategoryRequest.getName());
     }
 
@@ -67,7 +67,7 @@ final class CategoryServiceTest {
         underTest.delete(category);
 
         //then
-        verify(mockCategoryDao).delete(category);
+        verify(mockCategoryRepository).delete(category);
     }
 
     @Test
@@ -78,22 +78,22 @@ final class CategoryServiceTest {
             .withName(UPDATED_NAME)
             .build();
 
-        given(mockCategoryDao.findById(CATEGORY_ID)).willReturn(Optional.ofNullable(category));
-        doReturn(category).when(mockCategoryDao).save(category);
+        given(mockCategoryRepository.findById(CATEGORY_ID)).willReturn(Optional.ofNullable(category));
+        doReturn(category).when(mockCategoryRepository).save(category);
 
         //when
         category = underTest.update(mockCategoryRequest);
 
         //then
         verify(category).setName(UPDATED_NAME);
-        verify(mockCategoryDao).save(category);
+        verify(mockCategoryRepository).save(category);
         assertEquals(UPDATED_NAME, category.getName());
     }
 
     @Test
     void testUpdateCategoryNotFound() {
         //given
-        given(mockCategoryDao.findById(CATEGORY_ID)).willReturn(Optional.empty());
+        given(mockCategoryRepository.findById(CATEGORY_ID)).willReturn(Optional.empty());
 
         //when
 
@@ -106,7 +106,7 @@ final class CategoryServiceTest {
         //given
         List<Category> categories = new ArrayList<>();
         categories.add(category);
-        doReturn(categories).when(mockCategoryDao).findAll();
+        doReturn(categories).when(mockCategoryRepository).findAll();
 
         //when
         List<Category> fetchedCategories = underTest.getAll();

@@ -15,7 +15,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import hu.bsstudio.raktr.RaktrApplication;
-import hu.bsstudio.raktr.dao.CategoryDao;
+import hu.bsstudio.raktr.repository.CategoryRepository;
 import hu.bsstudio.raktr.model.Category;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -50,16 +50,16 @@ public class CategoryControllerIntegrationTest {
     private MockMvc mvc;
 
     @Autowired
-    private CategoryDao categoryDao;
+    private CategoryRepository categoryRepository;
 
     @BeforeEach
     public final void init() {
-        categoryDao.deleteAll();
+        categoryRepository.deleteAll();
     }
 
     @AfterEach
     public final void after() {
-        categoryDao.deleteAll();
+        categoryRepository.deleteAll();
     }
 
     @Test
@@ -68,7 +68,7 @@ public class CategoryControllerIntegrationTest {
             .withName(CATEGORY_NAME)
             .build();
 
-        categoryDao.save(category);
+        categoryRepository.save(category);
 
         mvc.perform(get("/api/category")
             .contentType(MediaType.APPLICATION_JSON))
@@ -143,7 +143,7 @@ public class CategoryControllerIntegrationTest {
             .withName(CATEGORY_NAME)
             .build();
 
-        Category category2 = categoryDao.save(category);
+        Category category2 = categoryRepository.save(category);
 
         category2.setName(CATEGORY_NAME_2);
 
@@ -176,7 +176,7 @@ public class CategoryControllerIntegrationTest {
             .withName(CATEGORY_NAME)
             .build();
 
-        category = categoryDao.save(category);
+        category = categoryRepository.save(category);
 
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);

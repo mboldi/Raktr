@@ -1,8 +1,8 @@
 package hu.bsstudio.raktr.service;
 
-import hu.bsstudio.raktr.dao.CategoryDao;
-import hu.bsstudio.raktr.dao.DeviceDao;
-import hu.bsstudio.raktr.dao.LocationDao;
+import hu.bsstudio.raktr.repository.CategoryRepository;
+import hu.bsstudio.raktr.repository.DeviceRepository;
+import hu.bsstudio.raktr.repository.LocationRepository;
 import hu.bsstudio.raktr.exception.ObjectNotFoundException;
 import hu.bsstudio.raktr.model.Category;
 import hu.bsstudio.raktr.model.Device;
@@ -16,32 +16,32 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public final class DeviceService {
 
-    private final DeviceDao deviceDao;
-    private final CategoryDao categoryDao;
-    private final LocationDao locationDao;
+    private final DeviceRepository deviceRepository;
+    private final CategoryRepository categoryRepository;
+    private final LocationRepository locationRepository;
 
-    public DeviceService(final DeviceDao deviceDao, final CategoryDao categoryDao, final LocationDao locationDao) {
-        this.deviceDao = deviceDao;
-        this.categoryDao = categoryDao;
-        this.locationDao = locationDao;
+    public DeviceService(final DeviceRepository deviceRepository, final CategoryRepository categoryRepository, final LocationRepository locationRepository) {
+        this.deviceRepository = deviceRepository;
+        this.categoryRepository = categoryRepository;
+        this.locationRepository = locationRepository;
     }
 
     public Device create(final Device deviceRequest) {
         checkCategoryAndLocation(deviceRequest);
 
-        var saved = deviceDao.save(deviceRequest);
+        var saved = deviceRepository.save(deviceRequest);
         log.info("Device created: {}", deviceRequest);
         return saved;
     }
 
     public List<Device> getAll() {
-        var fetched = deviceDao.findAll();
+        var fetched = deviceRepository.findAll();
         log.info("Devices fetched from DB: {}", fetched);
         return fetched;
     }
 
     public Device delete(final Device deviceRequest) {
-        deviceDao.delete(deviceRequest);
+        deviceRepository.delete(deviceRequest);
         log.info("Deleted device from DB: {}", deviceRequest);
         return deviceRequest;
     }
@@ -49,7 +49,7 @@ public final class DeviceService {
     public Device update(final Device deviceRequest) {
         checkCategoryAndLocation(deviceRequest);
 
-        Device deviceToUpdate = deviceDao.findById(deviceRequest.getId()).orElse(null);
+        Device deviceToUpdate = deviceRepository.findById(deviceRequest.getId()).orElse(null);
 
         if (deviceToUpdate == null) {
             throw new ObjectNotFoundException();
@@ -67,13 +67,13 @@ public final class DeviceService {
         deviceToUpdate.setCategory(deviceRequest.getCategory());
         deviceToUpdate.setLocation(deviceRequest.getLocation());
 
-        Device saved = deviceDao.save(deviceToUpdate);
+        Device saved = deviceRepository.save(deviceToUpdate);
         log.info("Device updated in DB: {}", saved);
         return saved;
     }
 
     public Device getById(final Long id) {
-        Optional<Device> foundDevice = deviceDao.findById(id);
+        Optional<Device> foundDevice = deviceRepository.findById(id);
 
         if (foundDevice.isEmpty()) {
             log.error("Device not found with id: {}", id);
@@ -85,19 +85,19 @@ public final class DeviceService {
     }
 
     private void checkCategoryAndLocation(final Device deviceRequest) {
-        Category category = categoryDao.findByName(deviceRequest.getCategory().getName()).orElse(null);
+        Category category = categoryRepository.findByName(deviceRequest.getCategory().getName()).orElse(null);
 
         if (category == null) {
-            category = categoryDao.save(Category.builder()
+            category = categoryRepository.save(Category.builder()
                 .withName(deviceRequest.getCategory().getName())
                 .build());
         }
         deviceRequest.setCategory(category);
 
-        Location location = locationDao.findByName(deviceRequest.getLocation().getName()).orElse(null);
+        Location location = locationRepository.findByName(deviceRequest.getLocation().getName()).orElse(null);
 
         if (location == null) {
-            location = locationDao.save(Location.builder()
+            location = locationRepository.save(Location.builder()
                 .withName(deviceRequest.getLocation().getName())
                 .build());
         }
@@ -105,12 +105,12 @@ public final class DeviceService {
     }
 
     public Device deleteById(final Long id) {
-        Optional<Device> deviceToDelete = deviceDao.findById(id);
+        Optional<Device> deviceToDelete = deviceRepository.findById(id);
 
         if (deviceToDelete.isEmpty()) {
             throw new ObjectNotFoundException();
         } else {
-            deviceDao.deleteById(id);
+            deviceRepository.deleteById(id);
             log.info("Device by id deleted: {}", deviceToDelete.get());
             return deviceToDelete.get();
         }

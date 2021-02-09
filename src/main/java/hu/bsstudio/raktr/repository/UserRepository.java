@@ -1,4 +1,4 @@
-package hu.bsstudio.raktr.dao;
+package hu.bsstudio.raktr.repository;
 
 import hu.bsstudio.raktr.model.User;
 import java.util.Optional;
@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 @Transactional
-public interface UserDao extends JpaRepository<User, Long> {
+public interface UserRepository extends JpaRepository<User, Long> {
 
     String FIND_BY_USERNAME_QUERY = "SELECT user FROM User user WHERE user.username = :username";
 

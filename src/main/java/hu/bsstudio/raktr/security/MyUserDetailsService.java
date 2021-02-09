@@ -1,6 +1,6 @@
 package hu.bsstudio.raktr.security;
 
-import hu.bsstudio.raktr.dao.UserDao;
+import hu.bsstudio.raktr.repository.UserRepository;
 import hu.bsstudio.raktr.model.User;
 import hu.bsstudio.raktr.model.UserRole;
 import java.util.ArrayList;
@@ -16,16 +16,16 @@ import org.springframework.stereotype.Service;
 @Service("userDetailsService")
 public class MyUserDetailsService implements UserDetailsService {
 
-    private final UserDao userDao;
+    private final UserRepository userRepository;
 
-    public MyUserDetailsService(final UserDao userDao) {
-        this.userDao = userDao;
+    public MyUserDetailsService(final UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
     @Override
     public final UserDetails loadUserByUsername(final String username) throws UsernameNotFoundException {
 
-        User user = userDao.findByUsername(username).orElse(null);
+        User user = userRepository.findByUsername(username).orElse(null);
 
         if (user == null) {
             throw new UsernameNotFoundException(username + " username not found");

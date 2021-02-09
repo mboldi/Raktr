@@ -1,7 +1,7 @@
 package hu.bsstudio.raktr.service;
 
-import hu.bsstudio.raktr.dao.CompositeItemDao;
-import hu.bsstudio.raktr.dao.DeviceDao;
+import hu.bsstudio.raktr.repository.CompositeItemRepository;
+import hu.bsstudio.raktr.repository.DeviceRepository;
 import hu.bsstudio.raktr.exception.ObjectNotFoundException;
 import hu.bsstudio.raktr.model.CompositeItem;
 import hu.bsstudio.raktr.model.Device;
@@ -13,19 +13,19 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class ScannableService {
 
-    private final DeviceDao deviceDao;
-    private final CompositeItemDao compositeItemDao;
+    private final DeviceRepository deviceRepository;
+    private final CompositeItemRepository compositeItemRepository;
 
-    public ScannableService(final DeviceDao deviceDao, final CompositeItemDao compositeItemDao) {
-        this.deviceDao = deviceDao;
-        this.compositeItemDao = compositeItemDao;
+    public ScannableService(final DeviceRepository deviceRepository, final CompositeItemRepository compositeItemRepository) {
+        this.deviceRepository = deviceRepository;
+        this.compositeItemRepository = compositeItemRepository;
     }
 
     public final Scannable getByBarcode(final String barcode) {
-        Device foundDevice = deviceDao.findByBarcode(barcode).orElse(null);
+        Device foundDevice = deviceRepository.findByBarcode(barcode).orElse(null);
 
         if (foundDevice == null) {
-            CompositeItem foundCompositeItem = compositeItemDao.findByBarcode(barcode).orElse(null);
+            CompositeItem foundCompositeItem = compositeItemRepository.findByBarcode(barcode).orElse(null);
             if (foundCompositeItem == null) {
                 throw new ObjectNotFoundException();
             } else {

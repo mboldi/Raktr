@@ -15,9 +15,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import hu.bsstudio.raktr.RaktrApplication;
-import hu.bsstudio.raktr.dao.CategoryDao;
-import hu.bsstudio.raktr.dao.DeviceDao;
-import hu.bsstudio.raktr.dao.LocationDao;
+import hu.bsstudio.raktr.repository.CategoryRepository;
+import hu.bsstudio.raktr.repository.DeviceRepository;
+import hu.bsstudio.raktr.repository.LocationRepository;
 import hu.bsstudio.raktr.model.Category;
 import hu.bsstudio.raktr.model.Device;
 import hu.bsstudio.raktr.model.DeviceStatus;
@@ -60,13 +60,13 @@ public class DeviceControllerIntegrationTest {
     private MockMvc mvc;
 
     @Autowired
-    private DeviceDao deviceDao;
+    private DeviceRepository deviceRepository;
 
     @Autowired
-    private CategoryDao categoryDao;
+    private CategoryRepository categoryRepository;
 
     @Autowired
-    private LocationDao locationDao;
+    private LocationRepository locationRepository;
 
     private Device.Builder defaultBuilder;
 
@@ -76,13 +76,13 @@ public class DeviceControllerIntegrationTest {
             .withName(CATEGORY_NAME)
             .build();
 
-        category = categoryDao.save(category);
+        category = categoryRepository.save(category);
 
         Location location = Location.builder()
             .withName(LOCATION_NAME)
             .build();
 
-        location = locationDao.save(location);
+        location = locationRepository.save(location);
 
         defaultBuilder = Device.builder()
             .withName(DEVICE_NAME)
@@ -100,9 +100,9 @@ public class DeviceControllerIntegrationTest {
 
     @AfterEach
     public final void after() {
-        deviceDao.deleteAll();
-        categoryDao.deleteAll();
-        locationDao.deleteAll();
+        deviceRepository.deleteAll();
+        categoryRepository.deleteAll();
+        locationRepository.deleteAll();
     }
 
     @Test
@@ -110,7 +110,7 @@ public class DeviceControllerIntegrationTest {
         Device device = defaultBuilder
             .build();
 
-        deviceDao.save(device);
+        deviceRepository.save(device);
 
         mvc.perform(get("/api/device")
             .contentType(MediaType.APPLICATION_JSON))
@@ -147,7 +147,7 @@ public class DeviceControllerIntegrationTest {
         Device device = defaultBuilder
             .build();
 
-        deviceDao.save(device);
+        deviceRepository.save(device);
 
         Device device2 = defaultBuilder
             .build();
@@ -172,7 +172,7 @@ public class DeviceControllerIntegrationTest {
         Device device = defaultBuilder
             .build();
 
-        Device device2 = deviceDao.save(device);
+        Device device2 = deviceRepository.save(device);
         device2.setName(DEVICE_NAME_2);
 
         ObjectMapper mapper = new ObjectMapper();
@@ -203,7 +203,7 @@ public class DeviceControllerIntegrationTest {
         Device device = defaultBuilder
             .build();
 
-        device = deviceDao.save(device);
+        device = deviceRepository.save(device);
 
         mvc.perform(get("/api/device/" + device.getId()))
             .andExpect(status().isOk())
@@ -223,7 +223,7 @@ public class DeviceControllerIntegrationTest {
         Device device = defaultBuilder
             .build();
 
-        device = deviceDao.save(device);
+        device = deviceRepository.save(device);
 
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);

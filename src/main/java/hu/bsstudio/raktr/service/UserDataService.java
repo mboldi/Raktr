@@ -1,6 +1,6 @@
 package hu.bsstudio.raktr.service;
 
-import hu.bsstudio.raktr.dao.UserDao;
+import hu.bsstudio.raktr.repository.UserRepository;
 import hu.bsstudio.raktr.exception.ObjectNotFoundException;
 import hu.bsstudio.raktr.model.User;
 import java.util.Optional;
@@ -11,14 +11,14 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class UserDataService {
 
-    private final UserDao userDao;
+    private final UserRepository userRepository;
 
-    public UserDataService(final UserDao userDao) {
-        this.userDao = userDao;
+    public UserDataService(final UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
     public final User getByUsername(final String username) {
-        Optional<User> foundUser = userDao.findByUsername(username);
+        Optional<User> foundUser = userRepository.findByUsername(username);
 
         if (foundUser.isEmpty()) {
             log.error("User by username {} not found", username);
@@ -30,7 +30,7 @@ public class UserDataService {
     }
 
     public final User updateUser(final User user) {
-        Optional<User> foundUser = userDao.findByUsername(user.getUsername());
+        Optional<User> foundUser = userRepository.findByUsername(user.getUsername());
 
         if (foundUser.isEmpty()) {
             log.error("User {} not found", user);
@@ -41,7 +41,7 @@ public class UserDataService {
             updatedUser.setPersonalId(user.getPersonalId());
 
             log.info("Updated user: {}", updatedUser);
-            return userDao.save(updatedUser);
+            return userRepository.save(updatedUser);
         }
     }
 }

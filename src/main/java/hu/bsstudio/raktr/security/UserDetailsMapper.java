@@ -1,7 +1,7 @@
 package hu.bsstudio.raktr.security;
 
-import hu.bsstudio.raktr.dao.UserDao;
-import hu.bsstudio.raktr.dao.UserRoleDao;
+import hu.bsstudio.raktr.repository.UserRepository;
+import hu.bsstudio.raktr.repository.UserRoleRepository;
 import hu.bsstudio.raktr.model.User;
 import hu.bsstudio.raktr.model.UserRole;
 import java.util.Collection;
@@ -17,13 +17,13 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserDetailsMapper implements UserDetailsContextMapper {
 
-    private final UserDao userDao;
-    private final UserRoleDao roleDao;
+    private final UserRepository userRepository;
+    private final UserRoleRepository roleDao;
 
     private final InetOrgPersonContextMapper ldapUserDetailsMapper = new InetOrgPersonContextMapper();
 
-    public UserDetailsMapper(final UserDao userDao, final UserRoleDao roleDao) {
-        this.userDao = userDao;
+    public UserDetailsMapper(final UserRepository userRepository, final UserRoleRepository roleDao) {
+        this.userRepository = userRepository;
         this.roleDao = roleDao;
     }
 
@@ -33,7 +33,7 @@ public class UserDetailsMapper implements UserDetailsContextMapper {
                                                 final Collection<? extends GrantedAuthority> authorities) {
         InetOrgPerson ldapPerson = (InetOrgPerson) ldapUserDetailsMapper.mapUserFromContext(ctx, username, authorities);
 
-        User foundUser = userDao.findByUsername(username).orElse(null);
+        User foundUser = userRepository.findByUsername(username).orElse(null);
 
         if (foundUser == null) {
             foundUser = User.builder()
@@ -69,7 +69,7 @@ public class UserDetailsMapper implements UserDetailsContextMapper {
             }
         }
 
-        userDao.save(foundUser);
+        userRepository.save(foundUser);
 
         return new LdapUser(foundUser);
     }

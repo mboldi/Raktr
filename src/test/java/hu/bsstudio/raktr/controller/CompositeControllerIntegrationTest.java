@@ -15,10 +15,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import hu.bsstudio.raktr.RaktrApplication;
-import hu.bsstudio.raktr.dao.CategoryDao;
-import hu.bsstudio.raktr.dao.CompositeItemDao;
-import hu.bsstudio.raktr.dao.DeviceDao;
-import hu.bsstudio.raktr.dao.LocationDao;
+import hu.bsstudio.raktr.repository.CategoryRepository;
+import hu.bsstudio.raktr.repository.CompositeItemRepository;
+import hu.bsstudio.raktr.repository.DeviceRepository;
+import hu.bsstudio.raktr.repository.LocationRepository;
 import hu.bsstudio.raktr.model.Category;
 import hu.bsstudio.raktr.model.CompositeItem;
 import hu.bsstudio.raktr.model.Device;
@@ -63,16 +63,16 @@ public class CompositeControllerIntegrationTest {
     private MockMvc mvc;
 
     @Autowired
-    private CompositeItemDao compositeItemDao;
+    private CompositeItemRepository compositeItemRepository;
 
     @Autowired
-    private DeviceDao deviceDao;
+    private DeviceRepository deviceRepository;
 
     @Autowired
-    private CategoryDao categoryDao;
+    private CategoryRepository categoryRepository;
 
     @Autowired
-    private LocationDao locationDao;
+    private LocationRepository locationRepository;
 
     private Device.Builder defaultDeviceBuilder;
     private CompositeItem.Builder defaultBuilder;
@@ -83,13 +83,13 @@ public class CompositeControllerIntegrationTest {
             .withName(CATEGORY_NAME)
             .build();
 
-        category = categoryDao.save(category);
+        category = categoryRepository.save(category);
 
         Location location = Location.builder()
             .withName(LOCATION_NAME)
             .build();
 
-        location = locationDao.save(location);
+        location = locationRepository.save(location);
 
         defaultDeviceBuilder = Device.builder()
             .withName(DEVICE_NAME)
@@ -112,15 +112,15 @@ public class CompositeControllerIntegrationTest {
 
     @AfterEach
     public final void after() {
-        compositeItemDao.deleteAll();
-        deviceDao.deleteAll();
-        categoryDao.deleteAll();
-        locationDao.deleteAll();
+        compositeItemRepository.deleteAll();
+        deviceRepository.deleteAll();
+        categoryRepository.deleteAll();
+        locationRepository.deleteAll();
     }
 
     @Test
     public void testGetCompositeItem() throws Exception {
-        compositeItemDao.save(defaultBuilder.build());
+        compositeItemRepository.save(defaultBuilder.build());
 
         mvc.perform(get("/api/composite")
             .contentType(MediaType.APPLICATION_JSON))
@@ -150,14 +150,14 @@ public class CompositeControllerIntegrationTest {
                 .contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.name", is(COMPOSITE_NAME)));
 
-        assertEquals(1, compositeItemDao.findAll().size());
+        assertEquals(1, compositeItemRepository.findAll().size());
     }
 
     @Test
     public void testUpdateCompositeItem() throws Exception {
         CompositeItem compositeItem = defaultBuilder.build();
 
-        CompositeItem compositeToUpdate = compositeItemDao.save(compositeItem);
+        CompositeItem compositeToUpdate = compositeItemRepository.save(compositeItem);
         compositeToUpdate.setName(COMPOSITE_NAME_2);
 
         ObjectMapper mapper = new ObjectMapper();
@@ -186,7 +186,7 @@ public class CompositeControllerIntegrationTest {
 
     @Test
     public void testGetCompositeItemById() throws Exception {
-        CompositeItem compositeItem = compositeItemDao.save(defaultBuilder.build());
+        CompositeItem compositeItem = compositeItemRepository.save(defaultBuilder.build());
 
         mvc.perform(get("/api/composite/" + compositeItem.getId())
             .contentType(MediaType.APPLICATION_JSON))
@@ -204,7 +204,7 @@ public class CompositeControllerIntegrationTest {
 
     @Test
     public void testDeleteCompositeItem() throws Exception {
-        CompositeItem compositeItem = compositeItemDao.save(defaultBuilder.build());
+        CompositeItem compositeItem = compositeItemRepository.save(defaultBuilder.build());
 
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
@@ -221,7 +221,7 @@ public class CompositeControllerIntegrationTest {
                 .contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.name", is(COMPOSITE_NAME)));
 
-        assertEquals(0, compositeItemDao.findAll().size());
+        assertEquals(0, compositeItemRepository.findAll().size());
     }
 
     @Test
@@ -229,9 +229,9 @@ public class CompositeControllerIntegrationTest {
         CompositeItem compositeItem = defaultBuilder.build();
         Device device = defaultDeviceBuilder.build();
 
-        compositeItem = compositeItemDao.save(compositeItem);
+        compositeItem = compositeItemRepository.save(compositeItem);
 
-        device = deviceDao.save(device);
+        device = deviceRepository.save(device);
 
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
@@ -261,9 +261,9 @@ public class CompositeControllerIntegrationTest {
         CompositeItem compositeItem = defaultBuilder.build();
         Device device = defaultDeviceBuilder.build();
 
-        compositeItem = compositeItemDao.save(compositeItem);
+        compositeItem = compositeItemRepository.save(compositeItem);
 
-        device = deviceDao.save(device);
+        device = deviceRepository.save(device);
 
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);

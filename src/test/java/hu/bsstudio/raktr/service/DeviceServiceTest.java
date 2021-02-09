@@ -11,9 +11,9 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
 
-import hu.bsstudio.raktr.dao.CategoryDao;
-import hu.bsstudio.raktr.dao.DeviceDao;
-import hu.bsstudio.raktr.dao.LocationDao;
+import hu.bsstudio.raktr.repository.CategoryRepository;
+import hu.bsstudio.raktr.repository.DeviceRepository;
+import hu.bsstudio.raktr.repository.LocationRepository;
 import hu.bsstudio.raktr.exception.ObjectNotFoundException;
 import hu.bsstudio.raktr.model.Category;
 import hu.bsstudio.raktr.model.Device;
@@ -52,15 +52,15 @@ final class DeviceServiceTest {
     public static final int OTHER_QUANTITY = 2;
 
     @Mock
-    private DeviceDao mockDeviceDao;
+    private DeviceRepository mockDeviceRepository;
     @Mock
     private Device deviceRequest;
 
     @Mock
-    private CategoryDao mockCategoryDao;
+    private CategoryRepository mockCategoryRepository;
 
     @Mock
-    private LocationDao mockLocationDao;
+    private LocationRepository mockLocationRepository;
 
     private Device device;
     private Location location;
@@ -72,7 +72,7 @@ final class DeviceServiceTest {
     void init() {
         initMocks(this);
 
-        underTest = new DeviceService(mockDeviceDao, mockCategoryDao, mockLocationDao);
+        underTest = new DeviceService(mockDeviceRepository, mockCategoryRepository, mockLocationRepository);
 
         location = Location.builder()
             .withName(LOCATION_NAME)
@@ -102,15 +102,15 @@ final class DeviceServiceTest {
     @Test
     void testCreateDevice() {
         //given
-        doReturn(device).when(mockDeviceDao).save(deviceRequest);
-        given(mockCategoryDao.findByName(CATEGORY_NAME)).willReturn(Optional.ofNullable(category));
-        given(mockLocationDao.findByName(LOCATION_NAME)).willReturn(Optional.ofNullable(location));
+        doReturn(device).when(mockDeviceRepository).save(deviceRequest);
+        given(mockCategoryRepository.findByName(CATEGORY_NAME)).willReturn(Optional.ofNullable(category));
+        given(mockLocationRepository.findByName(LOCATION_NAME)).willReturn(Optional.ofNullable(location));
 
         //when
         final Device saved = underTest.create(deviceRequest);
 
         //then
-        verify(mockDeviceDao).save(any(Device.class));
+        verify(mockDeviceRepository).save(any(Device.class));
         assertAll(
             () -> assertNotNull(saved),
             () -> assertEquals(deviceRequest.getName(), saved.getName()),
@@ -154,11 +154,11 @@ final class DeviceServiceTest {
             .withQuantity(OTHER_QUANTITY)
             .build();
 
-        given(mockDeviceDao.save(device)).willReturn(updatedDevice);
-        given(mockDeviceDao.findById(any())).willReturn(java.util.Optional.ofNullable(device));
+        given(mockDeviceRepository.save(device)).willReturn(updatedDevice);
+        given(mockDeviceRepository.findById(any())).willReturn(java.util.Optional.ofNullable(device));
 
-        given(mockCategoryDao.findByName(CATEGORY_NAME)).willReturn(Optional.ofNullable(category));
-        given(mockLocationDao.findByName(LOCATION_NAME)).willReturn(Optional.ofNullable(location));
+        given(mockCategoryRepository.findByName(CATEGORY_NAME)).willReturn(Optional.ofNullable(category));
+        given(mockLocationRepository.findByName(LOCATION_NAME)).willReturn(Optional.ofNullable(location));
 
         //when
         final Device updated = underTest.update(deviceRequest);
@@ -201,9 +201,9 @@ final class DeviceServiceTest {
     @Test
     void testUpdateFindsNoDeviceToUpdate() {
         //given
-        given(mockDeviceDao.findById(any())).willReturn(Optional.empty());
-        given(mockCategoryDao.findByName(CATEGORY_NAME)).willReturn(Optional.ofNullable(category));
-        given(mockLocationDao.findByName(LOCATION_NAME)).willReturn(Optional.ofNullable(location));
+        given(mockDeviceRepository.findById(any())).willReturn(Optional.empty());
+        given(mockCategoryRepository.findByName(CATEGORY_NAME)).willReturn(Optional.ofNullable(category));
+        given(mockLocationRepository.findByName(LOCATION_NAME)).willReturn(Optional.ofNullable(location));
 
 
         //when
@@ -215,20 +215,20 @@ final class DeviceServiceTest {
     @Test
     void testGetById() {
         //given
-        given(mockDeviceDao.findById(any())).willReturn(Optional.ofNullable(device));
+        given(mockDeviceRepository.findById(any())).willReturn(Optional.ofNullable(device));
 
         //when
         Device foundDevice = underTest.getById(ID);
 
         //then
-        verify(mockDeviceDao).findById(ID);
+        verify(mockDeviceRepository).findById(ID);
         assertEquals(device, foundDevice);
     }
 
     @Test
     void testGetByIdFindNoDevice() {
         //given
-        given(mockDeviceDao.findById(any())).willReturn(Optional.empty());
+        given(mockDeviceRepository.findById(any())).willReturn(Optional.empty());
 
         //when
 
@@ -244,7 +244,7 @@ final class DeviceServiceTest {
         underTest.delete(deviceRequest);
 
         //then
-        verify(mockDeviceDao).delete(deviceRequest);
+        verify(mockDeviceRepository).delete(deviceRequest);
     }
 
     @Test
@@ -252,7 +252,7 @@ final class DeviceServiceTest {
         //given
         List<Device> devices = new ArrayList<>();
         devices.add(device);
-        given(mockDeviceDao.findAll()).willReturn(devices);
+        given(mockDeviceRepository.findAll()).willReturn(devices);
 
         //when
         List<Device> all = underTest.getAll();

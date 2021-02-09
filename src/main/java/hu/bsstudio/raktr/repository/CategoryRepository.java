@@ -1,4 +1,4 @@
-package hu.bsstudio.raktr.dao;
+package hu.bsstudio.raktr.repository;
 
 import hu.bsstudio.raktr.model.Category;
 import java.util.Optional;
@@ -8,6 +8,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 @Transactional
-public interface CategoryDao extends JpaRepository<Category, Long> {
+public interface CategoryRepository extends JpaRepository<Category, Long> {
     Optional<Category> findByName(String name);
 }

@@ -1,4 +1,4 @@
-package hu.bsstudio.raktr.dao;
+package hu.bsstudio.raktr.repository;
 
 import hu.bsstudio.raktr.model.Location;
 import java.util.Optional;
@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 @Transactional
-public interface LocationDao extends JpaRepository<Location, Long> {
+public interface LocationRepository extends JpaRepository<Location, Long> {
 
     String FIND_BY_NAME_QUERY = "SELECT location FROM Location location WHERE location.name = :name";
 

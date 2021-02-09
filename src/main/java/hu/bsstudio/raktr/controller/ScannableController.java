@@ -41,4 +41,11 @@ public class ScannableController {
             .<ResponseEntity<Scannable>>map(ResponseEntity::ok)
             .orElseGet(() -> ResponseEntity.notFound().build());
     }
+
+    @GetMapping("/count")
+    public ResponseEntity<Long> getScannablesCount() {
+        log.info("Incoming request for scannables count");
+
+        return ResponseEntity.ok(scannableService.getScannableCount());
+    }
 }

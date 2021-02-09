@@ -1,5 +1,6 @@
 package hu.bsstudio.raktr.service;
 
+import com.jayway.jsonpath.JsonPath;
 import hu.bsstudio.raktr.repository.CompositeItemRepository;
 import hu.bsstudio.raktr.repository.DeviceRepository;
 import hu.bsstudio.raktr.exception.ObjectNotFoundException;
@@ -54,5 +55,9 @@ public class ScannableService {
             log.info("Device found by textIdentifier: {}", foundDevice.get());
             return foundDevice;
         }
+    }
+
+    public Long getScannableCount() {
+        return deviceRepository.count() + compositeItemRepository.count();
     }
 }

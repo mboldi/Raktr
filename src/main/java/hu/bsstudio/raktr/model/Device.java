@@ -74,6 +74,7 @@ public class Device extends Scannable {
         this.status = builder.status;
         this.category = builder.category;
         this.quantity = builder.quantity;
+        this.textIdentifier = builder.textIdentifier;
     }
 
     public static Builder builder() {
@@ -86,6 +87,7 @@ public class Device extends Scannable {
             + "id=" + id
             + ", name='" + name + '\''
             + ", barcode='" + barcode + '\''
+            + ", textIdentifier='" + textIdentifier + "'"
             + ", maker='" + maker + '\''
             + ", type='" + type + '\''
             + ", serial='" + serial + '\''
@@ -107,6 +109,7 @@ public class Device extends Scannable {
         private String serial;
         private Integer value;
         private String barcode;
+        private String textIdentifier;
         private Integer weight;
         private Location location;
         private DeviceStatus status;
@@ -145,6 +148,11 @@ public class Device extends Scannable {
 
         public Builder withBarcode(final String barcode) {
             this.barcode = barcode;
+            return this;
+        }
+
+        public Builder withTextIdentifier(final String textIdentifier) {
+            this.textIdentifier = textIdentifier;
             return this;
         }
 

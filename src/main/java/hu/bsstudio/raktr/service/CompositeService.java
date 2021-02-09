@@ -50,6 +50,7 @@ public class CompositeService {
 
         compositeItemToUpdate.setName(compositeItemRequest.getName());
         compositeItemToUpdate.setBarcode(compositeItemRequest.getBarcode());
+        compositeItemToUpdate.setTextIdentifier(compositeItemRequest.getTextIdentifier());
         compositeItemToUpdate.setLocation(compositeItemRequest.getLocation());
 
         CompositeItem saved = compositeItemRepository.save(compositeItemToUpdate);

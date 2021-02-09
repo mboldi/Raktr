@@ -25,7 +25,7 @@ import lombok.Setter;
 @Inheritance(strategy = InheritanceType.JOINED)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME)
-@JsonSubTypes({
+@JsonSubTypes( {
     @JsonSubTypes.Type(value = Device.class, name = "device"),
     @JsonSubTypes.Type(value = CompositeItem.class, name = "compositeItem")
 })
@@ -38,6 +38,10 @@ public abstract class Scannable extends DomainAuditModel {
 
     @NotBlank
     String name;
+
+    @NotBlank
+    @Column(unique = true)
+    String textIdentifier;
 
     @NotNull
     @Column(unique = true)

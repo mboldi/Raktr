@@ -56,6 +56,7 @@ public final class DeviceService {
         }
 
         deviceToUpdate.setBarcode(deviceRequest.getBarcode());
+        deviceToUpdate.setTextIdentifier(deviceRequest.getTextIdentifier());
         deviceToUpdate.setName(deviceRequest.getName());
         deviceToUpdate.setMaker(deviceRequest.getMaker());
         deviceToUpdate.setType(deviceRequest.getType());

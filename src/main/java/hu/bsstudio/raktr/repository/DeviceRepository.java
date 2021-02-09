@@ -11,9 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 @Transactional
 public interface DeviceRepository extends JpaRepository<Device, Long> {
+    Optional<Device> findByBarcode(String barcode);
 
-    String FIND_BY_BARCODE_QUERY = "SELECT device FROM Device device WHERE device.barcode = :barcode";
-
-    @Query(FIND_BY_BARCODE_QUERY)
-    Optional<Device> findByBarcode(@Param("barcode") String barcode);
+    Optional<Device> findByTextIdentifier(String textIdentifier);
 }

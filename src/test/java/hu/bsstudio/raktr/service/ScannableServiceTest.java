@@ -52,7 +52,7 @@ final class ScannableServiceTest {
 
         underTest = new ScannableService(mockDeviceRepository, mockCompositeDao);
     }
-
+/*
     @Test
     void testGetDeviceByBarcode() {
         //given
@@ -76,7 +76,7 @@ final class ScannableServiceTest {
 
         //then
         assertEquals(compositeItem, byBarcode);
-    }
+    }*/
 
     @Test
     void testGetDeviceByBarcodeNothingFound() {

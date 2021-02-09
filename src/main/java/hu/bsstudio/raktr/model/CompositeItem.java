@@ -39,6 +39,7 @@ public class CompositeItem extends Scannable {
     public CompositeItem(final Builder builder) {
         this.id = builder.id;
         this.barcode = builder.barcode;
+        this.textIdentifier = builder.textIdentifier;
         this.name = builder.name;
         this.devices = builder.devices;
         this.location = builder.location;
@@ -55,6 +56,7 @@ public class CompositeItem extends Scannable {
             + "id=" + id
             + ", name='" + name + '\''
             + ", barcode='" + barcode + '\''
+            + ", textIdentifier='" + textIdentifier + '\''
             + ", devices=" + devices
             + ", location=" + location
             + '}';
@@ -65,6 +67,7 @@ public class CompositeItem extends Scannable {
         private Long id;
         private String name;
         private String barcode;
+        private String textIdentifier;
         private List<Device> devices;
         private Location location;
 
@@ -80,6 +83,11 @@ public class CompositeItem extends Scannable {
 
         public Builder withBarcode(final String barcode) {
             this.barcode = barcode;
+            return this;
+        }
+
+        public Builder withTextIdentifier(final String textIdentifier) {
+            this.textIdentifier = textIdentifier;
             return this;
         }
 

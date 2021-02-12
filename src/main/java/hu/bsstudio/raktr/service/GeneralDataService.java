@@ -5,23 +5,28 @@ import hu.bsstudio.raktr.exception.ObjectNotFoundException;
 import hu.bsstudio.raktr.model.GeneralData;
 import java.util.List;
 import java.util.Optional;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public final class GeneralDataService {
     private final GeneralDataRepository generalDataRepository;
 
-    public GeneralDataService(final GeneralDataRepository generalDataRepository) {
-        this.generalDataRepository = generalDataRepository;
-    }
+    public Optional<GeneralData> create(final GeneralData newData) {
+        final var foundData = generalDataRepository.findById(newData.getKey());
 
-    public GeneralData create(final GeneralData newData) {
+        if(foundData.isPresent()){
+            log.info("General Data item with same key exists in database: {}", foundData.get());
+            return Optional.empty();
+        }
+
         GeneralData saved = generalDataRepository.save(newData);
 
         log.info("General data saved: {}", saved);
-        return saved;
+        return Optional.of(saved);
     }
 
     public List<GeneralData> getAll() {
@@ -31,7 +36,7 @@ public final class GeneralDataService {
         return fetched;
     }
 
-    public GeneralData getByKey(final String key) {
+    public Optional<GeneralData> getByKey(final String key) {
         Optional<GeneralData> found = generalDataRepository.findById(key);
 
         if (found.isEmpty()) {
@@ -41,7 +46,7 @@ public final class GeneralDataService {
 
         log.info("General data by id {} found: {}", key, found.get());
 
-        return found.get();
+        return found;
     }
 
     public GeneralData update(final GeneralData dataToUpdate) {
@@ -61,15 +66,15 @@ public final class GeneralDataService {
         return saved;
     }
 
-    public GeneralData delete(final GeneralData dataToDelete) {
+    public Optional<GeneralData> delete(final GeneralData dataToDelete) {
         Optional<GeneralData> found = generalDataRepository.findById(dataToDelete.getKey());
 
         if (found.isEmpty()) {
             log.error("General data not in database, couldn't delete: {}", dataToDelete);
-            throw new ObjectNotFoundException();
+            return Optional.empty();
         }
 
         generalDataRepository.delete(dataToDelete);
-        return dataToDelete;
+        return found;
     }
 }

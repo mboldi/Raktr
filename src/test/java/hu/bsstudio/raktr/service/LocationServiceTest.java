@@ -2,6 +2,7 @@ package hu.bsstudio.raktr.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doReturn;
@@ -42,6 +43,7 @@ final class LocationServiceTest {
         given(mockLocationRequest.getName()).willReturn(NAME);
 
         location = spy(Location.builder()
+            .withId(LOCATION_ID)
             .withName(NAME)
             .build());
     }
@@ -49,25 +51,41 @@ final class LocationServiceTest {
     @Test
     void testCreateLocation() {
         //given
+        given(mockLocationRepository.findByName(NAME)).willReturn(Optional.empty());
         doReturn(location).when(mockLocationRepository).save(any(Location.class));
 
         //when
-        final Location result = underTest.create(mockLocationRequest);
+        final var result = underTest.create(mockLocationRequest);
 
         //then
         verify(mockLocationRepository).save(mockLocationRequest);
-        assertEquals(result.getName(), mockLocationRequest.getName());
+        assertEquals(result.get().getName(), mockLocationRequest.getName());
     }
 
     @Test
     void testDelete() {
         //given
+        given(mockLocationRepository.findById(LOCATION_ID)).willReturn(Optional.of(location));
 
         //when
-        underTest.delete(location);
+        final var deleted = underTest.delete(location);
 
         //then
+        assertTrue(deleted.isPresent());
+        assertEquals(deleted.get(), location);
         verify(mockLocationRepository).delete(location);
+    }
+
+    @Test
+    void testCannotDeleteNotFound() {
+        //given
+        given(mockLocationRepository.findById(LOCATION_ID)).willReturn(Optional.empty());
+
+        //when
+        final var deleted = underTest.delete(location);
+
+        //then
+        assertTrue(deleted.isEmpty());
     }
 
     @Test
@@ -78,16 +96,17 @@ final class LocationServiceTest {
             .withName(UPDATED_NAME)
             .build();
 
-        given(mockLocationRepository.findById(LOCATION_ID)).willReturn(java.util.Optional.ofNullable(location));
+        given(mockLocationRepository.findById(LOCATION_ID)).willReturn(Optional.of(location));
         doReturn(location).when(mockLocationRepository).save(location);
 
         //when
-        location = underTest.update(mockLocationRequest);
+        final var updatedLocation = underTest.update(mockLocationRequest);
 
         //then
         verify(location).setName(UPDATED_NAME);
         verify(mockLocationRepository).save(location);
-        assertEquals(UPDATED_NAME, location.getName());
+        assertTrue(updatedLocation.isPresent());
+        assertEquals(UPDATED_NAME, updatedLocation.get().getName());
     }
 
     @Test
@@ -110,8 +129,9 @@ final class LocationServiceTest {
         given(mockLocationRepository.findById(LOCATION_ID)).willReturn(Optional.empty());
 
         //when
+        final var updatedLocation = underTest.update(mockLocationRequest);
 
         //then
-        assertThrows(ObjectNotFoundException.class, () -> underTest.update(mockLocationRequest));
+        assertTrue(updatedLocation.isEmpty());
     }
 }

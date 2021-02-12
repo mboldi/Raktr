@@ -1,9 +1,8 @@
 swagger: "2.0"
 info:
   title: Raktr
-  description: API description.
-  version: 0.0.1
-host: api.example.com
+  description: Inventory and rental management software API
+  version: 0.1.0
 basePath: "/api"
 tags:
   - name: "Device"
@@ -16,6 +15,8 @@ tags:
     description: "Everything about categories"
   - name: "Location"
     description: "Everything about locations"
+  - name: "GeneralData"
+    description: "Everything about general data"
 schemes:
   - https
 paths:
@@ -109,25 +110,6 @@ paths:
             $ref: '#/definitions/Device'
         400:
           description: "Invalid ID supplied"
-#  /device/barcode/{barcode}:
-#    get:
-#      tags:
-#        - "Device"
-#      summary: "Return a device with given barcode value"
-#      operationId: "getDeviceByBarcode"
-#      parameters:
-#        - name: "barcode"
-#          in: path
-#          description: "The barcode of the device you want to get"
-#          required: true
-#          type: string
-#      responses:
-#        200:
-#          description: "Successfully found device"
-#          schema:
-#            $ref: '#/definitions/Device'
-#        400:
-#          description: "Device with given barcode not found"
 
   /composite:
     get:
@@ -267,7 +249,7 @@ paths:
         404:
           description: "CompositeItem not found"
 
-  /scannable/{barcode}:
+  /scannable/barcode/{barcode}:
     get:
       tags:
         - "Device"
@@ -286,6 +268,25 @@ paths:
             $ref: '#/definitions/Scannable'
         404:
           description: "No item found with given barcode"
+  /scannable/textid/{textIdentifier}:
+    get:
+      tags:
+        - "Device"
+        - "CompositeItem"
+      summary: "Returns the item with given text identifier"
+      operationId: "getScannableByTextIdentifier"
+      parameters:
+        - name: "textIdentifier"
+          in: path
+          type: string
+          required: true
+      responses:
+        200:
+          description: "Successful operation"
+          schema:
+            $ref: '#/definitions/Scannable'
+        404:
+          description: "No item found with given text identifier"
 
   /rent:
     post:
@@ -553,7 +554,7 @@ paths:
           schema:
             $ref: '#/definitions/Location'
         404:
-          description: "Category not found"
+          description: "Location not found"
           schema:
             $ref: '#/definitions/Location'
     delete:
@@ -572,12 +573,100 @@ paths:
         200:
           description: "Successful operation"
           schema:
-            $ref: '#/definitions/Location'
-        404:
-          description: "Location not found"
-          schema:
-            $ref: '#/definitions/Location'
+            - $ref: '#/definitions/Location'
 
+  /generaldata:
+    post:
+      tags:
+        - "GeneralData"
+      summary: "Adds a general data item"
+      operationId: "addGeneralData"
+      parameters:
+        - name: "generalData"
+          in: body
+          required: true
+          description: "The general data item you want to add"
+          schema:
+            $ref: '#/definitions/GeneralData'
+      responses:
+        200:
+          description: "Successfully added"
+          schema:
+            $ref: '#/definitions/GeneralData'
+        409:
+          description: "GeneralData item exists in database with same key"
+    get:
+      tags:
+        - "GeneralData"
+      summary: "Returns all stored general data items"
+      operationId: "getAllGeneralData"
+      responses:
+        200:
+          description: "Successfully added"
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/GeneralData'
+    put:
+      tags:
+        - "GeneralData"
+      summary: "Update a general data item"
+      operationId: "updateGeneralData"
+      parameters:
+        - name: "generalData"
+          in: body
+          required: true
+          description: "The general data item you want to update"
+          schema:
+            $ref: '#/definitions/GeneralData'
+      responses:
+        200:
+          description: "Successfully updated"
+          schema:
+            $ref: '#/definitions/GeneralData'
+        404:
+          description: "GeneralData not found in database with given key"
+    delete:
+      tags:
+        - "GeneralData"
+      summary: "Deletes a general data item"
+      operationId: "deleteGeneralData"
+      parameters:
+        - name: "generalData"
+          in: body
+          required: true
+          description: "The general data item you want to delete"
+          schema:
+            $ref: '#/definitions/GeneralData'
+      responses:
+        200:
+          description: "Successfully removed"
+          schema:
+            $ref: '#/definitions/GeneralData'
+        404:
+          description: "GeneralData item not found in database with given key"
+
+  /generaldata/{key}:
+    get:
+      tags:
+        - "GeneralData"
+      summary: "Returns a general data item by key"
+      operationId: "getGeneralDataByKey"
+      parameters:
+        - name: "key"
+          in: path
+          required: true
+          description: "The key of the general data item you want to get"
+          type: number
+      responses:
+        200:
+          description: "OK"
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/GeneralData'
+        404:
+          description: "GeneralData item not found with given key"
 
 definitions:
   Scannable:
@@ -758,3 +847,15 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/RentItem'
+
+  GeneralData:
+    description: "An object that can be used to store general data, like name of group leader"
+    type: object
+    required:
+      - key
+      - data
+    properties:
+      key:
+        type: string
+      data:
+        type: string

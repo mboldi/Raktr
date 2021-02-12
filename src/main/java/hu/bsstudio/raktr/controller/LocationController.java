@@ -4,7 +4,9 @@ import hu.bsstudio.raktr.model.Location;
 import hu.bsstudio.raktr.service.LocationService;
 import java.util.List;
 import javax.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -19,37 +21,50 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @Slf4j
 @SuppressWarnings("checkstyle:DesignForExtension")
+@RequiredArgsConstructor
 @RequestMapping("/api/location")
 public class LocationController {
 
     private final LocationService locationService;
 
-    public LocationController(final LocationService locationService) {
-        this.locationService = locationService;
-    }
-
     @PostMapping
-    public Location createLocation(@Valid @RequestBody final Location locationRequest) {
+    public ResponseEntity<Location> createLocation(@Valid @RequestBody final Location locationRequest) {
         log.info("Incoming request for new location: {}", locationRequest);
-        return locationService.create(locationRequest);
+
+        final var location = locationService.create(locationRequest);
+
+        return location
+            .map(ResponseEntity::ok)
+            .orElseGet(() -> ResponseEntity.status(409).build());
     }
 
     @GetMapping
-    public List<Location> locationList() {
+    public ResponseEntity<List<Location>> locationList() {
         log.info("Incoming request for all locations");
-        return locationService.getAll();
+        return ResponseEntity
+            .ok(locationService.getAll());
     }
 
     @PutMapping
-    public Location updateLocation(@Valid @RequestBody final Location locationRequest) {
+    public ResponseEntity<Location> updateLocation(@Valid @RequestBody final Location locationRequest) {
         log.info("Incoming request for updating a location: {}", locationRequest);
-        return locationService.update(locationRequest);
+
+        final var location = locationService.update(locationRequest);
+
+        return location
+            .map(ResponseEntity::ok)
+            .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @DeleteMapping
     @Secured("ROLE_Stúdiós")
-    public Location deleteLocation(@Valid @RequestBody final  Location locationRequest) {
+    public ResponseEntity<Location> deleteLocation(@Valid @RequestBody final Location locationRequest) {
         log.info("Incoming request to delete location: {}", locationRequest);
-        return locationService.delete(locationRequest);
+
+        final var location = locationService.delete(locationRequest);
+
+        return location
+            .map(ResponseEntity::ok)
+            .orElseGet(() -> ResponseEntity.notFound().build());
     }
 }

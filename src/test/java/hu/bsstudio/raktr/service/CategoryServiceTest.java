@@ -2,6 +2,7 @@ package hu.bsstudio.raktr.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doReturn;
@@ -42,6 +43,7 @@ final class CategoryServiceTest {
         given(mockCategoryRequest.getName()).willReturn(NAME);
 
         category = spy(Category.builder()
+            .withId(CATEGORY_ID)
             .withName(NAME)
             .build());
     }
@@ -52,22 +54,34 @@ final class CategoryServiceTest {
         doReturn(category).when(mockCategoryRepository).save(any(Category.class));
 
         //when
-        final Category result = underTest.create(mockCategoryRequest);
+        final var result = underTest.create(mockCategoryRequest);
 
         //then
         verify(mockCategoryRepository).save(mockCategoryRequest);
-        assertEquals(result.getName(), mockCategoryRequest.getName());
+        assertEquals(result.get().getName(), mockCategoryRequest.getName());
     }
 
     @Test
     void testDelete() {
         //given
+        given(mockCategoryRepository.findById(CATEGORY_ID)).willReturn(Optional.of(category));
 
         //when
-        underTest.delete(category);
+        Optional<Category> deleted = underTest.delete(category);
 
         //then
-        verify(mockCategoryRepository).delete(category);
+        assertTrue(deleted.isPresent());
+        assertEquals(deleted.get(), category);
+        verify(mockCategoryRepository).delete(any(Category.class));
+    }
+
+    @Test
+    void testCannotDeleteNotFound() {
+        given(mockCategoryRepository.findById(CATEGORY_ID)).willReturn(Optional.empty());
+
+        var deleted = underTest.delete(category);
+
+        assertTrue(deleted.isEmpty());
     }
 
     @Test
@@ -82,12 +96,12 @@ final class CategoryServiceTest {
         doReturn(category).when(mockCategoryRepository).save(category);
 
         //when
-        category = underTest.update(mockCategoryRequest);
+        final var updatedCategory = underTest.update(mockCategoryRequest);
 
         //then
         verify(category).setName(UPDATED_NAME);
         verify(mockCategoryRepository).save(category);
-        assertEquals(UPDATED_NAME, category.getName());
+        assertEquals(UPDATED_NAME, updatedCategory.get().getName());
     }
 
     @Test
@@ -96,9 +110,10 @@ final class CategoryServiceTest {
         given(mockCategoryRepository.findById(CATEGORY_ID)).willReturn(Optional.empty());
 
         //when
+        Optional<Category> updated = underTest.update(mockCategoryRequest);
 
         //then
-        assertThrows(ObjectNotFoundException.class, () -> underTest.update(mockCategoryRequest));
+        assertTrue(updated.isEmpty());
     }
 
     @Test

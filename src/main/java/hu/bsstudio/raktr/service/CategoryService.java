@@ -1,9 +1,9 @@
 package hu.bsstudio.raktr.service;
 
-import hu.bsstudio.raktr.repository.CategoryRepository;
-import hu.bsstudio.raktr.exception.ObjectNotFoundException;
 import hu.bsstudio.raktr.model.Category;
+import hu.bsstudio.raktr.repository.CategoryRepository;
 import java.util.List;
+import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -17,10 +17,16 @@ public class CategoryService {
         this.categoryRepository = categoryRepository;
     }
 
-    public final Category create(final Category category) {
-        final Category saved = categoryRepository.save(category);
-        log.info("Category created: {}", saved);
-        return saved;
+    public final Optional<Category> create(final Category category) {
+        final var byName = categoryRepository.findByName(category.getName());
+
+        if (byName.isEmpty()) {
+            final Category saved = categoryRepository.save(category);
+            log.info("Category created: {}", saved);
+            return Optional.of(saved);
+        } else {
+            return Optional.empty();
+        }
     }
 
     public final List<Category> getAll() {
@@ -29,23 +35,30 @@ public class CategoryService {
         return fetched;
     }
 
-    public final Category update(final Category categoryRequest) {
-        final Category categoryToUpdate = categoryRepository.findById(categoryRequest.getId()).orElse(null);
+    public final Optional<Category> update(final Category categoryRequest) {
+        final var categoryToUpdate = categoryRepository.findById(categoryRequest.getId());
 
-        if (categoryToUpdate == null) {
-            throw new ObjectNotFoundException();
+        if (categoryToUpdate.isEmpty()) {
+            return Optional.empty();
         }
 
-        categoryToUpdate.setName(categoryRequest.getName());
+        categoryToUpdate.get().setName(categoryRequest.getName());
 
-        final Category updated = categoryRepository.save(categoryToUpdate);
+        final Category updated = categoryRepository.save(categoryToUpdate.get());
         log.info("Category updated in DB: {}", updated);
-        return updated;
+        return Optional.of(updated);
     }
 
-    public final Category delete(final Category categoryRequest) {
-        categoryRepository.delete(categoryRequest);
-        log.info("Category deleted: {}", categoryRequest);
-        return categoryRequest;
+    public final Optional<Category> delete(final Category categoryRequest) {
+        final var foundCategory = categoryRepository.findById(categoryRequest.getId());
+
+        if (foundCategory.isPresent()) {
+            categoryRepository.delete(categoryRequest);
+            log.info("Category deleted: {}", categoryRequest);
+        } else {
+            log.info("Category not found to delete with id: {}", categoryRequest.getId());
+        }
+
+        return foundCategory;
     }
 }

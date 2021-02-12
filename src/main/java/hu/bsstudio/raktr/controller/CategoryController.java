@@ -3,8 +3,10 @@ package hu.bsstudio.raktr.controller;
 import hu.bsstudio.raktr.model.Category;
 import hu.bsstudio.raktr.service.CategoryService;
 import java.util.List;
+import java.util.Optional;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -29,27 +31,42 @@ public class CategoryController {
     }
 
     @PostMapping()
-    public Category createCategory(@Valid @RequestBody final Category categoryRequest) {
+    public ResponseEntity<Category> createCategory(@Valid @RequestBody final Category categoryRequest) {
         log.info("Incoming request for new category: {}", categoryRequest);
-        return categoryService.create(categoryRequest);
+
+        final var createdCategory = categoryService.create(categoryRequest);
+
+        return createdCategory
+            .map(ResponseEntity::ok)
+            .orElseGet(() -> ResponseEntity.status(409).build());
     }
 
     @GetMapping
-    public List<Category> categoryList() {
+    public ResponseEntity<List<Category>> categoryList() {
         log.info("Incoming request for all categories");
-        return categoryService.getAll();
+        return ResponseEntity.ok(categoryService.getAll());
     }
 
     @PutMapping
-    public Category updateCategory(@Valid @RequestBody final Category categoryRequest) {
+    public ResponseEntity<Category> updateCategory(@Valid @RequestBody final Category categoryRequest) {
         log.info("Incoming request for updating a category: {}", categoryRequest);
-        return categoryService.update(categoryRequest);
+
+        Optional<Category> updatedCategory = categoryService.update(categoryRequest);
+
+        return updatedCategory
+            .map(ResponseEntity::ok)
+            .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @DeleteMapping
     @Secured("ROLE_Stúdiós")
-    public Category deleteCategory(@Valid @RequestBody final Category categoryRequest) {
+    public ResponseEntity<Category> deleteCategory(@Valid @RequestBody final Category categoryRequest) {
         log.info("Incoming request to delete category: {}", categoryRequest);
-        return categoryService.delete(categoryRequest);
+
+        final var deletedCategory = categoryService.delete(categoryRequest);
+
+        return deletedCategory
+            .map(ResponseEntity::ok)
+            .orElseGet(() -> ResponseEntity.notFound().build());
     }
 }

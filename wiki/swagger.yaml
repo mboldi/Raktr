@@ -446,6 +446,8 @@ paths:
           description: "Successfully added"
           schema:
             $ref: '#/definitions/Category'
+        409:
+          description: "Category exists with this name"
     get:
       tags:
         - "Category"
@@ -519,6 +521,8 @@ paths:
           description: "Successfully added"
           schema:
             $ref: '#/definitions/Location'
+        409:
+          description: "Location exists with this name"
     get:
       tags:
         - "Location"

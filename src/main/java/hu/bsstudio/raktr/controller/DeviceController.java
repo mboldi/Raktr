@@ -3,8 +3,11 @@ package hu.bsstudio.raktr.controller;
 import hu.bsstudio.raktr.model.Device;
 import hu.bsstudio.raktr.service.DeviceService;
 import java.util.List;
+import java.util.Optional;
 import javax.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -21,18 +24,20 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @SuppressWarnings("checkstyle:DesignForExtension")
 @RequestMapping("/api/device")
+@RequiredArgsConstructor
 public class DeviceController {
 
     private final DeviceService deviceService;
 
-    public DeviceController(final DeviceService deviceService) {
-        this.deviceService = deviceService;
-    }
-
     @PostMapping
-    public Device createDevice(@Valid @RequestBody final Device deviceRequest) {
+    public ResponseEntity<Device> createDevice(@Valid @RequestBody final Device deviceRequest) {
         log.info("Incoming request for new device: {}", deviceRequest);
-        return deviceService.create(deviceRequest);
+
+        final var device = deviceService.create(deviceRequest);
+
+        return device
+            .map(ResponseEntity::ok)
+            .orElseGet(() -> ResponseEntity.status(409).build());
     }
 
     @GetMapping
@@ -43,27 +48,46 @@ public class DeviceController {
 
     @DeleteMapping
     @Secured("ROLE_Stúdiós")
-    public Device deleteDevice(@Valid @RequestBody final Device deviceRequest) {
+    public ResponseEntity<Device> deleteDevice(@Valid @RequestBody final Device deviceRequest) {
         log.info("Incoming request to delete device: {}", deviceRequest);
-        return deviceService.delete(deviceRequest);
+
+        final var device = deviceService.delete(deviceRequest);
+
+        return device
+            .map(ResponseEntity::ok)
+            .orElseGet(() ->  ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("/{id}")
     @Secured("ROLE_Stúdiós")
-    public Device deleteDeviceById(@PathVariable final Long id) {
+    public ResponseEntity<Device> deleteDeviceById(@PathVariable final Long id) {
         log.info("Incoming request to delete device with id: {}", id);
-        return deviceService.deleteById(id);
+
+        final var device = deviceService.deleteById(id);
+
+        return device
+            .map(ResponseEntity::ok)
+            .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PutMapping
-    public Device updateDevice(@Valid @RequestBody final Device deviceRequest) {
+    public ResponseEntity<Device> updateDevice(@Valid @RequestBody final Device deviceRequest) {
         log.info("Incoming request to update device: {}", deviceRequest);
-        return deviceService.update(deviceRequest);
+
+        final var device = deviceService.update(deviceRequest);
+
+        return device
+            .map(ResponseEntity::ok)
+            .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @GetMapping("/{id}")
-    public Device getDeviceById(@PathVariable final Long id) {
+    public ResponseEntity<Device> getDeviceById(@PathVariable final Long id) {
         log.info("Incoming request for device with id {}", id);
-        return deviceService.getById(id);
+        final var device = deviceService.getById(id);
+
+        return device
+            .map(ResponseEntity::ok)
+            .orElseGet(() -> ResponseEntity.notFound().build());
     }
 }

@@ -2,8 +2,8 @@ package hu.bsstudio.raktr.service;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doReturn;
@@ -11,14 +11,15 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
 
-import hu.bsstudio.raktr.repository.CategoryRepository;
-import hu.bsstudio.raktr.repository.DeviceRepository;
-import hu.bsstudio.raktr.repository.LocationRepository;
+
 import hu.bsstudio.raktr.exception.ObjectNotFoundException;
 import hu.bsstudio.raktr.model.Category;
 import hu.bsstudio.raktr.model.Device;
 import hu.bsstudio.raktr.model.DeviceStatus;
 import hu.bsstudio.raktr.model.Location;
+import hu.bsstudio.raktr.repository.CategoryRepository;
+import hu.bsstudio.raktr.repository.DeviceRepository;
+import hu.bsstudio.raktr.repository.LocationRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -107,21 +108,21 @@ final class DeviceServiceTest {
         given(mockLocationRepository.findByName(LOCATION_NAME)).willReturn(Optional.ofNullable(location));
 
         //when
-        final Device saved = underTest.create(deviceRequest);
+        final var saved = underTest.create(deviceRequest);
 
         //then
         verify(mockDeviceRepository).save(any(Device.class));
         assertAll(
-            () -> assertNotNull(saved),
-            () -> assertEquals(deviceRequest.getName(), saved.getName()),
-            () -> assertEquals(deviceRequest.getMaker(), saved.getMaker()),
-            () -> assertEquals(deviceRequest.getType(), saved.getType()),
-            () -> assertEquals(deviceRequest.getSerial(), saved.getSerial()),
-            () -> assertEquals(deviceRequest.getValue(), saved.getValue()),
-            () -> assertEquals(deviceRequest.getBarcode(), saved.getBarcode()),
-            () -> assertEquals(deviceRequest.getWeight(), saved.getWeight()),
-            () -> assertEquals(deviceRequest.getStatus(), saved.getStatus()),
-            () -> assertEquals(deviceRequest.getQuantity(), saved.getQuantity())
+            () -> assertTrue(saved.isPresent()),
+            () -> assertEquals(deviceRequest.getName(), saved.get().getName()),
+            () -> assertEquals(deviceRequest.getMaker(), saved.get().getMaker()),
+            () -> assertEquals(deviceRequest.getType(), saved.get().getType()),
+            () -> assertEquals(deviceRequest.getSerial(), saved.get().getSerial()),
+            () -> assertEquals(deviceRequest.getValue(), saved.get().getValue()),
+            () -> assertEquals(deviceRequest.getBarcode(), saved.get().getBarcode()),
+            () -> assertEquals(deviceRequest.getWeight(), saved.get().getWeight()),
+            () -> assertEquals(deviceRequest.getStatus(), saved.get().getStatus()),
+            () -> assertEquals(deviceRequest.getQuantity(), saved.get().getQuantity())
         );
     }
 
@@ -161,7 +162,7 @@ final class DeviceServiceTest {
         given(mockLocationRepository.findByName(LOCATION_NAME)).willReturn(Optional.ofNullable(location));
 
         //when
-        final Device updated = underTest.update(deviceRequest);
+        final var updated = underTest.update(deviceRequest);
 
         //then
         verify(deviceRequest).getName();
@@ -184,17 +185,18 @@ final class DeviceServiceTest {
         verify(device).setStatus(any());
         verify(device).setQuantity(any());
 
+        assertTrue(updated.isPresent());
+
         assertAll(
-            () -> assertNotNull(updated),
-            () -> assertEquals(OTHER_NAME, updated.getName()),
-            () -> assertEquals(OTHER_MAKER, updated.getMaker()),
-            () -> assertEquals(OTHER_TYPE, updated.getType()),
-            () -> assertEquals(OTHER_SERIAL, updated.getSerial()),
-            () -> assertEquals(OTHER_VALUE, updated.getValue()),
-            () -> assertEquals(OTHER_BARCODE, updated.getBarcode()),
-            () -> assertEquals(OTHER_WEIGHT, updated.getWeight()),
-            () -> assertEquals(OTHER_STATUS, updated.getStatus()),
-            () -> assertEquals(OTHER_QUANTITY, updated.getQuantity())
+            () -> assertEquals(OTHER_NAME, updated.get().getName()),
+            () -> assertEquals(OTHER_MAKER, updated.get().getMaker()),
+            () -> assertEquals(OTHER_TYPE, updated.get().getType()),
+            () -> assertEquals(OTHER_SERIAL, updated.get().getSerial()),
+            () -> assertEquals(OTHER_VALUE, updated.get().getValue()),
+            () -> assertEquals(OTHER_BARCODE, updated.get().getBarcode()),
+            () -> assertEquals(OTHER_WEIGHT, updated.get().getWeight()),
+            () -> assertEquals(OTHER_STATUS, updated.get().getStatus()),
+            () -> assertEquals(OTHER_QUANTITY, updated.get().getQuantity())
         );
     }
 
@@ -207,9 +209,9 @@ final class DeviceServiceTest {
 
 
         //when
-
+        final var device = underTest.update(deviceRequest);
         //then
-        assertThrows(ObjectNotFoundException.class, () -> underTest.update(deviceRequest));
+        assertTrue(device.isEmpty());
     }
 
     @Test
@@ -218,11 +220,12 @@ final class DeviceServiceTest {
         given(mockDeviceRepository.findById(any())).willReturn(Optional.ofNullable(device));
 
         //when
-        Device foundDevice = underTest.getById(ID);
+        final var foundDevice = underTest.getById(ID);
 
         //then
         verify(mockDeviceRepository).findById(ID);
-        assertEquals(device, foundDevice);
+        assertTrue(foundDevice.isPresent());
+        assertEquals(device, foundDevice.get());
     }
 
     @Test
@@ -231,14 +234,15 @@ final class DeviceServiceTest {
         given(mockDeviceRepository.findById(any())).willReturn(Optional.empty());
 
         //when
-
+        final var device = underTest.getById(ID);
         //then
-        assertThrows(ObjectNotFoundException.class, () -> underTest.getById(ID));
+        assertTrue(device.isEmpty());
     }
 
     @Test
     void testDelete() {
         //given
+        given(mockDeviceRepository.findById(any())).willReturn(Optional.of(device));
 
         //when
         underTest.delete(deviceRequest);

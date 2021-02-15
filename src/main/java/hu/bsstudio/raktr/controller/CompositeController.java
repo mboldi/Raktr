@@ -4,8 +4,11 @@ import hu.bsstudio.raktr.model.CompositeItem;
 import hu.bsstudio.raktr.model.Device;
 import hu.bsstudio.raktr.service.CompositeService;
 import java.util.List;
+import java.util.Optional;
 import javax.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -22,13 +25,10 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @SuppressWarnings("checkstyle:DesignForExtension")
 @RequestMapping("/api/composite")
+@RequiredArgsConstructor
 public class CompositeController {
 
     private final CompositeService compositeService;
-
-    public CompositeController(final CompositeService compositeService) {
-        this.compositeService = compositeService;
-    }
 
     @GetMapping
     public List<CompositeItem> getCompositeList() {
@@ -37,39 +37,69 @@ public class CompositeController {
     }
 
     @PostMapping
-    public CompositeItem createCompositeItem(@Valid @RequestBody final CompositeItem compositeItemRequest) {
+    public ResponseEntity<CompositeItem> createCompositeItem(@Valid @RequestBody final CompositeItem compositeItemRequest) {
         log.info("Incoming request for new composite item: {}", compositeItemRequest);
-        return compositeService.create(compositeItemRequest);
+
+        final var compositeItem = compositeService.create(compositeItemRequest);
+
+        return compositeItem
+            .map(ResponseEntity::ok)
+            .orElseGet(() -> ResponseEntity.status(409).build());
     }
 
     @PutMapping
-    public CompositeItem updateCompositeItem(@Valid @RequestBody final CompositeItem compositeItemRequest) {
+    public ResponseEntity<CompositeItem> updateCompositeItem(@Valid @RequestBody final CompositeItem compositeItemRequest) {
         log.info("Incoming request to update composite item: {}", compositeItemRequest);
-        return compositeService.update(compositeItemRequest);
+
+        final var compositeItem = compositeService.update(compositeItemRequest);
+
+        return compositeItem
+            .map(ResponseEntity::ok)
+            .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @DeleteMapping
     @Secured("ROLE_Stúdiós")
-    public CompositeItem deleteCompositeItem(@Valid @RequestBody final CompositeItem compositeItemRequest) {
+    public ResponseEntity<CompositeItem> deleteCompositeItem(@Valid @RequestBody final CompositeItem compositeItemRequest) {
         log.info("Incoming request to delete composite item: {}", compositeItemRequest);
-        return compositeService.delete(compositeItemRequest);
+
+        final var compositeItem = compositeService.delete(compositeItemRequest);
+
+        return compositeItem
+            .map(ResponseEntity::ok)
+            .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @GetMapping("/{compositeId}")
-    public CompositeItem getCompositeById(@PathVariable final Long compositeId) {
+    public ResponseEntity<CompositeItem> getCompositeById(@PathVariable final Long compositeId) {
         log.info("Incoming request for composite item with id {}", compositeId);
-        return compositeService.getOne(compositeId);
+
+        final var compositeItem = compositeService.getById(compositeId);
+
+        return compositeItem
+            .map(ResponseEntity::ok)
+            .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PutMapping("/{compositeId}")
-    public CompositeItem addDeviceToCompositeItem(@PathVariable final Long compositeId, @Valid @RequestBody final Device deviceRequest) {
+    public ResponseEntity<CompositeItem> addDeviceToCompositeItem(@PathVariable final Long compositeId, @Valid @RequestBody final Device deviceRequest) {
         log.info("Incoming request to add device {} to composite item with id {}", deviceRequest, compositeId);
-        return compositeService.addDevice(compositeId, deviceRequest);
+
+        final var compositeItem = compositeService.addDevice(compositeId, deviceRequest);
+
+        return compositeItem
+            .map(ResponseEntity::ok)
+            .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("/{compositeId}")
-    public CompositeItem deleteDeviceFromCompositeItem(@PathVariable final Long compositeId, @Valid @RequestBody final Device deviceRequest) {
+    public ResponseEntity<CompositeItem> deleteDeviceFromCompositeItem(@PathVariable final Long compositeId, @Valid @RequestBody final Device deviceRequest) {
         log.info("Incoming request to delete device {} from composite item with id {}", deviceRequest, compositeId);
-        return compositeService.deleteDevice(compositeId, deviceRequest);
+
+        final var compositeItem = compositeService.removeDeviceFromComposite(compositeId, deviceRequest);
+
+        return compositeItem
+            .map(ResponseEntity::ok)
+            .orElseGet(() -> ResponseEntity.notFound().build());
     }
 }

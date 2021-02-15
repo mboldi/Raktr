@@ -1,7 +1,9 @@
 package hu.bsstudio.raktr.service;
 
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.spy;
@@ -27,10 +29,12 @@ final class CompositeServiceTest {
     private static final Long ID = 1L;
     private static final String NAME = "composite_name";
     private static final String BARCODE = "barcode";
+    private static final String TEXT_IDENTIFIER = "textid";
 
     private static final Long OTHER_ID = 5L;
     private static final String OTHER_NAME = "composite_name2";
     private static final String OTHER_BARCODE = "barcode2";
+    private static final String OTHER_TEXT_IDENTIFIER = "other_textid";
 
     private static final Long LOCATION_ID = 2L;
     private static final Long OTHER_LOCATION_ID = 7L;
@@ -75,6 +79,7 @@ final class CompositeServiceTest {
         given(mockCompositeRequest.getId()).willReturn(ID);
         given(mockCompositeRequest.getName()).willReturn(NAME);
         given(mockCompositeRequest.getBarcode()).willReturn(BARCODE);
+        given(mockCompositeRequest.getTextIdentifier()).willReturn(TEXT_IDENTIFIER);
         given(mockCompositeRequest.getLocation()).willReturn(location);
         given(mockCompositeRequest.getDevices()).willReturn(devices);
 
@@ -82,6 +87,7 @@ final class CompositeServiceTest {
             .withId(ID)
             .withName(NAME)
             .withBarcode(BARCODE)
+            .withTextIdentifier(TEXT_IDENTIFIER)
             .withLocation(location)
             .withDevices(devices);
 
@@ -94,11 +100,12 @@ final class CompositeServiceTest {
         given(mockCompositeDao.save(mockCompositeRequest)).willReturn(compositeItem);
 
         //when
-        CompositeItem saved = underTest.create(mockCompositeRequest);
+        var saved = underTest.create(mockCompositeRequest);
 
         //then
         verify(mockCompositeDao).save(mockCompositeRequest);
-        assertEquals(compositeItem, saved);
+        assertTrue(saved.isPresent());
+        assertEquals(compositeItem, saved.get());
     }
 
     @Test
@@ -126,12 +133,14 @@ final class CompositeServiceTest {
 
         given(mockCompositeRequest.getName()).willReturn(OTHER_NAME);
         given(mockCompositeRequest.getBarcode()).willReturn(OTHER_BARCODE);
+        given(mockCompositeRequest.getTextIdentifier()).willReturn(OTHER_TEXT_IDENTIFIER);
         given(mockCompositeRequest.getLocation()).willReturn(otherLocation);
 
-        given(mockCompositeDao.findById(ID)).willReturn(java.util.Optional.ofNullable(compositeItem));
+        given(mockCompositeDao.findById(ID)).willReturn(Optional.of(compositeItem));
+        given(mockCompositeDao.save(any())).willReturn(compositeItem);
 
         //when
-        CompositeItem updated = underTest.update(mockCompositeRequest);
+        var updated = underTest.update(mockCompositeRequest);
 
         //then
         verify(mockCompositeDao).findById(ID);
@@ -140,29 +149,52 @@ final class CompositeServiceTest {
         verify(compositeItem).setLocation(otherLocation);
         verify(compositeItem).setName(OTHER_NAME);
         verify(compositeItem).setBarcode(OTHER_BARCODE);
+
+        assertTrue(updated.isPresent());
+        assertAll(
+            () -> assertEquals(updated.get().getName(), OTHER_NAME),
+            () -> assertEquals(updated.get().getBarcode(), OTHER_BARCODE),
+            () -> assertEquals(updated.get().getTextIdentifier(), OTHER_TEXT_IDENTIFIER),
+            () -> assertEquals(updated.get().getLocation(), otherLocation)
+        );
     }
 
     @Test
-    void testUpdateCompositeItemThrowsNotFound() {
+    void testUpdateCompositeItemNotFound() {
         //given
         given(mockCompositeDao.findById(ID)).willReturn(Optional.empty());
 
         //when
+        final var updated = underTest.update(mockCompositeRequest);
 
         //then
-        assertThrows(ObjectNotFoundException.class, () -> underTest.update(mockCompositeRequest));
+        assertTrue(updated.isEmpty());
     }
 
     @Test
     void testDeleteCompositeItem() {
         //given
+        given(mockCompositeDao.findById(ID)).willReturn(Optional.of(compositeItem));
 
         //when
-        CompositeItem deleted = underTest.delete(mockCompositeRequest);
+        final var deleted = underTest.delete(mockCompositeRequest);
 
         //then
         verify(mockCompositeDao).delete(mockCompositeRequest);
-        assertEquals(mockCompositeRequest, deleted);
+        assertTrue(deleted.isPresent());
+        assertEquals(mockCompositeRequest.getBarcode(), deleted.get().getBarcode());
+    }
+
+    @Test
+    void testDeleteCompositeItemFailsNotFound() {
+        //given
+        given(mockCompositeDao.findById(ID)).willReturn(Optional.empty());
+
+        //when
+        final var deleted = underTest.delete(mockCompositeRequest);
+
+        //then
+        assertTrue(deleted.isEmpty());
     }
 
     @Test
@@ -171,11 +203,12 @@ final class CompositeServiceTest {
         given(mockCompositeDao.findById(ID)).willReturn(Optional.ofNullable(compositeItem));
 
         //when
-        CompositeItem item = underTest.getOne(ID);
+        final var item = underTest.getById(ID);
 
         //then
         verify(mockCompositeDao).findById(ID);
-        assertEquals(compositeItem, item);
+        assertTrue(item.isPresent());
+        assertEquals(compositeItem, item.get());
     }
 
     @Test
@@ -184,9 +217,10 @@ final class CompositeServiceTest {
         given(mockCompositeDao.findById(ID)).willReturn(Optional.empty());
 
         //when
+        final var compositeItem = underTest.getById(ID);
 
         //then
-        assertThrows(ObjectNotFoundException.class, () -> underTest.getOne(ID));
+        assertTrue(compositeItem.isEmpty());
     }
 
     @Test
@@ -194,6 +228,8 @@ final class CompositeServiceTest {
         //given
         devices.clear();
         given(mockCompositeDao.findById(ID)).willReturn(Optional.ofNullable(compositeItem));
+        given(mockCompositeDao.save(any())).willReturn(compositeItem);
+        given(mockDeviceRepository.findById(DEVICE_ID)).willReturn(Optional.of(device));
         given(compositeItem.getDevices()).willReturn(devices);
 
         //when
@@ -205,14 +241,15 @@ final class CompositeServiceTest {
     }
 
     @Test
-    void testAddDeviceThrowsNotFound() {
+    void testAddDeviceCompositeNotFound() {
         //given
         given(mockCompositeDao.findById(ID)).willReturn(Optional.empty());
 
         //when
+        final var compositeItem = underTest.addDevice(ID, device);
 
         //then
-        assertThrows(ObjectNotFoundException.class, () -> underTest.addDevice(ID, device));
+        assertTrue(compositeItem.isEmpty());
     }
 
     @Test
@@ -223,14 +260,14 @@ final class CompositeServiceTest {
         given(mockCompositeDao.save(any())).willReturn(compositeItem);
 
         //when
-        CompositeItem updatedCompositeItem = underTest.deleteDevice(ID, device);
+        final var updatedCompositeItem = underTest.removeDeviceFromComposite(ID, device);
 
         //then
         assertEquals(0, devices.size());
-        assertEquals(compositeItem, updatedCompositeItem);
+        assertTrue(updatedCompositeItem.isPresent());
+        assertEquals(compositeItem, updatedCompositeItem.get());
 
         verify(mockCompositeDao).findById(ID);
-        verify(mockDeviceRepository).findById(DEVICE_ID);
         verify(devices).remove(device);
         verify(mockCompositeDao).save(this.compositeItem);
     }
@@ -238,25 +275,26 @@ final class CompositeServiceTest {
     @Test
     void testDeleteDeviceDeviceNotFound() {
         //given
+        compositeItem.getDevices().clear();
         given(mockCompositeDao.findById(ID)).willReturn(Optional.ofNullable(compositeItem));
-        given(mockDeviceRepository.findById(DEVICE_ID)).willReturn(Optional.empty());
 
         //when
+        final var compositeItem = underTest.removeDeviceFromComposite(ID, device);
 
         //then
-        assertThrows(ObjectNotFoundException.class, () -> underTest.deleteDevice(ID, device));
+        assertTrue(compositeItem.isEmpty());
     }
 
     @Test
     void testDeleteDeviceCompositeNotFound() {
         //given
         given(mockCompositeDao.findById(ID)).willReturn(Optional.empty());
-        given(mockDeviceRepository.findById(DEVICE_ID)).willReturn(Optional.ofNullable(device));
 
         //when
+        final var compositeItem = underTest.removeDeviceFromComposite(ID, device);
 
         //then
-        assertThrows(ObjectNotFoundException.class, () -> underTest.deleteDevice(ID, device));
+        assertTrue(compositeItem.isEmpty());
     }
 
 }

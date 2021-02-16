@@ -48,4 +48,11 @@ public class ScannableController {
 
         return ResponseEntity.ok(scannableService.getScannableCount());
     }
+
+    @GetMapping("/nextid")
+    public ResponseEntity<Long> getNextId() {
+        log.info("incoming request for next id");
+
+        return ResponseEntity.ok(scannableService.getNextId());
+    }
 }

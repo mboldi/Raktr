@@ -14,4 +14,7 @@ public interface DeviceRepository extends JpaRepository<Device, Long> {
     Optional<Device> findByBarcode(String barcode);
 
     Optional<Device> findByTextIdentifier(String textIdentifier);
+
+    @Query(value = "SELECT max(id) FROM Scannable")
+    long getMaxId();
 }

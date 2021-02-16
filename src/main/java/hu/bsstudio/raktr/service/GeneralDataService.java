@@ -41,7 +41,7 @@ public final class GeneralDataService {
 
         if (found.isEmpty()) {
             log.error("General data by key {} not found", key);
-            throw new ObjectNotFoundException();
+            return Optional.empty();
         }
 
         log.info("General data by id {} found: {}", key, found.get());

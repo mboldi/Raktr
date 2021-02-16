@@ -20,6 +20,7 @@ import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -28,6 +29,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class RentService {
 
     private static final String GROUP_NAME_KEY = "groupName";
@@ -41,13 +43,6 @@ public class RentService {
     private final RentItemDao rentItemDao;
     private final DeviceRepository deviceRepository;
     private final GeneralDataRepository generalDataRepository;
-
-    public RentService(final RentRepository rentRepository, final RentItemDao rentItemDao, final DeviceRepository deviceRepository, final GeneralDataRepository generalDataRepository) {
-        this.rentRepository = rentRepository;
-        this.rentItemDao = rentItemDao;
-        this.deviceRepository = deviceRepository;
-        this.generalDataRepository = generalDataRepository;
-    }
 
     @SuppressWarnings("checkstyle:DesignForExtension")
     public boolean checkIfAvailable(final RentItem deviceRentItem, final RentItem rentItemToUpdate) {
@@ -81,15 +76,15 @@ public class RentService {
     }
 
     public final Rent updateItem(final Long rentId, final RentItem newRentItem) {
-        Rent rentToUpdate = rentRepository.findById(rentId).orElse(null);
+        var rentToUpdate = rentRepository.findById(rentId);
         RentItem savedDeviceItem;
         RentItem rentItemToUpdate;
 
-        if (rentToUpdate == null) {
+        if (rentToUpdate.isEmpty()) {
             throw new ObjectNotFoundException();
         }
 
-        rentItemToUpdate = rentToUpdate.getRentItemOfScannable(newRentItem.getScannable());
+        rentItemToUpdate = rentToUpdate.get().getRentItemOfScannable(newRentItem.getScannable());
 
         if (newRentItem.getScannable().getClass() == Device.class && !checkIfAvailable(newRentItem, rentItemToUpdate)) {
             throw new NotAvailableQuantityException();
@@ -97,7 +92,7 @@ public class RentService {
 
         if (rentItemToUpdate != null) {
             if (newRentItem.getOutQuantity() == 0) {
-                rentToUpdate.getRentItems().remove(rentItemToUpdate);
+                rentToUpdate.get().getRentItems().remove(rentItemToUpdate);
                 rentItemDao.delete(rentItemToUpdate);
             } else {
                 rentItemToUpdate.setOutQuantity(newRentItem.getOutQuantity());
@@ -108,11 +103,11 @@ public class RentService {
         } else {
             if (newRentItem.getOutQuantity() != 0) {
                 savedDeviceItem = rentItemDao.save(newRentItem);
-                rentToUpdate.getRentItems().add(savedDeviceItem);
+                rentToUpdate.get().getRentItems().add(savedDeviceItem);
             }
         }
 
-        Rent saved = rentRepository.save(rentToUpdate);
+        Rent saved = rentRepository.save(rentToUpdate.get());
         log.info("Rent updated: {}", saved);
         return saved;
     }
@@ -124,20 +119,20 @@ public class RentService {
     }
 
     public final Rent update(final Rent rentRequest) {
-        Rent rentToUpdate = rentRepository.findById(rentRequest.getId()).orElse(null);
+        var rentToUpdate = rentRepository.findById(rentRequest.getId());
 
-        if (rentToUpdate == null) {
+        if (rentToUpdate.isEmpty()) {
             throw new ObjectNotFoundException();
         }
 
-        rentToUpdate.setDestination(rentRequest.getDestination());
-        rentToUpdate.setIssuer(rentRequest.getIssuer());
-        rentToUpdate.setRenter(rentRequest.getRenter());
-        rentToUpdate.setOutDate(rentRequest.getOutDate());
-        rentToUpdate.setExpBackDate(rentRequest.getExpBackDate());
-        rentToUpdate.setActBackDate(rentRequest.getActBackDate());
+        rentToUpdate.get().setDestination(rentRequest.getDestination());
+        rentToUpdate.get().setIssuer(rentRequest.getIssuer());
+        rentToUpdate.get().setRenter(rentRequest.getRenter());
+        rentToUpdate.get().setOutDate(rentRequest.getOutDate());
+        rentToUpdate.get().setExpBackDate(rentRequest.getExpBackDate());
+        rentToUpdate.get().setActBackDate(rentRequest.getActBackDate());
 
-        Rent saved = rentRepository.save(rentToUpdate);
+        Rent saved = rentRepository.save(rentToUpdate.get());
         log.info("Rent updated: {}", saved);
         return saved;
     }
@@ -149,15 +144,15 @@ public class RentService {
     }
 
     public final Rent getById(final Long rentId) {
-        Rent foundRent = rentRepository.findById(rentId).orElse(null);
+        var foundRent = rentRepository.findById(rentId);
 
-        if (foundRent == null) {
+        if (foundRent.isEmpty()) {
             log.error("Rent not found with ID {}", rentId);
             throw new ObjectNotFoundException();
         }
 
-        log.info("Rent found: {}", foundRent);
-        return foundRent;
+        log.info("Rent found: {}", foundRent.get());
+        return foundRent.get();
     }
 
     @SuppressWarnings({"checkstyle:InnerAssignment", "checkstyle:AvoidInlineConditionals"})
@@ -196,10 +191,22 @@ public class RentService {
             .build();
 
         for (var item : rentToGenerate.getRentItems()) {
-            rentPdfData.getItems().put(
-                item.getScannable().getName(),
-                item.getOutQuantity()
-            );
+            String currentName = item.getScannable().getName();
+
+            if(rentPdfData.getItems().containsKey(currentName)){
+                var currAmount = rentPdfData.getItems().get(currentName);
+                currAmount += item.getOutQuantity();
+
+                rentPdfData.getItems().replace(
+                    currentName,
+                    currAmount
+                );
+            } else {
+                rentPdfData.getItems().put(
+                    currentName,
+                    item.getOutQuantity()
+                );
+            }
         }
 
         RentPdfCreator.generatePdf(rentPdfData);

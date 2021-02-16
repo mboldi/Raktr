@@ -7,6 +7,7 @@ import hu.bsstudio.raktr.service.RentService;
 import java.io.IOException;
 import java.util.List;
 import javax.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
@@ -25,13 +26,10 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @SuppressWarnings("checkstyle:DesignForExtension")
 @RequestMapping("/api/rent")
+@RequiredArgsConstructor
 public class RentController {
 
     private final RentService rentService;
-
-    public RentController(final RentService rentService) {
-        this.rentService = rentService;
-    }
 
     @GetMapping
     public List<Rent> getRentList() {

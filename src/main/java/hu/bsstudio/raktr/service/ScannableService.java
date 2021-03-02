@@ -1,5 +1,7 @@
 package hu.bsstudio.raktr.service;
 
+import hu.bsstudio.raktr.model.CompositeItem;
+import hu.bsstudio.raktr.model.Device;
 import hu.bsstudio.raktr.model.Scannable;
 import hu.bsstudio.raktr.repository.CompositeItemRepository;
 import hu.bsstudio.raktr.repository.DeviceRepository;
@@ -62,5 +64,37 @@ public class ScannableService {
 
         log.info("Found next id: {}", nextId);
         return nextId;
+    }
+
+    public Long textIdTaken(final String textId) {
+        Optional<Device> device = deviceRepository.findByTextIdentifier(textId);
+
+        if (device.isPresent()) {
+            return device.get().getId();
+        }
+
+        Optional<CompositeItem> compositeItem = compositeItemRepository.findByTextIdentifier(textId);
+
+        if (compositeItem.isPresent()) {
+            return compositeItem.get().getId();
+        }
+
+        return -1L;
+    }
+
+    public Long barcodeTaken(final String barcode) {
+        Optional<Device> device = deviceRepository.findByBarcode(barcode);
+
+        if (device.isPresent()) {
+            return device.get().getId();
+        }
+
+        Optional<CompositeItem> compositeItem = compositeItemRepository.findByBarcode(barcode);
+
+        if (compositeItem.isPresent()) {
+            return compositeItem.get().getId();
+        }
+
+        return -1L;
     }
 }

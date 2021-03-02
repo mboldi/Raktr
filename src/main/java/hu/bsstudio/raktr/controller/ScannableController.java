@@ -55,4 +55,22 @@ public class ScannableController {
 
         return ResponseEntity.ok(scannableService.getNextId());
     }
+
+    @GetMapping("/textidtaken/{textId}")
+    public ResponseEntity<Long> textIdTaken(@PathVariable final String textId) {
+        Long foundId = scannableService.textIdTaken(textId);
+
+        log.info("Found id for textId: {}", foundId);
+
+        return ResponseEntity.ok(foundId);
+    }
+
+    @GetMapping("/barcodetaken/{barcode}")
+    public ResponseEntity<Long> barcodeTaken(@PathVariable final String barcode) {
+        Long foundId = scannableService.barcodeTaken(barcode);
+
+        log.info("Found id for barcode: {}", foundId);
+
+        return ResponseEntity.ok(foundId);
+    }
 }

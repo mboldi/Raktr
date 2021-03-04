@@ -1,9 +1,5 @@
 package hu.bsstudio.raktr.service;
 
-import hu.bsstudio.raktr.repository.DeviceRepository;
-import hu.bsstudio.raktr.repository.GeneralDataRepository;
-import hu.bsstudio.raktr.repository.RentRepository;
-import hu.bsstudio.raktr.repository.RentItemDao;
 import hu.bsstudio.raktr.exception.NotAvailableQuantityException;
 import hu.bsstudio.raktr.exception.ObjectNotFoundException;
 import hu.bsstudio.raktr.model.BackStatus;
@@ -14,6 +10,10 @@ import hu.bsstudio.raktr.model.RentItem;
 import hu.bsstudio.raktr.pdfgeneration.RentPdfCreator;
 import hu.bsstudio.raktr.pdfgeneration.RentPdfData;
 import hu.bsstudio.raktr.pdfgeneration.RentPdfRequest;
+import hu.bsstudio.raktr.repository.DeviceRepository;
+import hu.bsstudio.raktr.repository.GeneralDataRepository;
+import hu.bsstudio.raktr.repository.RentItemDao;
+import hu.bsstudio.raktr.repository.RentRepository;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -193,7 +193,7 @@ public class RentService {
         for (var item : rentToGenerate.getRentItems()) {
             String currentName = item.getScannable().getName();
 
-            if(rentPdfData.getItems().containsKey(currentName)){
+            if (rentPdfData.getItems().containsKey(currentName)) {
                 var currAmount = rentPdfData.getItems().get(currentName);
                 currAmount += item.getOutQuantity();
 

@@ -3,7 +3,6 @@ package hu.bsstudio.raktr.controller;
 import hu.bsstudio.raktr.model.Device;
 import hu.bsstudio.raktr.service.DeviceService;
 import java.util.List;
-import java.util.Optional;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +26,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class DeviceController {
 
+    private static final int CONFLICT = 409;
+
     private final DeviceService deviceService;
 
     @PostMapping
@@ -37,7 +38,7 @@ public class DeviceController {
 
         return device
             .map(ResponseEntity::ok)
-            .orElseGet(() -> ResponseEntity.status(409).build());
+            .orElseGet(() -> ResponseEntity.status(CONFLICT).build());
     }
 
     @GetMapping
@@ -55,7 +56,7 @@ public class DeviceController {
 
         return device
             .map(ResponseEntity::ok)
-            .orElseGet(() ->  ResponseEntity.notFound().build());
+            .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("/{id}")

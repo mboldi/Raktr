@@ -25,6 +25,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/location")
 public class LocationController {
 
+    private static final int CONFLICT = 409;
+
     private final LocationService locationService;
 
     @PostMapping
@@ -35,7 +37,7 @@ public class LocationController {
 
         return location
             .map(ResponseEntity::ok)
-            .orElseGet(() -> ResponseEntity.status(409).build());
+            .orElseGet(() -> ResponseEntity.status(CONFLICT).build());
     }
 
     @GetMapping

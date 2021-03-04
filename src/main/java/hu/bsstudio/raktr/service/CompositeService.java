@@ -1,6 +1,5 @@
 package hu.bsstudio.raktr.service;
 
-import hu.bsstudio.raktr.exception.ObjectNotFoundException;
 import hu.bsstudio.raktr.model.CompositeItem;
 import hu.bsstudio.raktr.model.Device;
 import hu.bsstudio.raktr.model.Location;

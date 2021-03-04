@@ -55,18 +55,18 @@ public class ScannableService {
         }
     }
 
-    public Long getScannableCount() {
+    public final Long getScannableCount() {
         return deviceRepository.count() + compositeItemRepository.count();
     }
 
-    public Long getNextId() {
+    public final Long getNextId() {
         var nextId = deviceRepository.getMaxId() + 1;
 
         log.info("Found next id: {}", nextId);
         return nextId;
     }
 
-    public Long textIdTaken(final String textId) {
+    public final Long textIdTaken(final String textId) {
         Optional<Device> device = deviceRepository.findByTextIdentifier(textId);
 
         if (device.isPresent()) {
@@ -82,7 +82,7 @@ public class ScannableService {
         return -1L;
     }
 
-    public Long barcodeTaken(final String barcode) {
+    public final Long barcodeTaken(final String barcode) {
         Optional<Device> device = deviceRepository.findByBarcode(barcode);
 
         if (device.isPresent()) {

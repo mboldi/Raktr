@@ -22,6 +22,7 @@ final class DeviceTest {
     private static final String SERIAL = "serial";
     private static final Integer VALUE = 100;
     private static final String BARCODE = "barcode";
+    private static final String TEXT_ID = "text_id";
     private static final Integer WEIGHT = 1000;
     private static final String LOCATION_NAME = "location";
     private static final DeviceStatus STATUS = DeviceStatus.GOOD;
@@ -54,6 +55,7 @@ final class DeviceTest {
         .withSerial(SERIAL)
         .withValue(VALUE)
         .withBarcode(BARCODE)
+        .withTextIdentifier(TEXT_ID)
         .withWeight(WEIGHT)
         .withLocation(location)
         .withStatus(STATUS)

@@ -24,6 +24,8 @@ import org.springframework.web.bind.annotation.RestController;
 @SuppressWarnings("checkstyle:DesignForExtension")
 public class CategoryController {
 
+    private static final int CONFLICT = 409;
+
     private final CategoryService categoryService;
 
     public CategoryController(final CategoryService categoryService) {
@@ -38,7 +40,7 @@ public class CategoryController {
 
         return createdCategory
             .map(ResponseEntity::ok)
-            .orElseGet(() -> ResponseEntity.status(409).build());
+            .orElseGet(() -> ResponseEntity.status(CONFLICT).build());
     }
 
     @GetMapping

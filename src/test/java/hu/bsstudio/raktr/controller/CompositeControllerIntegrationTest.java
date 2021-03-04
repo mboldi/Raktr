@@ -94,6 +94,7 @@ public class CompositeControllerIntegrationTest {
         defaultDeviceBuilder = Device.builder()
             .withName(DEVICE_NAME)
             .withBarcode(DEVICE_BARCODE)
+            .withTextIdentifier("text_id")
             .withMaker("maker")
             .withType("type")
             .withQuantity(1)

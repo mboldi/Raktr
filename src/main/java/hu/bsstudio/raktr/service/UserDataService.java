@@ -1,8 +1,8 @@
 package hu.bsstudio.raktr.service;
 
-import hu.bsstudio.raktr.repository.UserRepository;
 import hu.bsstudio.raktr.exception.ObjectNotFoundException;
 import hu.bsstudio.raktr.model.User;
+import hu.bsstudio.raktr.repository.UserRepository;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

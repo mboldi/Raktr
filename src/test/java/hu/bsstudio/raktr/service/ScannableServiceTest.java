@@ -4,6 +4,7 @@ import static java.util.Optional.empty;
 import static java.util.Optional.ofNullable;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.spy;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -87,6 +88,6 @@ final class ScannableServiceTest {
         //when
 
         //then
-        assertThrows(ObjectNotFoundException.class, () -> underTest.getByBarcode(COMPOSITE_BARCODE));
+        assertTrue(underTest.getByBarcode(COMPOSITE_BARCODE).isEmpty());
     }
 }

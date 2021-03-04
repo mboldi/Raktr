@@ -1,8 +1,7 @@
 package hu.bsstudio.raktr.service;
 
-import hu.bsstudio.raktr.repository.GeneralDataRepository;
-import hu.bsstudio.raktr.exception.ObjectNotFoundException;
 import hu.bsstudio.raktr.model.GeneralData;
+import hu.bsstudio.raktr.repository.GeneralDataRepository;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +17,7 @@ public final class GeneralDataService {
     public Optional<GeneralData> create(final GeneralData newData) {
         final var foundData = generalDataRepository.findById(newData.getKey());
 
-        if(foundData.isPresent()){
+        if (foundData.isPresent()) {
             log.info("General Data item with same key exists in database: {}", foundData.get());
             return Optional.empty();
         }

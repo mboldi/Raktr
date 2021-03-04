@@ -2,6 +2,7 @@ package hu.bsstudio.raktr.controller;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.hasSize;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -130,11 +131,10 @@ public class CategoryControllerIntegrationTest {
             .andExpect(jsonPath("$.name", is(CATEGORY_NAME)));
 
         String finalRequestBody = requestBody;
-        assertThrows(NestedServletException.class, () ->
-            mvc.perform(post("/api/category")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(finalRequestBody))
-        );
+        mvc.perform(post("/api/category")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(finalRequestBody))
+            .andExpect(status().is(409));
     }
 
     @Test

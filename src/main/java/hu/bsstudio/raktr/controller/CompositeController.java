@@ -4,7 +4,6 @@ import hu.bsstudio.raktr.model.CompositeItem;
 import hu.bsstudio.raktr.model.Device;
 import hu.bsstudio.raktr.service.CompositeService;
 import java.util.List;
-import java.util.Optional;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,6 +27,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class CompositeController {
 
+    private static final int CONFLICT = 409;
+
     private final CompositeService compositeService;
 
     @GetMapping
@@ -44,7 +45,7 @@ public class CompositeController {
 
         return compositeItem
             .map(ResponseEntity::ok)
-            .orElseGet(() -> ResponseEntity.status(409).build());
+            .orElseGet(() -> ResponseEntity.status(CONFLICT).build());
     }
 
     @PutMapping
@@ -82,7 +83,9 @@ public class CompositeController {
     }
 
     @PutMapping("/{compositeId}")
-    public ResponseEntity<CompositeItem> addDeviceToCompositeItem(@PathVariable final Long compositeId, @Valid @RequestBody final Device deviceRequest) {
+    public ResponseEntity<CompositeItem> addDeviceToCompositeItem(
+        @PathVariable final Long compositeId,
+        @Valid @RequestBody final Device deviceRequest) {
         log.info("Incoming request to add device {} to composite item with id {}", deviceRequest, compositeId);
 
         final var compositeItem = compositeService.addDevice(compositeId, deviceRequest);
@@ -93,7 +96,9 @@ public class CompositeController {
     }
 
     @DeleteMapping("/{compositeId}")
-    public ResponseEntity<CompositeItem> deleteDeviceFromCompositeItem(@PathVariable final Long compositeId, @Valid @RequestBody final Device deviceRequest) {
+    public ResponseEntity<CompositeItem> deleteDeviceFromCompositeItem(
+        @PathVariable final Long compositeId,
+        @Valid @RequestBody final Device deviceRequest) {
         log.info("Incoming request to delete device {} from composite item with id {}", deviceRequest, compositeId);
 
         final var compositeItem = compositeService.removeDeviceFromComposite(compositeId, deviceRequest);

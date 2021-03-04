@@ -19,6 +19,7 @@ final class CompositeItemTest {
     private static final Long ID = 1L;
     private static final String NAME = "scannable_name";
     private static final String BARCODE = "barcode";
+    private static final String TEXT_ID = "text_id";
 
     private static final Long LOCATION_ID = 2L;
     private static final String LOCATION_NAME = "location_name";
@@ -41,6 +42,7 @@ final class CompositeItemTest {
         .withId(ID)
         .withName(NAME)
         .withBarcode(BARCODE)
+        .withTextIdentifier(TEXT_ID)
         .withLocation(location);
 
     @Test

@@ -1,8 +1,8 @@
 package hu.bsstudio.raktr.security;
 
-import hu.bsstudio.raktr.repository.UserRepository;
 import hu.bsstudio.raktr.model.User;
 import hu.bsstudio.raktr.model.UserRole;
+import hu.bsstudio.raktr.repository.UserRepository;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;

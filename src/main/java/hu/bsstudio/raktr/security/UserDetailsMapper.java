@@ -1,9 +1,9 @@
 package hu.bsstudio.raktr.security;
 
-import hu.bsstudio.raktr.repository.UserRepository;
-import hu.bsstudio.raktr.repository.UserRoleRepository;
 import hu.bsstudio.raktr.model.User;
 import hu.bsstudio.raktr.model.UserRole;
+import hu.bsstudio.raktr.repository.UserRepository;
+import hu.bsstudio.raktr.repository.UserRoleRepository;
 import java.util.Collection;
 import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.DirContextOperations;

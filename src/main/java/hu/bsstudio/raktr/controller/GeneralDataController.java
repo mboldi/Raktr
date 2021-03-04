@@ -26,6 +26,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class GeneralDataController {
 
+    private static final int CONFLICT = 409;
+
     private final GeneralDataService generalDataService;
 
     @PostMapping
@@ -35,7 +37,7 @@ public class GeneralDataController {
         final var generalData = generalDataService.create(dataToAdd);
         return generalData
             .map(ResponseEntity::ok)
-            .orElseGet(() -> ResponseEntity.status(409).build());
+            .orElseGet(() -> ResponseEntity.status(CONFLICT).build());
     }
 
     @GetMapping

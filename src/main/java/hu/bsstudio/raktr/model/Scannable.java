@@ -25,7 +25,7 @@ import lombok.Setter;
 @Inheritance(strategy = InheritanceType.JOINED)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME)
-@JsonSubTypes( {
+@JsonSubTypes({
     @JsonSubTypes.Type(value = Device.class, name = "device"),
     @JsonSubTypes.Type(value = CompositeItem.class, name = "compositeItem")
 })

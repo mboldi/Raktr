@@ -1,5 +1,6 @@
 package hu.bsstudio.raktr.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -16,6 +17,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @EqualsAndHashCode(callSuper = true)
 @SuppressWarnings("checkstyle:FinalClass")
@@ -42,11 +44,13 @@ public class RentItem extends DomainAuditModel {
 
     @NotNull
     private Integer outQuantity;
-    /*
+
     @ManyToOne
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     @JsonIgnore
     @JoinColumn(name = "rent_id")
-    private Rent rent;*/
+    private Rent rent;
 
     private RentItem(final Builder builder) {
         this.id = builder.id;

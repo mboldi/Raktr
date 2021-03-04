@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.PrimaryKeyJoinColumn;
@@ -27,7 +28,7 @@ import lombok.Setter;
 @PrimaryKeyJoinColumn(name = "id")
 public class CompositeItem extends Scannable {
 
-    @OneToMany(targetEntity = Device.class, cascade = REFRESH, fetch = EAGER)
+    @ManyToMany(targetEntity = Device.class, cascade = REFRESH, fetch = EAGER)
     @Setter(AccessLevel.NONE)
     private List<Device> devices;
 

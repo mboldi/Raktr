@@ -1,9 +1,12 @@
 package hu.bsstudio.raktr.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
@@ -60,6 +63,12 @@ public class Device extends Scannable {
     @NotNull
     @Min(1)
     private Integer quantity;
+
+    @ManyToMany
+    @ToString.Exclude
+    @JsonIgnore
+    @EqualsAndHashCode.Exclude
+    private List<CompositeItem> parentComposites;
 
     private Device(final Builder builder) {
         this.id = builder.id;

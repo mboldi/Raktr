@@ -28,11 +28,11 @@ public class RentItemTest {
     public static final long OTHER_DEVICE_ID = 4L;
 
     private Device device = Device.builder()
-        .withId(DEVICE_ID)
+        .id(DEVICE_ID)
         .build();
 
     private Device otherDevice = Device.builder()
-        .withId(OTHER_DEVICE_ID)
+        .id(OTHER_DEVICE_ID)
         .build();
 
     private RentItem underTest;

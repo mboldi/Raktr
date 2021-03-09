@@ -94,7 +94,7 @@ public class RentControllerIntegrationTest {
     private LocationRepository locationRepository;
 
     private Rent.Builder defaultBuilder;
-    private Device.Builder defaultDeviceBuilder;
+    private Device.DeviceBuilder defaultDeviceBuilder;
     private CompositeItem.Builder defaultCompositeBuilder;
 
     @BeforeEach
@@ -112,17 +112,17 @@ public class RentControllerIntegrationTest {
         location = locationRepository.save(location);
 
         defaultDeviceBuilder = Device.builder()
-            .withName(DEVICE_NAME)
-            .withBarcode(DEVICE_BARCODE)
-            .withMaker("maker")
-            .withType("type")
-            .withQuantity(2)
-            .withSerial("serial")
-            .withWeight(DEVICE_WEIGHT)
-            .withCategory(category)
-            .withLocation(location)
-            .withStatus(DeviceStatus.GOOD)
-            .withValue(DEVICE_VALUE);
+            .name(DEVICE_NAME)
+            .barcode(DEVICE_BARCODE)
+            .maker("maker")
+            .type("type")
+            .quantity(2)
+            .serial("serial")
+            .weight(DEVICE_WEIGHT)
+            .category(category)
+            .location(location)
+            .status(DeviceStatus.GOOD)
+            .value(DEVICE_VALUE);
 
         defaultCompositeBuilder = CompositeItem.builder()
             .withBarcode(COMPOSITE_BARCODE)

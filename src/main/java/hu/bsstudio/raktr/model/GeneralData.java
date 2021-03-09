@@ -1,11 +1,14 @@
 package hu.bsstudio.raktr.model;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -13,8 +16,10 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "GeneralData")
-@JsonDeserialize(builder = GeneralData.Builder.class)
+@JsonDeserialize(builder = GeneralData.GeneralDataBuilder.class)
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Data
 public class GeneralData extends DomainAuditModel {
     @Id
@@ -24,35 +29,6 @@ public class GeneralData extends DomainAuditModel {
 
     private String data;
 
-    GeneralData(final Builder builder) {
-        this.key = builder.key;
-        this.data = builder.data;
-    }
-
-    final Builder builder() {
-        return new Builder();
-    }
-
-    @SuppressWarnings("hiddenfield")
-    public static final class Builder {
-        private String key;
-        private String data;
-
-        private Builder() {
-        }
-
-        public Builder withKey(final String key) {
-            this.key = key;
-            return this;
-        }
-
-        public Builder withData(final String data) {
-            this.data = data;
-            return this;
-        }
-
-        public GeneralData build() {
-            return new GeneralData(this);
-        }
-    }
+    @JsonPOJOBuilder(withPrefix = "")
+    public static class GeneralDataBuilder {}
 }

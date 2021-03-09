@@ -33,7 +33,7 @@ public class RentTest {
     private Rent underTest;
 
     private final Device device = Device.builder()
-        .withId(DEVICE_ID)
+        .id(DEVICE_ID)
         .build();
 
     private final RentItem rentItem = RentItem.builder()

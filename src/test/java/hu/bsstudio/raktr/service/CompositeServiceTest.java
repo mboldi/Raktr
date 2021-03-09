@@ -70,7 +70,7 @@ final class CompositeServiceTest {
             .build();
 
         device = Device.builder()
-            .withId(DEVICE_ID)
+            .id(DEVICE_ID)
             .build();
 
         devices = spy(new ArrayList<>());

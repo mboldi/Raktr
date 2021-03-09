@@ -34,8 +34,8 @@ final class CompositeItemTest {
         .build();
 
     private Device device = Device.builder()
-        .withId(DEVICE_ID)
-        .withName(DEVICE_NAME)
+        .id(DEVICE_ID)
+        .name(DEVICE_NAME)
         .build();
 
     private CompositeItem.Builder defaultBuilder = CompositeItem.builder()

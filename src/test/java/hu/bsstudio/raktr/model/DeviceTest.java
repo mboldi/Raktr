@@ -40,27 +40,27 @@ final class DeviceTest {
     public static final Integer OTHER_QUANTITY = 1;
 
     private Device underTest;
-    private Location location = Location.builder()
+    private final Location location = Location.builder()
         .withName(LOCATION_NAME)
         .build();
-    private Category category = Category.builder()
+    private final Category category = Category.builder()
         .withName(CATEGORY_NAME)
         .build();
 
-    private Device.Builder defaultBuilder = Device.builder()
-        .withId(ID)
-        .withName(NAME)
-        .withMaker(MAKER)
-        .withType(TYPE)
-        .withSerial(SERIAL)
-        .withValue(VALUE)
-        .withBarcode(BARCODE)
-        .withTextIdentifier(TEXT_ID)
-        .withWeight(WEIGHT)
-        .withLocation(location)
-        .withStatus(STATUS)
-        .withCategory(category)
-        .withQuantity(QUANTITY);
+    private final Device.DeviceBuilder defaultBuilder = Device.builder()
+        .id(ID)
+        .name(NAME)
+        .maker(MAKER)
+        .type(TYPE)
+        .serial(SERIAL)
+        .value(VALUE)
+        .barcode(BARCODE)
+        .textIdentifier(TEXT_ID)
+        .weight(WEIGHT)
+        .location(location)
+        .status(STATUS)
+        .category(category)
+        .quantity(QUANTITY);
 
     @Test
     void testConstructorAndGetters() {
@@ -111,8 +111,8 @@ final class DeviceTest {
     @Test
     void testValidationShouldFailForEmptyName() {
         //given
-        underTest = defaultBuilder
-            .withName("")
+        underTest = (Device) defaultBuilder
+            .name("")
             .build();
 
         //when
@@ -126,7 +126,7 @@ final class DeviceTest {
     void testValidationShouldFailForToSmallQuantity() {
         //given
         underTest = defaultBuilder
-            .withQuantity(TOO_LOW_QUANTITY)
+            .quantity(TOO_LOW_QUANTITY)
             .build();
 
         //when
@@ -140,7 +140,7 @@ final class DeviceTest {
     void testValidationShouldFailForNullQuantity() {
         //given
         underTest = defaultBuilder
-            .withQuantity(null)
+            .quantity(null)
             .build();
 
         //when
@@ -154,7 +154,7 @@ final class DeviceTest {
     void testValidationShouldFailForNullMaker() {
         //given
         underTest = defaultBuilder
-            .withMaker(null)
+            .maker(null)
             .build();
 
         //when
@@ -168,7 +168,7 @@ final class DeviceTest {
     void testValidationShouldFailForNullType() {
         //given
         underTest = defaultBuilder
-            .withType(null)
+            .type(null)
             .build();
 
         //when
@@ -182,7 +182,7 @@ final class DeviceTest {
     void testValidationShouldFailForNullSerial() {
         //given
         underTest = defaultBuilder
-            .withSerial(null)
+            .serial(null)
             .build();
 
         //when
@@ -196,7 +196,7 @@ final class DeviceTest {
     void testValidationShouldFailForNullValue() {
         //given
         underTest = defaultBuilder
-            .withValue(null)
+            .value(null)
             .build();
 
         //when
@@ -209,8 +209,8 @@ final class DeviceTest {
     @Test
     void testValidationShouldFailForNullBarcode() {
         //given
-        underTest = defaultBuilder
-            .withBarcode(null)
+        underTest = (Device) defaultBuilder
+            .barcode(null)
             .build();
 
         //when
@@ -224,7 +224,7 @@ final class DeviceTest {
     void testValidationShouldFailForTooSmallWeight() {
         //given
         underTest = defaultBuilder
-            .withWeight(-1)
+            .weight(-1)
             .build();
 
         //when
@@ -238,7 +238,7 @@ final class DeviceTest {
     void testValidationShouldFailForNullLocation() {
         //given
         underTest = defaultBuilder
-            .withLocation(null)
+            .location(null)
             .build();
 
         //when
@@ -252,7 +252,7 @@ final class DeviceTest {
     void testValidationShouldFailForNullCategory() {
         //given
         underTest = defaultBuilder
-            .withCategory(null)
+            .category(null)
             .build();
 
         //when

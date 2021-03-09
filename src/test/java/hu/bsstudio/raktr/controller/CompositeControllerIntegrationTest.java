@@ -74,13 +74,13 @@ public class CompositeControllerIntegrationTest {
     @Autowired
     private LocationRepository locationRepository;
 
-    private Device.Builder defaultDeviceBuilder;
-    private CompositeItem.Builder defaultBuilder;
+    private Device.DeviceBuilder defaultDeviceBuilder;
+    private CompositeItem.CompositeItemBuilder defaultBuilder;
 
     @BeforeEach
     public final void init() {
         Category category = Category.builder()
-            .withName(CATEGORY_NAME)
+            .name(CATEGORY_NAME)
             .build();
 
         category = categoryRepository.save(category);
@@ -92,23 +92,23 @@ public class CompositeControllerIntegrationTest {
         location = locationRepository.save(location);
 
         defaultDeviceBuilder = Device.builder()
-            .withName(DEVICE_NAME)
-            .withBarcode(DEVICE_BARCODE)
-            .withTextIdentifier("text_id")
-            .withMaker("maker")
-            .withType("type")
-            .withQuantity(1)
-            .withSerial("serial")
-            .withWeight(DEVICE_WEIGHT)
-            .withCategory(category)
-            .withLocation(location)
-            .withStatus(DeviceStatus.GOOD)
-            .withValue(DEVICE_VALUE);
+            .name(DEVICE_NAME)
+            .barcode(DEVICE_BARCODE)
+            .textIdentifier("text_id")
+            .maker("maker")
+            .type("type")
+            .quantity(1)
+            .serial("serial")
+            .weight(DEVICE_WEIGHT)
+            .category(category)
+            .location(location)
+            .status(DeviceStatus.GOOD)
+            .value(DEVICE_VALUE);
 
         defaultBuilder = CompositeItem.builder()
-            .withBarcode(COMPOSITE_BARCODE)
-            .withLocation(location)
-            .withName(COMPOSITE_NAME);
+            .barcode(COMPOSITE_BARCODE)
+            .location(location)
+            .name(COMPOSITE_NAME);
     }
 
     @AfterEach

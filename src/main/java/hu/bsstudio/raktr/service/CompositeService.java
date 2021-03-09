@@ -139,7 +139,7 @@ public class CompositeService {
 
         if (location == null) {
             location = locationRepository.save(Location.builder()
-                .withName(compositeRequest.getLocation().getName())
+                .name(compositeRequest.getLocation().getName())
                 .build());
         }
         compositeRequest.setLocation(location);

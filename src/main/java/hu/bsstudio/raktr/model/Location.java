@@ -4,6 +4,7 @@ import static javax.persistence.CascadeType.REFRESH;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.util.Set;
 import javax.persistence.Column;
@@ -16,6 +17,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -26,8 +29,10 @@ import lombok.ToString;
 @Entity
 @Table(name = "location")
 @JsonSerialize
-@JsonDeserialize(builder = Location.Builder.class)
+@JsonDeserialize(builder = Location.LocationBuilder.class)
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Data
 public class Location extends DomainAuditModel {
 
@@ -44,36 +49,9 @@ public class Location extends DomainAuditModel {
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     @Setter(AccessLevel.NONE)
-    @OneToMany(targetEntity = Device.class, fetch = FetchType.EAGER,
-        cascade = REFRESH, mappedBy = "location")
+    @OneToMany(targetEntity = Device.class, fetch = FetchType.LAZY, cascade = REFRESH, mappedBy = "location")
     private Set<Device> devices;
 
-    public Location(final Builder builder) {
-        this.id = builder.id;
-        this.name = builder.name;
-    }
-
-    public static Builder builder() {
-        return new Builder();
-    }
-
-    @SuppressWarnings("hiddenfield")
-    public static final class Builder {
-        private Long id;
-        private String name;
-
-        public Builder withId(final Long id) {
-            this.id = id;
-            return this;
-        }
-
-        public Builder withName(final String name) {
-            this.name = name;
-            return this;
-        }
-
-        public Location build() {
-            return new Location(this);
-        }
-    }
+    @JsonPOJOBuilder(withPrefix = "")
+    public static class LocationBuilder {}
 }

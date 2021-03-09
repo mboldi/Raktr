@@ -83,8 +83,8 @@ final class RentServiceTest {
         underTest = spy(new RentService(mockRentRepository, mockRentItemDao, mockDeviceRepository, mockGeneralDataRepository));
 
         device = Device.builder()
-            .withId(DEVICE_ID)
-            .withQuantity(1)
+            .id(DEVICE_ID)
+            .quantity(1)
             .build();
 
         doReturn(device).when(mockDeviceRepository).getOne(any());
@@ -187,8 +187,8 @@ final class RentServiceTest {
     void checkIfAvailableTrueSomeIsOutButNotAll() {
         //given
         Device deviceMultiple = Device.builder()
-            .withId(DEVICE_ID)
-            .withQuantity(2)
+            .id(DEVICE_ID)
+            .quantity(2)
             .build();
 
         RentItem rentItem = RentItem.builder()

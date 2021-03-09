@@ -66,7 +66,7 @@ final class DeviceServiceTest {
     private Device device;
     private Location location;
     private Category category;
-    private Device.Builder defaultBuilder;
+    private Device.DeviceBuilder defaultBuilder;
     private DeviceService underTest;
 
     @BeforeEach
@@ -83,17 +83,17 @@ final class DeviceServiceTest {
             .build();
 
         defaultBuilder = Device.builder()
-            .withName(DEVICE_NAME)
-            .withMaker(MAKER)
-            .withType(TYPE)
-            .withSerial(SERIAL)
-            .withValue(VALUE)
-            .withBarcode(BARCODE)
-            .withWeight(WEIGHT)
-            .withStatus(STATUS)
-            .withLocation(location)
-            .withCategory(category)
-            .withQuantity(QUANTITY);
+            .name(DEVICE_NAME)
+            .maker(MAKER)
+            .type(TYPE)
+            .serial(SERIAL)
+            .value(VALUE)
+            .barcode(BARCODE)
+            .weight(WEIGHT)
+            .status(STATUS)
+            .location(location)
+            .category(category)
+            .quantity(QUANTITY);
 
         deviceRequest = spy(defaultBuilder.build());
 
@@ -130,29 +130,29 @@ final class DeviceServiceTest {
     void testUpdateDevice() {
         //given
         deviceRequest = spy(Device.builder()
-            .withName(DEVICE_NAME)
-            .withMaker(MAKER)
-            .withType(TYPE)
-            .withSerial(SERIAL)
-            .withValue(VALUE)
-            .withBarcode(BARCODE)
-            .withWeight(WEIGHT)
-            .withStatus(STATUS)
-            .withQuantity(QUANTITY)
-            .withCategory(category)
-            .withLocation(location)
+            .name(DEVICE_NAME)
+            .maker(MAKER)
+            .type(TYPE)
+            .serial(SERIAL)
+            .value(VALUE)
+            .barcode(BARCODE)
+            .weight(WEIGHT)
+            .status(STATUS)
+            .quantity(QUANTITY)
+            .category(category)
+            .location(location)
             .build());
 
         final Device updatedDevice = Device.builder()
-            .withName(OTHER_NAME)
-            .withMaker(OTHER_MAKER)
-            .withType(OTHER_TYPE)
-            .withSerial(OTHER_SERIAL)
-            .withValue(OTHER_VALUE)
-            .withBarcode(OTHER_BARCODE)
-            .withWeight(OTHER_WEIGHT)
-            .withStatus(OTHER_STATUS)
-            .withQuantity(OTHER_QUANTITY)
+            .name(OTHER_NAME)
+            .maker(OTHER_MAKER)
+            .type(OTHER_TYPE)
+            .serial(OTHER_SERIAL)
+            .value(OTHER_VALUE)
+            .barcode(OTHER_BARCODE)
+            .weight(OTHER_WEIGHT)
+            .status(OTHER_STATUS)
+            .quantity(OTHER_QUANTITY)
             .build();
 
         given(mockDeviceRepository.save(device)).willReturn(updatedDevice);

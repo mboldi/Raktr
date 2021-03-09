@@ -1,20 +1,15 @@
 package hu.bsstudio.raktr.service;
 
 import static java.util.Optional.empty;
-import static java.util.Optional.ofNullable;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.spy;
 import static org.mockito.MockitoAnnotations.initMocks;
 
-import hu.bsstudio.raktr.repository.CompositeItemRepository;
-import hu.bsstudio.raktr.repository.DeviceRepository;
-import hu.bsstudio.raktr.exception.ObjectNotFoundException;
 import hu.bsstudio.raktr.model.CompositeItem;
 import hu.bsstudio.raktr.model.Device;
-import hu.bsstudio.raktr.model.Scannable;
+import hu.bsstudio.raktr.repository.CompositeItemRepository;
+import hu.bsstudio.raktr.repository.DeviceRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -42,8 +37,8 @@ final class ScannableServiceTest {
         initMocks(this);
 
         device = spy(Device.builder()
-            .withId(DEVICE_ID)
-            .withBarcode(DEVICE_BARCODE)
+            .id(DEVICE_ID)
+            .barcode(DEVICE_BARCODE)
             .build());
 
         compositeItem = spy(CompositeItem.builder()

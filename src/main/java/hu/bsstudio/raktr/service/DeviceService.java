@@ -101,7 +101,7 @@ public final class DeviceService {
 
         if (category == null) {
             category = categoryRepository.save(Category.builder()
-                .withName(deviceRequest.getCategory().getName())
+                .name(deviceRequest.getCategory().getName())
                 .build());
         }
         deviceRequest.setCategory(category);
@@ -110,7 +110,7 @@ public final class DeviceService {
 
         if (location == null) {
             location = locationRepository.save(Location.builder()
-                .withName(deviceRequest.getLocation().getName())
+                .name(deviceRequest.getLocation().getName())
                 .build());
         }
         deviceRequest.setLocation(location);

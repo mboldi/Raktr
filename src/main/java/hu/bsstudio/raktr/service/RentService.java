@@ -50,23 +50,7 @@ public class RentService {
         List<RentItem> rentItems = rentItemDao.findAll();
         Integer sumOut = 0;
 
-        if (deviceRentItem.getOutQuantity() > maxAvailableQuantity) {
-            return false;
-        }
-
-        for (RentItem rentItem : rentItems) {
-            if (rentItem.getBackStatus().equals(BackStatus.OUT)
-                && rentItem.getScannable().getId().equals(deviceRentItem.getScannable().getId())
-                && (rentItemToUpdate == null || !rentItem.getId().equals(rentItemToUpdate.getId()))) {
-                sumOut += rentItem.getOutQuantity();
-            }
-
-            if (sumOut + deviceRentItem.getOutQuantity() > maxAvailableQuantity) {
-                return false;
-            }
-        }
-
-        return true;
+        return deviceRentItem.getOutQuantity() <= maxAvailableQuantity;
     }
 
     public final Rent create(final Rent rentRequest) {

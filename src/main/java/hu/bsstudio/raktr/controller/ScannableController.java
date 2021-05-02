@@ -1,7 +1,10 @@
 package hu.bsstudio.raktr.controller;
 
+import hu.bsstudio.raktr.dto.RentItemWithRentData;
+import hu.bsstudio.raktr.model.RentItem;
 import hu.bsstudio.raktr.model.Scannable;
 import hu.bsstudio.raktr.service.ScannableService;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -38,6 +41,15 @@ public class ScannableController {
 
         return scannableService.getByTextIdentifier(textIdentifier)
             .<ResponseEntity<Scannable>>map(ResponseEntity::ok)
+            .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/{id}/rentItems")
+    public ResponseEntity<List<RentItemWithRentData>> getRentItemsOfScannable(@PathVariable final Long id) {
+        log.info("Incoming request for rentITems of scannable item with id {}", id);
+
+        return scannableService.getRentItemsOfScannable(id)
+            .map(ResponseEntity::ok)
             .orElseGet(() -> ResponseEntity.notFound().build());
     }
 

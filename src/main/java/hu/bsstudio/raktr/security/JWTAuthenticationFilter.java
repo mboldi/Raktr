@@ -37,7 +37,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     @SuppressWarnings("checkstyle:DesignForExtension")
     @Override
     public Authentication attemptAuthentication(final HttpServletRequest req,
-                                                final HttpServletResponse res) throws AuthenticationException {
+                                                final HttpServletResponse res) {
         try {
             UserLoginData creds = new ObjectMapper()
                 .readValue(req.getInputStream(), UserLoginData.class);

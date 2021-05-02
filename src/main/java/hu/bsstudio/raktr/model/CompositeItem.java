@@ -40,9 +40,9 @@ public class CompositeItem extends Scannable {
     private Location location;
 
     @Builder
-    public CompositeItem(Long id, @NotBlank String name, @NotBlank String textIdentifier, @NotNull String barcode,
+    public CompositeItem(Long id, @NotBlank String name, @NotBlank String textIdentifier, @NotNull String barcode, List<RentItem> rentItems,
                          List<Device> devices, @NotNull Location location) {
-        super(id, name, textIdentifier, barcode);
+        super(id, name, textIdentifier, barcode, rentItems);
         this.devices = devices;
         this.location = location;
     }

@@ -75,12 +75,12 @@ public class Device extends Scannable {
     private List<CompositeItem> parentComposites;
 
     @Builder
-    public Device(Long id, String name, String barcode, String textIdentifier,
+    public Device(Long id, String name, String barcode, String textIdentifier, List<RentItem> rentItems,
                   @NotNull String maker, @NotNull String type, @NotNull String serial,
                   @NotNull Integer value, @Min(0) Integer weight, @NotNull Location location,
                   @NotNull DeviceStatus status, @NotNull Category category,
                   @NotNull @Min(1) Integer quantity, List<CompositeItem> parentComposites) {
-        super(id, name, textIdentifier, barcode);
+        super(id, name, textIdentifier, barcode, rentItems);
         this.maker = maker;
         this.type = type;
         this.serial = serial;

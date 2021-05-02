@@ -22,6 +22,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import static javax.persistence.FetchType.*;
+
 @EqualsAndHashCode(callSuper = true)
 @SuppressWarnings("checkstyle:FinalClass")
 @Entity
@@ -41,7 +43,7 @@ public class RentItem extends DomainAuditModel {
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @NotNull
     @JoinColumn
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = EAGER)
     private Scannable scannable;
 
     @NotNull
@@ -50,7 +52,6 @@ public class RentItem extends DomainAuditModel {
     @NotNull
     private Integer outQuantity;
 
-    @ManyToOne
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     @JsonIgnore

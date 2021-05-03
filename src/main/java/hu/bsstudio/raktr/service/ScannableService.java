@@ -3,12 +3,15 @@ package hu.bsstudio.raktr.service;
 import hu.bsstudio.raktr.dto.RentItemWithRentData;
 import hu.bsstudio.raktr.model.CompositeItem;
 import hu.bsstudio.raktr.model.Device;
+import hu.bsstudio.raktr.model.Rent;
 import hu.bsstudio.raktr.model.Scannable;
 import hu.bsstudio.raktr.repository.CompositeItemRepository;
 import hu.bsstudio.raktr.repository.DeviceRepository;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import hu.bsstudio.raktr.repository.RentItemDao;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -18,10 +21,12 @@ public class ScannableService {
 
     private final DeviceRepository deviceRepository;
     private final CompositeItemRepository compositeItemRepository;
+    private final RentItemDao rentItemDao;
 
-    public ScannableService(final DeviceRepository deviceRepository, final CompositeItemRepository compositeItemRepository) {
+    public ScannableService(final DeviceRepository deviceRepository, final CompositeItemRepository compositeItemRepository, RentItemDao rentItemDao) {
         this.deviceRepository = deviceRepository;
         this.compositeItemRepository = compositeItemRepository;
+        this.rentItemDao = rentItemDao;
     }
 
     public final Optional<? extends Scannable> getByBarcode(final String barcode) {
@@ -74,7 +79,10 @@ public class ScannableService {
         } else {
             //log.info("Device found by barcode: {}", foundDevice.get());
             return Optional.of(foundDevice.get().getRentItems().stream()
-                .map(rentItem -> new RentItemWithRentData(rentItem, rentItem.getRent()))
+                .map(rentItem -> {
+                    log.info("found: {}", rentItemDao.findRentOfRentItem(rentItem.getId()).orElse(null));
+                    return new RentItemWithRentData(rentItem, rentItemDao.findRentOfRentItem(rentItem.getId()).orElse(null));
+                })
                 .collect(Collectors.toList()));
         }
     }

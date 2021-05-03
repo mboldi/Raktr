@@ -40,13 +40,13 @@ final class ScannableServiceTest {
             .id(DEVICE_ID)
             .barcode(DEVICE_BARCODE)
             .build());
-
+/*
         compositeItem = spy(CompositeItem.builder()
             .withId(COMPOSITE_ID)
             .withBarcode(COMPOSITE_BARCODE)
             .build());
 
-        underTest = new ScannableService(mockDeviceRepository, mockCompositeDao);
+        underTest = new ScannableService(mockDeviceRepository, mockCompositeDao, rentItemDao);*/
     }
 /*
     @Test

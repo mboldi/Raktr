@@ -67,6 +67,7 @@ public final class DeviceService {
         }
 
         deviceToUpdate.get().setBarcode(deviceRequest.getBarcode());
+        deviceToUpdate.get().setIsPublicRentable(deviceRequest.getIsPublicRentable());
         deviceToUpdate.get().setTextIdentifier(deviceRequest.getTextIdentifier());
         deviceToUpdate.get().setName(deviceRequest.getName());
         deviceToUpdate.get().setMaker(deviceRequest.getMaker());

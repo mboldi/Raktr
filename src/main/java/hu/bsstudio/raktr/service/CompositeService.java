@@ -56,6 +56,7 @@ public class CompositeService {
 
         compositeItemToUpdate.get().setName(compositeItemRequest.getName());
         compositeItemToUpdate.get().setBarcode(compositeItemRequest.getBarcode());
+        compositeItemToUpdate.get().setIsPublicRentable(compositeItemRequest.getIsPublicRentable());
         compositeItemToUpdate.get().setTextIdentifier(compositeItemRequest.getTextIdentifier());
         compositeItemToUpdate.get().setLocation(compositeItemRequest.getLocation());
 

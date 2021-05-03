@@ -56,6 +56,9 @@ public abstract class Scannable extends DomainAuditModel {
     @Column(unique = true)
     String barcode;
 
+    @NotNull
+    Boolean isPublicRentable;
+
     @JsonIgnore
     @ToString.Exclude
     @EqualsAndHashCode.Exclude

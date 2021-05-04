@@ -2,30 +2,24 @@ package hu.bsstudio.raktr.service;
 
 import hu.bsstudio.raktr.exception.NotAvailableQuantityException;
 import hu.bsstudio.raktr.exception.ObjectNotFoundException;
-import hu.bsstudio.raktr.model.BackStatus;
-import hu.bsstudio.raktr.model.Device;
-import hu.bsstudio.raktr.model.GeneralData;
-import hu.bsstudio.raktr.model.Rent;
-import hu.bsstudio.raktr.model.RentItem;
+import hu.bsstudio.raktr.model.*;
 import hu.bsstudio.raktr.pdfgeneration.RentPdfCreator;
 import hu.bsstudio.raktr.pdfgeneration.RentPdfData;
 import hu.bsstudio.raktr.pdfgeneration.RentPdfRequest;
-import hu.bsstudio.raktr.repository.DeviceRepository;
-import hu.bsstudio.raktr.repository.GeneralDataRepository;
-import hu.bsstudio.raktr.repository.RentItemDao;
-import hu.bsstudio.raktr.repository.RentRepository;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
+import hu.bsstudio.raktr.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -43,6 +37,7 @@ public class RentService {
     private final RentItemDao rentItemDao;
     private final DeviceRepository deviceRepository;
     private final GeneralDataRepository generalDataRepository;
+    private final CommentRepository commentRepository;
 
     @SuppressWarnings("checkstyle:DesignForExtension")
     public boolean checkIfAvailable(final RentItem deviceRentItem, final RentItem rentItemToUpdate) {
@@ -139,6 +134,47 @@ public class RentService {
         return foundRent.get();
     }
 
+    public Optional<Rent> addCommentToRent(final Long rentId, final Comment commentToAdd) {
+        Optional<Rent> rentToAddTo = rentRepository.findById(rentId);
+
+        if (rentToAddTo.isEmpty()) {
+            log.info("Rent not found with id: {}", rentId);
+            return Optional.empty();
+        }
+
+        Comment savedComment = commentRepository.save(commentToAdd);
+
+        rentToAddTo.get().getComments().add(savedComment);
+
+        Rent updatedRent = rentRepository.save(rentToAddTo.get());
+        log.info("Comment added to rent: {}", updatedRent);
+
+        return Optional.of(updatedRent);
+    }
+
+    public Optional<Rent> removeCommentFromRent(final Long rentId, final Comment commentToRemove) {
+        Optional<Rent> rentToUpdate = rentRepository.findById(rentId);
+        Optional<Comment> commentFound = commentRepository.findById(commentToRemove.getId());
+
+        if (rentToUpdate.isEmpty()) {
+            log.info("Rent not found with id: {}", rentId);
+            return Optional.empty();
+        }
+
+        if (commentFound.isEmpty()) {
+            log.info("Comment not found with id: {}", commentToRemove.getId());
+            return Optional.empty();
+        }
+
+        rentToUpdate.get().getComments().remove(commentFound.get());
+        commentRepository.delete(commentFound.get());
+
+        Rent savedRent = rentRepository.save(rentToUpdate.get());
+
+        log.info("Comment successfully removed from rent: {}", savedRent);
+        return Optional.of(savedRent);
+    }
+
     @SuppressWarnings({"checkstyle:InnerAssignment", "checkstyle:AvoidInlineConditionals"})
     public final ResponseEntity<byte[]> getPdf(final Long rentId, final RentPdfRequest rentPdfRequest) throws IOException {
         Rent rentToGenerate = rentRepository.findById(rentId).orElse(null);
@@ -152,7 +188,7 @@ public class RentService {
 
         Optional<GeneralData> foundData;
         String groupName = (foundData = generalDataRepository.findById(GROUP_NAME_KEY)).isPresent()
-            ? foundData.get().getData() : "Budavári Schönherz Stúdió";
+                ? foundData.get().getData() : "Budavári Schönherz Stúdió";
         String groupLeaderName = (foundData = generalDataRepository.findById(GROUP_LEADER_NAME_KEY)).isPresent() ? foundData.get().getData() : "";
         String firstSignerName = (foundData = generalDataRepository.findById(FIRST_SIGNER_NAME_KEY)).isPresent() ? foundData.get().getData() : "";
         String firstSignerTitle = (foundData = generalDataRepository.findById(FIRST_SIGNER_TITLE_KEY)).isPresent() ? foundData.get().getData() : "";
@@ -160,19 +196,19 @@ public class RentService {
         String secondSignerTitle = (foundData = generalDataRepository.findById(SECOND_SIGNER_TITLE_KEY)).isPresent() ? foundData.get().getData() : "";
 
         RentPdfData rentPdfData = RentPdfData.builder()
-            .withTeamName(groupName)
-            .withTeamLeaderName(groupLeaderName)
-            .withFirstSignerName(firstSignerName)
-            .withFirstSignerTitle(firstSignerTitle)
-            .withSecondSignerName(secondSignerName)
-            .withSecondSignerTitle(secondSignerTitle)
-            .withOutDate(rentToGenerate.getOutDate())
-            .withBackDate(rentToGenerate.getExpBackDate())
-            .withFileName(fileName)
-            .withRenterName(rentPdfRequest.getRenterFullName())
-            .withRenterId(rentPdfRequest.getRenterId())
-            .withItems(new HashMap<>())
-            .build();
+                .withTeamName(groupName)
+                .withTeamLeaderName(groupLeaderName)
+                .withFirstSignerName(firstSignerName)
+                .withFirstSignerTitle(firstSignerTitle)
+                .withSecondSignerName(secondSignerName)
+                .withSecondSignerTitle(secondSignerTitle)
+                .withOutDate(rentToGenerate.getOutDate())
+                .withBackDate(rentToGenerate.getExpBackDate())
+                .withFileName(fileName)
+                .withRenterName(rentPdfRequest.getRenterFullName())
+                .withRenterId(rentPdfRequest.getRenterId())
+                .withItems(new HashMap<>())
+                .build();
 
         for (var item : rentToGenerate.getRentItems()) {
             String currentName = item.getScannable().getName();
@@ -182,13 +218,13 @@ public class RentService {
                 currAmount += item.getOutQuantity();
 
                 rentPdfData.getItems().replace(
-                    currentName,
-                    currAmount
+                        currentName,
+                        currAmount
                 );
             } else {
                 rentPdfData.getItems().put(
-                    currentName,
-                    item.getOutQuantity()
+                        currentName,
+                        item.getOutQuantity()
                 );
             }
         }

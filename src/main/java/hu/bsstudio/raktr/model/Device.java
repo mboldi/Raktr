@@ -48,21 +48,7 @@ public class Device extends Scannable {
     private Integer weight;
 
     @NotNull
-    @ManyToOne
-    @JoinColumn
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    private Location location;
-
-    @NotNull
     private DeviceStatus status;
-
-    @NotNull
-    @JoinColumn
-    @ManyToOne
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    private Category category;
 
     @NotNull
     @Min(1)
@@ -82,15 +68,13 @@ public class Device extends Scannable {
                   @NotNull DeviceStatus status, @NotNull Category category,
                   @NotNull @Min(1) Integer quantity,
                   List<CompositeItem> parentComposites) {
-        super(id, name, textIdentifier, barcode, isPublicRentable, rentItems);
+        super(id, name, textIdentifier, barcode, isPublicRentable, location, category, rentItems);
         this.maker = maker;
         this.type = type;
         this.serial = serial;
         this.value = value;
         this.weight = weight;
-        this.location = location;
         this.status = status;
-        this.category = category;
         this.quantity = quantity;
         this.parentComposites = parentComposites;
     }

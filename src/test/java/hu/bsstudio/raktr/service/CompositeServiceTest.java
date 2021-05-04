@@ -10,6 +10,7 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
 
+import hu.bsstudio.raktr.repository.CategoryRepository;
 import hu.bsstudio.raktr.repository.CompositeItemRepository;
 import hu.bsstudio.raktr.repository.DeviceRepository;
 import hu.bsstudio.raktr.repository.LocationRepository;
@@ -50,10 +51,13 @@ final class CompositeServiceTest {
     private LocationRepository mockLocationRepository;
 
     @Mock
+    private CategoryRepository mockCategoryRepository;
+
+    @Mock
     private CompositeItem mockCompositeRequest;
 
     private CompositeItem compositeItem;
-    private CompositeItem.Builder defaultBuilder;
+    private CompositeItem.CompositeItemBuilder defaultBuilder;
     private Location location;
     private Device device;
     private CompositeService underTest;
@@ -63,10 +67,10 @@ final class CompositeServiceTest {
     void init() {
         initMocks(this);
 
-        underTest = new CompositeService(mockCompositeDao, mockDeviceRepository, mockLocationRepository);
+        underTest = new CompositeService(mockCompositeDao, mockDeviceRepository, mockLocationRepository, mockCategoryRepository);
 
         location = Location.builder()
-            .withId(LOCATION_ID)
+            .id(LOCATION_ID)
             .build();
 
         device = Device.builder()
@@ -84,12 +88,12 @@ final class CompositeServiceTest {
         given(mockCompositeRequest.getDevices()).willReturn(devices);
 
         defaultBuilder = CompositeItem.builder()
-            .withId(ID)
-            .withName(NAME)
-            .withBarcode(BARCODE)
-            .withTextIdentifier(TEXT_IDENTIFIER)
-            .withLocation(location)
-            .withDevices(devices);
+            .id(ID)
+            .name(NAME)
+            .barcode(BARCODE)
+            .textIdentifier(TEXT_IDENTIFIER)
+            .location(location)
+            .devices(devices);
 
         compositeItem = spy(defaultBuilder.build());
     }
@@ -128,7 +132,7 @@ final class CompositeServiceTest {
     void testUpdateCompositeItem() {
         //given
         Location otherLocation = Location.builder()
-            .withId(OTHER_LOCATION_ID)
+            .id(OTHER_LOCATION_ID)
             .build();
 
         given(mockCompositeRequest.getName()).willReturn(OTHER_NAME);

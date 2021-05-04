@@ -34,18 +34,12 @@ public class CompositeItem extends Scannable {
     @Setter(AccessLevel.NONE)
     private List<Device> devices;
 
-    @NotNull
-    @ManyToOne
-    @JoinColumn
-    private Location location;
-
     @Builder
     public CompositeItem(Long id, @NotBlank String name, @NotBlank String textIdentifier, @NotNull String barcode,
                          @NotNull Boolean isPublicRentable, List<RentItem> rentItems,
-                         List<Device> devices, @NotNull Location location) {
-        super(id, name, textIdentifier, barcode, isPublicRentable, rentItems);
+                         List<Device> devices, @NotNull Location location, @NotNull Category category) {
+        super(id, name, textIdentifier, barcode, isPublicRentable, location, category, rentItems);
         this.devices = devices;
-        this.location = location;
     }
 
     @JsonPOJOBuilder(withPrefix = "")

@@ -43,21 +43,35 @@ public abstract class Scannable extends DomainAuditModel {
     @Id
     @Setter(AccessLevel.NONE)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    protected Long id;
 
     @NotBlank
-    String name;
+    protected String name;
 
     @NotBlank
     @Column(unique = true)
-    String textIdentifier;
+    protected String textIdentifier;
 
     @NotNull
     @Column(unique = true)
-    String barcode;
+    protected String barcode;
 
     @NotNull
-    Boolean isPublicRentable;
+    protected Boolean isPublicRentable;
+
+    @NotNull
+    @ManyToOne
+    @JoinColumn
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    protected Location location;
+
+    @NotNull
+    @JoinColumn
+    @ManyToOne
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    protected Category category;
 
     @JsonIgnore
     @ToString.Exclude

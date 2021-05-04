@@ -1,8 +1,10 @@
 package hu.bsstudio.raktr.service;
 
+import hu.bsstudio.raktr.model.Category;
 import hu.bsstudio.raktr.model.CompositeItem;
 import hu.bsstudio.raktr.model.Device;
 import hu.bsstudio.raktr.model.Location;
+import hu.bsstudio.raktr.repository.CategoryRepository;
 import hu.bsstudio.raktr.repository.CompositeItemRepository;
 import hu.bsstudio.raktr.repository.DeviceRepository;
 import hu.bsstudio.raktr.repository.LocationRepository;
@@ -20,6 +22,7 @@ public class CompositeService {
     private final CompositeItemRepository compositeItemRepository;
     private final DeviceRepository deviceRepository;
     private final LocationRepository locationRepository;
+    private final CategoryRepository categoryRepository;
 
     public final List<CompositeItem> getAll() {
         List<CompositeItem> compositeItems = compositeItemRepository.findAll();
@@ -37,7 +40,7 @@ public class CompositeService {
             }
         }
 
-        checkAndCreateLocation(compositeItemRequest);
+        checkCategoryAndLocation(compositeItemRequest);
 
         CompositeItem saved = compositeItemRepository.save(compositeItemRequest);
         log.info("Composite item saved: {}", saved);
@@ -45,7 +48,7 @@ public class CompositeService {
     }
 
     public final Optional<CompositeItem> update(final CompositeItem compositeItemRequest) {
-        checkAndCreateLocation(compositeItemRequest);
+        checkCategoryAndLocation(compositeItemRequest);
 
         var compositeItemToUpdate = compositeItemRepository.findById(compositeItemRequest.getId());
 
@@ -59,6 +62,7 @@ public class CompositeService {
         compositeItemToUpdate.get().setIsPublicRentable(compositeItemRequest.getIsPublicRentable());
         compositeItemToUpdate.get().setTextIdentifier(compositeItemRequest.getTextIdentifier());
         compositeItemToUpdate.get().setLocation(compositeItemRequest.getLocation());
+        compositeItemToUpdate.get().setCategory(compositeItemRequest.getCategory());
 
         CompositeItem saved = compositeItemRepository.save(compositeItemToUpdate.get());
         log.info("Saved composite item: {}", saved);
@@ -135,14 +139,23 @@ public class CompositeService {
         return Optional.empty();
     }
 
-    private void checkAndCreateLocation(final CompositeItem compositeRequest) {
-        Location location = locationRepository.findByName(compositeRequest.getLocation().getName()).orElse(null);
+    private void checkCategoryAndLocation(final CompositeItem compositeItemRequest) {
+        var category = categoryRepository.findByName(compositeItemRequest.getCategory().getName()).orElse(null);
+
+        if (category == null) {
+            category = categoryRepository.save(Category.builder()
+                    .name(compositeItemRequest.getCategory().getName())
+                    .build());
+        }
+        compositeItemRequest.setCategory(category);
+
+        Location location = locationRepository.findByName(compositeItemRequest.getLocation().getName()).orElse(null);
 
         if (location == null) {
             location = locationRepository.save(Location.builder()
-                .name(compositeRequest.getLocation().getName())
-                .build());
+                    .name(compositeItemRequest.getLocation().getName())
+                    .build());
         }
-        compositeRequest.setLocation(location);
+        compositeItemRequest.setLocation(location);
     }
 }

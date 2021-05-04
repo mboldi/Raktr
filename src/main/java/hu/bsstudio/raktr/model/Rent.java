@@ -30,6 +30,9 @@ public class Rent extends DomainAuditModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotNull
+    private RentType type;
+
     @NotBlank
     private String destination;
 
@@ -48,10 +51,16 @@ public class Rent extends DomainAuditModel {
     @NotNull
     private String actBackDate;
 
+    @NotNull
+    private Boolean isFinalized;
+
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @OneToMany(targetEntity = RentItem.class, fetch = LAZY, orphanRemoval = true)
     @Setter(AccessLevel.NONE)
     private List<RentItem> rentItems;
+
+    @ManyToMany
+    private List<Comment> comments;
 
     @SuppressWarnings("checkstyle:DesignForExtension")
     public RentItem getRentItemOfScannable(final Scannable scannableToFind) {

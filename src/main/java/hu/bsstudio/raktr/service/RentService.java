@@ -104,6 +104,7 @@ public class RentService {
             throw new ObjectNotFoundException();
         }
 
+        rentToUpdate.get().setType(rentRequest.getType());
         rentToUpdate.get().setDestination(rentRequest.getDestination());
         rentToUpdate.get().setIssuer(rentRequest.getIssuer());
         rentToUpdate.get().setRenter(rentRequest.getRenter());

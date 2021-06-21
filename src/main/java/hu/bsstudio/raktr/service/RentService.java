@@ -117,6 +117,27 @@ public class RentService {
         return saved;
     }
 
+    public final Rent manageFinalization(final Rent rentRequest) {
+        var rentToUpdate = rentRepository.findById(rentRequest.getId());
+
+        if (rentToUpdate.isEmpty()) {
+            throw new ObjectNotFoundException();
+        }
+
+        rentToUpdate.get().setType(rentRequest.getType());
+        rentToUpdate.get().setDestination(rentRequest.getDestination());
+        rentToUpdate.get().setIssuer(rentRequest.getIssuer());
+        rentToUpdate.get().setRenter(rentRequest.getRenter());
+        rentToUpdate.get().setOutDate(rentRequest.getOutDate());
+        rentToUpdate.get().setExpBackDate(rentRequest.getExpBackDate());
+        rentToUpdate.get().setActBackDate(rentRequest.getActBackDate());
+        rentToUpdate.get().setIsFinalized(rentRequest.getIsFinalized());
+
+        Rent saved = rentRepository.save(rentToUpdate.get());
+        log.info("Rent updated with finalization: {}", saved);
+        return saved;
+    }
+
     public final Rent delete(final Rent rentRequest) {
         rentRepository.delete(rentRequest);
         log.info("Rent deleted: {}", rentRequest);

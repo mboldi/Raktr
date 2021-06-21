@@ -47,7 +47,6 @@ public class RentController {
     }
 
     @PutMapping("/{rentId}")
-    @Secured("ROLE_Stúdiós")
     public Rent addItemToRent(@PathVariable final Long rentId, @RequestBody @Valid final RentItem rentItemRequest) {
         log.info("Incoming request to add device {} to rent with id {}", rentItemRequest, rentId);
         return rentService.updateItem(rentId, rentItemRequest);
@@ -60,10 +59,16 @@ public class RentController {
     }
 
     @PutMapping
-    @Secured("ROLE_Stúdiós")
     public Rent updateRent(@RequestBody @Valid final Rent rentRequest) {
         log.info("Incoming request to update rent: {}", rentRequest);
         return rentService.update(rentRequest);
+    }
+
+    @PutMapping("/finalize")
+    @Secured("ROLE_Stúdiós")
+    public Rent finalizeRent(@RequestBody @Valid final Rent rentRequest) {
+        log.info("Incoming request to finalize/unfinalize rent: {}", rentRequest);
+        return rentService.manageFinalization(rentRequest);
     }
 
     @PostMapping("/{rentId}/comment")
@@ -88,7 +93,7 @@ public class RentController {
     }
 
     @DeleteMapping
-    @Secured("ROLE_Stúdiós")
+    @Secured("ROLE_ADMIN")
     public Rent deleteRent(@RequestBody @Valid final Rent rentRequest) {
         log.info("Incoming request to delete rent {}", rentRequest);
         return rentService.delete(rentRequest);
@@ -96,6 +101,7 @@ public class RentController {
 
     @PostMapping("/pdf/{rentId}")
     @Secured("ROLE_Stúdiós")
+    @Secured("ROLE_Stúdiós jelölt")
     public ResponseEntity<byte[]> getRentPdf(@PathVariable final Long rentId,
                                              @RequestBody @Valid final RentPdfRequest rentPdfRequest) throws IOException {
         log.info("Incoming request for pdf of rent with id: {}", rentId);

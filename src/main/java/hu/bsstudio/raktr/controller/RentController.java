@@ -100,8 +100,7 @@ public class RentController {
     }
 
     @PostMapping("/pdf/{rentId}")
-    @Secured("ROLE_Stúdiós")
-    @Secured("ROLE_Stúdiós jelölt")
+    @Secured({"ROLE_Stúdiós", "ROLE_Stúdiós jelölt"})
     public ResponseEntity<byte[]> getRentPdf(@PathVariable final Long rentId,
                                              @RequestBody @Valid final RentPdfRequest rentPdfRequest) throws IOException {
         log.info("Incoming request for pdf of rent with id: {}", rentId);

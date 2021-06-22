@@ -1,5 +1,7 @@
 package hu.bsstudio.raktr.pdfgeneration;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Map;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -100,13 +102,19 @@ public class RentPdfData {
             return this;
         }
 
-        public Builder withOutDate(final String outDate) {
-            this.outDate = outDate;
+        public Builder withOutDate(final Date outDate) {
+            String pattern = "yyyy. MM. dd.";
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+
+            this.outDate = simpleDateFormat.format(outDate);
             return this;
         }
 
-        public Builder withBackDate(final String backDate) {
-            this.backDate = backDate;
+        public Builder withBackDate(final Date backDate) {
+            String pattern = "yyyy. MM. dd.";
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+
+            this.backDate = simpleDateFormat.format(backDate);
             return this;
         }
 

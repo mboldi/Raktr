@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import java.util.Date;
 import java.util.List;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -42,14 +43,11 @@ public class Rent extends DomainAuditModel {
     @NotBlank
     private String issuer;
 
-    @NotBlank
-    private String outDate;
+    private Date outDate;
 
-    @NotBlank
-    private String expBackDate;
+    private Date expBackDate;
 
-    @NotNull
-    private String actBackDate;
+    private Date actBackDate;
 
     @NotNull
     private Boolean isFinalized;

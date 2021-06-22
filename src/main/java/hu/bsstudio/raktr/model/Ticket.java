@@ -2,6 +2,7 @@ package hu.bsstudio.raktr.model;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
+import java.util.Date;
 import lombok.*;
 
 import javax.persistence.*;
@@ -30,6 +31,9 @@ public class Ticket {
 
     @NotNull
     private TicketStatus status;
+
+    @NotNull
+    private Date dateOfWriting;
 
     @NotNull
     private ProblemSeverity severity;

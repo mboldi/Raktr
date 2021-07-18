@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
+import java.util.Date;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -54,6 +56,16 @@ public class Device extends Scannable {
     @Min(1)
     private Integer quantity;
 
+    private String aquiredFrom;
+
+    private Date dateOfAcquisition;
+
+    private String owner;
+
+    private Date endOfWarranty;
+
+    private String comment;
+
     @ManyToMany
     @ToString.Exclude
     @JsonIgnore
@@ -81,25 +93,4 @@ public class Device extends Scannable {
 
     @JsonPOJOBuilder(withPrefix = "")
     public static class DeviceBuilder {}
-
-    @Override
-    public String toString() {
-        return "Device{"
-            + "id=" + id
-            + ", name='" + name + '\''
-            + ", barcode='" + barcode + '\''
-            + ", textIdentifier='" + textIdentifier + "'"
-            + ", public_rentable='" + isPublicRentable + "'"
-            + ", maker='" + maker + '\''
-            + ", type='" + type + '\''
-            + ", serial='" + serial + '\''
-            + ", value=" + value
-            + ", weight=" + weight
-            + ", location=" + location
-            + ", status=" + status
-            + ", category=" + category
-            + ", quantity=" + quantity
-            + '}';
-    }
-
 }

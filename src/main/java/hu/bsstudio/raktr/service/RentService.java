@@ -9,6 +9,8 @@ import hu.bsstudio.raktr.pdfgeneration.RentPdfRequest;
 import hu.bsstudio.raktr.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,15 +25,27 @@ import java.util.Optional;
 
 @Service
 @Slf4j
+@PropertySource("classpath:generalData.properties")
 @RequiredArgsConstructor
 public class RentService {
 
-    private static final String GROUP_NAME_KEY = "groupName";
-    private static final String GROUP_LEADER_NAME_KEY = "groupLeader";
-    private static final String FIRST_SIGNER_NAME_KEY = "firstSignerName";
-    private static final String FIRST_SIGNER_TITLE_KEY = "firstSignerTitle";
-    private static final String SECOND_SIGNER_NAME_KEY = "secondSignerName";
-    private static final String SECOND_SIGNER_TITLE_KEY = "secondSignerTitle";
+    @Value("${generalData.groupNameKey}")
+    private String GROUP_NAME_KEY;
+
+    @Value("${generalData.groupLeaderNameKey}")
+    private String GROUP_LEADER_NAME_KEY;
+
+    @Value("${generalData.firstSignerNameKey}")
+    private String FIRST_SIGNER_NAME_KEY;
+
+    @Value("${generalData.firstSignerTitleKey}")
+    private String FIRST_SIGNER_TITLE_KEY;
+
+    @Value("${generalData.secondSignerNameKey}")
+    private String SECOND_SIGNER_NAME_KEY;
+
+    @Value("${generalData.secondSignerTitleKey}")
+    private String SECOND_SIGNER_TITLE_KEY;
 
     private final RentRepository rentRepository;
     private final RentItemDao rentItemDao;

@@ -35,22 +35,14 @@ public class Rent extends DomainAuditModel {
     private RentType type;
 
     @NotBlank
-    private String destination;
-
-    @NotBlank
-    private String renter;
-
-    @NotBlank
     private String issuer;
 
     private Date outDate;
 
-    private Date expBackDate;
-
-    private Date actBackDate;
+    private Date backDate;
 
     @NotNull
-    private Boolean isFinalized;
+    private Boolean isClosed;
 
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @OneToMany(targetEntity = RentItem.class, fetch = LAZY, orphanRemoval = true)
@@ -59,6 +51,11 @@ public class Rent extends DomainAuditModel {
 
     @ManyToMany
     private List<Comment> comments;
+
+    @ToString.Exclude
+    @JsonIgnore
+    @ManyToOne(fetch = LAZY, targetEntity = Project.class)
+    private Project project;
 
     @SuppressWarnings("checkstyle:DesignForExtension")
     public RentItem getRentItemOfScannable(final Scannable scannableToFind) {

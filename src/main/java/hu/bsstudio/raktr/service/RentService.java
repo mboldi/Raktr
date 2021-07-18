@@ -119,12 +119,9 @@ public class RentService {
         }
 
         rentToUpdate.get().setType(rentRequest.getType());
-        rentToUpdate.get().setDestination(rentRequest.getDestination());
         rentToUpdate.get().setIssuer(rentRequest.getIssuer());
-        rentToUpdate.get().setRenter(rentRequest.getRenter());
         rentToUpdate.get().setOutDate(rentRequest.getOutDate());
-        rentToUpdate.get().setExpBackDate(rentRequest.getExpBackDate());
-        rentToUpdate.get().setActBackDate(rentRequest.getActBackDate());
+        rentToUpdate.get().setBackDate(rentRequest.getBackDate());
 
         Rent saved = rentRepository.save(rentToUpdate.get());
         log.info("Rent updated: {}", saved);
@@ -139,13 +136,10 @@ public class RentService {
         }
 
         rentToUpdate.get().setType(rentRequest.getType());
-        rentToUpdate.get().setDestination(rentRequest.getDestination());
         rentToUpdate.get().setIssuer(rentRequest.getIssuer());
-        rentToUpdate.get().setRenter(rentRequest.getRenter());
         rentToUpdate.get().setOutDate(rentRequest.getOutDate());
-        rentToUpdate.get().setExpBackDate(rentRequest.getExpBackDate());
-        rentToUpdate.get().setActBackDate(rentRequest.getActBackDate());
-        rentToUpdate.get().setIsFinalized(rentRequest.getIsFinalized());
+        rentToUpdate.get().setBackDate(rentRequest.getBackDate());
+        rentToUpdate.get().setIsClosed(rentRequest.getIsClosed());
 
         Rent saved = rentRepository.save(rentToUpdate.get());
         log.info("Rent updated with finalization: {}", saved);
@@ -239,7 +233,7 @@ public class RentService {
                 .withSecondSignerName(secondSignerName)
                 .withSecondSignerTitle(secondSignerTitle)
                 .withOutDate(rentToGenerate.getOutDate())
-                .withBackDate(rentToGenerate.getExpBackDate())
+                //.withBackDate(rentToGenerate.getProject().getExpEndDate())
                 .withFileName(fileName)
                 .withRenterName(rentPdfRequest.getRenterFullName())
                 .withRenterId(rentPdfRequest.getRenterId())

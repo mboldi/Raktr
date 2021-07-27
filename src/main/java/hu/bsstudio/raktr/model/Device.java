@@ -11,6 +11,7 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 import javax.validation.constraints.Min;
@@ -60,7 +61,8 @@ public class Device extends Scannable {
 
     private Date dateOfAcquisition;
 
-    private String owner;
+    @ManyToOne
+    private Owner owner;
 
     private Date endOfWarranty;
 
@@ -79,6 +81,7 @@ public class Device extends Scannable {
                   @NotNull Integer value, @Min(0) Integer weight, @NotNull Location location,
                   @NotNull DeviceStatus status, @NotNull Category category,
                   @NotNull @Min(1) Integer quantity,
+                  String aquiredFrom, Date dateOfAcquisition, Owner owner, Date endOfWarranty, String comment,
                   List<CompositeItem> parentComposites) {
         super(id, name, textIdentifier, barcode, isPublicRentable, location, category, rentItems);
         this.maker = maker;
@@ -88,6 +91,11 @@ public class Device extends Scannable {
         this.weight = weight;
         this.status = status;
         this.quantity = quantity;
+        this.aquiredFrom = aquiredFrom;
+        this.dateOfAcquisition = dateOfAcquisition;
+        this.owner = owner;
+        this.endOfWarranty = endOfWarranty;
+        this.comment = comment;
         this.parentComposites = parentComposites;
     }
 

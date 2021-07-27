@@ -3,6 +3,7 @@ package hu.bsstudio.raktr.service;
 import hu.bsstudio.raktr.model.Category;
 import hu.bsstudio.raktr.model.Device;
 import hu.bsstudio.raktr.model.Location;
+import hu.bsstudio.raktr.model.Owner;
 import hu.bsstudio.raktr.repository.CategoryRepository;
 import hu.bsstudio.raktr.repository.DeviceRepository;
 import hu.bsstudio.raktr.repository.LocationRepository;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public final class DeviceService {
 
+    private final OwnerService ownerService;
     private final DeviceRepository deviceRepository;
     private final CategoryRepository categoryRepository;
     private final LocationRepository locationRepository;
@@ -27,6 +29,12 @@ public final class DeviceService {
 
         if (foundDevice.isEmpty()) {
             checkCategoryAndLocation(deviceRequest);
+
+            if (deviceRequest.getOwner() != null) {
+                Optional<Owner> owner = ownerService.create(deviceRequest.getOwner());
+
+                deviceRequest.setOwner(owner.get());
+            }
 
             var saved = deviceRepository.save(deviceRequest);
             log.info("Device created: {}", deviceRequest);
@@ -66,6 +74,11 @@ public final class DeviceService {
             return deviceToUpdate;
         }
 
+        if (deviceRequest.getOwner() != null) {
+            Optional<Owner> owner = ownerService.create(deviceRequest.getOwner());
+            deviceToUpdate.get().setOwner(owner.get());
+        }
+
         deviceToUpdate.get().setBarcode(deviceRequest.getBarcode());
         deviceToUpdate.get().setIsPublicRentable(deviceRequest.getIsPublicRentable());
         deviceToUpdate.get().setTextIdentifier(deviceRequest.getTextIdentifier());
@@ -79,6 +92,10 @@ public final class DeviceService {
         deviceToUpdate.get().setQuantity(deviceRequest.getQuantity());
         deviceToUpdate.get().setCategory(deviceRequest.getCategory());
         deviceToUpdate.get().setLocation(deviceRequest.getLocation());
+        deviceToUpdate.get().setAquiredFrom(deviceRequest.getAquiredFrom());
+        deviceToUpdate.get().setComment(deviceRequest.getComment());
+        deviceToUpdate.get().setDateOfAcquisition(deviceRequest.getDateOfAcquisition());
+        deviceToUpdate.get().setEndOfWarranty(deviceRequest.getEndOfWarranty());
 
         Device saved = deviceRepository.save(deviceToUpdate.get());
         log.info("Device updated in DB: {}", saved);

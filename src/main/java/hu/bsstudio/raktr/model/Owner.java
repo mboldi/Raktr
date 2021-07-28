@@ -1,14 +1,11 @@
 package hu.bsstudio.raktr.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+
+import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import lombok.AccessLevel;
@@ -17,6 +14,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.List;
 
 @Entity
 @Table(name = "owner")
@@ -39,6 +38,11 @@ public class Owner extends DomainAuditModel {
 
     @NotNull
     private boolean inSchInventory;
+
+    @Setter(AccessLevel.NONE)
+    @JsonIgnore
+    @OneToMany(targetEntity = Device.class, fetch = FetchType.LAZY)
+    private List<Device> devices;
 
     @JsonPOJOBuilder(withPrefix = "")
     public static class OwnerBuilder {}

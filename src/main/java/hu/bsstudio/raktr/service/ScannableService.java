@@ -3,17 +3,16 @@ package hu.bsstudio.raktr.service;
 import hu.bsstudio.raktr.dto.RentItemWithRentData;
 import hu.bsstudio.raktr.model.CompositeItem;
 import hu.bsstudio.raktr.model.Device;
-import hu.bsstudio.raktr.model.Rent;
 import hu.bsstudio.raktr.model.Scannable;
 import hu.bsstudio.raktr.repository.CompositeItemRepository;
 import hu.bsstudio.raktr.repository.DeviceRepository;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
 import hu.bsstudio.raktr.repository.RentItemDao;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -73,17 +72,17 @@ public class ScannableService {
             } else {
                 //log.info("Composite Item found by id: {}", foundCompositeItem.get());
                 return Optional.of(foundCompositeItem.get().getRentItems().stream()
-                    .map(rentItem -> new RentItemWithRentData(rentItem, rentItem.getRent()))
-                    .collect(Collectors.toList()));
+                        .map(rentItem -> new RentItemWithRentData(rentItem, rentItem.getRent()))
+                        .collect(Collectors.toList()));
             }
         } else {
             //log.info("Device found by barcode: {}", foundDevice.get());
             return Optional.of(foundDevice.get().getRentItems().stream()
-                .map(rentItem -> {
-                    log.info("found: {}", rentItemDao.findRentOfRentItem(rentItem.getId()).orElse(null));
-                    return new RentItemWithRentData(rentItem, rentItemDao.findRentOfRentItem(rentItem.getId()).orElse(null));
-                })
-                .collect(Collectors.toList()));
+                    .map(rentItem -> {
+                        log.info("found: {}", rentItemDao.findRentOfRentItem(rentItem.getId()).orElse(null));
+                        return new RentItemWithRentData(rentItem, rentItemDao.findRentOfRentItem(rentItem.getId()).orElse(null));
+                    })
+                    .collect(Collectors.toList()));
         }
     }
 
@@ -92,7 +91,13 @@ public class ScannableService {
     }
 
     public final Long getNextId() {
-        var nextId = deviceRepository.getMaxId() + 1;
+        Long nextId = 1L;
+
+        try {
+            nextId = deviceRepository.getMaxId() + 1;
+        } catch (Exception e) {
+
+        }
 
         log.info("Found next id: {}", nextId);
         return nextId;

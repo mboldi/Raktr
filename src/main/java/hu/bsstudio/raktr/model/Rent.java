@@ -34,8 +34,10 @@ public class Rent extends DomainAuditModel {
     @NotNull
     private RentType type;
 
-    @NotBlank
-    private String issuer;
+    private String destination;
+
+    @ManyToOne(fetch = LAZY)
+    private User issuer;
 
     private Date outDate;
 

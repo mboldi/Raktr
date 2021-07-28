@@ -119,6 +119,7 @@ public class RentService {
         }
 
         rentToUpdate.get().setType(rentRequest.getType());
+        rentToUpdate.get().setDestination(rentRequest.getDestination());
         rentToUpdate.get().setIssuer(rentRequest.getIssuer());
         rentToUpdate.get().setOutDate(rentRequest.getOutDate());
         rentToUpdate.get().setBackDate(rentRequest.getBackDate());
@@ -136,6 +137,7 @@ public class RentService {
         }
 
         rentToUpdate.get().setType(rentRequest.getType());
+        rentToUpdate.get().setDestination(rentRequest.getDestination());
         rentToUpdate.get().setIssuer(rentRequest.getIssuer());
         rentToUpdate.get().setOutDate(rentRequest.getOutDate());
         rentToUpdate.get().setBackDate(rentRequest.getBackDate());

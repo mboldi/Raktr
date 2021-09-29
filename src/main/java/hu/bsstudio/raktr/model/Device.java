@@ -76,14 +76,14 @@ public class Device extends Scannable {
 
     @Builder
     public Device(Long id, String name, String barcode, String textIdentifier,
-                  @NotNull Boolean isPublicRentable, List<RentItem> rentItems,
+                  @NotNull Boolean isPublicRentable, @NotNull Boolean isDeleted, List<RentItem> rentItems,
                   @NotNull String maker, @NotNull String type, @NotNull String serial,
                   @NotNull Integer value, @Min(0) Integer weight, @NotNull Location location,
                   @NotNull DeviceStatus status, @NotNull Category category,
                   @NotNull @Min(1) Integer quantity,
                   String aquiredFrom, Date dateOfAcquisition, Owner owner, Date endOfWarranty, String comment,
                   List<CompositeItem> parentComposites) {
-        super(id, name, textIdentifier, barcode, isPublicRentable, location, category, rentItems);
+        super(id, name, textIdentifier, barcode, isPublicRentable, isDeleted, location, category, rentItems);
         this.maker = maker;
         this.type = type;
         this.serial = serial;

@@ -1,5 +1,6 @@
 package hu.bsstudio.raktr.service;
 
+import hu.bsstudio.raktr.exception.ObjectConflictException;
 import hu.bsstudio.raktr.model.Category;
 import hu.bsstudio.raktr.model.CompositeItem;
 import hu.bsstudio.raktr.model.Device;
@@ -27,6 +28,12 @@ public class CompositeService {
     public final List<CompositeItem> getAll() {
         List<CompositeItem> compositeItems = compositeItemRepository.findAll();
         log.info("Composite items fetched from db: {}", compositeItems);
+        return compositeItems;
+    }
+
+    public final List<CompositeItem> getAllDeleted() {
+        List<CompositeItem> compositeItems = compositeItemRepository.findAllDeleted();
+        log.info("Deleted composite items fetched from db: {}", compositeItems);
         return compositeItems;
     }
 
@@ -80,6 +87,31 @@ public class CompositeService {
         }
 
         return composite;
+    }
+
+    public final Optional<CompositeItem> unDelete(final CompositeItem compositeItemRequest) {
+        var foundCompositeItem = compositeItemRepository.findById(compositeItemRequest.getId());
+
+        if (foundCompositeItem.isPresent()) {
+            foundCompositeItem.get().setUndeletedData();
+
+            var byBarcode = compositeItemRepository.findByBarcode(foundCompositeItem.get().getBarcode());
+            var byTextIdentifier = compositeItemRepository.findByTextIdentifier(foundCompositeItem.get().getTextIdentifier());
+
+            if (byBarcode.isPresent() && !byBarcode.get().getId().equals(foundCompositeItem.get().getId()) ||
+                byTextIdentifier.isPresent() && !byTextIdentifier.get().getId().equals(foundCompositeItem.get().getId())) {
+                log.info("Original composite item barcode ({}) or textID ({}) taken",
+                    foundCompositeItem.get().getBarcode(), foundCompositeItem.get().getTextIdentifier());
+                throw new ObjectConflictException();
+            }
+
+            compositeItemRepository.save(compositeItemRequest);
+            log.info("Restored composite item: {}", compositeItemRequest);
+        } else {
+            log.info("Composite item to restore not found: {}", compositeItemRequest);
+        }
+
+        return foundCompositeItem;
     }
 
     public final Optional<CompositeItem> getById(final Long compositeId) {

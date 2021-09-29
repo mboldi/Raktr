@@ -36,9 +36,9 @@ public class CompositeItem extends Scannable {
 
     @Builder
     public CompositeItem(Long id, @NotBlank String name, @NotBlank String textIdentifier, @NotNull String barcode,
-                         @NotNull Boolean isPublicRentable, List<RentItem> rentItems,
+                         @NotNull Boolean isPublicRentable, @NotNull Boolean isDeleted, List<RentItem> rentItems,
                          List<Device> devices, @NotNull Location location, @NotNull Category category) {
-        super(id, name, textIdentifier, barcode, isPublicRentable, location, category, rentItems);
+        super(id, name, textIdentifier, barcode, isPublicRentable, isDeleted, location, category, rentItems);
         this.devices = devices;
     }
 

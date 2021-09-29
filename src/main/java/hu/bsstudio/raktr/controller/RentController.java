@@ -39,6 +39,12 @@ public class RentController {
         return rentService.getAll();
     }
 
+    @GetMapping("/deleted")
+    public List<Rent> getDeletedRentList() {
+        log.info("Incoming request for all deleted rents");
+        return rentService.getAll();
+    }
+
     @PostMapping
     @Secured("ROLE_Stúdiós")
     public Rent createRent(@Valid @RequestBody final Rent rentRequest) {
@@ -97,6 +103,13 @@ public class RentController {
     public Rent deleteRent(@RequestBody @Valid final Rent rentRequest) {
         log.info("Incoming request to delete rent {}", rentRequest);
         return rentService.delete(rentRequest);
+    }
+
+    @PutMapping("/undelete")
+    @Secured("ROLE_ADMIN")
+    public Rent undeleteRent(@RequestBody @Valid final Rent rentRequest) {
+        log.info("Incoming request to delete rent {}", rentRequest);
+        return rentService.undelete(rentRequest);
     }
 
     @PostMapping("/pdf/{rentId}")

@@ -6,7 +6,7 @@ import hu.bsstudio.raktr.model.Device;
 import hu.bsstudio.raktr.model.Scannable;
 import hu.bsstudio.raktr.repository.CompositeItemRepository;
 import hu.bsstudio.raktr.repository.DeviceRepository;
-import hu.bsstudio.raktr.repository.RentItemDao;
+import hu.bsstudio.raktr.repository.RentItemRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -20,12 +20,12 @@ public class ScannableService {
 
     private final DeviceRepository deviceRepository;
     private final CompositeItemRepository compositeItemRepository;
-    private final RentItemDao rentItemDao;
+    private final RentItemRepository rentItemRepository;
 
-    public ScannableService(final DeviceRepository deviceRepository, final CompositeItemRepository compositeItemRepository, RentItemDao rentItemDao) {
+    public ScannableService(final DeviceRepository deviceRepository, final CompositeItemRepository compositeItemRepository, RentItemRepository rentItemRepository) {
         this.deviceRepository = deviceRepository;
         this.compositeItemRepository = compositeItemRepository;
-        this.rentItemDao = rentItemDao;
+        this.rentItemRepository = rentItemRepository;
     }
 
     public final Optional<? extends Scannable> getByBarcode(final String barcode) {
@@ -79,8 +79,8 @@ public class ScannableService {
             //log.info("Device found by barcode: {}", foundDevice.get());
             return Optional.of(foundDevice.get().getRentItems().stream()
                     .map(rentItem -> {
-                        log.info("found: {}", rentItemDao.findRentOfRentItem(rentItem.getId()).orElse(null));
-                        return new RentItemWithRentData(rentItem, rentItemDao.findRentOfRentItem(rentItem.getId()).orElse(null));
+                        log.info("found: {}", rentItemRepository.findRentOfRentItem(rentItem.getId()).orElse(null));
+                        return new RentItemWithRentData(rentItem, rentItemRepository.findRentOfRentItem(rentItem.getId()).orElse(null));
                     })
                     .collect(Collectors.toList()));
         }

@@ -11,7 +11,7 @@ import java.util.Optional;
 
 @Repository
 @Transactional
-public interface RentItemDao extends JpaRepository<RentItem, Long> {
+public interface RentItemRepository extends JpaRepository<RentItem, Long> {
 
     @Query("SELECT rent from Rent rent, RentItem rentItem " +
             "WHERE rentItem.id = :rentItemId " +

@@ -37,6 +37,13 @@ public class CompositeController {
         return compositeService.getAll();
     }
 
+    @GetMapping("/deleted")
+    @Secured("ROLE_ADMIN")
+    public List<CompositeItem> getDeletedCompositeList() {
+        log.info("Incoming request for all deleted composite items");
+        return compositeService.getAllDeleted();
+    }
+
     @PostMapping
     public ResponseEntity<CompositeItem> createCompositeItem(@Valid @RequestBody final CompositeItem compositeItemRequest) {
         log.info("Incoming request for new composite item: {}", compositeItemRequest);
@@ -71,6 +78,18 @@ public class CompositeController {
             .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    @PutMapping("/undelete")
+    @Secured("ROLE_ADMIN")
+    public ResponseEntity<CompositeItem> undeleteCompositeItem(@Valid @RequestBody final CompositeItem compositeItemRequest) {
+        log.info("Incoming request to restore composite item: {}", compositeItemRequest);
+
+        final var compositeItem = compositeService.unDelete(compositeItemRequest);
+
+        return compositeItem
+            .map(ResponseEntity::ok)
+            .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
     @GetMapping("/{compositeId}")
     public ResponseEntity<CompositeItem> getCompositeById(@PathVariable final Long compositeId) {
         log.info("Incoming request for composite item with id {}", compositeId);
@@ -96,6 +115,7 @@ public class CompositeController {
     }
 
     @DeleteMapping("/{compositeId}")
+    @Secured("ROLE_Stúdiós")
     public ResponseEntity<CompositeItem> deleteDeviceFromCompositeItem(
         @PathVariable final Long compositeId,
         @Valid @RequestBody final Device deviceRequest) {

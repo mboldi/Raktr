@@ -59,6 +59,9 @@ public class Rent extends DomainAuditModel {
     @ManyToOne(fetch = LAZY, targetEntity = Project.class)
     private Project project;
 
+    @NotNull
+    private Boolean isDeleted;
+
     @SuppressWarnings("checkstyle:DesignForExtension")
     public RentItem getRentItemOfScannable(final Scannable scannableToFind) {
         for (RentItem rentItem : rentItems) {
@@ -68,6 +71,18 @@ public class Rent extends DomainAuditModel {
         }
 
         return null;
+    }
+
+    public Rent setDeletedData() {
+        isDeleted = true;
+
+        return this;
+    }
+
+    public Rent setUndeletedData() {
+        isDeleted = false;
+
+        return this;
     }
 
     @JsonPOJOBuilder(withPrefix = "")

@@ -6,6 +6,8 @@ import java.util.List;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.PropertySources;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -23,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @SuppressWarnings("checkstyle:DesignForExtension")
 @RequestMapping("/api/device")
+@PropertySource("classpath:userInfo.properties")
 @RequiredArgsConstructor
 public class DeviceController {
 
@@ -47,6 +50,13 @@ public class DeviceController {
         return deviceService.getAll();
     }
 
+    @GetMapping("/deleted")
+    @Secured("ROLA_ADMIN")
+    public List<Device> getDeletedDeviceList() {
+        log.info("Incoming request for all Devices");
+        return deviceService.getAllDeleted();
+    }
+
     @DeleteMapping
     @Secured("ROLE_Stúdiós")
     public ResponseEntity<Device> deleteDevice(@Valid @RequestBody final Device deviceRequest) {
@@ -65,6 +75,18 @@ public class DeviceController {
         log.info("Incoming request to delete device with id: {}", id);
 
         final var device = deviceService.deleteById(id);
+
+        return device
+            .map(ResponseEntity::ok)
+            .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @PutMapping("/undelete")
+    @Secured("ROLE_Stúdiós")
+    public ResponseEntity<Device> unDeleteDevice(@Valid @RequestBody final Device deviceRequest) {
+        log.info("Incoming request to restore device: {}", deviceRequest);
+
+        final var device = deviceService.unDelete(deviceRequest);
 
         return device
             .map(ResponseEntity::ok)

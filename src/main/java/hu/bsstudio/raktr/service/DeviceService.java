@@ -1,5 +1,6 @@
 package hu.bsstudio.raktr.service;
 
+import hu.bsstudio.raktr.exception.ObjectConflictException;
 import hu.bsstudio.raktr.model.Category;
 import hu.bsstudio.raktr.model.Device;
 import hu.bsstudio.raktr.model.Location;
@@ -51,14 +52,47 @@ public final class DeviceService {
         return fetched;
     }
 
+    public List<Device> getAllDeleted() {
+        var fetched = deviceRepository.findAllDeleted();
+        log.info("Deleted devices fetched from DB: {}", fetched);
+        return fetched;
+    }
+
     public Optional<Device> delete(final Device deviceRequest) {
         var foundDevice = deviceRepository.findById(deviceRequest.getId());
 
         if (foundDevice.isPresent()) {
-            deviceRepository.delete(deviceRequest);
+            foundDevice.get().setDeletedData();
+
+            deviceRepository.save(deviceRequest);
             log.info("Deleted device from DB: {}", deviceRequest);
         } else {
             log.info("Device to delete not found in DB: {}", deviceRequest);
+        }
+
+        return foundDevice;
+    }
+
+    public Optional<Device> unDelete(final Device deviceRequest) {
+        var foundDevice = deviceRepository.findById(deviceRequest.getId());
+
+        if (foundDevice.isPresent()) {
+            foundDevice.get().setUndeletedData();
+
+            Optional<Device> byBarcode = deviceRepository.findByBarcode(foundDevice.get().getBarcode());
+            Optional<Device> byTextIdentifier = deviceRepository.findByTextIdentifier(foundDevice.get().getTextIdentifier());
+
+            if (byBarcode.isPresent() && !byBarcode.get().getId().equals(foundDevice.get().getId()) ||
+                byTextIdentifier.isPresent() && !byTextIdentifier.get().getId().equals(foundDevice.get().getId())) {
+                log.warn("Original device barcode ({}) or textID ({}) taken",
+                    foundDevice.get().getBarcode(), foundDevice.get().getTextIdentifier());
+                throw new ObjectConflictException();
+            }
+
+            deviceRepository.save(deviceRequest);
+            log.info("Deleted device from DB: {}", deviceRequest);
+        } else {
+            log.warn("Device to delete not found in DB: {}", deviceRequest);
         }
 
         return foundDevice;
@@ -70,7 +104,7 @@ public final class DeviceService {
         var deviceToUpdate = deviceRepository.findById(deviceRequest.getId());
 
         if (deviceToUpdate.isEmpty()) {
-            log.info("Device not found in db to update: {}", deviceRequest);
+            log.warn("Device not found in db to update: {}", deviceRequest);
             return deviceToUpdate;
         }
 

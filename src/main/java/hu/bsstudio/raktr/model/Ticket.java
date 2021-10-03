@@ -9,6 +9,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "ticket")
 @JsonDeserialize(builder = Ticket.TicketBuilder.class)
@@ -16,24 +17,13 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @Builder
 @Data
-public class Ticket {
-
-    @Id
-    @Setter(AccessLevel.NONE)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    protected Long id;
-
-    @ManyToOne
-    private Scannable scannableOfProblem;
-
-    @NotBlank
-    private String descriptionOfProblem;
+public class Ticket extends Commentable{
 
     @NotNull
     private TicketStatus status;
 
-    @NotNull
-    private Date dateOfWriting;
+    @ManyToOne
+    private Scannable scannableOfProblem;
 
     @NotNull
     private ProblemSeverity severity;

@@ -3,8 +3,11 @@ package hu.bsstudio.raktr.controller;
 import hu.bsstudio.raktr.dto.RentItemWithRentData;
 import hu.bsstudio.raktr.model.RentItem;
 import hu.bsstudio.raktr.model.Scannable;
+import hu.bsstudio.raktr.model.Ticket;
 import hu.bsstudio.raktr.service.ScannableService;
 import java.util.List;
+
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -18,13 +21,10 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @SuppressWarnings("checkstyle:DesignForExtension")
 @RequestMapping("/api/scannable")
+@RequiredArgsConstructor
 public class ScannableController {
 
     private final ScannableService scannableService;
-
-    public ScannableController(final ScannableService scannableService) {
-        this.scannableService = scannableService;
-    }
 
     @GetMapping("/barcode/{barcode}")
     public ResponseEntity<Scannable> getScannableByBarcode(@PathVariable final String barcode) {

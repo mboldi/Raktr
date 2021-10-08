@@ -4,9 +4,12 @@ import hu.bsstudio.raktr.dto.RentItemWithRentData;
 import hu.bsstudio.raktr.model.CompositeItem;
 import hu.bsstudio.raktr.model.Device;
 import hu.bsstudio.raktr.model.Scannable;
+import hu.bsstudio.raktr.model.Ticket;
 import hu.bsstudio.raktr.repository.CompositeItemRepository;
 import hu.bsstudio.raktr.repository.DeviceRepository;
 import hu.bsstudio.raktr.repository.RentItemRepository;
+import hu.bsstudio.raktr.repository.TicketRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -16,17 +19,12 @@ import java.util.stream.Collectors;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class ScannableService {
 
     private final DeviceRepository deviceRepository;
     private final CompositeItemRepository compositeItemRepository;
     private final RentItemRepository rentItemRepository;
-
-    public ScannableService(final DeviceRepository deviceRepository, final CompositeItemRepository compositeItemRepository, RentItemRepository rentItemRepository) {
-        this.deviceRepository = deviceRepository;
-        this.compositeItemRepository = compositeItemRepository;
-        this.rentItemRepository = rentItemRepository;
-    }
 
     public final Optional<? extends Scannable> getByBarcode(final String barcode) {
         var foundDevice = deviceRepository.findByBarcode(barcode);

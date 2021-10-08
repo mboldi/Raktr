@@ -101,4 +101,32 @@ public class Device extends Scannable {
 
     @JsonPOJOBuilder(withPrefix = "")
     public static class DeviceBuilder {}
+
+    @Override
+    public String toString() {
+        return "Device{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", textIdentifier='" + textIdentifier + '\'' +
+                ", barcode='" + barcode + '\'' +
+                ", isPublicRentable=" + isPublicRentable +
+                ", location=" + location +
+                ", category=" + category +
+                ", rentItems=" + rentItems +
+                ", isDeleted=" + isDeleted +
+                ", maker='" + maker + '\'' +
+                ", type='" + type + '\'' +
+                ", serial='" + serial + '\'' +
+                ", value=" + value +
+                ", weight=" + weight +
+                ", status=" + status +
+                ", quantity=" + quantity +
+                ", aquiredFrom='" + aquiredFrom + '\'' +
+                ", dateOfAcquisition=" + dateOfAcquisition +
+                ", owner=" + owner +
+                ", endOfWarranty=" + endOfWarranty +
+                ", comment='" + comment + '\'' +
+                ", parentComposites=" + parentComposites +
+                '}';
+    }
 }

@@ -14,9 +14,13 @@ import java.util.Date;
 @Table(name = "comment")
 @JsonDeserialize(builder = Comment.CommentBuilder.class)
 @AllArgsConstructor
-@Builder
 @Data
 public class Comment extends Commentable {
+
+    @Builder
+    public Comment(Long id, @NotBlank String body, @NotNull Date dateOfWriting, @NotNull User writer) {
+        super(id, body, dateOfWriting, writer);
+    }
 
     @JsonPOJOBuilder(withPrefix = "")
     public static class CommentBuilder {

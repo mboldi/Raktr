@@ -31,6 +31,8 @@ public final class DeviceService {
         if (foundDevice.isEmpty()) {
             checkCategoryAndLocation(deviceRequest);
 
+            deviceRequest.setIsDeleted(false);
+
             if (deviceRequest.getOwner() != null) {
                 Optional<Owner> owner = ownerService.create(deviceRequest.getOwner());
 

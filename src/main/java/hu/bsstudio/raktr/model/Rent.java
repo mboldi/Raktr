@@ -39,6 +39,10 @@ public class Rent extends DomainAuditModel {
     @ManyToOne(fetch = LAZY)
     private User issuer;
 
+    @NotBlank
+    private String renter;
+
+    @NotNull
     private Date outDate;
 
     private Date backDate;
@@ -59,7 +63,7 @@ public class Rent extends DomainAuditModel {
     @ManyToOne(fetch = LAZY, targetEntity = Project.class)
     private Project project;
 
-    @NotNull
+    @JsonIgnore
     private Boolean isDeleted;
 
     @SuppressWarnings("checkstyle:DesignForExtension")

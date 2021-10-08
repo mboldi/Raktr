@@ -83,7 +83,7 @@ public class Device extends Scannable {
                   @NotNull @Min(1) Integer quantity,
                   String aquiredFrom, Date dateOfAcquisition, Owner owner, Date endOfWarranty, String comment,
                   List<CompositeItem> parentComposites) {
-        super(id, name, textIdentifier, barcode, isPublicRentable, isDeleted, location, category, rentItems);
+        super(id, name, textIdentifier, barcode, isPublicRentable, location, category, rentItems, isDeleted);
         this.maker = maker;
         this.type = type;
         this.serial = serial;

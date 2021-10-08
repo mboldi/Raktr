@@ -1,6 +1,7 @@
 package hu.bsstudio.raktr.service;
 
 import hu.bsstudio.raktr.exception.ObjectConflictException;
+import hu.bsstudio.raktr.exception.ObjectNotFoundException;
 import hu.bsstudio.raktr.model.Project;
 import hu.bsstudio.raktr.model.Rent;
 import hu.bsstudio.raktr.model.User;
@@ -27,7 +28,7 @@ public class ProjectService {
     private final RentService rentService;
 
     public Optional<Project> create(final Project projectRequest) {
-        Optional<User> foundProducer = userRepository.findByUsername(projectRequest.getProducer().getUsername());
+        Optional<User> foundProducer = userRepository.findByUsername(projectRequest.getProdManager().getUsername());
 
         if (foundProducer.isEmpty()) {
             log.error("User not found with given username: {}", foundProducer);
@@ -41,7 +42,7 @@ public class ProjectService {
             throw new ObjectConflictException();
         }
 
-        projectRequest.setProducer(foundProducer.get());
+        projectRequest.setProdManager(foundProducer.get());
 
         Project saved = projectRepository.save(projectRequest);
 
@@ -52,7 +53,7 @@ public class ProjectService {
 
     public Optional<Project> update(final Project projectUpdateRequest) {
         Optional<Project> projectToUpdate = projectRepository.findById(projectUpdateRequest.getId());
-        Optional<User> foundProducer = userRepository.findByUsername(projectUpdateRequest.getProducer().getUsername());
+        Optional<User> foundProducer = userRepository.findByUsername(projectUpdateRequest.getProdManager().getUsername());
 
         if (projectToUpdate.isEmpty()) {
             log.error("Project not found with given ID: {}", projectToUpdate);
@@ -65,7 +66,7 @@ public class ProjectService {
         }
 
         projectToUpdate.get().setName(projectUpdateRequest.getName());
-        projectToUpdate.get().setProducer(foundProducer.get());
+        projectToUpdate.get().setProdManager(foundProducer.get());
         projectToUpdate.get().setStartDate(projectUpdateRequest.getStartDate());
         projectToUpdate.get().setExpEndDate(projectUpdateRequest.getExpEndDate());
 
@@ -80,6 +81,14 @@ public class ProjectService {
         List<Project> fetched = projectRepository.findAll();
 
         log.info("Found projects: {}", fetched);
+
+        return fetched;
+    }
+
+    public List<Project> getAllDeleted() {
+        List<Project> fetched = projectRepository.findAllDeleted();
+
+        log.info("Found deleted projects: {}", fetched);
 
         return fetched;
     }
@@ -100,10 +109,26 @@ public class ProjectService {
         if (toDelete.isEmpty()) {
             log.error("Project not found with id to delete: {}", projectId);
         } else {
-            projectRepository.delete(toDelete.get());
+            toDelete.get().setDeletedData();
+
+            projectRepository.save(toDelete.get());
         }
 
         return toDelete;
+    }
+
+    public Optional<Project> unDelete(final Long projectId) {
+        Optional<Project> toUnDelete = projectRepository.findById(projectId);
+
+        if (toUnDelete.isEmpty()) {
+            log.error("Project not found with id to restore: {}", projectId);
+        } else {
+            toUnDelete.get().setUndeletedData();
+
+            projectRepository.save(toUnDelete.get());
+        }
+
+        return toUnDelete;
     }
 
     public Optional<Project> addNewRentToProject(final Long projectId, final Rent rentRequest) {

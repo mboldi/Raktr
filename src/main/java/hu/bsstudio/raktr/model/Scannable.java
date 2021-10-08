@@ -60,9 +60,6 @@ public abstract class Scannable extends DomainAuditModel {
     protected Boolean isPublicRentable;
 
     @NotNull
-    protected Boolean isDeleted;
-
-    @NotNull
     @ManyToOne
     @JoinColumn
     @EqualsAndHashCode.Exclude
@@ -81,6 +78,9 @@ public abstract class Scannable extends DomainAuditModel {
     @EqualsAndHashCode.Exclude
     @OneToMany(mappedBy = "scannable")
     List<RentItem> rentItems;
+
+    @JsonIgnore
+    protected Boolean isDeleted;
 
     public Scannable setDeletedData() {
         barcode = barcode + "_d_" + id;

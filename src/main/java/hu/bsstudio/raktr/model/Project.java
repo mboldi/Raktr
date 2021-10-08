@@ -1,5 +1,6 @@
 package hu.bsstudio.raktr.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -35,8 +36,9 @@ public class Project extends DomainAuditModel{
 
     @NotNull
     @ManyToOne
-    private User producer;
+    private User prodManager;
 
+    @NotNull
     private Date startDate;
 
     private Date expEndDate;
@@ -45,6 +47,21 @@ public class Project extends DomainAuditModel{
     @Setter(AccessLevel.NONE)
     private List<Rent> rents;
 
+    @JsonIgnore
+    private Boolean isDeleted;
+
     @JsonPOJOBuilder(withPrefix = "")
     public static class ProjectBuilder {}
+
+    public Project setDeletedData() {
+        isDeleted = true;
+
+        return this;
+    }
+
+    public Project setUndeletedData() {
+        isDeleted = false;
+
+        return this;
+    }
 }

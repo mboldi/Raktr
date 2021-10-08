@@ -6,6 +6,7 @@ import hu.bsstudio.raktr.service.ProjectService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.NotNull;
@@ -52,6 +53,14 @@ public class ProjectController {
                 .ok(projectService.getAll());
     }
 
+    @Secured("ROLE_ADMIN")
+    @GetMapping("/deleted")
+    private ResponseEntity<List<Project>> getAllDeletedProjects() {
+        log.info("Incoming request for all deleted projects");
+        return ResponseEntity
+                .ok(projectService.getAllDeleted());
+    }
+
     @GetMapping("/{projectId}")
     private ResponseEntity<Project> getOneProject(final @PathVariable @NotNull Long projectId) {
         log.info("Incoming request for project with id: {}", projectId);
@@ -68,6 +77,18 @@ public class ProjectController {
         log.info("Incoming request to delete project with id: {}", projectId);
 
         Optional<Project> project = projectService.delete(projectId);
+
+        return project
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @Secured("ROLE_ADMIN")
+    @PutMapping("/undelete/{projectId}")
+    private ResponseEntity<Project> unDeleteProject(final @PathVariable @NotNull Long projectId) {
+        log.info("Incoming request to restore project with id: {}", projectId);
+
+        Optional<Project> project = projectService.unDelete(projectId);
 
         return project
                 .map(ResponseEntity::ok)

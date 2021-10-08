@@ -48,6 +48,7 @@ public class CompositeService {
         }
 
         checkCategoryAndLocation(compositeItemRequest);
+        compositeItemRequest.setIsDeleted(false);
 
         CompositeItem saved = compositeItemRepository.save(compositeItemRequest);
         log.info("Composite item saved: {}", saved);

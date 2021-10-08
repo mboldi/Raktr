@@ -43,6 +43,7 @@ public class ProjectService {
         }
 
         projectRequest.setProdManager(foundProducer.get());
+        projectRequest.setIsDeleted(false);
 
         Project saved = projectRepository.save(projectRequest);
 

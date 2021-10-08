@@ -64,6 +64,7 @@ public class RentService {
     }
 
     public final Rent create(final Rent rentRequest) {
+        rentRequest.setIsDeleted(false);
         Rent saved = rentRepository.save(rentRequest);
         log.info("Rent saved: {}", saved);
         return saved;
@@ -121,9 +122,8 @@ public class RentService {
 
         rentToUpdate.get().setType(rentRequest.getType());
         rentToUpdate.get().setDestination(rentRequest.getDestination());
-        rentToUpdate.get().setIssuer(rentRequest.getIssuer());
-        rentToUpdate.get().setRenter(rentRequest.getRenter());
         rentToUpdate.get().setOutDate(rentRequest.getOutDate());
+        rentToUpdate.get().setExpBackDate(rentRequest.getExpBackDate());
         rentToUpdate.get().setBackDate(rentRequest.getBackDate());
 
         Rent saved = rentRepository.save(rentToUpdate.get());
@@ -261,7 +261,7 @@ public class RentService {
             .withSecondSignerName(secondSignerName)
             .withSecondSignerTitle(secondSignerTitle)
             .withOutDate(rentToGenerate.getOutDate())
-            //.withBackDate(rentToGenerate.getProject().getExpEndDate())
+            .withBackDate(rentToGenerate.getExpBackDate())
             .withFileName(fileName)
             .withRenterName(rentPdfRequest.getRenterFullName())
             .withRenterId(rentPdfRequest.getRenterId())

@@ -112,7 +112,6 @@ public class Device extends Scannable {
                 ", isPublicRentable=" + isPublicRentable +
                 ", location=" + location +
                 ", category=" + category +
-                ", rentItems=" + rentItems +
                 ", isDeleted=" + isDeleted +
                 ", maker='" + maker + '\'' +
                 ", type='" + type + '\'' +

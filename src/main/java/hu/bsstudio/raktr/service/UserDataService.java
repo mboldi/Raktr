@@ -3,9 +3,13 @@ package hu.bsstudio.raktr.service;
 import hu.bsstudio.raktr.exception.ObjectNotFoundException;
 import hu.bsstudio.raktr.model.User;
 import hu.bsstudio.raktr.repository.UserRepository;
-import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -43,5 +47,19 @@ public class UserDataService {
             log.info("Updated user: {}", updatedUser);
             return userRepository.save(updatedUser);
         }
+    }
+
+    public List<User> getRentIssuerableMembers() {
+        List<User> allUsers = userRepository.findAll();
+
+        List<User> fullAccessMembers = allUsers.stream()
+                .filter(user -> user.getRoles().stream()
+                        .anyMatch(userRole -> Objects.equals(userRole.getRoleName(), "ROLE_Stúdiós")
+                                || Objects.equals(userRole.getRoleName(), "ROLE_Stúdiós-jelölt")))
+                .collect(Collectors.toList());
+
+        log.info("Found full access members: {}", fullAccessMembers);
+
+        return fullAccessMembers;
     }
 }

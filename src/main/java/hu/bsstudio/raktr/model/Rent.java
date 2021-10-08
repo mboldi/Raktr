@@ -45,6 +45,9 @@ public class Rent extends DomainAuditModel {
     @NotNull
     private Date outDate;
 
+    @NotNull
+    private Date expBackDate;
+
     private Date backDate;
 
     @NotNull

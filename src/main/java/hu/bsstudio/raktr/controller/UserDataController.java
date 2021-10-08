@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @Slf4j
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -29,6 +31,13 @@ public class UserDataController {
         log.info("Incoming request for user with name: {}", username);
 
         return userDataService.getByUsername(username);
+    }
+
+    @GetMapping("/canissuerent")
+    public List<User> getRentIssuerableMembers() {
+        log.info("incoming request for all members that can issue a rent");
+
+        return userDataService.getRentIssuerableMembers();
     }
 
     @PutMapping

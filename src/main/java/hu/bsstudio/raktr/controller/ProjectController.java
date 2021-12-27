@@ -28,9 +28,9 @@ public class ProjectController {
     private ResponseEntity<Project> addProject(@RequestBody @NotNull final Project projectRequest) {
         log.info("Incoming request for new project: {}", projectRequest);
 
-        final var location = projectService.create(projectRequest);
+        var project = projectService.create(projectRequest);
 
-        return location
+        return project
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.status(CONFLICT).build());
     }

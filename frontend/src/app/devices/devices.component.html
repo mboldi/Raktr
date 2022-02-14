@@ -1,0 +1,188 @@
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header card-header-tabs card-header-primary">
+                        <div class="card-title ">
+                            <div class="nav-tabs-navigation list-title mt-1">
+                                <div class="nav-tabs-wrapper">
+                                    <ul class="nav nav-tabs" data-tabs="tabs">
+                                        <li class="nav-item active">
+                                            <a href="#devices" class="nav-link active" data-toggle="tab"
+                                               (click)="setTab('devices')">
+                                                <h4 class="mb-0">Eszközök</h4>
+                                                <div class="ripple-container"></div>
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a href="#composites" class="nav-link" data-toggle="tab"
+                                               (click)="setTab('composites')">
+                                                <h4 class="mb-0">Összetett eszközök</h4>
+                                                <div class="ripple-container"></div>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="pull-right form-inline">
+                                <mat-form-field class="deviceSearchField">
+                                    <mat-label>Keresés...</mat-label>
+                                    <input matInput class="searchInput" type="text" [formControl]="searchControl"
+                                           autocomplete="off">
+                                    <button mat-button matSuffix mat-icon-button
+                                            *ngIf="searchControl.value !== ''" aria-label="search">
+                                        <mat-icon (click)="searchControl.setValue('')">clear</mat-icon>
+                                    </button>
+                                </mat-form-field>
+                                <button class="ml-1" mat-button mat-icon-button aria-label="Filter">
+                                    <mat-icon>filter_alt</mat-icon>
+                                </button>
+                                <button class="ml-1 addButton" color="warn" mat-mini-fab aria-label="Add"
+                                        (click)="create()">
+                                    <mat-icon>add</mat-icon>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="devices">
+                                <div class="table-responsive">
+                                    <table class="table" matSort (matSortChange)="sortDevices($event)">
+                                        <thead class="text-orange">
+                                        <th mat-sort-header="name">
+                                            Név
+                                        </th>
+                                        <th mat-sort-header="maker">
+                                            Gyártó
+                                        </th>
+                                        <th mat-sort-header="type">
+                                            Típus
+                                        </th>
+                                        <th mat-sort-header="quantity">
+                                            Mennyiség
+                                        </th>
+                                        <th mat-sort-header="category">
+                                            Kategória
+                                        </th>
+                                        <th mat-sort-header="location">
+                                            Tárolási hely
+                                        </th>
+                                        <th mat-sort-header="weight">
+                                            Tömeg
+                                        </th>
+                                        <th mat-sort-header="textId">
+                                            Azonosító
+                                        </th>
+                                        <th>
+                                            Másolás
+                                        </th><!--
+                                        <th>
+                                            Szerkesztés
+                                        </th>-->
+                                        </thead>
+                                        <tbody>
+                                        <tr class="device-row" *ngFor="let device of sortedDevices">
+                                            <td (click)="editDevice(device)">
+                                                {{device.name}}
+                                            </td>
+                                            <td (click)="editDevice(device)">
+                                                {{device.maker}}
+                                            </td>
+                                            <td (click)="editDevice(device)">
+                                                {{device.type}}
+                                            </td>
+                                            <td (click)="editDevice(device)">
+                                                {{device.quantity}}
+                                            </td>
+                                            <td (click)="editDevice(device)">
+                                                {{device.category.name}}
+                                            </td>
+                                            <td (click)="editDevice(device)">
+                                                {{device.location.name}}
+                                            </td>
+                                            <td (click)="editDevice(device)">
+                                                {{device.weight / 1000}} kg
+                                            </td>
+                                            <td (click)="editDevice(device)">
+                                                {{device.textIdentifier}}
+                                            </td>
+                                            <td class="pb-0 pt-0">
+                                                <button mat-raised-button type="button"
+                                                        class="btn btn-info pull-center btn-just-icon"><i
+                                                        class="material-icons pb-0 pt-0"
+                                                        (click)="copyDevice(device)">content_copy</i>
+                                                </button>
+                                            </td><!--
+                                            <td class="pb-0 pt-0">
+                                                <button mat-raised-button type="button"
+                                                        class="btn btn-info pull-center btn-just-icon pb-0 pt-0">
+                                                    <i class="material-icons" (click)="editDevice(device)">create</i>
+                                                </button>
+                                            </td>-->
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="tab-pane" id="composites">
+                                <div class="table-responsive">
+                                    <table class="table" matSort (matSortChange)="sortComposites($event)">
+                                        <thead class="text-orange">
+                                        <th mat-sort-header="name">
+                                            Név
+                                        </th>
+                                        <th>
+                                            Tartalmazott eszközök száma
+                                        </th>
+                                        <th mat-sort-header="location">
+                                            Tárolási hely
+                                        </th>
+                                        <th mat-sort-header="weight">
+                                            Tömeg
+                                        </th>
+                                        <th mat-sort-header="textId">
+                                            Azonosító
+                                        </th><!--
+                                        <th>
+                                            Szerkesztés
+                                        </th>-->
+                                        </thead>
+                                        <tbody>
+                                        <tr class="device-row"
+                                            *ngFor="let compositeItem of sortedComposites">
+                                            <td (click)="editCompositeItem(compositeItem)">
+                                                {{compositeItem.name}}
+                                            </td>
+                                            <td (click)="editCompositeItem(compositeItem)">
+                                                {{compositeItem.devices.length}}
+                                            </td>
+                                            <td (click)="editCompositeItem(compositeItem)">
+                                                {{compositeItem.location.name}}
+                                            </td>
+                                            <td (click)="editCompositeItem(compositeItem)">
+                                                {{compositeItem.getWeight() / 1000}} kg
+                                            </td>
+                                            <td (click)="editCompositeItem(compositeItem)">
+                                                {{compositeItem.textIdentifier}}
+                                            </td><!--
+                                            <td class="pb-0 pt-0">
+                                                <button mat-raised-button type="button"
+                                                        class="btn btn-info pull-center btn-just-icon"
+                                                        (click)="editCompositeItem(compositeItem)">
+                                                    <mat-icon>create</mat-icon>
+                                                </button>
+                                            </td>-->
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

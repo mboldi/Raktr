@@ -1,0 +1,7 @@
+.full-width-form-element {
+    width: 100%;
+}
+
+.confirm-dialog {
+    z-index: 9999999 !important;
+}

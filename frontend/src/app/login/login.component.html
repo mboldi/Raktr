@@ -1,0 +1,33 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-xl-4 col-lg-4 col-md-3 col-sm-1">&nbsp;</div>
+        <div class="col-xl-3 col-lg-4 col-md-6 col-sm-10">
+            <div class="card">
+                <div class="card-header head">
+                    <h3 class="card-title">Raktr</h3>
+                </div>
+                <div class="card-body">
+                    <form [formGroup]="form">
+                        <mat-form-field>
+                            <mat-label>Felhasználónév</mat-label>
+                            <input matInput autocomplete="off" formControlName="username">
+                        </mat-form-field>
+                        <mat-form-field>
+                            <mat-label>Jelszó</mat-label>
+                            <input matInput [type]="hide ? 'password' : 'text'" formControlName="password">
+                            <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
+                                    [attr.aria-pressed]="hide"
+                                    type="button">
+                                <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                            </button>
+                        </mat-form-field>
+                        <button class="pull-right mt-4" color="primary" mat-raised-button type="submit"
+                                (click)="login()">
+                            Bejelentkezés
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,103 @@
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header card-header-primary">
+                        <div class="card-title ">
+                            <h4 style="display: inline-block" class="mt-3">Bérlések</h4>
+                            <div class="form-inline pull-right">
+                                <mat-form-field class="rent-search-field">
+                                    <mat-label>Keresés...</mat-label>
+                                    <input matInput class="searchInput" type="text" [formControl]="rentSearchControl" autocomplete="off">
+                                    <button mat-button matSuffix mat-icon-button
+                                            *ngIf="rentSearchControl.value !== ''" aria-label="deviceSearch">
+                                        <mat-icon (click)="rentSearchControl.setValue('')">clear</mat-icon>
+                                    </button>
+                                </mat-form-field>
+                                <button class="ml-3 addButton" color="warn" mat-mini-fab mat-icon-button
+                                        aria-label="Add"
+                                [routerLink]="['/rent', 'new']">
+                                    <mat-icon style="color: white">add</mat-icon>
+                                </button>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead class="text-orange">
+                                <th>
+                                    Kiadó
+                                </th>
+                                <th>
+                                    Felelősségvállaló
+                                </th>
+                                <th>
+                                    Kivitel célja
+                                </th>
+                                <th>
+                                    Kivitel ideje
+                                </th>
+                                <th>
+                                    Várható visszaérkezés
+                                </th>
+                                <th>
+                                    Tényleges visszaérkezés
+                                </th>
+                                <th>
+                                    Eszközök száma
+                                </th>
+                                <th>
+                                    Össztömeg
+                                </th>
+                                <th>
+                                    Szerkesztés
+                                </th>
+                                </thead>
+                                <tbody>
+                                <tr class="rent-row" *ngFor="let rent of filteredRents | async" (click)="openRent(rent.id)">
+                                    <td>
+                                        {{rent.issuer}}
+                                    </td>
+                                    <td>
+                                        {{rent.renter}}
+                                    </td>
+                                    <td>
+                                        {{rent.destination}}
+                                    </td>
+                                    <td>
+                                        {{rent.outDate}}
+                                    </td>
+                                    <td>
+                                        {{rent.expBackDate}}
+                                    </td>
+                                    <td>
+                                        <div *ngIf="rent.actBackDate == ''">Nem jött még vissza</div>
+                                        {{rent.actBackDate}}
+                                    </td>
+                                    <td>
+                                        {{rent.rentItems.length}}
+                                    </td>
+                                    <td>
+                                        {{rent.getSumWeight() / 1000}} kg
+                                    </td>
+                                    <td class="pb-0 pt-0" style="z-index: 1500">
+                                        <button mat-raised-button type="button"
+                                                class="btn btn-info pull-center btn-just-icon"
+                                                data-toggle="modal" [routerLink]="['/rent', rent.id]">
+                                                    <i class="material-icons">create</i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

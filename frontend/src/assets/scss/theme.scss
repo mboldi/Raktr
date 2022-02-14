@@ -1,0 +1,8 @@
+@import '~@angular/material/theming';
+@include mat-core();
+
+$bss-primary: mat-palette($mat-light-blue, 900);
+$bss-accent:  mat-palette($mat-light-blue, 800);
+$bss-warn:    mat-palette($mat-orange, 600);
+$bss-theme: mat-light-theme($bss-primary, $bss-accent, $bss-warn);
+@include angular-material-theme($bss-theme);

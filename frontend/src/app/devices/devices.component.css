@@ -1,0 +1,44 @@
+::ng-deep .cdk-overlay-container {
+    z-index:2000;
+}
+
+.list-title {
+    display: inline-block
+}
+
+.deviceSearchField {
+    width: 250px;
+    max-width: 80%;
+}
+
+.addButton {
+    color: white;
+}
+
+.nav-link {
+    text-transform: none !important;
+}
+
+.device-row {
+    cursor: pointer;
+}
+
+.device-row:hover {
+    background: #f2f2f2 !important;
+}
+
+.nav-link.active {
+    background: #0277bd !important;
+}
+
+.deviceSearchField ::ng-deep .mat-form-field-label {
+    color: white !important;
+}
+
+.deviceSearchField ::ng-deep .mat-form-field-underline .mat-form-field-ripple {
+    background-color: white !important;
+}
+
+.deviceSearchField ::ng-deep .mat-form-field-underline {
+    background-color: white !important;
+}

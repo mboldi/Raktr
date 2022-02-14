@@ -1,0 +1,28 @@
+.project-search-field{
+    width: 250px;
+    max-width: 80%;
+}
+
+::ng-deep .cdk-overlay-container {
+    z-index:2000;
+}
+
+.project-search-field ::ng-deep .mat-form-field-label {
+    color: white !important;
+}
+
+.project-search-field ::ng-deep .mat-form-field-underline .mat-form-field-ripple {
+    background-color: white !important;
+}
+
+.project-search-field ::ng-deep .mat-form-field-underline {
+    background-color: white !important;
+}
+
+.project-row {
+    cursor: pointer;
+}
+
+.project-row:hover {
+    background: #f2f2f2 !important;
+}

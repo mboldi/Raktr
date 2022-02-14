@@ -1,0 +1,8 @@
+.main-content {
+    margin-top: 0 !important;
+    padding: 15px;
+}
+
+.backbutton {
+    z-index: 1050 !important;
+}

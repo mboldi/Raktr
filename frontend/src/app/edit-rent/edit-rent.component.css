@@ -1,0 +1,62 @@
+.main-content {
+    margin-top: 0 !important;
+    padding: 15px;
+}
+
+.clickable {
+    cursor: pointer;
+
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select:none;
+    user-select:none;
+    -o-user-select:none;
+}
+
+.selected {
+    text-decoration: underline;
+    font-weight: bold;
+}
+
+.selected-alt {
+    background: #fb8c00;
+    color: white;
+    border-radius: 0.4rem;
+}
+
+.comment-field {
+    background: #11111111;
+    border-radius: 5px;
+}
+
+.blockquote {
+    font-size: 1rem;
+}
+
+.date-delete-row {
+    font-size: 0.7rem;
+}
+
+.comment-deleter {
+    cursor: pointer;
+}
+
+.comment-deleter:hover {
+    text-decoration: underline;
+}
+
+.backbutton {
+    z-index: 1050 !important;
+}
+
+.modal-holder {
+    z-index: 2000 !important;
+}
+
+.full-width {
+    width: 100%;
+}
+
+.device-row:hover {
+    background: #f2f2f2 !important;
+}

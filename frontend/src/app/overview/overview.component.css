@@ -1,0 +1,11 @@
+.deviceSearchField{
+    width: 100%;
+}
+
+.rent-row {
+    cursor: pointer;
+}
+
+.rent-row:hover {
+    background: #f2f2f2 !important;
+}

@@ -1,0 +1,12 @@
+.invalid-creds{
+    color: firebrick;
+    background: rgba(178, 34, 34, 0.29);
+    border-radius: 6px;
+    padding: 4px;
+    width: fit-content;
+}
+
+.invalid-box{
+    align-items: center;
+}
+

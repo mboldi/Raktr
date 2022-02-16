@@ -1,0 +1,34 @@
+<div class="modal-header">
+    <h3 class="mt-0 mb-0">Szállítólevél generálása</h3>
+</div>
+
+<div class="modal-body pt-2">
+    <div class="container-fluid">
+        <div class="row">
+            <h3 class="col-sm-12 mt-0 pt-0">{{rent.destination}} - {{rent.renter}}</h3>
+        </div>
+        <form [formGroup]="dataFormGroup">
+            <div class="row">
+                <mat-form-field class="col-sm-12">
+                    <mat-label>Felelősségvállaló neve</mat-label>
+                    <input matInput type="text"
+                           formControlName="renterName"
+                           autocomplete="off">
+                </mat-form-field>
+            </div>
+            <div class="row">
+                <mat-form-field class="col-sm-12">
+                    <mat-label>Felelősségvállaló Szig. száma</mat-label>
+                    <input matInput type="text"
+                           formControlName="renterId"
+                           autocomplete="off">
+                </mat-form-field>
+            </div>
+            <div class="col-sm-12">
+                <button class="pull-right mb-3" type="submit" mat-raised-button color="primary" (click)="generate()">
+                    Generálás
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

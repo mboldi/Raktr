@@ -1,8 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {Location, PopStateEvent} from '@angular/common';
-import 'rxjs/add/operator/filter';
+//import 'rxjs/add/operator/filter';
 import {NavigationEnd, NavigationStart, Router} from '@angular/router';
-import {Subscription} from 'rxjs/Subscription';
+import {Subscription} from 'rxjs';
 import PerfectScrollbar from 'perfect-scrollbar';
 import * as $ from 'jquery';
 
@@ -49,10 +49,10 @@ export class AdminLayoutComponent implements OnInit {
                 }
             }
         });
-        this._router = this.router.events.filter(event => event instanceof NavigationEnd).subscribe((event: NavigationEnd) => {
+        /*this._router = this.router.events.filter(event => event instanceof NavigationEnd).subscribe((event: NavigationEnd) => {
             elemMainPanel.scrollTop = 0;
             elemSidebar.scrollTop = 0;
-        });
+        });*/
         if (window.matchMedia(`(min-width: 960px)`).matches && !this.isMac()) {
             let ps = new PerfectScrollbar(elemMainPanel);
             ps = new PerfectScrollbar(elemSidebar);

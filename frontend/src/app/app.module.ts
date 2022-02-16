@@ -1,7 +1,6 @@
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {LOCALE_ID, NgModule} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {HttpModule} from '@angular/http';
 import {RouterModule} from '@angular/router';
 
 import {AppRoutingModule} from './app.routing';
@@ -46,7 +45,6 @@ import { EditProjectComponent } from './edit-project/edit-project.component';
         BrowserAnimationsModule,
         FormsModule,
         ReactiveFormsModule,
-        HttpModule,
         ComponentsModule,
         RouterModule,
         AppRoutingModule,

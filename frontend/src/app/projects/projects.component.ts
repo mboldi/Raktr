@@ -24,6 +24,7 @@ export class ProjectsComponent implements OnInit {
 
     projectSearchControl = new FormControl();
 
+
     constructor(private title: Title,
                 private projectService: ProjectService,
                 private router: Router) {

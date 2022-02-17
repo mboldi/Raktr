@@ -14,8 +14,8 @@ declare interface RouteInfo {
 
 export const ROUTES: RouteInfo[] = [
     {path: '/overview', title: 'Áttekintés', icon: 'dashboard', class: '', inMenuBar: true},
-    {path: '/devices', title: 'Eszközök kezelése', icon: 'sd_storage', class: '', inMenuBar: true}, //content_paste
-    {path: '/projects', title: 'Projektek kezelése', icon: 'content_paste', class: '', inMenuBar: true},
+    {path: '/devices', title: 'Eszközök kezelése', icon: 'sd_storage', class: '', inMenuBar: true}, // content_paste
+    // {path: '/projects', title: 'Projektek kezelése', icon: 'content_paste', class: '', inMenuBar: true},
     {path: '/rents', title: 'Kivitelek kezelése', icon: 'local_shipping', class: '', inMenuBar: true},
     {path: '/tickets', title: 'Hibajegyek', icon: 'bug_report', class: '', inMenuBar: true},
     {path: '/user-profile', title: 'Beállítások', icon: 'person', class: '', inMenuBar: true},

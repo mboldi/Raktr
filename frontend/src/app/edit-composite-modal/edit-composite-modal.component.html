@@ -89,6 +89,10 @@
                         </button>
                     </mat-slide-toggle>
                     <button mat-raised-button type="submit" class="btn btn-info pb-2"
+                            (click)="this.activeModal.dismiss(0)">
+                        Vissza
+                    </button>
+                    <button mat-raised-button type="submit" class="btn btn-info pb-2"
                             [disabled]="compositeDataForm.invalid"
                             (click)="save()">
                         Mentés

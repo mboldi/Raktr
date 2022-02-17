@@ -80,6 +80,8 @@ export class DevicesComponent implements OnInit {
                 compositeItem.name.toLowerCase().includes(value) ||
                 compositeItem.textIdentifier.toLowerCase().includes(value) ||
                 compositeItem.barcode.toLowerCase().includes(value))
+
+            this.setCompositePage();
         });
     }
 
@@ -212,7 +214,6 @@ export class DevicesComponent implements OnInit {
         const editModal = this.modalService.open(EditDeviceModalComponent, {size: 'lg', backdrop: false});
         editModal.componentInstance.title = 'Eszköz szerkesztése';
         editModal.componentInstance.device = device;
-        console.log('edit')
 
         editModal.result.catch(reason => {
             if (reason === 'delete') {

@@ -187,7 +187,6 @@ export class EditDeviceModalComponent implements OnInit {
         this.device.owner = values.owner.toString() !== '' ? new Owner(-1, values.owner.toString()) : null;
         this.device.comment = values.comment.toString();
 
-        console.log(this.device.toJson());
 
         if (this.device.id === -1) {
             // new

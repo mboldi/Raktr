@@ -67,8 +67,8 @@ export class EditDeviceModalComponent implements OnInit {
             location: ['', Validators.required],
             barcode: ['', Validators.required, barcodeValidator(this.scannableService, this.device.id)],
             textIdentifier: ['', Validators.required, textIdValidator(this.scannableService, this.device.id)],
-            weight: ['0'],
-            value: ['0'],
+            weight: ['1'],
+            value: ['1'],
             quantity: ['1'],
             acquiredFrom: [''],
             dateOfAcquisition: [new Date()],
@@ -246,5 +246,9 @@ export class EditDeviceModalComponent implements OnInit {
             },
             z_index: 2000
         })
+    }
+
+    closeModal() {
+        this.activeModal.dismiss(0);
     }
 }

@@ -53,7 +53,7 @@ export class Device extends Scannable {
     }
 
     constructor(id: number = -1, name: string = '', barcode: string = '', textIdentifier: string = '', isPublicRentable: boolean = false,
-                maker: string = '', type: string = '', serial: string = '', value: number = 0, weight: number = 0,
+                maker: string = '', type: string = '', serial: string = '', value: number = 1, weight: number = 1,
                 location: Location = null, status: DeviceStatus = DeviceStatus.GOOD, category: Category = null, quantity: number = 1,
                 acquiredFrom: string = '', dateOfAcquisition: Date = new Date(), owner: Owner = null, endOfWarranty: Date = null,
                 comment: string = '') {

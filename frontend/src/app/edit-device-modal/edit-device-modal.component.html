@@ -197,11 +197,15 @@
                         <mat-icon>delete</mat-icon>
                     </button>
                 </mat-slide-toggle>
-                <button mat-raised-button type="button" class="btn btn-info pull-right"
-                        [disabled]="deviceForm.invalid"
-                        (click)="save()">
-                    Mentés
-                </button>
+                    <button mat-raised-button type="button" class="btn btn-info"
+                            (click)="closeModal()">
+                        Vissza
+                    </button>
+                    <button mat-raised-button type="button" class="btn btn-info"
+                            [disabled]="deviceForm.invalid"
+                            (click)="save()">
+                        Mentés
+                    </button>
             </div>
             <div class="clearfix"></div>
         </div>

@@ -2,7 +2,7 @@ import * as $ from 'jquery';
 import {Rent} from '../model/Rent';
 import {RentService} from '../_services/rent.service';
 import {Title} from '@angular/platform-browser';
-import {Component, ElementRef, HostListener, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, HostListener, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {RentItem} from '../model/RentItem';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
@@ -26,7 +26,8 @@ import {Comment} from '../model/Comment';
 @Component({
     selector: 'app-edit-rent',
     templateUrl: './edit-rent.component.html',
-    styleUrls: ['./edit-rent.component.css']
+    styleUrls: ['./edit-rent.component.css'],
+    encapsulation: ViewEncapsulation.None,
 })
 export class EditRentComponent implements OnInit {
     @ViewChild('barcodeInput') input: ElementRef;

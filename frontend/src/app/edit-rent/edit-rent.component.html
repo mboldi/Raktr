@@ -41,7 +41,10 @@
                                         <mat-form-field>
                                             <mat-label>Kivitel típusa</mat-label>
                                             <mat-select [disabled]="!fullAccessMember"
-                                                        formControlName="rentType">
+                                                        formControlName="rentType"
+                                                        matTooltip="Összetett esetén lehetőség van kivitel és visszavitel külön követésére, míg egyszerű esetén csak a visszavitelre lehetséges."
+                                                        matTooltipClass="custom-tooltip"
+                                                        matTooltipPosition="right">
                                                 <mat-option value="SIMPLE">Egyszerű</mat-option>
                                                 <mat-option value="COMPLEX">Összetett</mat-option>
                                             </mat-select>

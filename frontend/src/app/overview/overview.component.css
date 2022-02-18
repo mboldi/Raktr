@@ -9,3 +9,7 @@
 .rent-row:hover {
     background: #f2f2f2 !important;
 }
+
+.custom-backdrop {
+    z-index: 1040;
+}

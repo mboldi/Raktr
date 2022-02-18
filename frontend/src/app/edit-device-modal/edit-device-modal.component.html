@@ -197,8 +197,8 @@
                         <mat-icon>delete</mat-icon>
                     </button>
                 </mat-slide-toggle>
-                    <button mat-raised-button type="button" class="btn btn-info"
-                            (click)="closeModal()">
+                    <button mat-raised-button type="button" mat-dialog-close style="margin-right: 4px"
+                            (click)="this.activeModal.dismiss(0)">
                         Vissza
                     </button>
                     <button mat-raised-button type="button" class="btn btn-info"

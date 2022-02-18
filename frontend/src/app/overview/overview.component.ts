@@ -1,4 +1,4 @@
-import {Component, HostListener, OnInit} from '@angular/core';
+import {Component, HostListener, OnInit, ViewEncapsulation} from '@angular/core';
 import {Title} from '@angular/platform-browser';
 import {RentService} from '../_services/rent.service';
 import {DeviceService} from '../_services/device.service';
@@ -67,11 +67,11 @@ export class OverviewComponent implements OnInit {
                     if (scannable === undefined) {
                         this.showNotification('Nem találtam eszközt ilyen vonalkóddal!', 'warning');
                     } else if (scannable['type_'] === 'device') {
-                        const editModal = this.modalService.open(EditDeviceModalComponent, {size: 'lg', windowClass: 'modal-holder'});
+                        const editModal = this.modalService.open(EditDeviceModalComponent, {size: 'lg', backdrop: false});
                         editModal.componentInstance.title = 'Eszköz szerkesztése';
                         editModal.componentInstance.device = scannable as Device;
                     } else if (scannable['type_'] === 'compositeItem') {
-                        const editModal = this.modalService.open(EditCompositeModalComponent, {size: 'lg', windowClass: 'modal-holder'});
+                        const editModal = this.modalService.open(EditCompositeModalComponent, {size: 'lg', backdrop: false});
                         editModal.componentInstance.title = 'Összetett eszköz szerkesztése';
                         editModal.componentInstance.compositeItem = scannable as CompositeItem;
                     }

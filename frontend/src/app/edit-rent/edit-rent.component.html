@@ -1,0 +1,312 @@
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-1 col-md-2 col-sm-4">
+                <button mat-raised-button type="button" [routerLink]="['/rents']" class="backbutton">
+                    <mat-icon>keyboard_backspace</mat-icon>
+                    Vissza a kivitelekhez
+                </button>
+            </div>
+        </div>
+        <div class="row pt-2">
+            <div class="col-xl-10 col-lg-12">
+                <div class="card" *ngIf="rent">
+                    <div class="card-header {{!rent.isClosed ? 'card-header-warning' : 'card-header-success'}}">
+                        <h3 style="display: inline-block" class="mt-2 mb-1">Kivitel szerkesztése</h3>
+                        <div class="form-inline pull-right" *ngIf="rent.id !== -1">
+                            <button mat-fab type="button" (click)="getPdf()">
+                                <mat-icon>picture_as_pdf</mat-icon>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body container-fluid">
+                        <mat-expansion-panel class="mb-4" expanded="true">
+                            <mat-expansion-panel-header>
+                                <mat-panel-title>
+                                    Kivitel alaptulajdonságai
+                                </mat-panel-title>
+                            </mat-expansion-panel-header>
+
+                            <form [formGroup]="rentDataForm">
+                                <div class="row">
+                                    <div class="col-xl-5 col-lg-6 col-md-8 col-sm-12">
+                                        <mat-form-field class="full-width">
+                                            <mat-label>Kivitel célja</mat-label>
+                                            <input matInput type="text"
+                                                   formControlName="destination"
+                                                   autocomplete="off">
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-xl-4 col-lg-5 col-md-4 col-sm-12">
+                                        <mat-form-field>
+                                            <mat-label>Kivitel típusa</mat-label>
+                                            <mat-select [disabled]="!fullAccessMember"
+                                                        formControlName="rentType"
+                                                        matTooltip="Összetett esetén lehetőség van kivitel és visszavitel külön követésére, míg egyszerű esetén csak a visszavitelre lehetséges."
+                                                        matTooltipClass="custom-tooltip"
+                                                        matTooltipPosition="right">
+                                                <mat-option value="SIMPLE">Egyszerű</mat-option>
+                                                <mat-option value="COMPLEX">Összetett</mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xl-4 col-lg-5 col-md-6 col-sm-12">
+                                        <mat-form-field class="full-width">
+                                            <mat-label>Kiadó</mat-label>
+                                            <input type="text" matInput
+                                                   formControlName="issuer"
+                                                   [matAutocomplete]="autoIssuer"
+                                                   required>
+                                            <mat-autocomplete #autoIssuer="matAutocomplete">
+                                                <mat-option *ngFor="let option of filteredRentIssuingMembers"
+                                                            [value]="option.familyName + ' ' + option.givenName"
+                                                            (onSelectionChange)="setSelectedIssuer(option.username)">
+                                                    {{option.familyName + ' ' + option.givenName}}
+                                                </mat-option>
+                                            </mat-autocomplete>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-xl-4 col-lg-5 col-md-6 col-sm-12">
+                                        <mat-form-field class="full-width">
+                                            <mat-label>Felelősségvállaló</mat-label>
+                                            <input matInput
+                                                   formControlName="renter"
+                                                   autocomplete="off">
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xl-3 col-lg-4 col-md-5  col-sm-12">
+                                        <mat-form-field class="full-width">
+                                            <mat-label>Kivitel ideje</mat-label>
+                                            <input matInput [matDatepicker]="picker_out"
+                                                   formControlName="outDate"
+                                                   autocomplete="off" (dateInput)="setCurrOutDate($event)">
+                                            <mat-datepicker-toggle matSuffix [for]="picker_out"></mat-datepicker-toggle>
+                                            <mat-datepicker #picker_out></mat-datepicker>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-xl-3 col-lg-4 col-md-5  col-sm-12">
+                                        <mat-form-field class="full-width">
+                                            <mat-label>Várható visszaérkezés</mat-label>
+                                            <input matInput [matDatepicker]="picker_exp"
+                                                   formControlName="expBackDate"
+                                                   [min]="currentOutDate"
+                                                   autocomplete="off">
+                                            <mat-datepicker-toggle matSuffix [for]="picker_exp"></mat-datepicker-toggle>
+                                            <mat-datepicker #picker_exp></mat-datepicker>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-xl-3 col-lg-4 col-md-5  col-sm-12">
+                                        <mat-form-field class="full-width">
+                                            <mat-label>Tényleges visszaérkezés</mat-label>
+                                            <input matInput [matDatepicker]="picker_back"
+                                                   formControlName="actBackDate"
+                                                   [min]="currentOutDate" (dateInput)="setActBackDate($event)"
+                                                   autocomplete="off">
+                                            <mat-datepicker-toggle matSuffix
+                                                                   [for]="picker_back"></mat-datepicker-toggle>
+                                            <mat-datepicker #picker_back></mat-datepicker>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="pull-right">
+                                            <mat-slide-toggle
+                                                    *ngIf="fullAccessMember && rent.id !== -1 && !rent.isClosed"
+                                                    class="pt-3"
+                                                    (change)="deleteConfirmed = $event.checked"
+                                                    color="warn">
+                                                <button mat-icon-button color="warn"
+                                                        type="button" (click)="delete(rent)"
+                                                        [disabled]="!deleteConfirmed">
+                                                    <mat-icon>delete</mat-icon>
+                                                </button>
+                                            </mat-slide-toggle>
+
+                                            <button mat-raised-button type="button" class="btn btn-danger mr-2"
+                                                    [disabled]="!isFinalizable()"
+                                                    *ngIf="fullAccessMember && !rent.isClosed"
+                                                    (click)="close()">
+                                                Lezárás
+                                            </button>
+
+                                            <button mat-raised-button type="button" class="btn btn-danger mr-2"
+                                                    *ngIf="admin && rent.isClosed"
+                                                    (click)="open()">
+                                                Lezárás visszavonása
+                                            </button>
+
+                                            <button mat-raised-button type="submit" class="btn btn-info"
+                                                    *ngIf="!rent.isClosed || admin"
+                                                    (click)="save()">
+                                                Mentés
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </mat-expansion-panel>
+
+                        <h4 *ngIf="rent.id === -1">
+                            Mentsd el a kivitelt eszközök hozzáadásához!
+                        </h4>
+                        <div *ngIf="rent.id !== -1">
+                            <h4>Eszközök:</h4>
+                            <div class="row">
+                                <div class="col-xl-4 col-lg-5 col-md-6 col-sm-12">
+                                    <mat-form-field class="full-width" *ngIf="!rent.isClosed"
+                                                    hintLabel="Mód kiválasztásához kattints a táblázat megfelelő fejlécére!">
+                                        <input matInput [placeholder]="barcodePlaceholder" #barcodeInput
+                                               [formControl]="addRentFormControl"
+                                               (keyup.enter)="barcodeRead()"
+                                               autocomplete="off">
+                                        <button mat-button mat-icon-button matSuffix type="button"
+                                                *ngIf="addRentFormControl.value"
+                                                (click)="barcodeRead()">
+                                            <mat-icon>add</mat-icon>
+                                        </button>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-xl-4 col-lg-2 col-md-1 col-sm-0"></div>
+                                <mat-form-field class="deviceSearchField col-xl-4 col-lg-5 col-md-6 col-sm-12">
+                                    <mat-label>Keresés...</mat-label>
+                                    <input matInput class="searchInput" type="text" [formControl]="searchControl"
+                                           (ngModelChange)="filterRentItems($event)"
+                                           autocomplete="off">
+                                    <button mat-button matSuffix mat-icon-button
+                                            *ngIf="searchControl.value" aria-label="search">
+                                        <mat-icon (click)="searchControl.setValue('')">clear</mat-icon>
+                                    </button>
+                                </mat-form-field>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead class="text-orange">
+                                    <th>
+                                        Eszköz neve
+                                    </th>
+                                    <th>
+                                        Kivitt mennyiség
+                                    </th>
+                                    <th>
+                                        Tömeg
+                                    </th>
+                                    <th *ngIf="rent.type === 1"
+                                        (click)="pack($event)" class="clickable"
+                                        [ngClass]="{'selected' : barcodeMode === 'pack'}">
+                                        Elpakolva
+                                    </th>
+                                    <th (click)="back($event)" class="clickable"
+                                        [ngClass]="{'selected' : barcodeMode === 'back'}">
+                                        Visszaérkezett
+                                    </th>
+                                    <th *ngIf="!rent.isClosed">
+                                        Törlés
+                                    </th>
+                                    </thead>
+                                    <tbody>
+                                    <tr class="device-row"
+                                        *ngFor="let rentItem of filteredRentItems; let i = index">
+                                        <td>
+                                            {{rentItem.scannable.name}}
+                                        </td>
+                                        <td>
+                                            <input matInput type="number" value="{{rentItem.outQuantity}}"
+                                                   min="1"
+                                                   max="{{rentItem.scannable.type_ === 'compositeItem' ? 1 : rentItem.scannable['quantity']}}"
+                                                   autocomplete="off"
+                                                   [disabled]="rentItem.scannable.type_ === 'compositeItem' || rent.isClosed"
+                                                   style="text-align: right"
+                                                   (change)="quantityChanged($event, rentItem)">
+                                        </td>
+                                        <td>
+                                            {{rentItem.scannable.getWeight() * rentItem.outQuantity / 1000}} kg
+                                        </td>
+                                        <td *ngIf="rent.type === 1">
+                                            <mat-checkbox color="primary"
+                                                          [disabled]="rent.isClosed"
+                                                          [ngModel]="rentItem.backStatus === 0 || rentItem.backStatus === 1"
+                                                          (change)="packedChanged($event, rentItem)"></mat-checkbox>
+                                        </td>
+                                        <td>
+                                            <mat-checkbox color="primary"
+                                                          [disabled]="rent.isClosed"
+                                                          [ngModel]="rentItem.backStatus === 1"
+                                                          (change)="backChanged($event, rentItem)"></mat-checkbox>
+                                        </td>
+                                        <td class="pb-0 pt-0 " *ngIf="!rent.isClosed">
+                                            <button mat-raised-button type="button"
+                                                    class="btn btn-info pull-center btn-just-icon"
+                                                    data-toggle="modal" data-target=".edit-rental-dialog"
+                                                    [disabled]="(rent.type === 0 && rentItem.backStatus === 1)
+                                                     || (rent.type === 1 && rentItem.backStatus !== 2)
+                                                     || rent.isClosed"
+                                                    (click)="removeFromRent(rentItem)">
+                                                <i class="material-icons">delete</i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" *ngIf="rent != undefined && rent.id !== -1">
+                    <div class="card-header card-header-primary">
+                        <h4>Megjegyzések</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="comment-field">
+                            <h5 class="mb-0 pt-1 pl-2">Új megjegyzés:</h5>
+                            <form [formGroup]="newCommentForm">
+                                <mat-form-field class="full-width m-0 pl-3 pr-3">
+                                    <input matInput type="text"
+                                           formControlName="commentBody"
+                                           bind-innerText="newComment"
+                                           autocomplete="off">
+                                </mat-form-field>
+                                <button mat-raised-button type="submit" class="btn btn-info m-0 ml-3 mb-2"
+                                        (click)="sendComment()">
+                                    Mentés
+                                </button>
+                            </form>
+                        </div>
+                        <div class="comment-field mt-3 ml-0 container col-sm-12" *ngFor="let comment of rent.comments">
+                            <div class="row">
+                                <h5 class="col-sm-10 pl-2 pt-1 mb-0 font-weight-bolder">{{comment.writer.nickName}}
+                                    :</h5>
+                            </div>
+                            <div class="row date-delete-row">
+                                <p class="pl-2 pt-0 mb-0 text-muted">{{comment.dateOfWriting | date:'medium'}}  </p>
+                                <a class="pl-1 comment-deleter"
+                                   *ngIf="comment.writer.id === user.id || admin"
+                                   (click)="deleteComment(comment)">
+                                    Megjegyzés törlése
+                                </a>
+                            </div>
+                            <mat-divider></mat-divider>
+                            <div class="row pt-1 pl-2">
+                                <blockquote class="blockquote">
+                                    {{comment.body}}
+                                </blockquote>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12" *ngIf="!rent">
+                <h1 style="text-align: center">Hoppá!</h1>
+                <h3 style="text-align: center">Nincs ilyen ID-vel rendelkező kivitel, vagy csak vak vagyok és nem
+                    találom :(
+                </h3>
+            </div>
+        </div>
+    </div>
+</div>

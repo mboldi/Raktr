@@ -1,0 +1,213 @@
+<div class="modal-header">
+    <h3>{{title}}</h3>
+</div>
+
+<div class="modal-body">
+    <form [formGroup]="deviceForm">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-7  col-sm-12">
+                    <mat-form-field class="full-width-form-element">
+                        <mat-label>Eszköz neve</mat-label>
+                        <input matInput type="text" required autocomplete="off"
+                               formControlName="name">
+                    </mat-form-field>
+                </div>
+                <div class="col-md-5 col-sm-12 publicRentableCheckbox">
+                    <mat-checkbox class="full-width-form-element"
+                                  formControlName="isPublicRentable">
+                        Bárki által kölcsönözhető?
+                    </mat-checkbox>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-7  col-sm-12">
+                    <mat-form-field class="full-width-form-element">
+                        <input matInput placeholder="Azonosító" type="text" required
+                               formControlName="textIdentifier"
+                               autocomplete="off">
+                        <mat-error *ngIf="deviceForm.get('textIdentifier').hasError('textIdTaken')">
+                            Ez az azonosító már foglalt!
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="col-md-5  col-sm-12">
+                    <mat-form-field class="full-width-form-element" hintLabel="7 számból kell álljon!">
+                        <input matInput placeholder="Vonalkód tartalma" type="text" required
+                               minlength="7" maxlength="7"
+                               formControlName="barcode" #barcode
+                               autocomplete="off">
+                        <mat-error *ngIf="deviceForm.get('barcode').hasError('barcodeTaken')">
+                            Ez a vonalkód már foglalt!
+                        </mat-error>
+                        <mat-hint align="end">{{barcode.value?.length || 0}}/7</mat-hint>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-5  col-sm-12">
+                    <mat-form-field class="full-width-form-element">
+                        <input matInput placeholder="Gyártó" type="text" autocomplete="off"
+                               formControlName="maker">
+                    </mat-form-field>
+                </div>
+                <div class="col-md-7  col-sm-12">
+                    <mat-form-field class="full-width-form-element">
+                        <input matInput placeholder="Típus" type="text" autocomplete="off"
+                               formControlName="type">
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6  col-sm-12">
+                    <mat-form-field class="full-width-form-element">
+                        <mat-label>Kategória</mat-label>
+                        <input type="text" matInput
+                               formControlName="category"
+                               [matAutocomplete]="autoCategory"
+                               required>
+                        <mat-autocomplete #autoCategory="matAutocomplete">
+                            <mat-option *ngFor="let option of filteredCategoryOptions"
+                                        [value]="option.name">
+                                {{option.name}}
+                            </mat-option>
+                        </mat-autocomplete>
+                    </mat-form-field>
+                </div>
+                <div class="col-md-6  col-sm-12">
+                    <mat-form-field class="full-width-form-element">
+                        <mat-label>Tárolási hely</mat-label>
+                        <input type="text" matInput
+                               formControlName="location"
+                               [matAutocomplete]="autoLocation"
+                               required>
+                        <mat-autocomplete #autoLocation="matAutocomplete">
+                            <mat-option *ngFor="let option of filteredLocationOptions"
+                                        [value]="option.name">
+                                {{option.name}}
+                            </mat-option>
+                        </mat-autocomplete>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6  col-sm-12">
+                    <mat-form-field class="full-width-form-element">
+                        <input matInput placeholder="Beszerzés forrása" type="text" autocomplete="off"
+                               formControlName="acquiredFrom">
+                    </mat-form-field>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-12">
+                    <mat-form-field class="full-width">
+                        <mat-label>Beszerzés ideje</mat-label>
+                        <input matInput [matDatepicker]="picker_acq"
+                               formControlName="dateOfAcquisition"
+                               autocomplete="off">
+                        <mat-datepicker-toggle matSuffix
+                                               [for]="picker_acq"></mat-datepicker-toggle>
+                        <mat-datepicker #picker_acq></mat-datepicker>
+                    </mat-form-field>
+                </div>
+                <div class="col-lg-3 col-md-6  col-sm-12">
+                    <mat-form-field class="full-width">
+                        <mat-label>Garancia vége</mat-label>
+                        <input matInput [matDatepicker]="picker_warranty"
+                               formControlName="endOfWarranty"
+                               autocomplete="off">
+                        <mat-datepicker-toggle matSuffix
+                                               [for]="picker_warranty"></mat-datepicker-toggle>
+                        <mat-datepicker #picker_warranty></mat-datepicker>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6  col-sm-12">
+                    <mat-form-field class="full-width-form-element">
+                        <input matInput placeholder="Tömeg (gramm)" type="number" min="1"
+                               formControlName="weight">
+                        <span matSuffix>g</span>
+                    </mat-form-field>
+                </div>
+                <div class="col-md-6  col-sm-12">
+                    <mat-form-field class="full-width-form-element">
+                        <input matInput placeholder="Érték (Ft)" type="number" min="1"
+                               formControlName="value">
+                        <span matSuffix>Ft</span>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6  col-sm-12">
+                    <mat-form-field class="full-width-form-element">
+                        <mat-label>Tulajdonos</mat-label>
+                        <input type="text" matInput
+                               formControlName="owner"
+                               [matAutocomplete]="autoOwner">
+                        <mat-autocomplete #autoOwner="matAutocomplete">
+                            <mat-option *ngFor="let option of filteredOwnerOptions"
+                                        [value]="option.name">
+                                {{option.name}}
+                            </mat-option>
+                        </mat-autocomplete>
+                    </mat-form-field>
+                </div>
+                <div class="col-lg-6 col-md-12">
+                    <mat-radio-group aria-label="state" class="state-radio-buttons">
+                        <mat-radio-button value="0" (change)="onStatusChange($event.value)"
+                                          [checked]="device.status.toString() === 'GOOD' ||
+                                                        device.status == 0">
+                            Jó
+                        </mat-radio-button>
+                        <mat-radio-button value="1" (change)="onStatusChange($event.value)"
+                                          [checked]="device.status.toString() === 'NEEDS_REPAIR' ||
+                                                        device.status == 1">
+                            Javításra szorul
+                        </mat-radio-button>
+                        <mat-radio-button value="2" (change)="onStatusChange($event.value)"
+                                          [checked]="device.status.toString() === 'SCRAPPED' ||
+                                                        device.status == 2">
+                            Selejtezve
+                        </mat-radio-button>
+                    </mat-radio-group>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6 col-md-12">
+                    <mat-form-field class="full-width-form-element">
+                        <input matInput placeholder="Birtokolt mennyiség azonos vonalkód alatt"
+                               formControlName="quantity"
+                               type="number" min="1" [defaultValue]="1" required>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="row">
+                <mat-form-field class="col-md-12">
+                    <mat-label>Megjegyzés</mat-label>
+                    <textarea matInput formControlName="comment"></textarea>
+                </mat-form-field>
+            </div>
+            <div class="pull-right">
+                <mat-slide-toggle *ngIf="admin && device.id !== -1"
+                                  class="pt-3"
+                                  (change)="deleteConfirmed = $event.checked"
+                                  color="warn">
+                    <button mat-icon-button color="warn" type="button"
+                            (click)="delete(device)"
+                            [disabled]="!deleteConfirmed">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                </mat-slide-toggle>
+                    <button mat-raised-button type="button" mat-dialog-close style="margin-right: 4px"
+                            (click)="this.activeModal.dismiss(0)">
+                        Vissza
+                    </button>
+                    <button mat-raised-button type="button" class="btn btn-info"
+                            [disabled]="deviceForm.invalid"
+                            (click)="save()">
+                        Mentés
+                    </button>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+    </form>
+</div>

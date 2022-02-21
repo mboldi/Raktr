@@ -3,8 +3,8 @@ import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {environment} from '../../environments/environment';
 import {map} from 'rxjs/operators';
-import {Owner} from '../model/Owner';
-import {Device} from '../model/Device';
+import {Owner} from '../_model/Owner';
+import {Device} from '../_model/Device';
 
 @Injectable({
     providedIn: 'root'

@@ -1,9 +1,9 @@
 import {Component, OnInit} from '@angular/core';
 import {Title} from '@angular/platform-browser';
 import {FormControl} from '@angular/forms';
-import {Device} from '../model/Device';
+import {Device} from '../_model/Device';
 import {DeviceService} from '../_services/device.service';
-import {CompositeItem} from '../model/CompositeItem';
+import {CompositeItem} from '../_model/CompositeItem';
 import {CompositeService} from '../_services/composite.service';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {EditDeviceModalComponent} from '../edit-device-modal/edit-device-modal.component';
@@ -11,9 +11,9 @@ import {EditCompositeModalComponent} from '../edit-composite-modal/edit-composit
 import * as $ from 'jquery';
 import {Sort} from '@angular/material/sort';
 import {MatPaginatorIntl, PageEvent} from '@angular/material/paginator';
-import {Category} from '../model/Category';
-import {DeviceStatus} from '../model/DeviceStatus';
-import {Location} from '../model/Location';
+import {Category} from '../_model/Category';
+import {DeviceStatus} from '../_model/DeviceStatus';
+import {Location} from '../_model/Location';
 import {HunPaginator} from '../helpers/hun-paginator';
 
 @Component({

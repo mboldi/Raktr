@@ -1,12 +1,12 @@
 import {Component, OnInit} from '@angular/core';
-import {Project} from '../model/Project';
+import {Project} from '../_model/Project';
 import {UserService} from '../_services/user.service';
 import {Title} from '@angular/platform-browser';
 import {ActivatedRoute, Router} from '@angular/router';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ProjectService} from '../_services/project.service';
-import {User} from '../model/User';
+import {User} from '../_model/User';
 import * as $ from 'jquery';
 
 @Component({

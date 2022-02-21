@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {Title} from '@angular/platform-browser';
 import {MatPaginatorIntl, PageEvent} from '@angular/material/paginator';
 import {HunPaginator} from '../helpers/hun-paginator';
-import {Project} from '../model/Project';
+import {Project} from '../_model/Project';
 import {FormControl} from '@angular/forms';
 import {Router} from '@angular/router';
 import {ProjectService} from '../_services/project.service';

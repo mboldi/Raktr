@@ -1,21 +1,21 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {CompositeItem} from '../model/CompositeItem';
+import {CompositeItem} from '../_model/CompositeItem';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
-import {Location} from '../model/Location';
+import {Location} from '../_model/Location';
 import {CompositeService} from '../_services/composite.service';
 import {LocationService} from '../_services/location.service';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
-import {Device} from '../model/Device';
+import {Device} from '../_model/Device';
 import * as $ from 'jquery';
 import {DeviceService} from '../_services/device.service';
 import {ScannableService} from '../_services/scannable.service';
 import {UserService} from '../_services/user.service';
-import {User} from '../model/User';
+import {User} from '../_model/User';
 import {BarcodePurifier} from '../_services/barcode-purifier.service';
 import {switchMap, tap} from 'rxjs/operators';
 import {barcodeValidator} from '../helpers/barcode.validator';
 import {textIdValidator} from '../helpers/textId.validator';
-import {Category} from '../model/Category';
+import {Category} from '../_model/Category';
 import {CategoryService} from '../_services/category.service';
 
 @Component({

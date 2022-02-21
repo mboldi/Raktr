@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
-import {Rent} from '../model/Rent';
-import {RentItem} from '../model/RentItem';
-import {Comment} from '../model/Comment';
+import {Rent} from '../_model/Rent';
+import {RentItem} from '../_model/RentItem';
+import {Comment} from '../_model/Comment';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {environment} from '../../environments/environment';
 import {saveAs} from 'file-saver';

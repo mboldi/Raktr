@@ -1,27 +1,27 @@
 import * as $ from 'jquery';
-import {Rent} from '../model/Rent';
+import {Rent} from '../_model/Rent';
 import {RentService} from '../_services/rent.service';
 import {Title} from '@angular/platform-browser';
 import {Component, ElementRef, HostListener, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {RentItem} from '../model/RentItem';
+import {RentItem} from '../_model/RentItem';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {DeviceService} from '../_services/device.service';
-import {Device} from '../model/Device';
+import {Device} from '../_model/Device';
 import {DeviceToRentModalComponent} from '../device-to-rent-modal/device-to-rent-modal.component';
-import {Scannable} from '../model/Scannable';
-import {BackStatus} from '../model/BackStatus';
+import {Scannable} from '../_model/Scannable';
+import {BackStatus} from '../_model/BackStatus';
 import {ScannableService} from '../_services/scannable.service';
 import {UserService} from '../_services/user.service';
-import {CompositeItem} from '../model/CompositeItem';
+import {CompositeItem} from '../_model/CompositeItem';
 import {MatCheckboxChange} from '@angular/material/checkbox';
 import {PdfGenerationModalComponent} from '../pdf-generation-modal/pdf-generation-modal.component';
 import {BarcodePurifier} from '../_services/barcode-purifier.service';
-import {RentType} from '../model/RentType';
+import {RentType} from '../_model/RentType';
 import {MatDatepickerInputEvent} from '@angular/material/datepicker';
-import {User} from '../model/User';
-import {Comment} from '../model/Comment';
+import {User} from '../_model/User';
+import {Comment} from '../_model/Comment';
 
 @Component({
     selector: 'app-edit-rent',

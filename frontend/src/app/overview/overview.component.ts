@@ -2,14 +2,14 @@ import {Component, HostListener, OnInit, ViewEncapsulation} from '@angular/core'
 import {Title} from '@angular/platform-browser';
 import {RentService} from '../_services/rent.service';
 import {DeviceService} from '../_services/device.service';
-import {Rent} from '../model/Rent';
-import {Device} from '../model/Device';
+import {Rent} from '../_model/Rent';
+import {Device} from '../_model/Device';
 import {FormControl} from '@angular/forms';
 import {EditDeviceModalComponent} from '../edit-device-modal/edit-device-modal.component';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {ScannableService} from '../_services/scannable.service';
 import {EditCompositeModalComponent} from '../edit-composite-modal/edit-composite-modal.component';
-import {CompositeItem} from '../model/CompositeItem';
+import {CompositeItem} from '../_model/CompositeItem';
 import {Router} from '@angular/router';
 import {BarcodePurifier} from '../_services/barcode-purifier.service';
 

@@ -2,7 +2,6 @@ import {Commentable} from './Commentable';
 import {ProblemSeverity} from './ProblemSeverity';
 import {Scannable} from './Scannable';
 import {User} from './User';
-import {DeviceStatus} from './DeviceStatus';
 import {TicketStatus} from './TicketStatus';
 
 export class Ticket extends Commentable {
@@ -22,8 +21,8 @@ export class Ticket extends Commentable {
         );
     }
 
-    constructor(id: number, body: string, dateOfWriting: Date, writer: User, status: TicketStatus,
-                scannableOfProblem: Scannable, severity: ProblemSeverity) {
+    constructor(id: number = -1, body: string = '', dateOfWriting: Date = new Date(), writer: User = null, status: TicketStatus = TicketStatus.OPEN,
+                scannableOfProblem: Scannable = null, severity: ProblemSeverity = ProblemSeverity.SEVERE) {
         super('ticket', id, body, dateOfWriting, writer);
         this.status = status;
         this.scannableOfProblem = scannableOfProblem;

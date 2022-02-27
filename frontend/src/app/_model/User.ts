@@ -25,17 +25,18 @@ export class User {
         return userFromJson;
     }
 
-    static isFullAccessMember(user: User): boolean {
-        return this.checkRole(user, 'ROLE_Stúdiós');
+    isFullAccessMember(): boolean {
+        return this.checkRole('ROLE_Stúdiós');
     }
 
-    static isAdmin(user: User): boolean {
-        return this.checkRole(user, 'ROLE_ADMIN');
+    isAdmin(): boolean {
+        return this.checkRole('ROLE_ADMIN');
     }
 
-    static checkRole(user: User, wantedRole: string): boolean {
-        for (let i = 0; i < user.roles.length; i++) {
-            const role = user.roles[i];
+    checkRole(wantedRole: string): boolean {
+        for (let i = 0; i < this.roles.length; i++) {
+            const role = this.roles[i];
+
             if (role.roleName === wantedRole) {
                 return true;
             }

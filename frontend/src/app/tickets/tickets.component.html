@@ -17,7 +17,7 @@
                                 </mat-form-field>
                                 <button class="ml-3 addButton" color="warn" mat-mini-fab mat-icon-button
                                         aria-label="Add"
-                                        [routerLink]="['/rent', 'new']">
+                                        (click)="create()">
                                     <mat-icon style="color: white">add</mat-icon>
                                 </button>
                             </div>
@@ -52,7 +52,7 @@
                                 </th>
                                 </thead>
                                 <tbody>
-                                <tr class="ticket-row" *ngFor="let ticket of pagedTickets" (click)="openTicket(ticket.id)">
+                                <tr class="ticket-row" *ngFor="let ticket of pagedTickets" (click)="editTicket(ticket)">
                                     <td class="icon-column">
                                         <mat-icon style="color: #c62828" *ngIf="ticket.severity === 2">report</mat-icon>
                                         <mat-icon style="color: #ffbe3b" *ngIf="ticket.severity === 1">warning</mat-icon>

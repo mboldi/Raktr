@@ -88,7 +88,7 @@ export class EditDeviceModalComponent implements OnInit {
         }
 
         this.userService.getCurrentUser().subscribe(user => {
-            this.admin = User.isFullAccessMember(user);
+            this.admin = user.isFullAccessMember();
         });
 
         this.deviceForm

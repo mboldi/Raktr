@@ -9,6 +9,9 @@ import {User} from '../_model/User';
 import {ProblemSeverity} from '../_model/ProblemSeverity';
 import {Device} from '../_model/Device';
 import {TicketStatus} from '../_model/TicketStatus';
+import {EditTicketComponent} from '../edit-ticket/edit-ticket.component';
+import {TicketService} from '../_services/ticket.service';
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
     selector: 'app-tickets',
@@ -32,21 +35,19 @@ export class TicketsComponent implements OnInit {
         new Date(), new User(0, 'asdsad', 'asasdasdd', 'asd', 'asd', 'sad'),
         TicketStatus.OPEN, new Device(0, 'eszköz'), ProblemSeverity.SEVERE)];
 
-    constructor() {
+    constructor(
+        private ticketService: TicketService,
+        private modalService: NgbModal
+    ) {
         this.filteredTickets = this.tickets;
         this.pagedTickets = this.tickets;
     }
 
     ngOnInit(): void {
-        console.log(this.tickets[0].writer.nickName)
     }
 
     setTab(tab: string) {
         this.activeTab = tab;
-    }
-
-    create() {
-
     }
 
     private setTicketsPage() {
@@ -87,8 +88,27 @@ export class TicketsComponent implements OnInit {
         this.setTicketsPage();
     }
 
-    openTicket(id) {
+    create() {
+        const ticketModal = this.modalService.open(EditTicketComponent, {size: 'lg', backdrop: false});
+        ticketModal.componentInstance.title = 'Új hibajegy';
+        ticketModal.componentInstance.ticket = new Ticket();
+    }
 
+    editTicket(ticket: Ticket) {
+        const ticketModal = this.modalService.open(EditTicketComponent, {size: 'lg', backdrop: false});
+        ticketModal.componentInstance.title = 'Hibajegy szerkesztése';
+        ticketModal.componentInstance.ticket = ticket;
+
+        ticketModal.result.catch(reason => {
+            if (reason === 'delete') {
+                this.ticketService.getTickets().subscribe(tickets => {
+                    this.tickets = tickets;
+                    this.sortedTickets = tickets;
+
+                    this.setTicketsPage();
+                });
+            }
+        })
     }
 }
 

@@ -53,7 +53,7 @@ export class EditCompositeModalComponent implements OnInit {
         }
 
         this.userService.getCurrentUser().subscribe(user => {
-            this.fullAccessMember = User.isFullAccessMember(user);
+            this.fullAccessMember = user.isFullAccessMember();
         });
     }
 

@@ -4,12 +4,11 @@ import {Observable} from 'rxjs';
 import {environment} from '../../environments/environment';
 import {map} from 'rxjs/operators';
 import {Ticket} from '../_model/Ticket';
-import {Rent} from '../_model/Rent';
 
 @Injectable({
     providedIn: 'root'
 })
-export class RentService {
+export class TicketService {
 
     constructor(private http: HttpClient) {
     }

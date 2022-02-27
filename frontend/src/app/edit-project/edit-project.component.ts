@@ -48,8 +48,8 @@ export class EditProjectComponent implements OnInit {
         this.userService.getCurrentUser().subscribe(user => {
             this.user = user;
 
-            this.fullAccessMember = User.isFullAccessMember(user);
-            this.admin = User.isAdmin(user);
+            this.fullAccessMember = user.isFullAccessMember();
+            this.admin = user.isAdmin();
 
             if (this.route.snapshot.paramMap.get('id') === 'new') {
                 this.project.prodManager = this.user;

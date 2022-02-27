@@ -55,12 +55,12 @@
                                 <tr class="ticket-row" *ngFor="let ticket of pagedTickets" (click)="openTicket(ticket.id)">
                                     <td class="icon-column">
                                         <mat-icon style="color: #c62828" *ngIf="ticket.severity === 2">report</mat-icon>
-                                        <mat-icon style="color: #ffeb3b" *ngIf="ticket.severity === 1">warning</mat-icon>
+                                        <mat-icon style="color: #ffbe3b" *ngIf="ticket.severity === 1">warning</mat-icon>
                                         <mat-icon style="color: #8bc34a" *ngIf="ticket.severity === 0">announcement</mat-icon>
                                     </td>
                                     <td class="icon-column">
-                                        <mat-icon style="color: #c62828" *ngIf="ticket.status === 0">mark_email_unread</mat-icon>
-                                        <mat-icon style="color: #ffeb3b" *ngIf="ticket.status === 1">published_with_changes</mat-icon>
+                                        <mat-icon style="color: #c62828" *ngIf="ticket.status === 0">help_outline</mat-icon>
+                                        <mat-icon style="color: #ffbe3b" *ngIf="ticket.status === 1">construction</mat-icon>
                                         <mat-icon style="color: #8bc34a" *ngIf="ticket.status === 2">done</mat-icon>
                                     </td>
                                     <td>

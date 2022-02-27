@@ -244,7 +244,8 @@ export class DevicesComponent implements OnInit {
                 editDeviceModal.componentInstance.title = 'Új eszköz';
 
                 editDeviceModal.result.catch(result => {
-                    if (result !== 0) {
+                    console.log(result);
+                    if (result !== 0 && result !== 1) {
                         const index = this.devices.indexOf(result);
                         if (index === -1) {
                             this.devices.push(result as Device);

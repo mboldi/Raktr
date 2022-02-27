@@ -29,7 +29,7 @@ export class TicketService {
     addTicket(ticket: Ticket): Observable<Ticket> {
         const headers = new HttpHeaders().set('Content-Type', 'application/json');
 
-        return this.http.post<Ticket>(`${environment.apiUrl}/api/ticket`, ticket.toJson, {headers: headers})
+        return this.http.post<Ticket>(`${environment.apiUrl}/api/ticket`, ticket.toJson(), {headers: headers})
             .pipe(
                 map(ticket_ => Ticket.fromJson(ticket_))
             );
@@ -38,7 +38,7 @@ export class TicketService {
     updateTicket(ticket: Ticket): Observable<Ticket> {
         const headers = new HttpHeaders().set('Content-Type', 'application/json');
 
-        return this.http.put<Ticket>(`${environment.apiUrl}/api/ticket`, ticket.toJson, {headers: headers})
+        return this.http.put<Ticket>(`${environment.apiUrl}/api/ticket`, ticket.toJson(), {headers: headers})
             .pipe(
                 map(ticket_ => Ticket.fromJson(ticket_))
             );
@@ -48,7 +48,7 @@ export class TicketService {
         const headers = new HttpHeaders().set('Content-Type', 'application/json');
 
         return this.http.request<Ticket>('delete', `${environment.apiUrl}/api/ticket`,
-            {headers: headers, body: ticket.toJson})
+            {headers: headers, body: ticket.toJson()})
             .pipe(
                 map(ticket_ => Ticket.fromJson(ticket_))
             );

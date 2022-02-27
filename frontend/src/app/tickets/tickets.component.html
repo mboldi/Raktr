@@ -11,7 +11,7 @@
                                     <mat-label>Keresés...</mat-label>
                                     <input matInput class="searchInput" type="text" [formControl]="searchControl" autocomplete="off">
                                     <button mat-button matSuffix mat-icon-button
-                                            *ngIf="searchControl.value !== ''" aria-label="deviceSearch">
+                                            *ngIf="searchControl.value !== ''" aria-label="ticketSearch">
                                         <mat-icon (click)="searchControl.setValue('')">clear</mat-icon>
                                     </button>
                                 </mat-form-field>

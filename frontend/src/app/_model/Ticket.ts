@@ -36,6 +36,7 @@ export class Ticket extends Commentable {
     toJsonWithoutRoot(): string {
         const ticketJson = JSON.parse(JSON.stringify(this));
         ticketJson['@type'] = 'ticket';
+        ticketJson['scannableOfProblem'] = this.scannableOfProblem.toJsonWithoutRoot();
         return JSON.stringify(ticketJson);
     }
 }

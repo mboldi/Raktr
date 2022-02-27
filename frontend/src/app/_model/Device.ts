@@ -76,7 +76,11 @@ export class Device extends Scannable {
         return this.weight;
     }
 
-    toJson(): String {
+    toJson(): string {
         return Device.toJsonString(this);
+    }
+
+    toJsonWithoutRoot(): string {
+        return Device.toJsonWithoutRoot(this);
     }
 }

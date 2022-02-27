@@ -5,10 +5,6 @@ import {HunPaginator} from '../helpers/hun-paginator';
 import {FormControl} from '@angular/forms';
 import {Ticket} from '../_model/Ticket';
 import {Sort} from '@angular/material/sort';
-import {User} from '../_model/User';
-import {ProblemSeverity} from '../_model/ProblemSeverity';
-import {Device} from '../_model/Device';
-import {TicketStatus} from '../_model/TicketStatus';
 import {EditTicketComponent} from '../edit-ticket/edit-ticket.component';
 import {TicketService} from '../_services/ticket.service';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
@@ -31,16 +27,18 @@ export class TicketsComponent implements OnInit {
     currPageIndex = 0;
     private currPageSize = 25;
     private sortedTickets: Ticket[];
-    private tickets = [new Ticket(0, 'asdasdasdasd',
-        new Date(), new User(0, 'asdsad', 'asasdasdd', 'asd', 'asd', 'sad'),
-        TicketStatus.OPEN, new Device(0, 'eszköz'), ProblemSeverity.SEVERE)];
+    private tickets: Ticket[]
 
     constructor(
         private ticketService: TicketService,
         private modalService: NgbModal
     ) {
-        this.filteredTickets = this.tickets;
-        this.pagedTickets = this.tickets;
+        ticketService.getTickets().subscribe(tickets => {
+            this.tickets = tickets;
+
+            this.filteredTickets = this.tickets;
+            this.pagedTickets = this.tickets;
+        });
     }
 
     ngOnInit(): void {

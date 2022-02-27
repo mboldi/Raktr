@@ -25,6 +25,8 @@ export abstract class Scannable {
 
     abstract getWeight(): number;
 
-    abstract toJson(): String;
+    abstract toJson(): string;
+
+    abstract toJsonWithoutRoot(): string;
 }
 

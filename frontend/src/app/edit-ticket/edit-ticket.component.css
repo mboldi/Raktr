@@ -2,3 +2,7 @@
     margin-left: 15px;
     font-size: 0.8em;
 }
+
+.cdk-global-overlay-wrapper, .cdk-overlay-container {
+    z-index: 3000 !important;
+}

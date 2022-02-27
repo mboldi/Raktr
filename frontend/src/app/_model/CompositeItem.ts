@@ -73,9 +73,13 @@ export class CompositeItem extends Scannable {
         return sum;
     }
 
-    toJson(): String {
+    toJson(): string {
         const compositeJson = JSON.parse(JSON.stringify(this));
         compositeJson['@type'] = 'compositeItem';
         return `{\"CompositeItem\": ${JSON.stringify(compositeJson)}}`;
+    }
+
+    toJsonWithoutRoot(): string {
+        return CompositeItem.toJsonWithoutRoot(this);
     }
 }

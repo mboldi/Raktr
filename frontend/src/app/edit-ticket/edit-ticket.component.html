@@ -19,6 +19,59 @@
 </div>
 
 <div class="modal-body">
+    <mat-expansion-panel [expanded]="ticket.scannableOfProblem === undefined || ticket.scannableOfProblem === null">
+        <mat-expansion-panel-header>
+            <mat-panel-title>
+                Hibához tartozó eszköz
+            </mat-panel-title>
+            <mat-panel-description>
+                <div *ngIf="ticket.scannableOfProblem !== undefined && ticket.scannableOfProblem !== null">
+                    {{ticket.scannableOfProblem.name}} - {{ticket.scannableOfProblem.textIdentifier}}
+                </div>
+                <div *ngIf="ticket.scannableOfProblem === undefined || ticket.scannableOfProblem === null">
+                    -
+                </div>
+            </mat-panel-description>
+        </mat-expansion-panel-header>
+        <div class="container-fluid">
+            <div *ngIf="ticket.scannableOfProblem === undefined || ticket.scannableOfProblem === null">
+                <form (submit)="searchScannable()">
+                    <div class="row">
+                        <div class="col-md-5  col-sm-12">
+                            <mat-form-field class="full-width-form-element">
+                                <mat-label>Eszköz keresése</mat-label>
+                                <input matInput placeholder="Eszköz neve/azonosítója" type="text" autocomplete="off"
+                                       [formControl]="scannableSearchControl">
+                                <button mat-button matSuffix mat-icon-button
+                                        *ngIf="scannableSearchControl.value !== ''" aria-label="scannableSearch">
+                                    <mat-icon (click)="searchScannable()">search</mat-icon>
+                                </button>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div *ngIf="ticket.scannableOfProblem !== undefined && ticket.scannableOfProblem !== null">
+                <p class="mb-1"><b>Eszköz neve:</b> {{ticket.scannableOfProblem.name}}</p>
+                <p class="mb-1"><b>Eszköz azonosítója:</b> {{ticket.scannableOfProblem.textIdentifier}}</p>
+                <div *ngIf="ticket.scannableOfProblem.type_ === 'device'">
+                    <p class="mb-1" *ngIf="asDevice(ticket.scannableOfProblem).maker !== ''"><b>Eszköz típusa:</b>
+                        {{asDevice(ticket.scannableOfProblem).maker}} {{asDevice(ticket.scannableOfProblem).type}}
+                    </p>
+                    <p class="mb-1" *ngIf="asDevice(ticket.scannableOfProblem).dateOfAcquisition !== null">
+                        <b>Eszköz beszerzési ideje:</b>
+                        {{asDevice(ticket.scannableOfProblem).dateOfAcquisition | date:'yyyy'}}
+                    </p>
+                    <p class="mb-1" *ngIf="asDevice(ticket.scannableOfProblem).owner !== null">
+                        <b>Eszköz tulajdonosa:</b> {{asDevice(ticket.scannableOfProblem).owner.name}}
+                        ({{asDevice(ticket.scannableOfProblem).aquiredFrom}})
+                    </p>
+                </div>
+
+            </div>
+        </div>
+    </mat-expansion-panel>
+
     <div *ngIf="ticket.id !== -1">
         <div>
             <h4 style="font-weight: 400">Hiba leírása:</h4>
@@ -42,8 +95,18 @@
         </div>
     </div>
 
-    <div *ngIf="ticket.id === -1" class="container-fluid">
+    <div *ngIf="ticket.id === -1" class="container-fluid mt-4">
         <form class="mb-3" [formGroup]="ticketForm">
+            <div class="col-xl-4 col-lg-5 col-md-4 col-sm-12 pl-0">
+                <mat-form-field>
+                    <mat-label>Hiba komolysága</mat-label>
+                    <mat-select formControlName="severity" style="z-index: 3000">
+                        <mat-option value="SEVERE">Komoly hiba</mat-option>
+                        <mat-option value="MEDIUM">Kisebb hiba</mat-option>
+                        <mat-option value="LIGHT">Megjegyzés</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
             <div class="row">
                 <mat-form-field class="col-md-12">
                     <mat-label>Hiba leírása</mat-label>

@@ -20,7 +20,7 @@ export class Comment extends Commentable {
             writer);
     }
 
-    toJson(): String {
+    toJson(): string {
         return `{\"Comment\": ${this.toJsonWithoutRoot()}}`;
     }
 

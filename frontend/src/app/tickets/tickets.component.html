@@ -54,14 +54,14 @@
                                 <tbody>
                                 <tr class="ticket-row" *ngFor="let ticket of pagedTickets" (click)="editTicket(ticket)">
                                     <td class="icon-column">
-                                        <mat-icon style="color: #c62828" *ngIf="ticket.severity === 2">report</mat-icon>
-                                        <mat-icon style="color: #ffbe3b" *ngIf="ticket.severity === 1">warning</mat-icon>
-                                        <mat-icon style="color: #8bc34a" *ngIf="ticket.severity === 0">announcement</mat-icon>
+                                        <mat-icon style="color: #c62828" *ngIf="ticket.severity === 2 || ticket.severity === 'SEVERE'">report</mat-icon>
+                                        <mat-icon style="color: #ffbe3b" *ngIf="ticket.severity === 1 || ticket.severity === 'MEDIUM'">warning</mat-icon>
+                                        <mat-icon style="color: #8bc34a" *ngIf="ticket.severity === 0 || ticket.severity === 'LIGHT'">announcement</mat-icon>
                                     </td>
                                     <td class="icon-column">
-                                        <mat-icon style="color: #c62828" *ngIf="ticket.status === 0">help_outline</mat-icon>
-                                        <mat-icon style="color: #ffbe3b" *ngIf="ticket.status === 1">construction</mat-icon>
-                                        <mat-icon style="color: #8bc34a" *ngIf="ticket.status === 2">done</mat-icon>
+                                        <mat-icon style="color: #c62828" *ngIf="ticket.status === 0 || ticket.status === 'OPEN'">help_outline</mat-icon>
+                                        <mat-icon style="color: #ffbe3b" *ngIf="ticket.status === 1 || ticket.status === 'WORKING_ON_IT'">construction</mat-icon>
+                                        <mat-icon style="color: #8bc34a" *ngIf="ticket.status === 2 || ticket.status === 'CLOSED'">done</mat-icon>
                                     </td>
                                     <td>
                                         {{ticket.dateOfWriting | date:'yyyy. MM. dd.'}}

@@ -21,8 +21,8 @@ import {TicketService} from '../_services/ticket.service';
 export class EditTicketComponent implements OnInit {
 
     @Input() ticket: Ticket;
-    @Input() title = 'Hibajegy szerkesztése';
-    @Input() scannable = undefined;
+    @Input() title: string;
+    @Input() scannable: Scannable;
 
     edit = false;
 
@@ -42,6 +42,14 @@ export class EditTicketComponent implements OnInit {
         private scannableService: ScannableService,
         private ticketService: TicketService,
         private userService: UserService) {
+
+        if (this.ticket === null || this.ticket === undefined) {
+            this.ticket = new Ticket();
+        }
+
+        if (this.scannable === null || this.scannable === undefined) {
+            this.ticket.scannableOfProblem = this.scannable;
+        }
     }
 
     ngOnInit() {
@@ -51,14 +59,6 @@ export class EditTicketComponent implements OnInit {
             this.fullAccessMember = user.isFullAccessMember();
             this.admin = user.isAdmin();
         });
-
-        if (this.ticket === null || this.ticket === undefined) {
-            this.ticket = new Ticket();
-        }
-
-        if (this.scannable === null || this.scannable === undefined) {
-            this.ticket.scannableOfProblem = this.scannable;
-        }
 
         this.scannableSearchControl.setValue('');
 
@@ -81,7 +81,6 @@ export class EditTicketComponent implements OnInit {
         this.ticket.status = TicketStatus.OPEN;
 
         this.ticketService.addTicket(this.ticket).subscribe(ticket => {
-            console.log(ticket);
             this.activeModal.dismiss('save');
         })
     }

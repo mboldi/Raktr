@@ -3,11 +3,11 @@
         <div class="row">
             <h3 class="col-sm-11 mb-0">{{title}}</h3>
             <div *ngIf="ticket.id !== -1" class="col-sm-1">
-                <mat-icon class="pull-right" style="color: #c62828; font-size: 2.5em" *ngIf="ticket.severity === 2">
+                <mat-icon class="pull-right" style="color: #c62828; font-size: 2.5em" *ngIf="ticket.severity === 2 || ticket.severity === 'SEVERE'">
                     report
                 </mat-icon>
-                <mat-icon class="pull-right" style="color: #ffbe3b" *ngIf="ticket.severity === 1">warning</mat-icon>
-                <mat-icon class="pull-right" style="color: #8bc34a" *ngIf="ticket.severity === 0">announcement
+                <mat-icon class="pull-right" style="color: #ffbe3b" *ngIf="ticket.severity === 1 || ticket.severity === 'MEDIUM'">warning</mat-icon>
+                <mat-icon class="pull-right" style="color: #8bc34a" *ngIf="ticket.severity === 0 || ticket.severity === 'LIGHT'">announcement
                 </mat-icon>
             </div>
         </div>
@@ -72,49 +72,14 @@
         </div>
     </mat-expansion-panel>
 
-    <div *ngIf="ticket.id !== -1">
-        <div>
-            <h4 style="font-weight: 400">Hiba leírása:</h4>
-            <p>{{ticket.body}}</p>
-        </div>
-        <div class="pull-right mb-3">
-            <mat-slide-toggle *ngIf="admin"
-                              class="pt-3"
-                              (change)="deleteConfirmed = $event.checked"
-                              color="warn">
-                <button mat-icon-button color="warn" type="button"
-                        (click)="delete(ticket)"
-                        [disabled]="!deleteConfirmed">
-                    <mat-icon>delete</mat-icon>
-                </button>
-            </mat-slide-toggle>
-            <button mat-raised-button type="button" mat-dialog-close
-                    (click)="this.activeModal.dismiss(0)">
-                Vissza
-            </button>
-        </div>
-    </div>
-
-    <div *ngIf="ticket.id === -1" class="container-fluid mt-4">
-        <form class="mb-3" [formGroup]="ticketForm">
-            <div class="col-xl-4 col-lg-5 col-md-4 col-sm-12 pl-0">
-                <mat-form-field>
-                    <mat-label>Hiba komolysága</mat-label>
-                    <mat-select formControlName="severity" style="z-index: 3000">
-                        <mat-option value="SEVERE">Komoly hiba</mat-option>
-                        <mat-option value="MEDIUM">Kisebb hiba</mat-option>
-                        <mat-option value="LIGHT">Megjegyzés</mat-option>
-                    </mat-select>
-                </mat-form-field>
+    <div class="mt-4">
+        <div *ngIf="ticket.id !== -1">
+            <div>
+                <h4 style="font-weight: 400">Hiba leírása:</h4>
+                <p>{{ticket.body}}</p>
             </div>
-            <div class="row">
-                <mat-form-field class="col-md-12">
-                    <mat-label>Hiba leírása</mat-label>
-                    <textarea matInput formControlName="body"></textarea>
-                </mat-form-field>
-            </div>
-            <div class="pull-right">
-                <mat-slide-toggle *ngIf="admin && ticket.id !== -1"
+            <div class="pull-right mb-3">
+                <mat-slide-toggle *ngIf="admin"
                                   class="pt-3"
                                   (change)="deleteConfirmed = $event.checked"
                                   color="warn">
@@ -124,17 +89,54 @@
                         <mat-icon>delete</mat-icon>
                     </button>
                 </mat-slide-toggle>
-                <button mat-raised-button type="button" mat-dialog-close style="margin-right: 4px"
+                <button mat-raised-button type="button" mat-dialog-close
                         (click)="this.activeModal.dismiss(0)">
                     Vissza
                 </button>
-                <button mat-raised-button type="button" class="btn btn-info"
-                        [disabled]="ticketForm.invalid"
-                        (click)="save()">
-                    Mentés
-                </button>
             </div>
-        </form>
-        <div class="clearfix"></div>
+        </div>
+
+        <div *ngIf="ticket.id === -1" class="container-fluid">
+            <form class="mb-3" [formGroup]="ticketForm">
+                <div class="col-xl-4 col-lg-5 col-md-4 col-sm-12 pl-0">
+                    <mat-form-field>
+                        <mat-label>Hiba komolysága</mat-label>
+                        <mat-select formControlName="severity" style="z-index: 3000">
+                            <mat-option value="SEVERE">Komoly hiba</mat-option>
+                            <mat-option value="MEDIUM">Kisebb hiba</mat-option>
+                            <mat-option value="LIGHT">Megjegyzés</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="row">
+                    <mat-form-field class="col-md-12">
+                        <mat-label>Hiba leírása</mat-label>
+                        <textarea matInput formControlName="body"></textarea>
+                    </mat-form-field>
+                </div>
+                <div class="pull-right">
+                    <mat-slide-toggle *ngIf="admin && ticket.id !== -1"
+                                      class="pt-3"
+                                      (change)="deleteConfirmed = $event.checked"
+                                      color="warn">
+                        <button mat-icon-button color="warn" type="button"
+                                (click)="delete(ticket)"
+                                [disabled]="!deleteConfirmed">
+                            <mat-icon>delete</mat-icon>
+                        </button>
+                    </mat-slide-toggle>
+                    <button mat-raised-button type="button" mat-dialog-close style="margin-right: 4px"
+                            (click)="this.activeModal.dismiss(0)">
+                        Vissza
+                    </button>
+                    <button mat-raised-button type="button" class="btn btn-info"
+                            [disabled]="ticketForm.invalid"
+                            (click)="save()">
+                        Mentés
+                    </button>
+                </div>
+            </form>
+            <div class="clearfix"></div>
+        </div>
     </div>
 </div>

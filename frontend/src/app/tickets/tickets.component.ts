@@ -4,7 +4,6 @@ import {MatPaginatorIntl, PageEvent} from '@angular/material/paginator';
 import {HunPaginator} from '../helpers/hun-paginator';
 import {FormControl} from '@angular/forms';
 import {Ticket} from '../_model/Ticket';
-import {Sort} from '@angular/material/sort';
 import {EditTicketComponent} from '../edit-ticket/edit-ticket.component';
 import {TicketService} from '../_services/ticket.service';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
@@ -25,8 +24,7 @@ export class TicketsComponent implements OnInit {
     pagedTickets: Ticket[];
     filteredTickets: Ticket[];
     currPageIndex = 0;
-    private currPageSize = 25;
-    private sortedTickets: Ticket[];
+    private currPageSize = 10;
     private tickets: Ticket[]
 
     constructor(
@@ -42,6 +40,16 @@ export class TicketsComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        this.searchControl.valueChanges.subscribe(value => {
+            value = value.toLowerCase();
+            console.log(value);
+            this.filteredTickets = this.tickets.filter(ticket =>
+                ticket.scannableOfProblem.name.toLowerCase().includes(value) ||
+                ticket.body.toLowerCase().includes(value)
+            )
+
+            this.setTicketsPage();
+        })
     }
 
     setTab(tab: string) {
@@ -49,10 +57,10 @@ export class TicketsComponent implements OnInit {
     }
 
     private setTicketsPage() {
-        for (; this.sortedTickets.length < this.currPageIndex * this.currPageSize; this.currPageIndex--) {
+        for (; this.filteredTickets.length < this.currPageIndex * this.currPageSize; this.currPageIndex--) {
         }
 
-        this.pagedTickets = this.sortedTickets.slice(this.currPageIndex * this.currPageSize,
+        this.pagedTickets = this.filteredTickets.slice(this.currPageIndex * this.currPageSize,
             (this.currPageIndex + 1) * this.currPageSize);
     }
 
@@ -63,25 +71,11 @@ export class TicketsComponent implements OnInit {
         this.setTicketsPage();
     }
 
-    sortTickets(sort: Sort) {
-        if (this.tickets.length === 0) {
-            return;
-        }
-        const data = this.tickets.slice();
-        if (!sort.active || sort.direction === '') {
-            this.sortedTickets = data;
-            return;
-        }
-
-        this.sortedTickets = data.sort((a, b) => {
-            const isAsc = sort.direction === 'asc';
-            switch (sort.active) {
-                case 'name':
-                    return compare(a.dateOfWriting.getTime(), b.dateOfWriting.getTime(), isAsc);
-                default:
-                    return 0;
+    sortTickets() {
+        this.filteredTickets = this.filteredTickets.sort((a, b) => {
+                return compare(a.dateOfWriting.getTime(), b.dateOfWriting.getTime(), true);
             }
-        });
+        );
 
         this.setTicketsPage();
     }
@@ -90,6 +84,17 @@ export class TicketsComponent implements OnInit {
         const ticketModal = this.modalService.open(EditTicketComponent, {size: 'lg', backdrop: false});
         ticketModal.componentInstance.title = 'Új hibajegy';
         ticketModal.componentInstance.ticket = new Ticket();
+
+        ticketModal.result.catch(reason => {
+            if (reason === 'save') {
+                this.ticketService.getTickets().subscribe(tickets => {
+                    this.tickets = tickets;
+                    this.filteredTickets = tickets;
+
+                    this.setTicketsPage();
+                });
+            }
+        })
     }
 
     editTicket(ticket: Ticket) {
@@ -101,7 +106,7 @@ export class TicketsComponent implements OnInit {
             if (reason === 'save' || reason === 'delete') {
                 this.ticketService.getTickets().subscribe(tickets => {
                     this.tickets = tickets;
-                    this.sortedTickets = tickets;
+                    this.filteredTickets = tickets;
 
                     this.setTicketsPage();
                 });

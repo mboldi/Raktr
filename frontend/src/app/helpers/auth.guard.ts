@@ -18,8 +18,7 @@ export class AuthGuard implements CanActivate {
         const expires_at = localStorage.getItem('expires_at');
         const username = localStorage.getItem('username');
 
-        if (!this.authService.isLoggedIn()) {
-            console.log('loggedin: ' + this.authService.isLoggedIn());
+        if (!this.authService.isLoggedIn() || new Date(expires_at) < new Date()) {
             this.router.navigate(['/login']);
             return false;
         }

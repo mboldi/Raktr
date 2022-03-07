@@ -17,7 +17,7 @@ export class Ticket extends Commentable {
         const newTicket = new Ticket(
             ticket.id,
             ticket.body,
-            ticket.dateOfWriting,
+            new Date(ticket.dateOfWriting),
             ticket.writer,
             ticket.status,
             null,

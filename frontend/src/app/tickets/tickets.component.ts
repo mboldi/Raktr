@@ -32,17 +32,18 @@ export class TicketsComponent implements OnInit {
         private modalService: NgbModal
     ) {
         ticketService.getTickets().subscribe(tickets => {
-            this.tickets = tickets;
+            this.tickets = this.sortTickets(tickets);
 
             this.filteredTickets = this.tickets;
             this.pagedTickets = this.tickets;
+
+            this.setTicketsPage()
         });
     }
 
     ngOnInit(): void {
         this.searchControl.valueChanges.subscribe(value => {
             value = value.toLowerCase();
-            console.log(value);
             this.filteredTickets = this.tickets.filter(ticket =>
                 ticket.scannableOfProblem.name.toLowerCase().includes(value) ||
                 ticket.body.toLowerCase().includes(value)
@@ -71,13 +72,11 @@ export class TicketsComponent implements OnInit {
         this.setTicketsPage();
     }
 
-    sortTickets() {
-        this.filteredTickets = this.filteredTickets.sort((a, b) => {
-                return compare(a.dateOfWriting.getTime(), b.dateOfWriting.getTime(), true);
+    sortTickets(tickets): Ticket[] {
+        return tickets.sort((a, b) => {
+                return compare(a.dateOfWriting.getTime(), b.dateOfWriting.getTime(), false);
             }
         );
-
-        this.setTicketsPage();
     }
 
     create() {

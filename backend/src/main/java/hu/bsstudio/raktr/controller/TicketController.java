@@ -1,18 +1,26 @@
 package hu.bsstudio.raktr.controller;
 
+import static org.springframework.http.HttpStatus.CONFLICT;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
+
+
+import hu.bsstudio.raktr.model.Comment;
 import hu.bsstudio.raktr.model.Ticket;
 import hu.bsstudio.raktr.service.TicketService;
+import java.util.List;
+import java.util.Optional;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
-import java.util.List;
-import java.util.Optional;
-
-import static org.springframework.http.HttpStatus.CONFLICT;
-import static org.springframework.http.HttpStatus.NOT_FOUND;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -38,8 +46,8 @@ public class TicketController {
         Optional<Ticket> ticket = ticketService.addTicket(newTicket);
 
         return ticket
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.status(CONFLICT).build());
+            .map(ResponseEntity::ok)
+            .orElseGet(() -> ResponseEntity.status(CONFLICT).build());
     }
 
     @PutMapping
@@ -49,8 +57,19 @@ public class TicketController {
         Optional<Ticket> ticket = ticketService.updateTicket(ticketToUpdate);
 
         return ticket
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.status(NOT_FOUND).build());
+            .map(ResponseEntity::ok)
+            .orElseGet(() -> ResponseEntity.status(NOT_FOUND).build());
+    }
+
+    @PutMapping("{ticketId}/addComment}")
+    public ResponseEntity<Ticket> updateTicket(@PathVariable final Long ticketId, @Valid @RequestBody Comment comment) {
+        log.info("Incoming request to update ticket with id: {}", ticketId);
+
+        Optional<Ticket> ticket = ticketService.addCommentToTicket(ticketId, comment);
+
+        return ticket
+            .map(ResponseEntity::ok)
+            .orElseGet(() -> ResponseEntity.status(NOT_FOUND).build());
     }
 
     @GetMapping("/ofscannable/{scannableId}")

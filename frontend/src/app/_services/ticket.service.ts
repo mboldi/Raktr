@@ -4,6 +4,7 @@ import {Observable} from 'rxjs';
 import {environment} from '../../environments/environment';
 import {map} from 'rxjs/operators';
 import {Ticket} from '../_model/Ticket';
+import {Comment} from '../_model/Comment';
 
 @Injectable({
     providedIn: 'root'
@@ -39,6 +40,15 @@ export class TicketService {
         const headers = new HttpHeaders().set('Content-Type', 'application/json');
 
         return this.http.put<Ticket>(`${environment.apiUrl}/api/ticket`, ticket.toJson(), {headers: headers})
+            .pipe(
+                map(ticket_ => Ticket.fromJson(ticket_))
+            );
+    }
+
+    addCommentToTicket(ticket: Ticket, comment: Comment): Observable<Ticket> {
+        const headers = new HttpHeaders().set('Content-Type', 'application/json');
+
+        return this.http.put<Ticket>(`${environment.apiUrl}/api/ticket/addcomment/${ticket.id}`, comment.toJson(), {headers: headers})
             .pipe(
                 map(ticket_ => Ticket.fromJson(ticket_))
             );

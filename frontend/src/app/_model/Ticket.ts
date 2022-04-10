@@ -32,10 +32,9 @@ export class Ticket extends Commentable {
             }
         }
 
-        // tslint:disable-next-line:forin
-        for (const rawComment in ticket.comments) {
-            newTicket.comments.push(Comment.fromJson(rawComment as unknown as Comment));
-        }
+        ticket.comments.forEach(rawComment => {
+            newTicket.comments.push(Comment.fromJson(rawComment));
+        })
 
         return newTicket;
     }

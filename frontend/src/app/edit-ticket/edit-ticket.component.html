@@ -139,4 +139,45 @@
             <div class="clearfix"></div>
         </div>
     </div>
+
+    <div class="card comments-card" *ngIf="ticket != undefined && ticket.id !== -1">
+        <div class="card-header card-header-primary">
+            <h4>Hozzászólások</h4>
+        </div>
+        <div class="card-body">
+            <div class="comment-field">
+                <h5 class="mb-0 pt-1 pl-2">Új hozzászólás:</h5>
+                <form>
+                    <mat-form-field class="full-width m-0 pl-3 pr-3">
+                        <input matInput type="text"
+                               [formControl]="newCommentFormControl"
+                               autocomplete="off">
+                    </mat-form-field>
+                    <button mat-raised-button type="submit" class="btn btn-info m-0 ml-3 mb-2"
+                            (click)="sendComment()">
+                        Mentés
+                    </button>
+                </form>
+            </div>
+            <div class="comment-field mt-3 ml-0 container col-sm-12" *ngFor="let comment of ticket.comments">
+                <div class="row">
+                    <h5 class="col-sm-10 pl-2 pt-1 mb-0 font-weight-bolder">{{comment.writer.nickName}}:</h5>
+                </div>
+                <div class="row date-delete-row">
+                    <p class="pl-2 pt-0 mb-0 text-muted">{{comment.dateOfWriting | date:'medium'}}  </p>
+                    <!--<a class="pl-1 comment-deleter"
+                       *ngIf="comment.writer.id === currUser.id || admin"
+                       (click)="deleteComment(comment)">
+                        Megjegyzés törlése
+                    </a>-->
+                </div>
+                <mat-divider></mat-divider>
+                <div class="row pt-1 pl-2">
+                    <blockquote class="blockquote">
+                        {{comment.body}}
+                    </blockquote>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

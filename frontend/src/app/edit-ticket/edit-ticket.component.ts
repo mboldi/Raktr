@@ -7,10 +7,12 @@ import {ScannableService} from '../_services/scannable.service';
 import * as $ from 'jquery';
 import {Scannable} from '../_model/Scannable';
 import {Device} from '../_model/Device';
+import {Comment} from '../_model/Comment';
 import {CompositeItem} from '../_model/CompositeItem';
 import {User} from '../_model/User';
 import {TicketStatus} from '../_model/TicketStatus';
 import {TicketService} from '../_services/ticket.service';
+import {Title} from '@angular/platform-browser';
 
 @Component({
     selector: 'app-edit-ticket',
@@ -35,13 +37,16 @@ export class EditTicketComponent implements OnInit {
     ticketForm: FormGroup;
     scannableSearchControl = new FormControl();
     showScannableLoading = false;
+    newCommentFormControl = new FormControl();
 
     constructor(
         public activeModal: NgbActiveModal,
+        private pageTitle: Title,
         private fb: FormBuilder,
         private scannableService: ScannableService,
         private ticketService: TicketService,
         private userService: UserService) {
+        this.pageTitle.setTitle('Raktr - Kivitel szerkesztése');
 
         if (this.ticket === null || this.ticket === undefined) {
             this.ticket = new Ticket();
@@ -127,4 +132,18 @@ export class EditTicketComponent implements OnInit {
         })
     }
 
+    sendComment() {
+        const newCommentBody = this.newCommentFormControl.value;
+
+        const newComment = new Comment(-1, newCommentBody, new Date(), this.currUser);
+
+        this.ticketService.addCommentToTicket(this.ticket, newComment).subscribe(ticket => {
+            this.ticket = ticket;
+            console.log(ticket);
+        })
+    }
+
+    deleteComment(comment) {
+
+    }
 }

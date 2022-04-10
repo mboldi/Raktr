@@ -2,6 +2,7 @@ package hu.bsstudio.raktr.service;
 
 import hu.bsstudio.raktr.model.Comment;
 import hu.bsstudio.raktr.model.Ticket;
+import hu.bsstudio.raktr.repository.CommentRepository;
 import hu.bsstudio.raktr.repository.TicketRepository;
 import java.util.List;
 import java.util.Optional;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 public class TicketService {
 
     private final TicketRepository ticketRepository;
+    private final CommentRepository commentRepository;
 
     public List<Ticket> getAll() {
         List<Ticket> allTickets = ticketRepository.findAll();
@@ -76,7 +78,9 @@ public class TicketService {
             return Optional.empty();
         }
 
-        ticketToUpdate.get().addComment(comment);
+        var savedComment = commentRepository.save(comment);
+
+        ticketToUpdate.get().addComment(savedComment);
 
         ticketRepository.save(ticketToUpdate.get());
 

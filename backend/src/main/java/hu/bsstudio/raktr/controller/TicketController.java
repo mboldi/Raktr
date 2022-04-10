@@ -61,9 +61,9 @@ public class TicketController {
             .orElseGet(() -> ResponseEntity.status(NOT_FOUND).build());
     }
 
-    @PutMapping("{ticketId}/addComment}")
-    public ResponseEntity<Ticket> updateTicket(@PathVariable final Long ticketId, @Valid @RequestBody Comment comment) {
-        log.info("Incoming request to update ticket with id: {}", ticketId);
+    @PutMapping("/addcomment/{ticketId}")
+    public ResponseEntity<Ticket> addCommentToTicket(@PathVariable final Long ticketId, @Valid @RequestBody Comment comment) {
+        log.info("Incoming request to add comment: {} to ticket with id: {}", comment, ticketId);
 
         Optional<Ticket> ticket = ticketService.addCommentToTicket(ticketId, comment);
 

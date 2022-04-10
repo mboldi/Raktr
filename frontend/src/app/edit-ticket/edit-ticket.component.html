@@ -3,11 +3,15 @@
         <div class="row">
             <h3 class="col-sm-11 mb-0">{{title}}</h3>
             <div *ngIf="ticket.id !== -1" class="col-sm-1">
-                <mat-icon class="pull-right" style="color: #c62828; font-size: 2.5em" *ngIf="ticket.severity === 2 || ticket.severity === 'SEVERE'">
+                <mat-icon class="pull-right" style="color: #c62828; font-size: 2.5em"
+                          *ngIf="ticket.severity === 2 || ticket.severity === 'SEVERE'">
                     report
                 </mat-icon>
-                <mat-icon class="pull-right" style="color: #ffbe3b" *ngIf="ticket.severity === 1 || ticket.severity === 'MEDIUM'">warning</mat-icon>
-                <mat-icon class="pull-right" style="color: #8bc34a" *ngIf="ticket.severity === 0 || ticket.severity === 'LIGHT'">announcement
+                <mat-icon class="pull-right" style="color: #ffbe3b"
+                          *ngIf="ticket.severity === 1 || ticket.severity === 'MEDIUM'">warning
+                </mat-icon>
+                <mat-icon class="pull-right" style="color: #8bc34a"
+                          *ngIf="ticket.severity === 0 || ticket.severity === 'LIGHT'">announcement
                 </mat-icon>
             </div>
         </div>
@@ -157,6 +161,11 @@
                             (click)="sendComment()">
                         Mentés
                     </button>
+                    <mat-slide-toggle class="pt-3 pl-4"
+                                      (change)="closingComment = $event.checked"
+                                      color="warn">
+                        Lezáró megjegyzés
+                    </mat-slide-toggle>
                 </form>
             </div>
             <div class="comment-field mt-3 ml-0 container col-sm-12" *ngFor="let comment of ticket.comments">

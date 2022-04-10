@@ -38,6 +38,7 @@ export class EditTicketComponent implements OnInit {
     scannableSearchControl = new FormControl();
     showScannableLoading = false;
     newCommentFormControl = new FormControl();
+    closingComment = false;
 
     constructor(
         public activeModal: NgbActiveModal,
@@ -139,7 +140,23 @@ export class EditTicketComponent implements OnInit {
 
         this.ticketService.addCommentToTicket(this.ticket, newComment).subscribe(ticket => {
             this.ticket = ticket;
-            console.log(ticket);
+
+            let change = false;
+
+
+
+            if (this.ticket.status !== TicketStatus.WORKING_ON_IT) {
+                this.ticket.status = TicketStatus.WORKING_ON_IT;
+                change = true;
+            }
+
+            if (change) {
+                this.ticketService.updateTicket(this.ticket).subscribe(updatedTicket => {
+                    this.ticket = updatedTicket;
+                    console.log(this.ticket);
+                })
+            }
+
         })
     }
 

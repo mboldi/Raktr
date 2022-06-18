@@ -143,9 +143,10 @@ export class EditTicketComponent implements OnInit {
 
             let change = false;
 
-
-
-            if (this.ticket.status !== TicketStatus.WORKING_ON_IT) {
+            if (this.closingComment === true) {
+                this.ticket.status = TicketStatus.CLOSED;
+                change = true;
+            } else if (this.ticket.status !== TicketStatus.WORKING_ON_IT) {
                 this.ticket.status = TicketStatus.WORKING_ON_IT;
                 change = true;
             }

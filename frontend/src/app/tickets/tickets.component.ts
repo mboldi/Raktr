@@ -58,6 +58,8 @@ export class TicketsComponent implements OnInit {
     }
 
     private setTicketsPage() {
+        this.filteredTickets = this.sortTickets(this.filteredTickets);
+
         for (; this.filteredTickets.length < this.currPageIndex * this.currPageSize; this.currPageIndex--) {
         }
 
@@ -74,7 +76,7 @@ export class TicketsComponent implements OnInit {
 
     sortTickets(tickets): Ticket[] {
         return tickets.sort((a, b) => {
-                return compare(a.dateOfWriting.getTime(), b.dateOfWriting.getTime(), false);
+                return compare(new Date(a.dateOfWriting).getTime(), new Date(b.dateOfWriting).getTime(), false);
             }
         );
     }

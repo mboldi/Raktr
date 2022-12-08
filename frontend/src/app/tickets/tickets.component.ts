@@ -102,14 +102,12 @@ export class TicketsComponent implements OnInit {
         ticketModal.componentInstance.ticket = ticket;
 
         ticketModal.result.catch(reason => {
-            if (reason === 'save' || reason === 'delete') {
-                this.ticketService.getTickets().subscribe(tickets => {
-                    this.tickets = tickets;
-                    this.filteredTickets = tickets;
+            this.ticketService.getTickets().subscribe(tickets => {
+                this.tickets = tickets;
+                this.filteredTickets = tickets;
 
-                    this.setTicketsPage();
-                });
-            }
+                this.setTicketsPage();
+            });
         })
     }
 }

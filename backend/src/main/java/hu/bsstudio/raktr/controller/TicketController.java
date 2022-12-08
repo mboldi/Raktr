@@ -74,7 +74,7 @@ public class TicketController {
 
     @GetMapping("/ofscannable/{scannableId}")
     public List<Ticket> getTicketsOfScannable(@PathVariable final Long scannableId) {
-        log.info("Incoming request for rentITems of scannable item with id {}", scannableId);
+        log.info("Incoming request for tickets of scannable item with id {}", scannableId);
 
         return ticketService.getTicketsOfScannable(scannableId);
     }

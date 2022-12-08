@@ -56,6 +56,13 @@ export class Ticket extends Commentable {
         const ticketJson = JSON.parse(JSON.stringify(this));
         ticketJson['@type'] = 'ticket';
         ticketJson['scannableOfProblem'] = JSON.parse(this.scannableOfProblem.toJsonWithoutRoot());
+
+        if (ticketJson.comments !== undefined && ticketJson.comments.length !== 0) {
+            ticketJson.comments.forEach(comment => {
+                comment['@type'] = comment['type_'];
+            })
+        }
+
         return JSON.stringify(ticketJson);
     }
 }

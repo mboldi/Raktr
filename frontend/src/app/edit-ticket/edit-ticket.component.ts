@@ -72,6 +72,16 @@ export class EditTicketComponent implements OnInit {
             severity: ['SEVERE', Validators.required],
             body: ['', Validators.required]
         })
+
+        this.sortComments();
+    }
+
+    sortComments() {
+        console.log(this.ticket.comments)
+        this.ticket.comments = this.ticket.comments.sort((a, b) => {
+                return compare(new Date(a.dateOfWriting).getTime(), new Date(b.dateOfWriting).getTime(), false);
+            }
+        );
     }
 
     delete(ticket: Ticket) {
@@ -89,6 +99,8 @@ export class EditTicketComponent implements OnInit {
         this.ticketService.addTicket(this.ticket).subscribe(ticket => {
             this.activeModal.dismiss('save');
         })
+
+        this.sortComments();
     }
 
     searchScannable() {
@@ -118,21 +130,6 @@ export class EditTicketComponent implements OnInit {
         return scannable as CompositeItem;
     }
 
-    showNotification(message_: string, type: string) {
-        $['notify']({
-            icon: 'add_alert',
-            message: message_
-        }, {
-            type: type,
-            timer: 1000,
-            placement: {
-                from: 'top',
-                align: 'right'
-            },
-            z_index: 2000
-        })
-    }
-
     sendComment() {
         const newCommentBody = this.newCommentFormControl.value;
 
@@ -158,10 +155,31 @@ export class EditTicketComponent implements OnInit {
                 })
             }
 
+            this.newCommentFormControl.setValue('');
+            this.sortComments();
         })
     }
 
     deleteComment(comment) {
 
     }
+
+    showNotification(message_: string, type: string) {
+        $['notify']({
+            icon: 'add_alert',
+            message: message_
+        }, {
+            type: type,
+            timer: 1000,
+            placement: {
+                from: 'top',
+                align: 'right'
+            },
+            z_index: 2000
+        })
+    }
+}
+
+function compare(a: number | string, b: number | string, isAsc: boolean) {
+    return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
 }

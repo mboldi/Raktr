@@ -15,5 +15,7 @@ export abstract class Commentable {
         this.writer = writer;
     }
 
-    abstract toJson(): String
+    abstract toJson(): string
+
+    abstract toJsonWithoutRoot(): string
 }

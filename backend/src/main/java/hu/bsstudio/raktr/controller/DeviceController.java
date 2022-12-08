@@ -51,7 +51,7 @@ public class DeviceController {
     }
 
     @GetMapping("/deleted")
-    @Secured("ROLA_ADMIN")
+    @Secured("ROLE_ADMIN")
     public List<Device> getDeletedDeviceList() {
         log.info("Incoming request for all Devices");
         return deviceService.getAllDeleted();

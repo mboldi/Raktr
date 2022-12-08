@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {Device} from '../model/Device';
+import {Device} from '../_model/Device';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {FormControl} from '@angular/forms';
 

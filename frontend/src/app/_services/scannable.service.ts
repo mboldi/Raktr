@@ -2,10 +2,10 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {environment} from '../../environments/environment';
 import {Observable} from 'rxjs';
-import {Scannable} from '../model/Scannable';
+import {Scannable} from '../_model/Scannable';
 import {map} from 'rxjs/operators';
-import {Device} from '../model/Device';
-import {CompositeItem} from '../model/CompositeItem';
+import {Device} from '../_model/Device';
+import {CompositeItem} from '../_model/CompositeItem';
 
 @Injectable({
     providedIn: 'root'

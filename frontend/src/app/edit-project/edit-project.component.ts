@@ -1,12 +1,12 @@
 import {Component, OnInit} from '@angular/core';
-import {Project} from '../model/Project';
+import {Project} from '../_model/Project';
 import {UserService} from '../_services/user.service';
 import {Title} from '@angular/platform-browser';
 import {ActivatedRoute, Router} from '@angular/router';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ProjectService} from '../_services/project.service';
-import {User} from '../model/User';
+import {User} from '../_model/User';
 import * as $ from 'jquery';
 
 @Component({
@@ -48,8 +48,8 @@ export class EditProjectComponent implements OnInit {
         this.userService.getCurrentUser().subscribe(user => {
             this.user = user;
 
-            this.fullAccessMember = User.isFullAccessMember(user);
-            this.admin = User.isAdmin(user);
+            this.fullAccessMember = user.isFullAccessMember();
+            this.admin = user.isAdmin();
 
             if (this.route.snapshot.paramMap.get('id') === 'new') {
                 this.project.prodManager = this.user;

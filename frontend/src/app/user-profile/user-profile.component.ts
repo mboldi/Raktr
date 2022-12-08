@@ -1,10 +1,10 @@
 import {Component, OnInit} from '@angular/core';
 import {Title} from '@angular/platform-browser';
 import {UserService} from '../_services/user.service';
-import {User} from '../model/User';
+import {User} from '../_model/User';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {GeneralDataService} from '../_services/general-data.service';
-import {GeneralData} from '../model/GeneralData';
+import {GeneralData} from '../_model/GeneralData';
 import * as $ from 'jquery';
 
 @Component({
@@ -55,7 +55,7 @@ export class UserProfileComponent implements OnInit {
             });
             this.user = user;
 
-            this.admin = User.isFullAccessMember(user);
+            this.admin = user.isFullAccessMember();
         });
 
         this.generalDataService.getAll().subscribe(data => {

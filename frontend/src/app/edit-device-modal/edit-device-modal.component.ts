@@ -1,22 +1,22 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {Category} from '../model/Category';
-import {Location} from '../model/Location';
+import {Category} from '../_model/Category';
+import {Location} from '../_model/Location';
 import {switchMap, tap} from 'rxjs/operators';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
-import {Device} from '../model/Device';
+import {Device} from '../_model/Device';
 import {LocationService} from '../_services/location.service';
 import {CategoryService} from '../_services/category.service';
 import {DeviceService} from '../_services/device.service';
 import {UserService} from '../_services/user.service';
 import {MatDialog} from '@angular/material/dialog';
-import {User} from '../model/User';
+import {User} from '../_model/User';
 import * as $ from 'jquery';
 import {ScannableService} from '../_services/scannable.service';
 import {barcodeValidator} from '../helpers/barcode.validator';
 import {textIdValidator} from '../helpers/textId.validator';
-import {DeviceStatus} from '../model/DeviceStatus';
-import {Owner} from '../model/Owner';
+import {DeviceStatus} from '../_model/DeviceStatus';
+import {Owner} from '../_model/Owner';
 import {OwnerService} from '../_services/owner.service';
 
 @Component({
@@ -88,7 +88,7 @@ export class EditDeviceModalComponent implements OnInit {
         }
 
         this.userService.getCurrentUser().subscribe(user => {
-            this.admin = User.isFullAccessMember(user);
+            this.admin = user.isFullAccessMember();
         });
 
         this.deviceForm

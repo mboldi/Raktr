@@ -1,9 +1,9 @@
 import {Injectable} from '@angular/core';
-import {CompositeItem} from '../model/CompositeItem';
+import {CompositeItem} from '../_model/CompositeItem';
 import {Observable} from 'rxjs';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {environment} from '../../environments/environment';
-import {Device} from '../model/Device';
+import {Device} from '../_model/Device';
 import {map} from 'rxjs/operators';
 
 @Injectable({

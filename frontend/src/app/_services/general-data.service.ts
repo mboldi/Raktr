@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Observable} from 'rxjs';
-import {GeneralData} from '../model/GeneralData';
+import {GeneralData} from '../_model/GeneralData';
 import {environment} from '../../environments/environment';
 import {map} from 'rxjs/operators';
 

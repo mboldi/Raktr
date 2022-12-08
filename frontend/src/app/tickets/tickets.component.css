@@ -1,0 +1,34 @@
+.ticket-row {
+    cursor: pointer;
+}
+
+.ticket-search-field{
+    width: 250px;
+    max-width: 80%;
+}
+
+.ticket-search-field ::ng-deep .mat-form-field-label {
+    color: white !important;
+}
+
+.ticket-search-field ::ng-deep .mat-form-field-underline .mat-form-field-ripple {
+    background-color: white !important;
+}
+
+.ticket-search-field ::ng-deep .mat-form-field-underline {
+    background-color: white !important;
+}
+
+.ticket-row:hover {
+    background: #f2f2f2 !important;
+}
+
+.severe-ticket {
+    color: darkred !important;
+    text-align: end;
+}
+
+.icon-column {
+    text-align: center;
+    width: 1.5em;
+}

@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {Title} from '@angular/platform-browser';
 import 'bootstrap-notify'
-import {Rent} from '../model/Rent';
+import {Rent} from '../_model/Rent';
 import {RentService} from '../_services/rent.service';
 import {FormControl} from '@angular/forms';
 import {map, startWith} from 'rxjs/operators';

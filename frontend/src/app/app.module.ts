@@ -1,5 +1,5 @@
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {LOCALE_ID, NgModule} from '@angular/core';
+import {NgModule} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {RouterModule} from '@angular/router';
 
@@ -37,8 +37,9 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatDividerModule} from '@angular/material/divider';
 import {MatExpansionModule} from '@angular/material/expansion';
 import {MatPaginatorModule} from '@angular/material/paginator';
-import { TicketsComponent } from './tickets/tickets.component';
-import { EditProjectComponent } from './edit-project/edit-project.component';
+import {TicketsComponent} from './tickets/tickets.component';
+import {EditProjectComponent} from './edit-project/edit-project.component';
+import {EditTicketComponent} from './edit-ticket/edit-ticket.component';
 
 @NgModule({
     imports: [
@@ -82,6 +83,7 @@ import { EditProjectComponent } from './edit-project/edit-project.component';
         PdfGenerationModalComponent,
         TicketsComponent,
         EditProjectComponent,
+        EditTicketComponent,
     ],
     providers: [
         {provide: MAT_DATE_LOCALE, useValue: 'hu-HU'},

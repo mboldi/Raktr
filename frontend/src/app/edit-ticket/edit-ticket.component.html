@@ -1,0 +1,192 @@
+<div class="modal-header">
+    <div class="container-fluid">
+        <div class="row">
+            <h3 class="col-sm-11 mb-0">{{title}}</h3>
+            <div *ngIf="ticket.id !== -1" class="col-sm-1">
+                <mat-icon class="pull-right" style="color: #c62828; font-size: 2.5em"
+                          *ngIf="ticket.severity === 2 || ticket.severity === 'SEVERE'">
+                    report
+                </mat-icon>
+                <mat-icon class="pull-right" style="color: #ffbe3b"
+                          *ngIf="ticket.severity === 1 || ticket.severity === 'MEDIUM'">warning
+                </mat-icon>
+                <mat-icon class="pull-right" style="color: #8bc34a"
+                          *ngIf="ticket.severity === 0 || ticket.severity === 'LIGHT'">announcement
+                </mat-icon>
+            </div>
+        </div>
+        <div *ngIf="ticket.id !== -1" class="row">
+            <p class="mb-0 creator-subtitle">Létrehozta: {{ticket.writer.familyName}} {{ticket.writer.givenName}}
+                - {{ticket.dateOfWriting | date:'medium'}}</p>
+        </div>
+    </div>
+</div>
+
+<div class="modal-body">
+    <mat-expansion-panel [expanded]="ticket.scannableOfProblem === undefined || ticket.scannableOfProblem === null">
+        <mat-expansion-panel-header>
+            <mat-panel-title>
+                Hibához tartozó eszköz
+            </mat-panel-title>
+            <mat-panel-description>
+                <div *ngIf="ticket.scannableOfProblem !== undefined && ticket.scannableOfProblem !== null">
+                    {{ticket.scannableOfProblem.name}} - {{ticket.scannableOfProblem.textIdentifier}}
+                </div>
+                <div *ngIf="ticket.scannableOfProblem === undefined || ticket.scannableOfProblem === null">
+                    -
+                </div>
+            </mat-panel-description>
+        </mat-expansion-panel-header>
+        <div class="container-fluid">
+            <div *ngIf="ticket.scannableOfProblem === undefined || ticket.scannableOfProblem === null">
+                <form (submit)="searchScannable()">
+                    <div class="row">
+                        <div class="col-md-5  col-sm-12">
+                            <mat-form-field class="full-width-form-element">
+                                <mat-label>Eszköz keresése</mat-label>
+                                <input matInput placeholder="Eszköz neve/azonosítója" type="text" autocomplete="off"
+                                       [formControl]="scannableSearchControl">
+                                <button mat-button matSuffix mat-icon-button
+                                        *ngIf="scannableSearchControl.value !== ''" aria-label="scannableSearch">
+                                    <mat-icon (click)="searchScannable()">search</mat-icon>
+                                </button>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div *ngIf="ticket.scannableOfProblem !== undefined && ticket.scannableOfProblem !== null">
+                <p class="mb-1"><b>Eszköz neve:</b> {{ticket.scannableOfProblem.name}}</p>
+                <p class="mb-1"><b>Eszköz azonosítója:</b> {{ticket.scannableOfProblem.textIdentifier}}</p>
+                <div *ngIf="ticket.scannableOfProblem.type_ === 'device'">
+                    <p class="mb-1" *ngIf="asDevice(ticket.scannableOfProblem).maker !== ''"><b>Eszköz típusa:</b>
+                        {{asDevice(ticket.scannableOfProblem).maker}} {{asDevice(ticket.scannableOfProblem).type}}
+                    </p>
+                    <p class="mb-1" *ngIf="asDevice(ticket.scannableOfProblem).dateOfAcquisition !== null">
+                        <b>Eszköz beszerzési ideje:</b>
+                        {{asDevice(ticket.scannableOfProblem).dateOfAcquisition | date:'yyyy'}}
+                    </p>
+                    <p class="mb-1" *ngIf="asDevice(ticket.scannableOfProblem).owner !== null">
+                        <b>Eszköz tulajdonosa:</b> {{asDevice(ticket.scannableOfProblem).owner.name}}
+                        ({{asDevice(ticket.scannableOfProblem).aquiredFrom}})
+                    </p>
+                </div>
+
+            </div>
+        </div>
+    </mat-expansion-panel>
+
+    <div class="mt-4">
+        <div *ngIf="ticket.id !== -1">
+            <div>
+                <h4 style="font-weight: 400">Hiba leírása:</h4>
+                <p>{{ticket.body}}</p>
+            </div>
+            <div class="pull-right mb-3">
+                <mat-slide-toggle *ngIf="admin"
+                                  class="pt-3"
+                                  (change)="deleteConfirmed = $event.checked"
+                                  color="warn">
+                    <button mat-icon-button color="warn" type="button"
+                            (click)="delete(ticket)"
+                            [disabled]="!deleteConfirmed">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                </mat-slide-toggle>
+                <button mat-raised-button type="button" mat-dialog-close
+                        (click)="this.activeModal.dismiss(0)">
+                    Vissza
+                </button>
+            </div>
+        </div>
+
+        <div *ngIf="ticket.id === -1" class="container-fluid">
+            <form class="mb-3" [formGroup]="ticketForm">
+                <div class="col-xl-4 col-lg-5 col-md-4 col-sm-12 pl-0">
+                    <mat-form-field>
+                        <mat-label>Hiba komolysága</mat-label>
+                        <mat-select formControlName="severity" style="z-index: 3000">
+                            <mat-option value="SEVERE">Komoly hiba</mat-option>
+                            <mat-option value="MEDIUM">Kisebb hiba</mat-option>
+                            <mat-option value="LIGHT">Megjegyzés</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="row">
+                    <mat-form-field class="col-md-12">
+                        <mat-label>Hiba leírása</mat-label>
+                        <textarea matInput formControlName="body"></textarea>
+                    </mat-form-field>
+                </div>
+                <div class="pull-right">
+                    <mat-slide-toggle *ngIf="admin && ticket.id !== -1"
+                                      class="pt-3"
+                                      (change)="deleteConfirmed = $event.checked"
+                                      color="warn">
+                        <button mat-icon-button color="warn" type="button"
+                                (click)="delete(ticket)"
+                                [disabled]="!deleteConfirmed">
+                            <mat-icon>delete</mat-icon>
+                        </button>
+                    </mat-slide-toggle>
+                    <button mat-raised-button type="button" mat-dialog-close style="margin-right: 4px"
+                            (click)="this.activeModal.dismiss(0)">
+                        Vissza
+                    </button>
+                    <button mat-raised-button type="button" class="btn btn-info"
+                            [disabled]="ticketForm.invalid"
+                            (click)="save()">
+                        Mentés
+                    </button>
+                </div>
+            </form>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+
+    <div class="card comments-card" *ngIf="ticket != undefined && ticket.id !== -1">
+        <div class="card-header card-header-primary">
+            <h4>Hozzászólások</h4>
+        </div>
+        <div class="card-body">
+            <div class="comment-field" *ngIf='ticket.status !== "CLOSED"'>
+                <h5 class="mb-0 pt-1 pl-2">Új hozzászólás:</h5>
+                <form>
+                    <mat-form-field class="full-width m-0 pl-3 pr-3">
+                        <input matInput type="text"
+                               [formControl]="newCommentFormControl"
+                               autocomplete="off">
+                    </mat-form-field>
+                    <button mat-raised-button type="submit" class="btn btn-info m-0 ml-3 mb-2"
+                            (click)="sendComment()">
+                        Mentés
+                    </button>
+                    <mat-slide-toggle class="pt-3 pl-3"
+                                      (change)="closingComment = $event.checked"
+                                      color="warn">
+                        Lezáró megjegyzés
+                    </mat-slide-toggle>
+                </form>
+            </div>
+            <div class="comment-field mt-3 ml-0 container col-sm-12" *ngFor="let comment of ticket.comments">
+                <div class="row">
+                    <h5 class="col-sm-10 pl-2 pt-1 mb-0 font-weight-bolder">{{comment.writer.nickName}}:</h5>
+                </div>
+                <div class="row date-delete-row">
+                    <p class="pl-2 pt-0 mb-0 text-muted">{{comment.dateOfWriting | date:'medium'}}  </p>
+                    <!--<a class="pl-1 comment-deleter"
+                       *ngIf="comment.writer.id === currUser.id || admin"
+                       (click)="deleteComment(comment)">
+                        Megjegyzés törlése
+                    </a>-->
+                </div>
+                <mat-divider></mat-divider>
+                <div class="row pt-1 pl-2">
+                    <blockquote class="blockquote">
+                        {{comment.body}}
+                    </blockquote>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

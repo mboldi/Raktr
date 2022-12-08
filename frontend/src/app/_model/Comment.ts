@@ -3,12 +3,12 @@ import {Commentable} from './Commentable';
 
 export class Comment extends Commentable {
 
-    static fromJson(comment: Comment): Comment {
+    static fromJson(comment: Comment | string): Comment {
         return new Comment(
-            comment.id,
-            comment.body,
-            comment.dateOfWriting,
-            comment.writer
+            comment['id'],
+            comment['body'],
+            comment['dateOfWriting'],
+            comment['writer']
         );
     }
 
@@ -20,7 +20,7 @@ export class Comment extends Commentable {
             writer);
     }
 
-    toJson(): String {
+    toJson(): string {
         return `{\"Comment\": ${this.toJsonWithoutRoot()}}`;
     }
 

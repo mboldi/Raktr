@@ -17,6 +17,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.time.LocalDateTime;
+import java.util.Date;
+
 import static javax.persistence.FetchType.*;
 
 @EqualsAndHashCode(callSuper = true)
@@ -46,6 +49,10 @@ public class RentItem extends DomainAuditModel {
 
     @NotNull
     private Integer outQuantity;
+
+    private Date addedAt;
+
+    private Integer addedByUserId;
 
     @ToString.Exclude
     @EqualsAndHashCode.Exclude

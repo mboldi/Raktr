@@ -8,6 +8,7 @@ export class RentItem {
     scannable: Scannable;
     backStatus: BackStatus;
     outQuantity: number;
+    addedAt: Date;
 
     static fromJson(rentItemString: RentItem): RentItem {
         return new RentItem(rentItemString.id,
@@ -15,7 +16,8 @@ export class RentItem {
                 Device.fromJson(rentItemString.scannable as Device) :
                 CompositeItem.fromJson(rentItemString.scannable as CompositeItem),
             this.rentStatusFormatter(rentItemString.backStatus),
-            rentItemString.outQuantity)
+            rentItemString.outQuantity,
+            rentItemString.addedAt)
     }
 
     static rentStatusFormatter(status: number | string): BackStatus {
@@ -37,10 +39,11 @@ export class RentItem {
         return `{\"RentItem\": ${JSON.stringify(rentItemJson)}}`;
     }
 
-    constructor(id: number = -1, scannable: Scannable = null, backStatus: BackStatus = BackStatus.OUT, outQuantity: number = 1) {
+    constructor(id: number = -1, scannable: Scannable = null, backStatus: BackStatus = BackStatus.OUT, outQuantity: number = 1, addedAt: Date = null) {
         this.id = id;
         this.scannable = scannable;
         this.backStatus = backStatus;
         this.outQuantity = outQuantity;
+        this.addedAt = addedAt;
     }
 }

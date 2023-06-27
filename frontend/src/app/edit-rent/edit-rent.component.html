@@ -194,6 +194,9 @@
                                         Kivitt mennyiség
                                     </th>
                                     <th>
+                                        Hozzáadva ekkor
+                                    </th>
+                                    <th>
                                         Tömeg
                                     </th>
                                     <th *ngIf="rent.type === 1"
@@ -223,6 +226,9 @@
                                                    [disabled]="rentItem.scannable.type_ === 'compositeItem' || rent.isClosed"
                                                    style="text-align: right"
                                                    (change)="quantityChanged($event, rentItem)">
+                                        </td>
+                                        <td>
+                                            {{rentItem.addedAt | date:'yyyy. MM. d. H:mm'}}
                                         </td>
                                         <td>
                                             {{rentItem.scannable.getWeight() * rentItem.outQuantity / 1000}} kg

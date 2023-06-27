@@ -18,6 +18,8 @@ import hu.bsstudio.raktr.repository.RentRepository;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
@@ -95,8 +97,10 @@ public class RentService {
 
                 rentItemRepository.save(rentItemToUpdate);
             }
-        } else {
+        } else { //New item
             if (newRentItem.getOutQuantity() != 0) {
+                newRentItem.setAddedAt(new Date());
+
                 savedDeviceItem = rentItemRepository.save(newRentItem);
                 rentToUpdate.get().getRentItems().add(savedDeviceItem);
             }

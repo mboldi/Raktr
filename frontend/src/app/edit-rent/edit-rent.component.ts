@@ -530,21 +530,6 @@ export class EditRentComponent implements OnInit {
         this.filteredRentItems = this._filterRentItems(this.rent.rentItems, $event);
     }
 
-    showNotification(message_: string, type: string) {
-        $['notify']({
-            icon: 'add_alert',
-            message: message_
-        }, {
-            type: type,
-            timer: 500,
-            placement: {
-                from: 'top',
-                align: 'right'
-            },
-            z_index: 2000
-        })
-    }
-
     @HostListener('document:keyDown.control.a', ['$event'])
     selectAdd(event: KeyboardEvent) {
         event.preventDefault();
@@ -588,5 +573,20 @@ export class EditRentComponent implements OnInit {
         this.selectedIssuer = username;
 
         this.userService.getUser(username).subscribe(user => this.rent.issuer = user);
+    }
+
+    showNotification(message_: string, type: string) {
+        $['notify']({
+            icon: 'add_alert',
+            message: message_
+        }, {
+            type: type,
+            timer: 500,
+            placement: {
+                from: 'top',
+                align: 'right'
+            },
+            z_index: 2000
+        })
     }
 }

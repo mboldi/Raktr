@@ -191,10 +191,10 @@
                                         Eszköz neve
                                     </th>
                                     <th>
-                                        Kivitt mennyiség
+                                        Mennyiség
                                     </th>
                                     <th>
-                                        Hozzáadva ekkor
+                                        Hozzáadva
                                     </th>
                                     <th>
                                         Tömeg
@@ -218,17 +218,18 @@
                                         <td>
                                             {{rentItem.scannable.name}}
                                         </td>
-                                        <td>
+                                        <td style="white-space: nowrap;">
                                             <input matInput type="number" value="{{rentItem.outQuantity}}"
                                                    min="1"
                                                    max="{{rentItem.scannable.type_ === 'compositeItem' ? 1 : rentItem.scannable['quantity']}}"
                                                    autocomplete="off"
                                                    [disabled]="rentItem.scannable.type_ === 'compositeItem' || rent.isClosed"
-                                                   style="text-align: right"
+                                                   style="text-align: right; display: inline-block; width: 90%"
                                                    (change)="quantityChanged($event, rentItem)">
+                                            <p class="mb-0" style="display: inline-block;">db</p>
                                         </td>
                                         <td>
-                                            {{rentItem.addedAt | date:'yyyy. MM. d. H:mm'}}
+                                            {{rentItem.addedBy.nickName}} - {{rentItem.addedAt | date:'yyyy. MM. d. H:mm'}}
                                         </td>
                                         <td>
                                             {{rentItem.scannable.getWeight() * rentItem.outQuantity / 1000}} kg
@@ -309,8 +310,8 @@
             </div>
             <div class="col-md-12" *ngIf="!rent">
                 <h1 style="text-align: center">Hoppá!</h1>
-                <h3 style="text-align: center">Nincs ilyen ID-vel rendelkező kivitel, vagy csak vak vagyok és nem
-                    találom :(
+                <h3 style="text-align: center">
+                    Nincs ilyen ID-vel rendelkező kivitel, vagy csak vak vagyok és nem találom :(
                 </h3>
             </div>
         </div>

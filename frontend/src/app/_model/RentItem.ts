@@ -2,6 +2,7 @@ import {Scannable} from './Scannable';
 import {BackStatus} from './BackStatus';
 import {Device} from './Device';
 import {CompositeItem} from './CompositeItem';
+import {NamesOfUser} from "./NamesOfUser";
 
 export class RentItem {
     id: number;
@@ -9,6 +10,7 @@ export class RentItem {
     backStatus: BackStatus;
     outQuantity: number;
     addedAt: Date;
+    addedBy: NamesOfUser;
 
     static fromJson(rentItemString: RentItem): RentItem {
         return new RentItem(rentItemString.id,
@@ -17,7 +19,13 @@ export class RentItem {
                 CompositeItem.fromJson(rentItemString.scannable as CompositeItem),
             this.rentStatusFormatter(rentItemString.backStatus),
             rentItemString.outQuantity,
-            rentItemString.addedAt)
+            rentItemString.addedAt,
+            new NamesOfUser(
+                rentItemString.addedBy.username,
+                rentItemString.addedBy.nickName,
+                rentItemString.addedBy.familyName,
+                rentItemString.addedBy.givenName
+            ));
     }
 
     static rentStatusFormatter(status: number | string): BackStatus {
@@ -39,11 +47,12 @@ export class RentItem {
         return `{\"RentItem\": ${JSON.stringify(rentItemJson)}}`;
     }
 
-    constructor(id: number = -1, scannable: Scannable = null, backStatus: BackStatus = BackStatus.OUT, outQuantity: number = 1, addedAt: Date = null) {
+    constructor(id: number = -1, scannable: Scannable = null, backStatus: BackStatus = BackStatus.OUT, outQuantity: number = 1, addedAt: Date = null, addedBy: NamesOfUser = new NamesOfUser()) {
         this.id = id;
         this.scannable = scannable;
         this.backStatus = backStatus;
         this.outQuantity = outQuantity;
         this.addedAt = addedAt;
+        this.addedBy = addedBy;
     }
 }

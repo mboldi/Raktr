@@ -50,9 +50,13 @@ public class RentItem extends DomainAuditModel {
     @NotNull
     private Integer outQuantity;
 
+    @NotNull
     private Date addedAt;
 
-    private Integer addedByUserId;
+    @ManyToOne(targetEntity = User.class, fetch = LAZY)
+    @EqualsAndHashCode.Exclude
+    @JoinColumn(name = "addedByUserId")
+    private User addedBy;
 
     @ToString.Exclude
     @EqualsAndHashCode.Exclude

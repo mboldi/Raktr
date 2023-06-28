@@ -255,7 +255,9 @@ export class EditRentComponent implements OnInit {
             newRentItem = new RentItem(undefined,
                 scannable,
                 this.rent.type === RentType.SIMPLE ? BackStatus.OUT : BackStatus.PLANNED,
-                amount);
+                amount,
+                new Date(),
+                this.user);
 
             this.rentService.addItemToRent(this.rent.id, newRentItem).subscribe(rent_ => {
                 this.rentService.getRent(this.rent.id).subscribe(rent => {

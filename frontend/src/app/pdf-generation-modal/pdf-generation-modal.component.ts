@@ -1,6 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {Rent} from '../_model/Rent';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
 import {UserService} from '../_services/user.service';
 import {User} from '../_model/User';
 import {RentService} from '../_services/rent.service';
@@ -14,12 +14,12 @@ import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 export class PdfGenerationModalComponent implements OnInit {
     @Input() rent: Rent;
 
-    dataFormGroup: FormGroup;
+    dataFormGroup: UntypedFormGroup;
     user: User;
 
     constructor(private userService: UserService,
                 private rentService: RentService,
-                private fb: FormBuilder,
+                private fb: UntypedFormBuilder,
                 private activeModal: NgbActiveModal) {
         this.dataFormGroup = fb.group({
             renterName: ['', Validators.required],

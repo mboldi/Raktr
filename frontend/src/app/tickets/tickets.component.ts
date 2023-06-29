@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {Title} from '@angular/platform-browser';
 import {MatPaginatorIntl, PageEvent} from '@angular/material/paginator';
 import {HunPaginator} from '../helpers/hun-paginator';
-import {FormControl} from '@angular/forms';
+import {UntypedFormControl} from '@angular/forms';
 import {Ticket} from '../_model/Ticket';
 import {EditTicketComponent} from '../edit-ticket/edit-ticket.component';
 import {TicketService} from '../_services/ticket.service';
@@ -19,7 +19,7 @@ import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 export class TicketsComponent implements OnInit {
 
     activeTab = 'open'
-    searchControl = new FormControl();
+    searchControl = new UntypedFormControl();
 
     pagedTickets: Ticket[];
     filteredTickets: Ticket[];

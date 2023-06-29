@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {Title} from '@angular/platform-browser';
 import {UserService} from '../_services/user.service';
 import {User} from '../_model/User';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
 import {GeneralDataService} from '../_services/general-data.service';
 import {GeneralData} from '../_model/GeneralData';
 import * as $ from 'jquery';
@@ -17,12 +17,12 @@ export class UserProfileComponent implements OnInit {
     user: User;
     admin = false;
 
-    personal_settings: FormGroup;
-    group_settings: FormGroup;
-    global_settings: FormGroup;
+    personal_settings: UntypedFormGroup;
+    group_settings: UntypedFormGroup;
+    global_settings: UntypedFormGroup;
 
     constructor(private title: Title,
-                private fb: FormBuilder,
+                private fb: UntypedFormBuilder,
                 private userService: UserService,
                 private generalDataService: GeneralDataService) {
         this.title.setTitle('Raktr - Adatok szerkesztése');

@@ -5,7 +5,7 @@ import {Title} from '@angular/platform-browser';
 import {Component, ElementRef, HostListener, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {RentItem} from '../_model/RentItem';
-import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {DeviceService} from '../_services/device.service';
 import {Device} from '../_model/Device';
@@ -40,10 +40,10 @@ export class EditRentComponent implements OnInit {
     filteredRentItems: RentItem[];
     currentOutDate: Date = new Date();
 
-    searchControl = new FormControl();
-    addRentFormControl = new FormControl();
-    rentDataForm: FormGroup;
-    newCommentForm: FormGroup;
+    searchControl = new UntypedFormControl();
+    addRentFormControl = new UntypedFormControl();
+    rentDataForm: UntypedFormGroup;
+    newCommentForm: UntypedFormGroup;
     fullAccessMember = false;
     admin = false;
     user: User;
@@ -62,7 +62,7 @@ export class EditRentComponent implements OnInit {
                 private title: Title,
                 private route: ActivatedRoute,
                 private modalService: NgbModal,
-                private fb: FormBuilder,
+                private fb: UntypedFormBuilder,
                 private router: Router) {
         this.title.setTitle('Raktr - Kivitel szerkesztése');
 

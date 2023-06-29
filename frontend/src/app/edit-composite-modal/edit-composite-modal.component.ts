@@ -1,6 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {CompositeItem} from '../_model/CompositeItem';
-import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms';
 import {Location} from '../_model/Location';
 import {CompositeService} from '../_services/composite.service';
 import {LocationService} from '../_services/location.service';
@@ -27,13 +27,13 @@ export class EditCompositeModalComponent implements OnInit {
     @Input() title: string;
     @Input() compositeItem: CompositeItem
 
-    compositeDataForm: FormGroup;
+    compositeDataForm: UntypedFormGroup;
 
     categoryOptions: Category[];
     filteredCategoryOptions: Category[];
     locationOptions: Location[];
     filteredLocationOptions: Location[];
-    addDeviceFormControl = new FormControl();
+    addDeviceFormControl = new UntypedFormControl();
     fullAccessMember = false;
     deleteConfirmed = false;
 
@@ -41,7 +41,7 @@ export class EditCompositeModalComponent implements OnInit {
     private currentCategoryInput = '';
 
     constructor(public activeModal: NgbActiveModal,
-                private fb: FormBuilder,
+                private fb: UntypedFormBuilder,
                 private compositeItemService: CompositeService,
                 private locationService: LocationService,
                 private categoryService: CategoryService,

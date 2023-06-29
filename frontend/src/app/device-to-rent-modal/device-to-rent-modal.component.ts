@@ -1,7 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {Device} from '../_model/Device';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
-import {FormControl} from '@angular/forms';
+import {UntypedFormControl} from '@angular/forms';
 import * as $ from 'jquery';
 
 @Component({
@@ -11,7 +11,7 @@ import * as $ from 'jquery';
 })
 export class DeviceToRentModalComponent implements OnInit {
     @Input() device: Device;
-    amountFormControl = new FormControl();
+    amountFormControl = new UntypedFormControl();
 
     constructor(public activeModal: NgbActiveModal) {
     }

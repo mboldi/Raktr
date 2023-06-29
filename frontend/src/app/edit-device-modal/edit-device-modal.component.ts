@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
 import {Category} from '../_model/Category';
 import {Location} from '../_model/Location';
 import {switchMap, tap} from 'rxjs/operators';
@@ -34,7 +34,7 @@ export class EditDeviceModalComponent implements OnInit {
     filteredLocationOptions: Location[];
     ownerOptions: Owner[];
     filteredOwnerOptions: Owner[];
-    deviceForm: FormGroup;
+    deviceForm: UntypedFormGroup;
     admin = false;
     deleteConfirmed = false;
 
@@ -43,7 +43,7 @@ export class EditDeviceModalComponent implements OnInit {
     currentOwnerInput = '';
 
     constructor(public activeModal: NgbActiveModal,
-                private fb: FormBuilder,
+                private fb: UntypedFormBuilder,
                 private locationService: LocationService,
                 private categoryService: CategoryService,
                 private ownerService: OwnerService,

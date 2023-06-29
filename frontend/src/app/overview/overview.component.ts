@@ -4,7 +4,7 @@ import {RentService} from '../_services/rent.service';
 import {DeviceService} from '../_services/device.service';
 import {Rent} from '../_model/Rent';
 import {Device} from '../_model/Device';
-import {FormControl} from '@angular/forms';
+import {UntypedFormControl} from '@angular/forms';
 import {EditDeviceModalComponent} from '../edit-device-modal/edit-device-modal.component';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {ScannableService} from '../_services/scannable.service';
@@ -22,7 +22,7 @@ import {BarcodePurifier} from '../_services/barcode-purifier.service';
 export class OverviewComponent implements OnInit {
 
     rents: Rent[] = [];
-    deviceSearchFormControl = new FormControl();
+    deviceSearchFormControl = new UntypedFormControl();
     numOfActiveRents = 0;
     scannableAmount = 0;
 

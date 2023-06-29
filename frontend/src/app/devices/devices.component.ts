@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {Title} from '@angular/platform-browser';
-import {FormControl} from '@angular/forms';
+import {UntypedFormControl} from '@angular/forms';
 import {Device} from '../_model/Device';
 import {DeviceService} from '../_services/device.service';
 import {CompositeItem} from '../_model/CompositeItem';
@@ -26,7 +26,7 @@ import {HunPaginator} from '../helpers/hun-paginator';
 export class DevicesComponent implements OnInit {
     currentTab = 'devices';
 
-    searchControl = new FormControl();
+    searchControl = new UntypedFormControl();
 
     devices: Device[];
     sortedDevices: Device[];

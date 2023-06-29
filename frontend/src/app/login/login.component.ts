@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {AuthService} from '../_services/auth.service';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
 import {Title} from '@angular/platform-browser';
 import {catchError, delay, timeout} from 'rxjs/operators';
@@ -15,10 +15,10 @@ export class LoginComponent implements OnInit {
     hide = true;
     loginHappening = false;
     invalidCreds = false;
-    form: FormGroup;
+    form: UntypedFormGroup;
 
     constructor(private authService: AuthService,
-                private fb: FormBuilder,
+                private fb: UntypedFormBuilder,
                 private router: Router,
                 private title: Title) {
         title.setTitle('Raktr - bejelentkezés');

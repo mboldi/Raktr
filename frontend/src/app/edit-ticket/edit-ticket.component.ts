@@ -2,7 +2,7 @@ import {Component, Input, OnInit, ViewEncapsulation} from '@angular/core';
 import {Ticket} from '../_model/Ticket';
 import {UserService} from '../_services/user.service';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
-import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms';
 import {ScannableService} from '../_services/scannable.service';
 import * as $ from 'jquery';
 import {Scannable} from '../_model/Scannable';
@@ -34,16 +34,16 @@ export class EditTicketComponent implements OnInit {
     fullAccessMember = false;
     admin = false;
 
-    ticketForm: FormGroup;
-    scannableSearchControl = new FormControl();
+    ticketForm: UntypedFormGroup;
+    scannableSearchControl = new UntypedFormControl();
     showScannableLoading = false;
-    newCommentFormControl = new FormControl();
+    newCommentFormControl = new UntypedFormControl();
     closingComment = false;
 
     constructor(
         public activeModal: NgbActiveModal,
         private pageTitle: Title,
-        private fb: FormBuilder,
+        private fb: UntypedFormBuilder,
         private scannableService: ScannableService,
         private ticketService: TicketService,
         private userService: UserService) {

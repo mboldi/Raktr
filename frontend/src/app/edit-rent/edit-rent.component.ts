@@ -22,6 +22,7 @@ import {RentType} from '../_model/RentType';
 import {MatDatepickerInputEvent} from '@angular/material/datepicker';
 import {User} from '../_model/User';
 import {Comment} from '../_model/Comment';
+import {MatFabMenu} from '@angular-material-extensions/fab-menu';
 
 @Component({
     selector: 'app-edit-rent',
@@ -54,6 +55,11 @@ export class EditRentComponent implements OnInit {
     barcodeMode = 'add';
 
     newComment = '';
+
+    fabButtons: MatFabMenu[] = [
+        {id: 1, icon: 'picture_as_pdf'},
+        {id: 2, icon: 'table_chart'}
+    ]
 
     constructor(private rentService: RentService,
                 private deviceService: DeviceService,
@@ -178,7 +184,10 @@ export class EditRentComponent implements OnInit {
                             const device = scannable as Device;
 
                             if (device.quantity > 1) {
-                                const editModal = this.modalService.open(DeviceToRentModalComponent, {size: 'md', windowClass: 'modal-holder'});
+                                const editModal = this.modalService.open(DeviceToRentModalComponent, {
+                                    size: 'md',
+                                    windowClass: 'modal-holder'
+                                });
                                 editModal.componentInstance.device = device;
 
                                 editModal.result.catch(result => {
@@ -470,6 +479,17 @@ export class EditRentComponent implements OnInit {
     getPdf() {
         const pdfModal = this.modalService.open(PdfGenerationModalComponent, {size: 'md', windowClass: 'modal-holder'});
         pdfModal.componentInstance.rent = this.rent;
+    }
+
+    downloadSelected(id: string | number) {
+        switch (id) {
+            case 1:     // PDF
+                this.getPdf();
+                break;
+            case 2:     // Excel
+
+                break;
+        }
     }
 
     setCurrOutDate(event) {

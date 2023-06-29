@@ -11,12 +11,17 @@
         <div class="row pt-2">
             <div class="col-xl-10 col-lg-12">
                 <div class="card" *ngIf="rent">
-                    <div class="card-header {{!rent.isClosed ? 'card-header-warning' : 'card-header-success'}}">
+                    <div class="card-header {{!rent.isClosed ? 'card-header-warning' : 'card-header-success'}}"
+                         style="max-height: 90px">
                         <h3 style="display: inline-block" class="mt-2 mb-1">Kivitel szerkesztése</h3>
                         <div class="form-inline pull-right" *ngIf="rent.id !== -1">
-                            <button mat-fab type="button" (click)="getPdf()">
-                                <mat-icon>picture_as_pdf</mat-icon>
-                            </button>
+                            <mat-fab-menu color="accent"
+                                          icon="ios_share"
+                                          direction="left"
+                                          [fabButtons]="fabButtons"
+                                          (onFabMenuItemSelected)="downloadSelected($event)">
+                                <mat-icon>exit_to_app</mat-icon>
+                            </mat-fab-menu>
                         </div>
                     </div>
                     <div class="card-body container-fluid">

@@ -13,3 +13,7 @@
 .custom-backdrop {
     z-index: 1040;
 }
+
+::ng-deep ngb-modal-backdrop {
+    z-index: 100 !important;
+}

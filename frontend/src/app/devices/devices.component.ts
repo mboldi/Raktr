@@ -195,7 +195,7 @@ export class DevicesComponent implements OnInit {
     }
 
     copyDevice(device: Device) {
-        const editModal = this.modalService.open(EditDeviceModalComponent, {size: 'lg', windowClass: 'modal-holder'});
+        const editModal = this.modalService.open(EditDeviceModalComponent, {size: 'lg'});
         editModal.componentInstance.title = 'Új eszköz másik alapján';
         editModal.componentInstance.device = device;
         editModal.componentInstance.device.id = -1;
@@ -211,7 +211,7 @@ export class DevicesComponent implements OnInit {
     }
 
     editDevice(device: Device) {
-        const editModal = this.modalService.open(EditDeviceModalComponent, {size: 'lg', backdrop: false});
+        const editModal = this.modalService.open(EditDeviceModalComponent, {size: 'lg'});
         editModal.componentInstance.title = 'Eszköz szerkesztése';
         editModal.componentInstance.device = device;
 
@@ -228,7 +228,7 @@ export class DevicesComponent implements OnInit {
     }
 
     editCompositeItem(compositeItem: CompositeItem) {
-        const editModal = this.modalService.open(EditCompositeModalComponent, {size: 'lg', backdrop: false});
+        const editModal = this.modalService.open(EditCompositeModalComponent, {size: 'lg'});
         editModal.componentInstance.title = 'Összetett eszköz szerkesztése';
         editModal.componentInstance.compositeItem = compositeItem;
 
@@ -240,7 +240,7 @@ export class DevicesComponent implements OnInit {
     create() {
         switch (this.currentTab) {
             case 'devices':
-                const editDeviceModal = this.modalService.open(EditDeviceModalComponent, {size: 'lg', backdrop: false});
+                const editDeviceModal = this.modalService.open(EditDeviceModalComponent, {size: 'lg'});
                 editDeviceModal.componentInstance.title = 'Új eszköz';
 
                 editDeviceModal.result.catch(result => {
@@ -260,7 +260,7 @@ export class DevicesComponent implements OnInit {
                 });
                 break;
             case 'composites':
-                const editCompositeModal = this.modalService.open(EditCompositeModalComponent, {size: 'lg', backdrop: false});
+                const editCompositeModal = this.modalService.open(EditCompositeModalComponent, {size: 'lg'});
                 editCompositeModal.componentInstance.title = 'Új összetett eszköz';
                 editCompositeModal.result.catch(() => {
                     this.getComposites();

@@ -38,3 +38,7 @@
 .deviceSearchField ::ng-deep .mat-form-field-underline {
     background-color: white !important;
 }
+
+::ng-deep ngb-modal-backdrop {
+    z-index: 100 !important;
+}

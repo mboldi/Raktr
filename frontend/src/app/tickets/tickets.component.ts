@@ -82,7 +82,7 @@ export class TicketsComponent implements OnInit {
     }
 
     create() {
-        const ticketModal = this.modalService.open(EditTicketComponent, {size: 'lg', backdrop: false});
+        const ticketModal = this.modalService.open(EditTicketComponent, {size: 'lg'});
         ticketModal.componentInstance.title = 'Új hibajegy';
         ticketModal.componentInstance.ticket = new Ticket();
 
@@ -99,7 +99,7 @@ export class TicketsComponent implements OnInit {
     }
 
     editTicket(ticket: Ticket) {
-        const ticketModal = this.modalService.open(EditTicketComponent, {size: 'lg', backdrop: false});
+        const ticketModal = this.modalService.open(EditTicketComponent, {size: 'lg'});
         ticketModal.componentInstance.title = 'Hibajegy szerkesztése';
         ticketModal.componentInstance.ticket = ticket;
 

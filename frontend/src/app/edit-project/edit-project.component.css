@@ -6,3 +6,7 @@
 .backbutton {
     z-index: 1050 !important;
 }
+
+::ng-deep ngb-modal-backdrop {
+    z-index: 100 !important;
+}

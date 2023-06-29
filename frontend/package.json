@@ -1,6 +1,6 @@
 {
   "name": "bss-raktr",
-  "version": "2.4.0",
+  "version": "0.8",
   "license": "MIT",
   "scripts": {
     "ng": "ng",

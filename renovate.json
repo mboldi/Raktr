@@ -3,5 +3,7 @@
   "extends": [
     "config:base"
   ],
-  "baseBranches": ["dev"]
+  "properties": {
+    "baseBranches": ["dev"]
+  }
 }

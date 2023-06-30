@@ -72,6 +72,7 @@ export class EditDeviceModalComponent implements OnInit {
             quantity: ['1'],
             acquiredFrom: [''],
             dateOfAcquisition: [new Date()],
+            endOfWarranty: [new Date()],
             owner: [''],
             comment: ['']
         });
@@ -146,6 +147,7 @@ export class EditDeviceModalComponent implements OnInit {
             quantity: this.device.quantity,
             acquiredFrom: this.device.aquiredFrom,
             dateOfAcquisition: this.device.dateOfAcquisition,
+            endOfWarranty: this.device.endOfWarranty,
             owner: this.device.owner === null ? '' : this.device.owner.name,
             comment: this.device.comment
         });
@@ -183,7 +185,8 @@ export class EditDeviceModalComponent implements OnInit {
         this.device.value = values.value;
         this.device.quantity = values.quantity;
         this.device.aquiredFrom = values.acquiredFrom;
-        this.device.dateOfAcquisition = values.dateOfAcquisition;
+        this.device.dateOfAcquisition = new Date(values.dateOfAcquisition);
+        this.device.endOfWarranty = new Date(values.endOfWarranty);
         this.device.owner = values.owner.toString() !== '' ? new Owner(-1, values.owner.toString()) : null;
         this.device.comment = values.comment.toString();
 

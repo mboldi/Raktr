@@ -48,6 +48,21 @@
                     <div class="card-body">
                         <div class="tab-content">
                             <div class="tab-pane active" id="devices">
+                                <mat-expansion-panel class="mb-4" expanded="false" *ngIf="currUser.isAdmin()">
+                                    <mat-expansion-panel-header>
+                                        <mat-panel-title>
+                                            Bulk tools
+                                        </mat-panel-title>
+                                    </mat-expansion-panel-header>
+
+                                    <mat-form-field floatLabel="always">
+                                        <mat-label>Import xls</mat-label>
+                                        <input matInput type="file" name="excelImportFile" id="excelImportFile" (change)="handleExcelImport($event)"
+                                               accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+                                    </mat-form-field>
+
+                                    <button mat-raised-button color="accent" (click)="exportDevices()">Aktuális lista exportálása Excel formátumba</button>
+                                </mat-expansion-panel>
                                 <div class="table-responsive">
                                     <mat-paginator [length]="sortedDevices.length" [pageSize]="25"
                                                    [pageSizeOptions]="[25, 50, 100]"

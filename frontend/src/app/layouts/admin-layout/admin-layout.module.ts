@@ -15,6 +15,7 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {MatIconModule} from '@angular/material/icon';
 import {MatSortModule} from '@angular/material/sort';
 import {MatPaginatorModule} from '@angular/material/paginator';
+import {MatExpansionModule} from "@angular/material/expansion";
 
 @NgModule({
     imports: [
@@ -32,6 +33,7 @@ import {MatPaginatorModule} from '@angular/material/paginator';
         MatIconModule,
         MatSortModule,
         MatPaginatorModule,
+        MatExpansionModule,
     ],
   declarations: [
     UserProfileComponent,

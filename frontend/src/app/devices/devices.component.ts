@@ -15,6 +15,10 @@ import {Category} from '../_model/Category';
 import {DeviceStatus} from '../_model/DeviceStatus';
 import {Location} from '../_model/Location';
 import {HunPaginator} from '../helpers/hun-paginator';
+import {read, utils, writeFile} from 'xlsx';
+import {User} from "../_model/User";
+import {UserService} from "../_services/user.service";
+import {DeviceForExcel} from "../_model/DeviceForExcel";
 
 @Component({
     selector: 'app-table-list',
@@ -25,18 +29,19 @@ import {HunPaginator} from '../helpers/hun-paginator';
 })
 export class DevicesComponent implements OnInit {
     currentTab = 'devices';
+    currUser: User = new User();
 
     searchControl = new UntypedFormControl();
 
     devices: Device[];
-    sortedDevices: Device[];
+    sortedDevices: Device[] = [];
     pagedDevices: Device[];
 
     currDevicePageIndex = 0;
     currDevicePageSize = 25;
 
     compositeItems: CompositeItem[];
-    sortedComposites: CompositeItem[];
+    sortedComposites: CompositeItem[] = [];
     pagedComposites: CompositeItem[];
 
     currCompositePageIndex = 0;
@@ -45,12 +50,17 @@ export class DevicesComponent implements OnInit {
     constructor(private title: Title,
                 private deviceService: DeviceService,
                 private compositeService: CompositeService,
-                private modalService: NgbModal) {
+                private modalService: NgbModal,
+                private userService: UserService) {
         this.title.setTitle('Raktr - Eszközök');
     }
 
     ngOnInit() {
         this.searchControl.setValue('');
+
+        this.userService.getCurrentUser().subscribe(user => {
+            this.currUser = user;
+        });
 
         this.devices = [];
 
@@ -309,6 +319,68 @@ export class DevicesComponent implements OnInit {
                 console.log(`${device.name} added`);
             })
         }
+    }
+
+    handleExcelImport($event: any) {
+        const files = $event.target.files;
+        if (files.length) {
+            const file = files[0];
+            const reader = new FileReader();
+
+            reader.onload = (event: any) => {
+                const wb = read(event.target.result);
+                const sheets = wb.SheetNames;
+
+                if (sheets.length) {
+                    const headings = [[
+                        'apple',
+                        'orange',
+                        'pear'
+                    ]];
+                    utils.sheet_add_aoa(wb, headings);
+                    const rows = utils.sheet_to_json(wb.Sheets[sheets[0]]);
+                    console.log(rows)
+                }
+            }
+            reader.readAsArrayBuffer(file);
+        }
+    }
+
+    exportDevices() {
+        const header = [[
+            'id',
+            'name',
+            'barcode',
+            'textIdentifier',
+            'category',
+            'location',
+            'isPublicRentable',
+            'maker',
+            'type',
+            'serial',
+            'value',
+            'weight',
+            'status',
+            'quantity',
+            'aquiredFrom',
+            'dateOfAcquisition',
+            'owner',
+            'endOfWarranty',
+            'comment'
+        ]];
+
+        const wb = utils.book_new();
+        const ws: any = utils.json_to_sheet([]);
+
+        utils.sheet_add_aoa(ws, header);
+
+        const exportDevices: DeviceForExcel[] = [];
+
+        this.sortedDevices.forEach(device => exportDevices.push(new DeviceForExcel(device)));
+
+        utils.sheet_add_json(ws, exportDevices, {origin: 'A2', skipHeader: true});
+        utils.book_append_sheet(wb, ws, 'Devices');
+        writeFile(wb, 'raktr-devices.xlsx');
     }
 }
 

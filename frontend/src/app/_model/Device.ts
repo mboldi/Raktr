@@ -45,9 +45,9 @@ export class Device extends Scannable {
             deviceJson.category,
             deviceJson.quantity,
             deviceJson.aquiredFrom,
-            deviceJson.dateOfAcquisition,
+            deviceJson.dateOfAcquisition != null ? new Date(deviceJson.dateOfAcquisition) : null,
             deviceJson.owner,
-            deviceJson.endOfWarranty,
+            deviceJson.endOfWarranty != null ? new Date(deviceJson.endOfWarranty) : null,
             deviceJson.comment
         )
     }

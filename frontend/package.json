@@ -12,7 +12,7 @@
     "install:clean": "rm -rf node_modules/ && rm -rf package-lock.json && npm install && ng serve -o"
   },
   "engines": {
-    "node": "16.13.1",
+    "node": "16.20.1",
     "npm": "8.1.29"
   },
   "private": true,

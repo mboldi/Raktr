@@ -77,7 +77,6 @@ export class EditTicketComponent implements OnInit {
     }
 
     sortComments() {
-        console.log(this.ticket.comments)
         this.ticket.comments = this.ticket.comments.sort((a, b) => {
                 return compare(new Date(a.dateOfWriting).getTime(), new Date(b.dateOfWriting).getTime(), false);
             }

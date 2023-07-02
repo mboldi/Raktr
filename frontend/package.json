@@ -59,7 +59,7 @@
     "@angular/cli": "14.2.12",
     "@angular/compiler-cli": "14.3.0",
     "@angular/language-service": "14.3.0",
-    "@types/bootstrap": "4.3.0",
+    "@types/bootstrap": "4.6.2",
     "@types/chartist": "0.11.1",
     "@types/googlemaps": "3.43.3",
     "@types/jasmine": "3.10.11",

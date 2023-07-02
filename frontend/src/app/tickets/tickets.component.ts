@@ -22,10 +22,10 @@ export class TicketsComponent implements OnInit {
     searchControl = new UntypedFormControl();
 
     pagedTickets: Ticket[];
-    filteredTickets: Ticket[];
+    filteredTickets: Ticket[] = [];
     currPageIndex = 0;
     private currPageSize = 10;
-    private tickets: Ticket[]
+    private tickets: Ticket[];
 
     constructor(
         private ticketService: TicketService,

@@ -6,6 +6,7 @@ import {UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
 import {GeneralDataService} from '../_services/general-data.service';
 import {GeneralData} from '../_model/GeneralData';
 import * as $ from 'jquery';
+import {group} from "@angular/animations";
 
 @Component({
     selector: 'app-user-profile',
@@ -59,16 +60,24 @@ export class UserProfileComponent implements OnInit {
         });
 
         this.generalDataService.getAll().subscribe(data => {
+            const groupNameData = data[data.findIndex(data_ => data_.key === 'groupName')];
+            const groupLeaderData = data[data.findIndex(data_ => data_.key === 'groupLeader')];
+
             this.group_settings.setValue({
-                groupName: [data[data.findIndex(data_ => data_.key === 'groupName')].data],
-                groupLeaderName: [data[data.findIndex(data_ => data_.key === 'groupLeader')].data],
+                groupName: [groupNameData ? groupNameData.data : ''],
+                groupLeaderName: [groupLeaderData ? groupLeaderData.data : ''],
             });
 
+            const firstName = data[data.findIndex(data_ => data_.key === 'firstSignerName')];
+            const firstTitle = data[data.findIndex(data_ => data_.key === 'firstSignerTitle')];
+            const secondName = data[data.findIndex(data_ => data_.key === 'secondSignerName')];
+            const secondTitle = data[data.findIndex(data_ => data_.key === 'secondSignerTitle')];
+
             this.global_settings.setValue({
-                firstSignerName: [data[data.findIndex(data_ => data_.key === 'firstSignerName')].data],
-                firstSignerTitle: [data[data.findIndex(data_ => data_.key === 'firstSignerTitle')].data],
-                secondSignerName: [data[data.findIndex(data_ => data_.key === 'secondSignerName')].data],
-                secondSignerTitle: [data[data.findIndex(data_ => data_.key === 'secondSignerTitle')].data],
+                firstSignerName: [firstName ? firstName.data : ''],
+                firstSignerTitle: [firstTitle ? firstTitle.data : ''],
+                secondSignerName: [secondName ? secondName.data : ''],
+                secondSignerTitle: [secondTitle ? secondTitle.data : ''],
             });
         });
     }

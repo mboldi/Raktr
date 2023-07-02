@@ -18,7 +18,7 @@ import {HunPaginator} from '../helpers/hun-paginator';
 })
 export class RentsComponent implements OnInit {
     rents: Rent[] = [];
-    filteredRents: Rent[];
+    filteredRents: Rent[] = [];
     pagedRents: Rent[];
 
     currPageIndex = 0;

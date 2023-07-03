@@ -23,6 +23,7 @@ import {MatDatepickerInputEvent} from '@angular/material/datepicker';
 import {User} from '../_model/User';
 import {Comment} from '../_model/Comment';
 import {MatFabMenu} from '@angular-material-extensions/fab-menu';
+import {CompositeService} from "../_services/composite.service";
 
 @Component({
     selector: 'app-edit-rent',
@@ -51,7 +52,7 @@ export class EditRentComponent implements OnInit {
 
     deleteConfirmed = false;
     whyNotFinalizable = 'Hiányzó adatok a lezáráshoz!';
-    barcodePlaceholder = 'Hozzáadandó vonalkódja';
+    barcodePlaceholder = 'Hozzáadandó eszköz (csippants vagy keress!)';
     barcodeMode = 'add';
 
     newComment = '';
@@ -61,8 +62,13 @@ export class EditRentComponent implements OnInit {
         {id: 2, icon: 'table_chart'}
     ]
 
+    scannablesOfRent: Scannable[] = [];
+    allScannables: Scannable[] = [];
+    filteredNewDeviceOptions: Scannable[] = [];
+
     constructor(private rentService: RentService,
                 private deviceService: DeviceService,
+                private compositeService: CompositeService,
                 private scannableService: ScannableService,
                 private userService: UserService,
                 private title: Title,
@@ -119,6 +125,14 @@ export class EditRentComponent implements OnInit {
 
                     this.filteredRentIssuingMembers = filteredMembers.length > 10 ? [] : filteredMembers;
                 });
+
+        this.deviceService.getDevices().subscribe(devices => {
+            devices.forEach(device => this.allScannables.push(device));
+        })
+
+        this.compositeService.getCompositeItems().subscribe(composites => {
+            composites.forEach(compositeItem => this.allScannables.push(compositeItem));
+        })
     }
 
     ngOnInit(): void {
@@ -143,10 +157,53 @@ export class EditRentComponent implements OnInit {
 
                     this.rentDataForm.get('issuer').disable();
                     this.rentDataForm.get('renter').disable();
+
+                    this.updateScannablesOfRent();
                 }
             )
         }
 
+
+        this.addRentFormControl.valueChanges.subscribe(value => {
+            if (value === '') {
+                this.filteredNewDeviceOptions = []
+                return;
+            }
+
+            let filteredItems: Scannable[] = []
+
+            if (this.barcodeMode === 'add') {
+                const items = this.allScannables.sort((a, b) => a.name.localeCompare(b.name));
+                filteredItems = items.filter(item => item.name.toLowerCase().includes(value.toLowerCase()))
+                    .filter(item => (item.type_ === 'device' && (item as Device).quantity > 1) ||
+                        this.scannablesOfRent.find(i => i.id === item.id) === undefined);
+            } else {
+                let wantedStatus = BackStatus.OUT;
+                if (this.barcodeMode === 'pack') {
+                    wantedStatus = BackStatus.PLANNED;
+                }
+
+                const items = this.rent.rentItems.sort((a, b) => a.scannable.name.localeCompare(b.scannable.name));
+                filteredItems = items.filter(item => item.scannable.name.toLowerCase().includes(value.toLowerCase()))
+                    .filter(item => (item.backStatus === wantedStatus))
+                    .map(rentItem => rentItem.scannable);
+            }
+
+            if (filteredItems.length < 10) {
+                this.filteredNewDeviceOptions = filteredItems;
+            } else {
+                this.filteredNewDeviceOptions = [];
+            }
+        });
+
+    }
+
+    private updateScannablesOfRent() {
+        this.scannablesOfRent = [];
+
+        this.rent.rentItems.forEach(item => {
+            this.scannablesOfRent.push(item.scannable);
+        });
     }
 
     private setFormFieldsWithRentData() {
@@ -282,6 +339,8 @@ export class EditRentComponent implements OnInit {
                         }
 
                         this.searchControl.setValue('');
+
+                        this.updateScannablesOfRent();
                     }
                 })
             }, error => {
@@ -487,7 +546,7 @@ export class EditRentComponent implements OnInit {
                 this.getPdf();
                 break;
             case 2:     // Excel
-
+                // TODO
                 break;
         }
     }
@@ -576,13 +635,13 @@ export class EditRentComponent implements OnInit {
 
         switch (mode) {
             case 'add':
-                this.barcodePlaceholder = 'Hozzáadandó vonalkódja';
+                this.barcodePlaceholder = 'Hozzáadandó eszköz (csippants vagy keress!)';
                 break;
             case 'pack':
-                this.barcodePlaceholder = 'Elpakolt eszköz vonalkódja';
+                this.barcodePlaceholder = 'Elrakott eszköz (csippants vagy keress!)';
                 break;
             case 'back':
-                this.barcodePlaceholder = 'Visszavett eszköz vonalkódja';
+                this.barcodePlaceholder = 'Visszavett eszköz (csippants vagy keress!)';
                 break;
         }
 
@@ -609,4 +668,6 @@ export class EditRentComponent implements OnInit {
             z_index: 2000
         })
     }
+
+    protected readonly Device = Device;
 }

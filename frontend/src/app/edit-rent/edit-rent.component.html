@@ -169,6 +169,7 @@
                                         <input matInput [placeholder]="barcodePlaceholder" #barcodeInput
                                                [formControl]="addRentFormControl"
                                                (keyup.enter)="barcodeRead()"
+                                               (keyup.escape)="addRentFormControl.reset()"
                                                formControlName="searchNewItem"
                                                [matAutocomplete]="autoNewDevice"
                                                matTooltip="Kattints bele ebbe a mezőbe és használd a vonalkódolvasót automatikus hozzáadáshoz, vagy kezdd el keresni az eszköz nevét, majd válaszd ki a listából!"

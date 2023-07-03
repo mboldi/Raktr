@@ -165,7 +165,7 @@ export class EditRentComponent implements OnInit {
 
 
         this.addRentFormControl.valueChanges.subscribe(value => {
-            if (value === '') {
+            if (value === '' || value === null) {
                 this.filteredNewDeviceOptions = []
                 return;
             }

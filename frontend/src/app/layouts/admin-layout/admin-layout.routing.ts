@@ -16,6 +16,6 @@ export const AdminLayoutRoutes: Routes = [
     {path: 'tickets', component: TicketsComponent, canActivate: [AuthGuard]},
     {path: 'projects', component: ProjectsComponent, canActivate: [AuthGuard]},
     {path: 'edit-project/:id', component: EditProjectComponent, canActivate: [AuthGuard]},
-    {path: 'user-profile', component: UserProfileComponent, canActivate: [AuthGuard]},
+    {path: 'settings', component: UserProfileComponent, canActivate: [AuthGuard]},
     {path: 'rent/:id', component: EditRentComponent, canActivate: [AuthGuard]},
 ];

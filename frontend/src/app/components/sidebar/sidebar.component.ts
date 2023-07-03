@@ -17,7 +17,7 @@ export const ROUTES: RouteInfo[] = [
     {path: '/devices', title: 'Eszközök kezelése', icon: 'sd_storage', class: '', inMenuBar: true},
     {path: '/rents', title: 'Kivitelek kezelése', icon: 'local_shipping', class: '', inMenuBar: true},
     {path: '/tickets', title: 'Hibajegyek', icon: 'bug_report', class: '', inMenuBar: true},
-    {path: '/user-profile', title: 'Beállítások', icon: 'person', class: '', inMenuBar: true},
+    {path: '/settings', title: 'Beállítások', icon: 'person', class: '', inMenuBar: true},
 ];
 
 @Component({

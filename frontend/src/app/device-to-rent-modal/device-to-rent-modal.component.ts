@@ -11,13 +11,39 @@ import * as $ from 'jquery';
 })
 export class DeviceToRentModalComponent implements OnInit {
     @Input() device: Device;
+    @Input() method: string;
+    @Input() initialQuantity: number = 1;
+
+    titleText = 'Eszköz hozzáadása';
+    amountText = 'Kivinni kívánt mennyiség';
+    buttonText = 'Hozzáadás';
+
     amountFormControl = new UntypedFormControl();
 
     constructor(public activeModal: NgbActiveModal) {
     }
 
     ngOnInit(): void {
-        this.amountFormControl.setValue(1);
+        this.amountFormControl.setValue(this.initialQuantity);
+
+        switch (this.method) {
+            case 'add':
+                this.titleText = 'Eszköz hozzáadása';
+                this.amountText = 'Kivinni kívánt mennyiség';
+                this.buttonText = 'Hozzáadás';
+                break;
+            case 'pack':
+                this.titleText = 'Eszköz elpakolása';
+                this.amountText = 'Kivinni kívánt mennyiség';
+                this.buttonText = 'Hozzáadás';
+                break;
+            case 'back':
+                this.titleText = 'Eszköz visszavétele';
+                this.amountText = 'Visszahozott mennyiség';
+                this.buttonText = 'Visszavétel';
+                break;
+        }
+
     }
 
     finish() {

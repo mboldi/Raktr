@@ -246,12 +246,13 @@ export class EditRentComponent implements OnInit {
                                     windowClass: 'modal-holder'
                                 });
                                 editModal.componentInstance.device = device;
+                                editModal.componentInstance.method = this.barcodeMode;
 
                                 editModal.result.catch(result => {
                                     if (result !== null && result as number !== 0) {
-                                        this.addScannableToRent(device, result);
+                                        this.addScannableToRent(device, result, false);
                                     }
-                                })
+                                });
                             } else {
                                 this.addScannableToRent(device, 1);
                             }
@@ -272,9 +273,33 @@ export class EditRentComponent implements OnInit {
                     this.showNotification('Nem találtam eszközt a listában ilyen vonalkóddal!', 'warning');
                 } else {
                     if (rentItemToChange.backStatus === BackStatus.OUT) {
-                        this.showNotification(`${rentItemToChange.scannable.name} ár kinn!`, 'warning');
+                        this.showNotification(`${rentItemToChange.scannable.name} már kinn!`, 'warning');
                     } else {
-                        this.togglePackedStatus(rentItemToChange);
+                        const scannable = rentItemToChange.scannable;
+
+                        if (scannable['type_'] === 'device' && (scannable as Device).quantity > 1) {
+
+                            const editModal = this.modalService.open(DeviceToRentModalComponent, {
+                                size: 'md',
+                                windowClass: 'modal-holder'
+                            });
+                            editModal.componentInstance.device = scannable as Device;
+                            editModal.componentInstance.method = this.barcodeMode;
+                            editModal.componentInstance.initialQuantity = rentItemToChange.outQuantity;
+
+                            editModal.result.catch(result => {
+                                if (result !== null && result as number !== 0) {
+                                    if (result !== rentItemToChange.outQuantity) {
+                                        this.showNotification(`Módosítottam a kivitt mennyiséget ${result} darabra`, 'warning');
+
+                                        this.togglePackedStatus(rentItemToChange, true, result);
+                                    }
+                                }
+                            })
+
+                        } else {
+                            this.togglePackedStatus(rentItemToChange);
+                        }
                     }
                 }
             } else if (this.barcodeMode === 'back') {
@@ -286,32 +311,55 @@ export class EditRentComponent implements OnInit {
                     if (rentItemToChange.backStatus === BackStatus.BACK) {
                         this.showNotification(`${rentItemToChange.scannable.name} már visszavéve!`, 'warning');
                     } else {
-                        this.toggleBackStatus(rentItemToChange);
+                        const scannable = rentItemToChange.scannable;
+
+                        if (scannable['type_'] === 'device' && (scannable as Device).quantity > 1) {
+
+                            const editModal = this.modalService.open(DeviceToRentModalComponent, {
+                                size: 'md',
+                                windowClass: 'modal-holder'
+                            });
+                            editModal.componentInstance.device = scannable as Device;
+                            editModal.componentInstance.method = this.barcodeMode;
+
+                            editModal.result.catch(result => {
+                                if (result !== null && result as number !== 0) {
+                                    if (result !== rentItemToChange.outQuantity) {
+                                        this.showNotification(`${rentItemToChange.outQuantity} db ment ki, de ${result} érkezne vissza, ezt nem engedhetem!`, 'danger');
+                                    } else {
+                                        this.toggleBackStatus(rentItemToChange);
+                                    }
+                                }
+                            })
+
+                        } else {
+                            this.toggleBackStatus(rentItemToChange);
+                        }
                     }
                 }
             }
 
             this.addRentFormControl.setValue('');
         } else {
-            this
-                .showNotification(
-                    'Add meg a vonalkódot!'
-                    ,
-                    'warning'
-                );
+            // this.showNotification('Add meg a vonalkódot!', 'warning');
         }
     }
 
-    addScannableToRent(scannable: Scannable, amount: number) {
+    addScannableToRent(scannable: Scannable, amount: number, doNotify = true) {
         let newRentItem = null;
 
         this.rent.rentItems.forEach(rentItem => {
             if (rentItem.scannable.barcode === scannable.barcode) {
                 if (rentItem.outQuantity !== amount) {
                     rentItem.outQuantity = amount;
-                    this.showNotification(scannable.name + ' mennyisége frissítve: ' + amount + 'db', 'success');
+
+                    if (doNotify) {
+                        this.showNotification(scannable.name + ' mennyisége frissítve: ' + amount + 'db', 'success');
+                    }
                 } else {
-                    this.showNotification('Ez az eszköz (' + scannable.name + ') már hozzá van adva ilyen mennyiségben', 'warning');
+                    if (doNotify) {
+                        this.showNotification('Ez az eszköz (' + scannable.name + ') már hozzá van adva ilyen mennyiségben', 'warning');
+                    }
                 }
                 newRentItem = rentItem;
             }
@@ -324,33 +372,35 @@ export class EditRentComponent implements OnInit {
                 amount,
                 new Date(),
                 this.user);
+        }
 
-            this.rentService.addItemToRent(this.rent.id, newRentItem).subscribe(rent_ => {
-                this.rentService.getRent(this.rent.id).subscribe(rent => {
-                    if (rent === undefined) {
+        this.rentService.addItemToRent(this.rent.id, newRentItem).subscribe(rent_ => {
+            this.rentService.getRent(this.rent.id).subscribe(rent => {
+                if (rent === undefined) {
+                    if (doNotify) {
                         this.showNotification('Nem sikerült hozzáadni', 'warning');
-                    } else {
-                        this.rent = rent;
-
-                        if (amount > 1) {
-                            this.showNotification(amount + ' darab ' + scannable.name + ' hozzáadva sikeresen!', 'success');
-                        } else {
-                            this.showNotification(scannable.name + ' hozzáadva sikeresen!', 'success');
-                        }
-
-                        this.searchControl.setValue('');
-
-                        this.updateScannablesOfRent();
                     }
-                })
-            }, error => {
-                if (error.status === 409) {
-                    this.showNotification('Nem lehetséges ennyit bérelni ebből az eszközből', 'warning');
                 } else {
-                    this.showNotification('Nem sikerült hozzáadni!', 'warning')
+                    this.rent = rent;
+
+                    if (amount > 1 && doNotify) {
+                        this.showNotification(amount + ' darab ' + scannable.name + ' hozzáadva sikeresen!', 'success');
+                    } else {
+                        this.showNotification(scannable.name + ' hozzáadva sikeresen!', 'success');
+                    }
+
+                    this.searchControl.setValue('');
+
+                    this.updateScannablesOfRent();
                 }
             })
-        }
+        }, error => {
+            if (error.status === 409) {
+                this.showNotification('Nem lehetséges ennyit bérelni ebből az eszközből', 'danger');
+            } else {
+                this.showNotification('Nem sikerült hozzáadni!', 'warning')
+            }
+        })
 
     }
 
@@ -416,12 +466,16 @@ export class EditRentComponent implements OnInit {
         )
     }
 
-    private togglePackedStatus(rentItem: RentItem) {
+    private togglePackedStatus(rentItem: RentItem, setQuantity = false, finalQuantity = 1) {
         if (rentItem.backStatus !== BackStatus.BACK) {
             if (rentItem.backStatus === BackStatus.PLANNED) {
                 rentItem.backStatus = BackStatus.OUT;
             } else {
                 rentItem.backStatus = BackStatus.PLANNED;
+            }
+
+            if (setQuantity) {
+                rentItem.outQuantity = finalQuantity;
             }
 
             this.rentService.updateInRent(this.rent.id, rentItem).subscribe(
@@ -437,7 +491,7 @@ export class EditRentComponent implements OnInit {
         } else {
             rentItem.backStatus = BackStatus.BACK;
             this.filteredRentItems.find(item => item.id === rentItem.id).backStatus = rentItem.backStatus;
-            this.showNotification('Már visszajött, nem tudod nem elpakolni :D', 'warning')
+            this.showNotification('Már visszajött, nem tudod nem elpakolni :D', 'danger')
         }
     }
 

@@ -9,14 +9,20 @@
                                 <div class="nav-tabs-wrapper">
                                     <ul class="nav nav-tabs" data-tabs="tabs">
                                         <li class="nav-item " [ngClass]="{ 'active':currentTab==='devices'}">
-                                            <a href="#devices" class="nav-link" [ngClass]="{ 'active':currentTab==='devices'}" data-toggle="tab"
+                                            <a href="#devices" class="nav-link"
+                                               [routerLink]="['/devices']"
+                                               [ngClass]="{ 'active':currentTab==='devices'}"
+                                               data-toggle="tab"
                                                (click)="setTab('devices')">
                                                 <h4 class="mb-0">Eszközök</h4>
                                                 <div class="ripple-container"></div>
                                             </a>
                                         </li>
                                         <li class="nav-item" [ngClass]="{ 'active':currentTab==='composites'}">
-                                            <a href="#composites" class="nav-link" [ngClass]="{ 'active':currentTab==='composites'}" data-toggle="tab"
+                                            <a href="#composites" class="nav-link"
+                                               [routerLink]="['/compositeItems']"
+                                               [ngClass]="{ 'active':currentTab==='composites'}"
+                                               data-toggle="tab"
                                                (click)="setTab('composites')">
                                                 <h4 class="mb-0">Összetett eszközök</h4>
                                                 <div class="ripple-container"></div>

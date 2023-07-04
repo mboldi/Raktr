@@ -179,7 +179,7 @@
                                         <mat-autocomplete #autoNewDevice="matAutocomplete">
                                             <mat-option *ngFor="let option of filteredNewDeviceOptions"
                                                         [value]="option.barcode">
-                                                {{option.name}} <span *ngIf="option.type_ == 'device' && option.maker != ''"> - {{option.maker}} {{option.type}}</span>
+                                                {{option.name}} - {{option.textIdentifier}}<!-- <span *ngIf="option.type_ == 'device' && option.maker != ''"> - {{option.maker}} {{option.type}}</span> -->
                                             </mat-option>
                                         </mat-autocomplete>
 

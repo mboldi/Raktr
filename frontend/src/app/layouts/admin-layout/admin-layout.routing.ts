@@ -12,6 +12,7 @@ import {EditProjectComponent} from '../../edit-project/edit-project.component';
 export const AdminLayoutRoutes: Routes = [
     {path: 'overview', component: OverviewComponent, canActivate: [AuthGuard]},
     {path: 'devices', component: DevicesComponent, canActivate: [AuthGuard]},
+    {path: 'compositeItems', component: DevicesComponent, canActivate: [AuthGuard]},
     {path: 'rents', component: RentsComponent, canActivate: [AuthGuard]},
     {path: 'tickets', component: TicketsComponent, canActivate: [AuthGuard]},
     {path: 'projects', component: ProjectsComponent, canActivate: [AuthGuard]},

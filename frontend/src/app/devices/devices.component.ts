@@ -16,9 +16,10 @@ import {DeviceStatus} from '../_model/DeviceStatus';
 import {Location} from '../_model/Location';
 import {HunPaginator} from '../helpers/hun-paginator';
 import {read, utils, writeFile} from 'xlsx';
-import {User} from "../_model/User";
-import {UserService} from "../_services/user.service";
-import {DeviceForExcel} from "../_model/DeviceForExcel";
+import {User} from '../_model/User';
+import {UserService} from '../_services/user.service';
+import {DeviceForExcel} from '../_model/DeviceForExcel';
+import {Router} from '@angular/router';
 
 @Component({
     selector: 'app-table-list',
@@ -51,11 +52,17 @@ export class DevicesComponent implements OnInit {
                 private deviceService: DeviceService,
                 private compositeService: CompositeService,
                 private modalService: NgbModal,
-                private userService: UserService) {
+                private userService: UserService,
+                private router: Router) {
         this.title.setTitle('Raktr - Eszközök');
+
+        if (this.router.url.toString().includes('compositeItems')) {
+            this.setTab('composites');
+        }
     }
 
     ngOnInit() {
+
         this.searchControl.setValue('');
 
         this.userService.getCurrentUser().subscribe(user => {
@@ -382,6 +389,9 @@ export class DevicesComponent implements OnInit {
         utils.book_append_sheet(wb, ws, 'Devices');
         writeFile(wb, 'raktr-devices.xlsx');
     }
+
+    protected readonly console = console;
+
 }
 
 function compare(a: number | string, b: number | string, isAsc: boolean) {

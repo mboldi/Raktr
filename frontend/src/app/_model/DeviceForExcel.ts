@@ -45,7 +45,7 @@ export class DeviceForExcel {
         this.quantity = device.quantity;
         this.aquiredFrom = device.aquiredFrom;
         this.dateOfAcquisition = device.dateOfAcquisition ? device.dateOfAcquisition.toLocaleDateString('hu-HU') : '';
-        this.owner = device.owner.name;
+        this.owner = device.owner ? device.owner.name : '';
         this.endOfWarranty = device.endOfWarranty ? device.endOfWarranty.toLocaleDateString('hu-HU') : '';
         this.comment = device.comment;
     }

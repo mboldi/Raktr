@@ -390,8 +390,6 @@ export class DevicesComponent implements OnInit {
         writeFile(wb, 'raktr-devices.xlsx');
     }
 
-    protected readonly console = console;
-
 }
 
 function compare(a: number | string, b: number | string, isAsc: boolean) {

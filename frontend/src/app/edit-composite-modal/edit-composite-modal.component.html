@@ -107,7 +107,18 @@
                 <input matInput placeholder="Új hozzáadása"
                        autocomplete="off"
                        [formControl]="addDeviceFormControl"
-                       (keyup.enter)="addDeviceToComposite()">
+                       [matAutocomplete]="autoNewDevice"
+                       (keyup.escape)="addDeviceFormControl.reset()"
+                       (keyup.enter)="addDeviceToComposite()"
+                       (select)="addDeviceToComposite()">
+
+                <mat-autocomplete #autoNewDevice="matAutocomplete">
+                    <mat-option *ngFor="let option of filteredNewDeviceOptions"
+                                [value]="option.barcode">
+                        {{option.name}} - {{option.textIdentifier}}
+                    </mat-option>
+                </mat-autocomplete>
+
                 <button mat-button mat-icon-button matSuffix type="button"
                         *ngIf="addDeviceFormControl.value"
                         (click)="addDeviceToComposite()">

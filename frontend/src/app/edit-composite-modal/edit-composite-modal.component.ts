@@ -17,6 +17,7 @@ import {barcodeValidator} from '../helpers/barcode.validator';
 import {textIdValidator} from '../helpers/textId.validator';
 import {Category} from '../_model/Category';
 import {CategoryService} from '../_services/category.service';
+import {Scannable} from "../_model/Scannable";
 
 @Component({
     selector: 'app-edit-composite-modal',
@@ -40,6 +41,9 @@ export class EditCompositeModalComponent implements OnInit {
     private currentLocationInput = '';
     private currentCategoryInput = '';
 
+    allDevices: Device[] = [];
+    filteredNewDeviceOptions: Scannable[] = [];
+
     constructor(public activeModal: NgbActiveModal,
                 private fb: UntypedFormBuilder,
                 private compositeItemService: CompositeService,
@@ -55,6 +59,10 @@ export class EditCompositeModalComponent implements OnInit {
         this.userService.getCurrentUser().subscribe(user => {
             this.fullAccessMember = user.isFullAccessMember();
         });
+
+        this.deviceService.getDevices().subscribe(devices => {
+            this.allDevices = devices;
+        })
     }
 
     ngOnInit(): void {
@@ -105,6 +113,25 @@ export class EditCompositeModalComponent implements OnInit {
 
         this.compositeDataForm.get('barcode').markAsTouched();
         this.compositeDataForm.get('textIdentifier').markAsTouched();
+
+        this.addDeviceFormControl.valueChanges.subscribe(value => {
+            if (value === '' || value === null) {
+                this.filteredNewDeviceOptions = []
+                return;
+            }
+
+            let filteredItems = [];
+
+            const items = this.allDevices.sort((a, b) => a.name.localeCompare(b.name));
+            filteredItems = items.filter(item => item.name.toLowerCase().includes(value.toLowerCase()))
+                                 .filter(item => this.compositeItem.devices.find(i => i.id === item.id) === undefined)
+
+            if (filteredItems.length < 10) {
+                this.filteredNewDeviceOptions = filteredItems;
+            } else {
+                this.filteredNewDeviceOptions = [];
+            }
+        });
     }
 
     private setFormData() {

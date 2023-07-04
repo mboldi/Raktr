@@ -23,7 +23,7 @@ import {MatDatepickerInputEvent} from '@angular/material/datepicker';
 import {User} from '../_model/User';
 import {Comment} from '../_model/Comment';
 import {MatFabMenu} from '@angular-material-extensions/fab-menu';
-import {CompositeService} from "../_services/composite.service";
+import {CompositeService} from '../_services/composite.service';
 
 @Component({
     selector: 'app-edit-rent',
@@ -536,16 +536,25 @@ export class EditRentComponent implements OnInit {
 
     quantityChanged(event, rentItem: RentItem) {
         const oldQuantity = rentItem.outQuantity;
-        rentItem.outQuantity = event.target.value;
 
-        this.rentService.updateInRent(this.rent.id, rentItem).subscribe(rent => {
-                this.showNotification(rentItem.scannable.name + ' mennyisége frissítve: ' + rentItem.outQuantity + 'db', 'success');
-            },
-            error => {
-                this.showNotification('Nem lehet ilyen mennyiségben kivinni!', 'warning');
-                event.target.value = oldQuantity;
-            }
-        )
+        if (event.target.value < 1 ||
+            rentItem.scannable.type_ !== 'device' ||
+            event.target.value > (rentItem.scannable as Device).quantity) {
+
+            event.target.value = oldQuantity;
+            this.showNotification('Nem lehet ilyen mennyiségben kivinni!', 'danger');
+        } else {
+            rentItem.outQuantity = event.target.value;
+
+            this.rentService.updateInRent(this.rent.id, rentItem).subscribe(rent => {
+                    this.showNotification(rentItem.scannable.name + ' mennyisége frissítve: ' + rentItem.outQuantity + 'db', 'success');
+                },
+                error => {
+                    this.showNotification('Nem lehet ilyen mennyiségben kivinni!', 'warning');
+                    event.target.value = oldQuantity;
+                }
+            )
+        }
     }
 
     isFinalizable() {

@@ -17,6 +17,7 @@ export const AdminLayoutRoutes: Routes = [
     {path: 'compositeItems/:id', component: DevicesComponent, canActivate: [AuthGuard]},
     {path: 'rents', component: RentsComponent, canActivate: [AuthGuard]},
     {path: 'tickets', component: TicketsComponent, canActivate: [AuthGuard]},
+    {path: 'tickets/:id', component: TicketsComponent, canActivate: [AuthGuard]},
     {path: 'projects', component: ProjectsComponent, canActivate: [AuthGuard]},
     {path: 'edit-project/:id', component: EditProjectComponent, canActivate: [AuthGuard]},
     {path: 'settings', component: UserProfileComponent, canActivate: [AuthGuard]},

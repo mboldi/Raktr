@@ -7,6 +7,10 @@ import {Ticket} from '../_model/Ticket';
 import {EditTicketComponent} from '../edit-ticket/edit-ticket.component';
 import {TicketService} from '../_services/ticket.service';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import { Location as RouterLocation } from '@angular/common' ;
+import {tick} from "@angular/core/testing";
+import {ActivatedRoute, Router} from "@angular/router";
+import * as $ from "jquery";
 
 @Component({
     selector: 'app-tickets',
@@ -29,7 +33,10 @@ export class TicketsComponent implements OnInit {
 
     constructor(
         private ticketService: TicketService,
-        private modalService: NgbModal
+        private modalService: NgbModal,
+        private route: ActivatedRoute,
+        private router: Router,
+        private routerLocation: RouterLocation
     ) {
         ticketService.getTickets().subscribe(tickets => {
             this.tickets = this.sortTickets(tickets);
@@ -50,7 +57,21 @@ export class TicketsComponent implements OnInit {
             )
 
             this.setTicketsPage();
-        })
+        });
+
+        // opening ticket if ID in URL is present
+
+        if (this.route.snapshot.paramMap.get('id') !== null) {
+            const id = this.route.snapshot.paramMap.get('id') as unknown as number;
+
+            this.ticketService.getTicket(id).subscribe(ticket => {
+                this.editTicket(ticket);
+            }, error => {
+                this.showNotification('Nem találtam eszközt az URL-ben megadott ID-vel!', 'danger');
+                this.router.navigateByUrl('/devices');
+            });
+
+        }
     }
 
     setTab(tab: string) {
@@ -103,6 +124,8 @@ export class TicketsComponent implements OnInit {
         ticketModal.componentInstance.title = 'Hibajegy szerkesztése';
         ticketModal.componentInstance.ticket = ticket;
 
+        this.routerLocation.go(`/tickets/${ticket.id}`);
+
         ticketModal.result.catch(reason => {
             this.ticketService.getTickets().subscribe(tickets => {
                 this.tickets = tickets;
@@ -110,6 +133,23 @@ export class TicketsComponent implements OnInit {
 
                 this.setTicketsPage();
             });
+        }).then(result => {
+            this.routerLocation.go('/tickets');
+        });
+    }
+
+    private showNotification(message_: string, type: string) {
+        $['notify']({
+            icon: 'add_alert',
+            message: message_
+        }, {
+            type: type,
+            timer: 1000,
+            placement: {
+                from: 'top',
+                align: 'right'
+            },
+            z_index: 2000
         })
     }
 }

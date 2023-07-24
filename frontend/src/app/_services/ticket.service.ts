@@ -27,6 +27,15 @@ export class TicketService {
             );
     }
 
+    getTicket(id: number): Observable<Ticket> {
+        return this.http.get<Ticket>(`${environment.apiUrl}/api/ticket/${id}`)
+            .pipe(
+                map(ticket => {
+                    return Ticket.fromJson(ticket);
+                })
+            );
+    }
+
     addTicket(ticket: Ticket): Observable<Ticket> {
         const headers = new HttpHeaders().set('Content-Type', 'application/json');
 

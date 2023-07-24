@@ -51,9 +51,9 @@ export class Rent {
         newRent.destination = rent.destination;
         newRent.issuer = rent.issuer;
         newRent.renter = rent.renter;
-        newRent.outDate = rent.outDate;
-        newRent.expBackDate = rent.expBackDate;
-        newRent.backDate = rent.backDate;
+        newRent.outDate = new Date(rent.outDate);
+        newRent.expBackDate = new Date(rent.expBackDate);
+        newRent.backDate = rent.backDate ? new Date(rent.backDate) : null;
         newRent.isClosed = rent.isClosed;
         newRent.rentItems = [];
 

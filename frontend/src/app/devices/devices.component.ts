@@ -19,7 +19,7 @@ import {read, utils, writeFile} from 'xlsx';
 import {User} from '../_model/User';
 import {UserService} from '../_services/user.service';
 import {DeviceForExcel} from '../_model/DeviceForExcel';
-import {Router} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 
 @Component({
     selector: 'app-table-list',
@@ -53,7 +53,8 @@ export class DevicesComponent implements OnInit {
                 private compositeService: CompositeService,
                 private modalService: NgbModal,
                 private userService: UserService,
-                private router: Router) {
+                private router: Router,
+                private route: ActivatedRoute) {
         this.title.setTitle('Raktr - Eszközök');
 
         if (this.router.url.toString().includes('compositeItems')) {
@@ -100,6 +101,22 @@ export class DevicesComponent implements OnInit {
 
             this.setCompositePage();
         });
+
+        // opening device if ID in URL is present
+
+        if (this.route.snapshot.paramMap.get('id') !== null) {
+            const id = this.route.snapshot.paramMap.get('id') as unknown as number;
+
+            if (this.currentTab === 'devices') {
+                this.deviceService.getDevice(id).subscribe(dev => {
+                    this.editDevice(dev);
+                }, error => {
+                    this.showNotification('Nem találtam eszközt az URL-ben megadott ID-vel!', 'danger');
+                    this.router.navigateByUrl('/devices')
+                });
+            } else {
+            }
+        }
     }
 
     private setDevicePage() {

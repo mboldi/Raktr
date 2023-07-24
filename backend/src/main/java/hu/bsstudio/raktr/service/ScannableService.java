@@ -5,14 +5,12 @@ import hu.bsstudio.raktr.model.CompositeItem;
 import hu.bsstudio.raktr.model.Device;
 import hu.bsstudio.raktr.model.Scannable;
 import hu.bsstudio.raktr.model.Ticket;
-import hu.bsstudio.raktr.repository.CompositeItemRepository;
-import hu.bsstudio.raktr.repository.DeviceRepository;
-import hu.bsstudio.raktr.repository.RentItemRepository;
-import hu.bsstudio.raktr.repository.TicketRepository;
+import hu.bsstudio.raktr.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -25,6 +23,7 @@ public class ScannableService {
     private final DeviceRepository deviceRepository;
     private final CompositeItemRepository compositeItemRepository;
     private final RentItemRepository rentItemRepository;
+    private final RentRepository rentRepository;
 
     public final Optional<? extends Scannable> getByBarcode(final String barcode) {
         var foundDevice = deviceRepository.findByBarcode(barcode);
@@ -61,27 +60,22 @@ public class ScannableService {
     }
 
     public final Optional<List<RentItemWithRentData>> getRentItemsOfScannable(final Long id) {
-        var foundDevice = deviceRepository.findById(id);
+        var rentItems = rentItemRepository.findRentItemsByScannable_Id(id);
 
-        if (foundDevice.isEmpty()) {
-            var foundCompositeItem = compositeItemRepository.findById(id);
-            if (foundCompositeItem.isEmpty()) {
-                return Optional.empty();
-            } else {
-                //log.info("Composite Item found by id: {}", foundCompositeItem.get());
-                return Optional.of(foundCompositeItem.get().getRentItems().stream()
-                        .map(rentItem -> new RentItemWithRentData(rentItem, rentItem.getRent()))
-                        .collect(Collectors.toList()));
-            }
-        } else {
-            //log.info("Device found by barcode: {}", foundDevice.get());
-            return Optional.of(foundDevice.get().getRentItems().stream()
-                    .map(rentItem -> {
-                        log.info("found: {}", rentItemRepository.findRentOfRentItem(rentItem.getId()).orElse(null));
-                        return new RentItemWithRentData(rentItem, rentItemRepository.findRentOfRentItem(rentItem.getId()).orElse(null));
-                    })
-                    .collect(Collectors.toList()));
+        if (rentItems.isEmpty())
+            return Optional.empty();
+
+        var rentItemsWithRent = new ArrayList<RentItemWithRentData>();
+
+        for (int i = 0; i < rentItems.get().size(); i++) {
+            var item = rentItems.get().get(i);
+
+            var rent = rentRepository.findByRentItemsId(item.getId());
+
+            rentItemsWithRent.add(new RentItemWithRentData(item, rent.get()));
         }
+
+        return Optional.of(rentItemsWithRent);
     }
 
     public final Long getScannableCount() {

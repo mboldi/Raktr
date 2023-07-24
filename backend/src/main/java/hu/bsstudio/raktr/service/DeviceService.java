@@ -8,8 +8,10 @@ import hu.bsstudio.raktr.model.Owner;
 import hu.bsstudio.raktr.repository.CategoryRepository;
 import hu.bsstudio.raktr.repository.DeviceRepository;
 import hu.bsstudio.raktr.repository.LocationRepository;
+
 import java.util.List;
 import java.util.Optional;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -85,9 +87,9 @@ public final class DeviceService {
             Optional<Device> byTextIdentifier = deviceRepository.findByTextIdentifier(foundDevice.get().getTextIdentifier());
 
             if (byBarcode.isPresent() && !byBarcode.get().getId().equals(foundDevice.get().getId()) ||
-                byTextIdentifier.isPresent() && !byTextIdentifier.get().getId().equals(foundDevice.get().getId())) {
+                    byTextIdentifier.isPresent() && !byTextIdentifier.get().getId().equals(foundDevice.get().getId())) {
                 log.warn("Original device barcode ({}) or textID ({}) taken",
-                    foundDevice.get().getBarcode(), foundDevice.get().getTextIdentifier());
+                        foundDevice.get().getBarcode(), foundDevice.get().getTextIdentifier());
                 throw new ObjectConflictException();
             }
 
@@ -155,8 +157,8 @@ public final class DeviceService {
 
         if (category == null) {
             category = categoryRepository.save(Category.builder()
-                .name(deviceRequest.getCategory().getName())
-                .build());
+                    .name(deviceRequest.getCategory().getName())
+                    .build());
         }
         deviceRequest.setCategory(category);
 
@@ -164,8 +166,8 @@ public final class DeviceService {
 
         if (location == null) {
             location = locationRepository.save(Location.builder()
-                .name(deviceRequest.getLocation().getName())
-                .build());
+                    .name(deviceRequest.getLocation().getName())
+                    .build());
         }
         deviceRequest.setLocation(location);
     }

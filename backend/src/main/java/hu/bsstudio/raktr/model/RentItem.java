@@ -61,7 +61,7 @@ public class RentItem extends DomainAuditModel {
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     @JsonIgnore
-    @ManyToOne
+    @ManyToOne(targetEntity = Rent.class, fetch = LAZY)
     @JoinColumn(name = "rent_id")
     private Rent rent;
 

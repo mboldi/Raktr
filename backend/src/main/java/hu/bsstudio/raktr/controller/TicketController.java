@@ -83,7 +83,7 @@ public class TicketController {
             .orElseGet(() -> ResponseEntity.status(NOT_FOUND).build());
     }
 
-    @GetMapping("/ofscannable/{scannableId}")
+    @GetMapping("/ofScannable/{scannableId}")
     public List<Ticket> getTicketsOfScannable(@PathVariable final Long scannableId) {
         log.info("Incoming request for tickets of scannable item with id {}", scannableId);
 

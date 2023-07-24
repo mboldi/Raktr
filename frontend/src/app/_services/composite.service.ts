@@ -29,6 +29,15 @@ export class CompositeService {
             );
     }
 
+    getCompositeItem(id: number): Observable<CompositeItem> {
+        return this.http.get<CompositeItem>(`${environment.apiUrl}/api/composite/${id}`)
+            .pipe(
+                map(composite => {
+                    return CompositeItem.fromJson(composite);
+                })
+            );
+    }
+
     addCompositeItem(compositeItem: CompositeItem): Observable<CompositeItem> {
         const headers = new HttpHeaders().set('Content-Type', 'application/json');
         compositeItem.id = null;

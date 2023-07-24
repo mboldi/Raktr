@@ -115,6 +115,12 @@ export class DevicesComponent implements OnInit {
                     this.router.navigateByUrl('/devices')
                 });
             } else {
+                this.compositeService.getCompositeItem(id).subscribe(compositeItem => {
+                    this.editCompositeItem(compositeItem);
+                }, error => {
+                    this.showNotification('Nem találtam eszközt az URL-ben megadott ID-vel!', 'danger');
+                    this.router.navigateByUrl('/compositeItems')
+                });
             }
         }
     }

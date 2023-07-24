@@ -26,6 +26,14 @@ public class TicketService {
         return allTickets;
     }
 
+    public Optional<Ticket> get(final Long ticketId) {
+        var ticket = ticketRepository.findById(ticketId);
+
+        log.info("Ticket found: {}", ticket);
+
+        return ticket;
+    }
+
     public Optional<Ticket> addTicket(final Ticket newTicket) {
         var foundTicket = newTicket.getId() == null ? Optional.empty() : ticketRepository.findById(newTicket.getId());
 

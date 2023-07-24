@@ -39,6 +39,17 @@ public class TicketController {
         return ticketService.getAll();
     }
 
+    @GetMapping("/{ticketId}")
+    public ResponseEntity<Ticket> getAllTickets(@PathVariable final Long ticketId) {
+        log.info("Incoming request for ticket with id: {}", ticketId);
+
+        var ticket = ticketService.get(ticketId);
+
+        return ticket
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.status(CONFLICT).build());
+    }
+
     @PostMapping
     public ResponseEntity<Ticket> addTicket(@Valid @RequestBody Ticket newTicket) {
         log.info("Incoming request to add ticket: {}", newTicket);

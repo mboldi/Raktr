@@ -124,7 +124,9 @@ export class TicketsComponent implements OnInit {
         ticketModal.componentInstance.title = 'Hibajegy szerkesztése';
         ticketModal.componentInstance.ticket = ticket;
 
-        this.routerLocation.go(`/tickets/${ticket.id}`);
+        if (!this.route.snapshot.url.toString().includes(ticket.id.toString())) {
+            this.routerLocation.go(`/tickets/${ticket.id}`);
+        }
 
         ticketModal.result.catch(reason => {
             this.ticketService.getTickets().subscribe(tickets => {

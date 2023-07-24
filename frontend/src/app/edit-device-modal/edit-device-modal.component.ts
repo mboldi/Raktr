@@ -10,7 +10,6 @@ import {CategoryService} from '../_services/category.service';
 import {DeviceService} from '../_services/device.service';
 import {UserService} from '../_services/user.service';
 import {MatDialog} from '@angular/material/dialog';
-import {User} from '../_model/User';
 import * as $ from 'jquery';
 import {ScannableService} from '../_services/scannable.service';
 import {barcodeValidator} from '../helpers/barcode.validator';
@@ -18,6 +17,10 @@ import {textIdValidator} from '../helpers/textId.validator';
 import {DeviceStatus} from '../_model/DeviceStatus';
 import {Owner} from '../_model/Owner';
 import {OwnerService} from '../_services/owner.service';
+import {RentItemWithRentData} from '../_model/RentItemWithRentData';
+import {Ticket} from '../_model/Ticket';
+import {Router} from '@angular/router';
+import {TicketStatus} from "../_model/TicketStatus";
 
 @Component({
     selector: 'app-edit-device-modal',
@@ -42,6 +45,9 @@ export class EditDeviceModalComponent implements OnInit {
     currentLocationInput = '';
     currentOwnerInput = '';
 
+    rentitemsAndRents: RentItemWithRentData[] = [];
+    tickets: Ticket[] = [];
+
     constructor(public activeModal: NgbActiveModal,
                 private fb: UntypedFormBuilder,
                 private locationService: LocationService,
@@ -50,7 +56,8 @@ export class EditDeviceModalComponent implements OnInit {
                 private deviceService: DeviceService,
                 private scannableService: ScannableService,
                 private userService: UserService,
-                public dialog: MatDialog) {
+                public dialog: MatDialog,
+                private router: Router) {
         if (this.device === undefined) {
             this.device = new Device();
             this.device.id = -1;
@@ -86,6 +93,28 @@ export class EditDeviceModalComponent implements OnInit {
             })
         } else {
             this.setFormFields();
+
+            this.scannableService.getRentsOfScannable(this.device.id).subscribe(result => {
+                this.rentitemsAndRents = result
+                    .filter(item => !item.rent.isClosed)
+                    .sort((a, b) => b.rent.expBackDate.getTime() - a.rent.expBackDate.getTime());
+
+                result
+                    .filter(item => item.rent.isClosed)
+                    .sort((a, b) => b.rent.expBackDate.getTime() - a.rent.expBackDate.getTime())
+                    .forEach(item => this.rentitemsAndRents.push(item));
+            });
+
+            this.scannableService.getTicketsOfScannable(this.device.id).subscribe(result => {
+                this.tickets = result.filter(item => !(item.status === TicketStatus.CLOSED));
+
+                this.tickets.sort((a, b) => b.dateOfWriting.getTime() - a.dateOfWriting.getTime());
+
+                result
+                    .filter(item => (item.status === TicketStatus.CLOSED))
+                    .sort((a, b) => b.dateOfWriting.getTime() - a.dateOfWriting.getTime())
+                    .forEach(item => this.tickets.push(item));
+            });
         }
 
         this.userService.getCurrentUser().subscribe(user => {
@@ -235,6 +264,18 @@ export class EditDeviceModalComponent implements OnInit {
         });
     }
 
+    goToRent(rentId: number) {
+        this.activeModal.dismiss('noRedirect');
+
+        this.router.navigateByUrl('/rent/' + rentId);
+    }
+
+    editTicket(id: number) {
+        this.activeModal.dismiss('noRedirect');
+
+        this.router.navigateByUrl('/tickets/' + id);
+    }
+
     showNotification(message_: string, type: string) {
         $['notify']({
             icon: 'add_alert',
@@ -248,9 +289,5 @@ export class EditDeviceModalComponent implements OnInit {
             },
             z_index: 2000
         })
-    }
-
-    closeModal() {
-        this.activeModal.dismiss(0);
     }
 }

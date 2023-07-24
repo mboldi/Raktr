@@ -41,6 +41,7 @@ import {TicketsComponent} from './tickets/tickets.component';
 import {EditProjectComponent} from './edit-project/edit-project.component';
 import {EditTicketComponent} from './edit-ticket/edit-ticket.component';
 import {MatFabMenuModule} from '@angular-material-extensions/fab-menu';
+import {MatTabsModule} from "@angular/material/tabs";
 
 @NgModule({
     imports: [
@@ -71,6 +72,7 @@ import {MatFabMenuModule} from '@angular-material-extensions/fab-menu';
         MatExpansionModule,
         MatPaginatorModule,
         MatFabMenuModule,
+        MatTabsModule,
     ],
     declarations: [
         AppComponent,

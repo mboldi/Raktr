@@ -24,6 +24,14 @@ export class Ticket extends Commentable {
             ticket.severity
         );
 
+        if (ticket.status.toString() === 'OPEN') {
+            newTicket.status = TicketStatus.OPEN;
+        } else if (ticket.status.toString() === 'WORKING_ON_IT') {
+            newTicket.status = TicketStatus.WORKING_ON_IT
+        } else if (ticket.status.toString() === 'CLOSED') {
+            newTicket.status = TicketStatus.CLOSED
+        }
+
         if (ticket.scannableOfProblem !== undefined) {
             if (ticket.scannableOfProblem['@type'] === 'device') {
                 newTicket.scannableOfProblem = Device.fromJson(ticket.scannableOfProblem as Device);

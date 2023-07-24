@@ -20,7 +20,7 @@ import {User} from '../_model/User';
 import {UserService} from '../_services/user.service';
 import {DeviceForExcel} from '../_model/DeviceForExcel';
 import {ActivatedRoute, Router} from '@angular/router';
-import { Location as RouterLocation } from '@angular/common' ;
+import {Location as RouterLocation} from '@angular/common' ;
 
 @Component({
     selector: 'app-table-list',
@@ -269,8 +269,10 @@ export class DevicesComponent implements OnInit {
                     this.setDevicePage();
                 });
             }
-        }).then(result => {
-            this.routerLocation.go('/devices');
+
+            if (reason !== 'noRedirect') {
+                this.routerLocation.go('/devices');
+            }
         });
     }
 
@@ -281,10 +283,12 @@ export class DevicesComponent implements OnInit {
 
         this.routerLocation.go(`/compositeItems/${compositeItem.id}`);
 
-        editModal.result.catch(() => {
+        editModal.result.catch(reason => {
             this.getComposites();
-        }).then(result => {
-            this.routerLocation.go('/compositeItems');
+
+            if (reason !== 'noRedirect') {
+                this.routerLocation.go('/devices');
+            }
         });
     }
 

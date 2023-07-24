@@ -20,6 +20,7 @@ import {User} from '../_model/User';
 import {UserService} from '../_services/user.service';
 import {DeviceForExcel} from '../_model/DeviceForExcel';
 import {ActivatedRoute, Router} from '@angular/router';
+import { Location as RouterLocation } from '@angular/common' ;
 
 @Component({
     selector: 'app-table-list',
@@ -54,7 +55,8 @@ export class DevicesComponent implements OnInit {
                 private modalService: NgbModal,
                 private userService: UserService,
                 private router: Router,
-                private route: ActivatedRoute) {
+                private route: ActivatedRoute,
+                private routerLocation: RouterLocation) {
         this.title.setTitle('Raktr - Eszközök');
 
         if (this.router.url.toString().includes('compositeItems')) {
@@ -112,14 +114,14 @@ export class DevicesComponent implements OnInit {
                     this.editDevice(dev);
                 }, error => {
                     this.showNotification('Nem találtam eszközt az URL-ben megadott ID-vel!', 'danger');
-                    this.router.navigateByUrl('/devices')
+                    this.router.navigateByUrl('/devices');
                 });
             } else {
                 this.compositeService.getCompositeItem(id).subscribe(compositeItem => {
                     this.editCompositeItem(compositeItem);
                 }, error => {
                     this.showNotification('Nem találtam eszközt az URL-ben megadott ID-vel!', 'danger');
-                    this.router.navigateByUrl('/compositeItems')
+                    this.router.navigateByUrl('/compositeItems');
                 });
             }
         }
@@ -250,10 +252,13 @@ export class DevicesComponent implements OnInit {
         })
     }
 
+
     editDevice(device: Device) {
         const editModal = this.modalService.open(EditDeviceModalComponent, {size: 'lg'});
         editModal.componentInstance.title = 'Eszköz szerkesztése';
         editModal.componentInstance.device = device;
+
+        this.routerLocation.go(`/devices/${device.id}`);
 
         editModal.result.catch(reason => {
             if (reason === 'delete') {
@@ -264,7 +269,9 @@ export class DevicesComponent implements OnInit {
                     this.setDevicePage();
                 });
             }
-        })
+        }).then(result => {
+            this.routerLocation.go('/devices');
+        });
     }
 
     editCompositeItem(compositeItem: CompositeItem) {
@@ -272,8 +279,12 @@ export class DevicesComponent implements OnInit {
         editModal.componentInstance.title = 'Összetett eszköz szerkesztése';
         editModal.componentInstance.compositeItem = compositeItem;
 
+        this.routerLocation.go(`/compositeItems/${compositeItem.id}`);
+
         editModal.result.catch(() => {
             this.getComposites();
+        }).then(result => {
+            this.routerLocation.go('/compositeItems');
         });
     }
 
@@ -284,7 +295,6 @@ export class DevicesComponent implements OnInit {
                 editDeviceModal.componentInstance.title = 'Új eszköz';
 
                 editDeviceModal.result.catch(result => {
-                    console.log(result);
                     if (result !== 0 && result !== 1) {
                         const index = this.devices.indexOf(result);
                         if (index === -1) {

@@ -1,59 +1,55 @@
 package hu.bsstudio.raktr.security;
 
-import org.springframework.beans.factory.annotation.Value;
+import hu.bsstudio.raktr.model.User;
+import hu.bsstudio.raktr.model.UserRole;
+import hu.bsstudio.raktr.repository.UserRepository;
+import hu.bsstudio.raktr.repository.UserRoleRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.ldap.authentication.ad.ActiveDirectoryLdapAuthenticationProvider;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
+@Slf4j
 @Configuration
 @SuppressWarnings("checkstyle:StaticVariableName")
-@PropertySource("classpath:ldap.properties")
 @EnableWebSecurity
 @Profile("!integrationtest")
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Value("${ldap.domain}")
-    private String domain;
-
-    @Value("${ldap.url}")
-    private String url;
-
-    @Value("${ldap.rootdn}")
-    private String rootDn;
-
-    @Value("${ldap.userDn}")
-    private String userDn;
-
-    @Value("${ldap.password}")
-    private String password;
-
-    private final UserDetailsMapper userDetailsMapper;
+    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     private final MyUserDetailsService userDetailsService;
+    private final UserRepository userRepository;
+    private final UserRoleRepository userRoleRepository;
 
-    public WebSecurityConfig(final UserDetailsMapper userDetailsMapper, final MyUserDetailsService userDetailsService) {
-        this.userDetailsMapper = userDetailsMapper;
+    public WebSecurityConfig(final MyUserDetailsService userDetailsService,
+                             final UserRepository userRepository,
+                             final UserRoleRepository userRoleRepository) {
         this.userDetailsService = userDetailsService;
+        this.userRepository = userRepository;
+        this.userRoleRepository = userRoleRepository;
     }
 
     @Override
-    protected final void configure(final AuthenticationManagerBuilder auth) {
-        ActiveDirectoryLdapAuthenticationProvider adProvider =
-            new ActiveDirectoryLdapAuthenticationProvider(domain, url, rootDn);
+    protected final void configure(final AuthenticationManagerBuilder auth) throws Exception {
+        auth.inMemoryAuthentication()
+                .passwordEncoder(passwordEncoder())
+                .withUser("mboldi")
+                .password(passwordEncoder().encode("admin"))
+                .roles("Stúdiós")
+                .roles("VEZETOSEG")
+                .roles("ADMIN")
+                .roles("BSS");
 
-        adProvider.setConvertSubErrorCodesToExceptions(true);
-        adProvider.setUseAuthenticationRequestCredentials(true);
-        adProvider.setUserDetailsContextMapper(userDetailsMapper);
-
-        auth.authenticationProvider(adProvider);
+        addBoldi();
     }
 
     @Override
@@ -75,5 +71,42 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     CorsFilter corsFilter() {
         return new CorsFilter();
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return passwordEncoder;
+    }
+
+    private void addBoldi() {
+        User mboldiUser = userRepository.findByUsername("mboldi").orElse(null);
+
+        if (mboldiUser == null) {
+            log.info("MBoldi not found, creating...");
+
+            mboldiUser = User.builder()
+                    .withUsername("mboldi")
+                    .withNickName("ifjB")
+                    .withPersonalId("")
+                    .withFamilyName("Márta")
+                    .withGivenName("Boldizsár")
+                    .build();
+
+            UserRole adminRole = new UserRole.Builder()
+                    .withRoleName("ROLE_Admin")
+                    .build();
+
+            UserRole studiosRole = new UserRole.Builder()
+                    .withRoleName("ROLE_Stúdiós")
+                    .build();
+
+            userRoleRepository.save(adminRole);
+            userRoleRepository.save(studiosRole);
+
+            mboldiUser.addRole(userRoleRepository.findByRoleName("ROLE_Admin").get());
+            mboldiUser.addRole(userRoleRepository.findByRoleName("ROLE_Stúdiós").get());
+
+            userRepository.save(mboldiUser);
+        }
     }
 }

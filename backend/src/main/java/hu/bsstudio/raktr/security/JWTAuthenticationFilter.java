@@ -23,6 +23,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Slf4j
@@ -65,7 +66,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         Date expiresAt = new Date(System.currentTimeMillis() + EXPIRATION_TIME);
 
         String token = JWT.create()
-            .withSubject(((LdapUser) auth.getPrincipal()).getUsername())
+            .withSubject(((User) auth.getPrincipal()).getUsername())
             .withExpiresAt(expiresAt)
             .sign(HMAC512(SECRET.getBytes()));
 

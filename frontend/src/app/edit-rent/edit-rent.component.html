@@ -250,7 +250,7 @@
                                             {{rentItem.addedBy.nickName}} - {{rentItem.addedAt | date:'yyyy. MM. d. H:mm'}}
                                         </td>
                                         <td>
-                                            {{rentItem.scannable.getWeight() * rentItem.outQuantity / 1000}} kg
+                                            {{rentItem.scannable.getWeight() * rentItem.outQuantity / 1000 | number: '1.0-2'}} kg
                                         </td>
                                         <td *ngIf="rent.type === 1">
                                             <mat-checkbox color="primary"

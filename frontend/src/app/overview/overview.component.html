@@ -112,7 +112,7 @@
                                         {{rent.rentItems.length}}
                                     </td>
                                     <td>
-                                        {{rent.getSumWeight() / 1000}} kg
+                                        {{(rent.getSumWeight() / 1000) | number: '1.0-2'}} kg
                                     </td>
                                 </tr>
                                 </tbody>

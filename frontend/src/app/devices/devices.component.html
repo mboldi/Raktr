@@ -126,7 +126,7 @@
                                                 {{device.location.name}}
                                             </td>
                                             <td (click)="editDevice(device)">
-                                                {{device.weight / 1000}} kg
+                                                {{device.weight / 1000 | number: '1.0-2'}} kg
                                             </td>
                                             <td (click)="editDevice(device)">
                                                 {{device.textIdentifier}}
@@ -187,7 +187,7 @@
                                                 {{compositeItem.location.name}}
                                             </td>
                                             <td (click)="editCompositeItem(compositeItem)">
-                                                {{compositeItem.getWeight() / 1000}} kg
+                                                {{compositeItem.getWeight() / 1000 | number: '1.0-2'}} kg
                                             </td>
                                             <td (click)="editCompositeItem(compositeItem)">
                                                 {{compositeItem.textIdentifier}}

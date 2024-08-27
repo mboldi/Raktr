@@ -44,29 +44,45 @@
                                 </mat-form-field>
                                 <button class="ml-1 popupBase" mat-button mat-icon-button aria-label="filter"
                                         onClick='document.getElementById("filterPopup").classList.toggle("show");
-                                                 document.getElementById("bulkToolsPopup").classList.remove("show")' >
+                                                 document.getElementById("bulkToolsPopup").classList.remove("show");'>
                                     <mat-icon>filter_alt</mat-icon>
-                                    <div class="popupBox" id="filterPopup">
-                                        <h4  class="mt-1 ml-3">Eszközök szűrése</h4>
 
+                                    <div class="popupBox pl-3" id="filterPopup">
+                                        <h4 class="mt-1">Eszközök szűrése</h4>
+                                        <span class="deleteFilters">Szűrők törlése</span>
+
+                                        <h6>Tárolási hely</h6>
+                                        <section class="location-section">
+                                            <mat-checkbox class="ml-2" color="accent"
+                                            onClick="event.stopPropagation();">
+                                                110
+                                            </mat-checkbox>
+                                        </section>
+
+
+                                        <h6>Kategória</h6>
 
                                     </div>
                                 </button>
-                                <button class="ml-1 mr-1 popupBase" mat-button mat-icon-button aria-label="bulk-tools" *ngIf="currUser.isAdmin()"
+                                <button class="ml-1 mr-1 popupBase" mat-button mat-icon-button aria-label="bulk-tools"
+                                        *ngIf="currUser.isAdmin()"
                                         onClick='document.getElementById("bulkToolsPopup").classList.toggle("show");
-                                                 document.getElementById("filterPopup").classList.remove("show")' >
+                                                 document.getElementById("filterPopup").classList.remove("show")'>
                                     <mat-icon>difference</mat-icon>
                                     <div class="popupBox" id="bulkToolsPopup">
-                                        <h4  class="mt-1 ml-3">Tömeges import/export</h4>
+                                        <h4 class="mt-1 ml-3">Tömeges import/export</h4>
 
                                         <mat-form-field class="mt-3 ml-3" floatLabel="always" style="width: 90%">
-                                            <mat-label style="color: white; font-size: large">Eszközlista importálása</mat-label>
-                                            <input matInput type="file" name="excelImportFile" id="excelImportFile" (change)="handleExcelImport($event)"
+                                            <mat-label style="color: white; font-size: large">Eszközlista importálása
+                                            </mat-label>
+                                            <input matInput type="file" name="excelImportFile" id="excelImportFile"
+                                                   (change)="handleExcelImport($event)"
                                                    accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
                                         </mat-form-field>
 
                                         <button class="ml-3 mb-2" mat-raised-button color="accent"
-                                                (click)="exportDevices()">Aktuális lista exportálása</button>
+                                                (click)="exportDevices()">Aktuális lista exportálása
+                                        </button>
                                     </div>
                                 </button>
                                 <button class="ml-1 addButton" color="warn" mat-mini-fab aria-label="Add"
@@ -118,28 +134,28 @@
                                         <tbody>
                                         <tr class="device-row" *ngFor="let device of pagedDevices">
                                             <td (click)="editDevice(device)">
-                                                {{device.name}}
+                                                {{ device.name }}
                                             </td>
                                             <td (click)="editDevice(device)">
-                                                {{device.maker}}
+                                                {{ device.maker }}
                                             </td>
                                             <td (click)="editDevice(device)">
-                                                {{device.type}}
+                                                {{ device.type }}
                                             </td>
                                             <td (click)="editDevice(device)">
-                                                {{device.quantity}}
+                                                {{ device.quantity }}
                                             </td>
                                             <td (click)="editDevice(device)">
-                                                {{device.category.name}}
+                                                {{ device.category.name }}
                                             </td>
                                             <td (click)="editDevice(device)">
-                                                {{device.location.name}}
+                                                {{ device.location.name }}
                                             </td>
                                             <td (click)="editDevice(device)">
-                                                {{device.weight / 1000 | number: '1.0-2'}} kg
+                                                {{ device.weight / 1000 | number: '1.0-2' }} kg
                                             </td>
                                             <td (click)="editDevice(device)">
-                                                {{device.textIdentifier}}
+                                                {{ device.textIdentifier }}
                                             </td>
                                             <td class="pb-0 pt-0">
                                                 <button mat-raised-button type="button"
@@ -185,22 +201,22 @@
                                         <tr class="device-row"
                                             *ngFor="let compositeItem of pagedComposites">
                                             <td (click)="editCompositeItem(compositeItem)">
-                                                {{compositeItem.name}}
+                                                {{ compositeItem.name }}
                                             </td>
                                             <td (click)="editCompositeItem(compositeItem)">
-                                                {{compositeItem.devices.length}}
+                                                {{ compositeItem.devices.length }}
                                             </td>
                                             <td (click)="editCompositeItem(compositeItem)">
-                                                {{compositeItem.category.name}}
+                                                {{ compositeItem.category.name }}
                                             </td>
                                             <td (click)="editCompositeItem(compositeItem)">
-                                                {{compositeItem.location.name}}
+                                                {{ compositeItem.location.name }}
                                             </td>
                                             <td (click)="editCompositeItem(compositeItem)">
-                                                {{compositeItem.getWeight() / 1000 | number: '1.0-2'}} kg
+                                                {{ compositeItem.getWeight() / 1000 | number: '1.0-2' }} kg
                                             </td>
                                             <td (click)="editCompositeItem(compositeItem)">
-                                                {{compositeItem.textIdentifier}}
+                                                {{ compositeItem.textIdentifier }}
                                             </td>
                                         </tr>
                                         </tbody>

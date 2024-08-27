@@ -9,7 +9,9 @@
                             <div class="form-inline pull-right">
                                 <mat-form-field class="rent-search-field">
                                     <mat-label>Keresés...</mat-label>
-                                    <input matInput class="searchInput" type="text" [formControl]="rentSearchControl" autocomplete="off">
+                                    <input matInput class="searchInput" type="text" [formControl]="rentSearchControl"
+                                           (keyup.escape)="rentSearchControl.setValue('')"
+                                           autocomplete="off">
                                     <button mat-button matSuffix mat-icon-button
                                             *ngIf="rentSearchControl.value !== ''" aria-label="deviceSearch">
                                         <mat-icon (click)="rentSearchControl.setValue('')">clear</mat-icon>

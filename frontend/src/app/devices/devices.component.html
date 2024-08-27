@@ -35,6 +35,7 @@
                                 <mat-form-field class="deviceSearchField">
                                     <mat-label>Keresés...</mat-label>
                                     <input matInput class="searchInput" type="text" [formControl]="searchControl"
+                                           (keyup.escape)="searchControl.setValue('')"
                                            autocomplete="off">
                                     <button mat-button matSuffix mat-icon-button
                                             *ngIf="searchControl.value !== ''" aria-label="search">

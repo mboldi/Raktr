@@ -37,7 +37,7 @@ export class User {
         for (let i = 0; i < this.roles.length; i++) {
             const role = this.roles[i];
 
-            if (role.roleName === wantedRole) {
+            if (role.roleName.toLowerCase() === wantedRole.toLowerCase()) {
                 return true;
             }
         }

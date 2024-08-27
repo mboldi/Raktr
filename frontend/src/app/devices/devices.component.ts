@@ -287,7 +287,7 @@ export class DevicesComponent implements OnInit {
             this.getComposites();
 
             if (reason !== 'noRedirect') {
-                this.routerLocation.go('/devices');
+                this.routerLocation.go('/compositeItems');
             }
         });
     }

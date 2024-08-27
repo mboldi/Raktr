@@ -217,7 +217,7 @@
                 </div>
             </form>
         </mat-tab>
-        <mat-tab>
+        <mat-tab *ngIf="device.id != -1">
             <ng-template mat-tab-label>
                 <mat-icon class="tab-icon">local_shipping</mat-icon>
                 Eszközhöz tartozó szállítók
@@ -271,7 +271,7 @@
                 </table>
             </div>
         </mat-tab>
-        <mat-tab>
+        <mat-tab *ngIf="device.id != -1">
             <ng-template mat-tab-label>
                 <mat-icon class="tab-icon">bug_report</mat-icon>
                 Eszközhöz tartozó hibajegyek

@@ -76,6 +76,7 @@
     border-color: #555 transparent transparent transparent;
 }
 
+
 /* Toggle this class - hide and show the popup */
 .popupBase .show {
     visibility: visible;

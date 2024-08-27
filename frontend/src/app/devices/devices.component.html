@@ -42,12 +42,20 @@
                                         <mat-icon (click)="searchControl.setValue('')">clear</mat-icon>
                                     </button>
                                 </mat-form-field>
-                                <button class="ml-1" mat-button mat-icon-button aria-label="Filter">
+                                <button class="ml-1 popupBase" mat-button mat-icon-button aria-label="filter"
+                                        onClick='document.getElementById("filterPopup").classList.toggle("show");
+                                                 document.getElementById("bulkToolsPopup").classList.remove("show")' >
                                     <mat-icon>filter_alt</mat-icon>
+                                    <div class="popupBox" id="filterPopup">
+                                        <h4  class="mt-1 ml-3">Eszközök szűrése</h4>
+
+
+                                    </div>
                                 </button>
                                 <button class="ml-1 mr-1 popupBase" mat-button mat-icon-button aria-label="bulk-tools" *ngIf="currUser.isAdmin()"
-                                        onClick='document.getElementById("bulkToolsPopup").classList.toggle("show")' >
-                                    <mat-icon>build</mat-icon>
+                                        onClick='document.getElementById("bulkToolsPopup").classList.toggle("show");
+                                                 document.getElementById("filterPopup").classList.remove("show")' >
+                                    <mat-icon>difference</mat-icon>
                                     <div class="popupBox" id="bulkToolsPopup">
                                         <h4  class="mt-1 ml-3">Tömeges import/export</h4>
 

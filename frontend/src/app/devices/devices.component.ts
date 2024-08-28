@@ -101,12 +101,7 @@ export class DevicesComponent implements OnInit {
         this.getLocAndCat();
 
         this.searchControl.valueChanges.subscribe(value => {
-            this.sortedComposites = this.compositeItems.filter(compositeItem =>
-                compositeItem.name.toLowerCase().includes(value) ||
-                compositeItem.textIdentifier.toLowerCase().includes(value) ||
-                compositeItem.barcode.toLowerCase().includes(value));
-
-            this.setCompositePage();
+            this.filterCompositeItems();
         });
 
         // opening device if ID in URL is present
@@ -448,8 +443,13 @@ export class DevicesComponent implements OnInit {
             this.locationGroup = this.formBuilder.group(locGroupItems);
 
             this.locationGroup.valueChanges.subscribe(groupItem => {
-                if (this.currentTab === 'devices') {
-                    this.filterDevices();
+                switch (this.currentTab) {
+                    case 'devices':
+                        this.filterDevices();
+                        break;
+                    case 'composites':
+                        this.filterCompositeItems();
+                        break;
                 }
             });
         });
@@ -465,8 +465,13 @@ export class DevicesComponent implements OnInit {
             this.categoryGroup = this.formBuilder.group(catGroupItems);
 
             this.categoryGroup.valueChanges.subscribe(groupItem => {
-                if (this.currentTab === 'devices') {
-                    this.filterDevices();
+                switch (this.currentTab) {
+                    case 'devices':
+                        this.filterDevices();
+                        break;
+                    case 'composites':
+                        this.filterCompositeItems();
+                        break;
                 }
             });
         });
@@ -503,20 +508,33 @@ export class DevicesComponent implements OnInit {
     }
 
     private filterDevices() {
-        const searchValue = this.searchControl.value;
+        const value = this.searchControl.value;
 
         this.sortedDevices = this.devices.filter(device =>
-            (device.name.toLowerCase().includes(searchValue.toLowerCase()) ||
-                device.maker.toLowerCase().includes(searchValue.toLowerCase()) ||
-                device.type.toLowerCase().includes(searchValue.toLowerCase()) ||
-                device.location.name.toLowerCase().includes(searchValue.toLowerCase()) ||
-                device.category.name.toLowerCase().includes(searchValue.toLowerCase()) ||
-                device.textIdentifier.toLowerCase().includes(searchValue.toLowerCase()) ||
-                device.barcode.toLowerCase().includes(searchValue.toLowerCase())) &&
+            (device.name.toLowerCase().includes(value.toLowerCase()) ||
+                device.maker.toLowerCase().includes(value.toLowerCase()) ||
+                device.type.toLowerCase().includes(value.toLowerCase()) ||
+                device.location.name.toLowerCase().includes(value.toLowerCase()) ||
+                device.category.name.toLowerCase().includes(value.toLowerCase()) ||
+                device.textIdentifier.toLowerCase().includes(value.toLowerCase()) ||
+                device.barcode.toLowerCase().includes(value.toLowerCase())) &&
             this.checkBoxFilter(device.location.id, this.locationGroup.value, this.locations) &&
             this.checkBoxFilter(device.category.id, this.categoryGroup.value, this.categories));
 
         this.setDevicePage();
+    }
+
+    private filterCompositeItems() {
+        const value = this.searchControl.value;
+
+        this.sortedComposites = this.compositeItems.filter(compositeItem =>
+            (compositeItem.name.toLowerCase().includes(value) ||
+            compositeItem.textIdentifier.toLowerCase().includes(value) ||
+            compositeItem.barcode.toLowerCase().includes(value)) &&
+            this.checkBoxFilter(compositeItem.location.id, this.locationGroup.value, this.locations) &&
+            this.checkBoxFilter(compositeItem.category.id, this.categoryGroup.value, this.categories));
+
+        this.setCompositePage();
     }
 
     deleteFilters() {
@@ -534,8 +552,13 @@ export class DevicesComponent implements OnInit {
 
         this.categoryGroup.setValue(catGroupItems);
 
-        if (this.currentTab === 'devices') {
-            this.setDevicePage();
+        switch (this.currentTab) {
+            case 'devices':
+                this.setDevicePage();
+                break;
+            case 'composites':
+                this.setCompositePage();
+                break;
         }
     }
 }

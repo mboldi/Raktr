@@ -49,7 +49,7 @@
 
                                     <div class="popupBox pl-3" id="filterPopup">
                                         <h4 class="mt-1">Eszközök szűrése</h4>
-                                        <span class="deleteFilters">Szűrők törlése</span>
+                                        <span class="deleteFilters" (click)="deleteFilters()">Szűrők törlése</span>
 
                                         <h6>Tárolási hely</h6>
                                         <section class="location-section" [formGroup]="locationGroup">

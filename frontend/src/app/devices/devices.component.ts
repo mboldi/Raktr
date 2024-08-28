@@ -104,7 +104,7 @@ export class DevicesComponent implements OnInit {
             this.sortedComposites = this.compositeItems.filter(compositeItem =>
                 compositeItem.name.toLowerCase().includes(value) ||
                 compositeItem.textIdentifier.toLowerCase().includes(value) ||
-                compositeItem.barcode.toLowerCase().includes(value))
+                compositeItem.barcode.toLowerCase().includes(value));
 
             this.setCompositePage();
         });
@@ -443,7 +443,7 @@ export class DevicesComponent implements OnInit {
             const locGroupItems = {};
             this.locations.forEach(location => {
                 locGroupItems[location.id] = false;
-            })
+            });
 
             this.locationGroup = this.formBuilder.group(locGroupItems);
 
@@ -460,7 +460,7 @@ export class DevicesComponent implements OnInit {
             const catGroupItems = {};
             this.categories.forEach(category => {
                 catGroupItems[category.id] = false;
-            })
+            });
 
             this.categoryGroup = this.formBuilder.group(catGroupItems);
 
@@ -517,6 +517,26 @@ export class DevicesComponent implements OnInit {
             this.checkBoxFilter(device.category.id, this.categoryGroup.value, this.categories));
 
         this.setDevicePage();
+    }
+
+    deleteFilters() {
+        const locGroupItems = {};
+        this.locations.forEach(location => {
+            locGroupItems[location.id] = false;
+        });
+
+        this.locationGroup.setValue(locGroupItems);
+
+        const catGroupItems = {};
+        this.categories.forEach(category => {
+            catGroupItems[category.id] = false;
+        });
+
+        this.categoryGroup.setValue(catGroupItems);
+
+        if (this.currentTab === 'devices') {
+            this.setDevicePage();
+        }
     }
 }
 

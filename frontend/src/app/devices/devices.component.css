@@ -100,3 +100,7 @@
     font-style: italic;
     cursor: pointer;
 }
+
+.location-section p {
+    line-height: 30px;
+}

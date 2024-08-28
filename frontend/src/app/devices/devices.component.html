@@ -52,15 +52,29 @@
                                         <span class="deleteFilters">Szűrők törlése</span>
 
                                         <h6>Tárolási hely</h6>
-                                        <section class="location-section">
-                                            <mat-checkbox class="ml-2" color="accent"
-                                            onClick="event.stopPropagation();">
-                                                110
-                                            </mat-checkbox>
+                                        <section class="location-section" [formGroup]="locationGroup">
+                                            <p *ngFor="let location of locations"
+                                               class="mb-0">
+                                                <mat-checkbox class="ml-2" color="accent" disableRipple="true"
+                                                              formControlName="{{ location.id }}"
+                                                              onClick="event.stopPropagation();">
+                                                    <span style="color: white">{{ location.name }}</span>
+                                                </mat-checkbox>
+                                            </p>
                                         </section>
 
-
                                         <h6>Kategória</h6>
+                                        <section class="category-section" [formGroup]="categoryGroup">
+                                            <p *ngFor="let category of categories"
+                                               class="mb-0">
+                                                <mat-checkbox class="ml-2" color="accent" disableRipple="true"
+                                                              formControlName="{{ category.id }}"
+                                                              onClick="event.stopPropagation();">
+                                                    <span style="color: white">{{ category.name }}</span>
+                                                </mat-checkbox>
+                                            </p>
+                                        </section>
+
 
                                     </div>
                                 </button>

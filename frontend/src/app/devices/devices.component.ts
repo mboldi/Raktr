@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {Title} from '@angular/platform-browser';
-import {UntypedFormControl} from '@angular/forms';
+import {FormBuilder, FormGroup, UntypedFormControl} from '@angular/forms';
 import {Device} from '../_model/Device';
 import {DeviceService} from '../_services/device.service';
 import {CompositeItem} from '../_model/CompositeItem';
@@ -21,6 +21,11 @@ import {UserService} from '../_services/user.service';
 import {DeviceForExcel} from '../_model/DeviceForExcel';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Location as RouterLocation} from '@angular/common' ;
+import {LocationService} from '../_services/location.service';
+import {CategoryService} from '../_services/category.service';
+import {MatCheckboxChange} from '@angular/material/checkbox';
+import {Scannable} from '../_model/Scannable';
+import {Obj} from '@popperjs/core';
 
 @Component({
     selector: 'app-table-list',
@@ -49,14 +54,22 @@ export class DevicesComponent implements OnInit {
     currCompositePageIndex = 0;
     currCompositePageSize = 25;
 
+    locations: Location[] = [];
+    categories: Category[] = [];
+    locationGroup: FormGroup;
+    categoryGroup: FormGroup;
+
     constructor(private title: Title,
                 private deviceService: DeviceService,
                 private compositeService: CompositeService,
                 private modalService: NgbModal,
                 private userService: UserService,
+                private locationService: LocationService,
+                private categoryService: CategoryService,
                 private router: Router,
                 private route: ActivatedRoute,
-                private routerLocation: RouterLocation) {
+                private routerLocation: RouterLocation,
+                private formBuilder: FormBuilder) {
         this.title.setTitle('Raktr - Eszközök');
 
         if (this.router.url.toString().includes('compositeItems')) {
@@ -80,20 +93,12 @@ export class DevicesComponent implements OnInit {
             this.setDevicePage();
 
             this.searchControl.valueChanges.subscribe(value => {
-                this.sortedDevices = this.devices.filter(device =>
-                    device.name.toLowerCase().includes(value.toLowerCase()) ||
-                    device.maker.toLowerCase().includes(value.toLowerCase()) ||
-                    device.type.toLowerCase().includes(value.toLowerCase()) ||
-                    device.location.name.toLowerCase().includes(value.toLowerCase()) ||
-                    device.category.name.toLowerCase().includes(value.toLowerCase()) ||
-                    device.textIdentifier.toLowerCase().includes(value.toLowerCase()) ||
-                    device.barcode.toLowerCase().includes(value.toLowerCase()));
-
-                this.setDevicePage();
+                this.filterDevices();
             });
         });
 
         this.getComposites();
+        this.getLocAndCat();
 
         this.searchControl.valueChanges.subscribe(value => {
             this.sortedComposites = this.compositeItems.filter(compositeItem =>
@@ -273,6 +278,8 @@ export class DevicesComponent implements OnInit {
             if (reason !== 'noRedirect') {
                 this.routerLocation.go('/devices');
             }
+
+            this.getLocAndCat();
         });
     }
 
@@ -289,6 +296,8 @@ export class DevicesComponent implements OnInit {
             if (reason !== 'noRedirect') {
                 this.routerLocation.go('/compositeItems');
             }
+
+            this.getLocAndCat();
         });
     }
 
@@ -427,6 +436,98 @@ export class DevicesComponent implements OnInit {
         writeFile(wb, 'raktr-devices.xlsx');
     }
 
+    private getLocAndCat() {
+        this.locationService.getLocations().subscribe(value => {
+            this.locations = value;
+
+            const locGroupItems = {};
+            this.locations.forEach(location => {
+                locGroupItems[location.id] = false;
+            })
+
+            this.locationGroup = this.formBuilder.group(locGroupItems);
+
+            this.locationGroup.valueChanges.subscribe(groupItem => {
+                if (this.currentTab === 'devices') {
+                    console.log('filter value change in devices');
+                    this.filterDevices();
+                }
+            });
+        });
+
+        this.categoryService.getCategories().subscribe(value => {
+            this.categories = value;
+
+            const catGroupItems = {};
+            this.categories.forEach(category => {
+                catGroupItems[category.id] = false;
+            })
+
+            this.categoryGroup = this.formBuilder.group(catGroupItems);
+
+            this.categoryGroup.valueChanges.subscribe(groupItem => {
+                if (this.currentTab === 'devices') {
+                    console.log('filter value change in devices');
+                    this.filterDevices();
+                }
+            });
+        });
+    }
+
+    private allFilterOff(filters: Object) {
+        const keys = Object.keys(filters);
+
+        for (let i = 0; i < keys.length; i++) {
+            if (filters[keys[i]]) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private checkBoxFilter(scannable: Scannable) {
+        if (this.allFilterOff(this.locationGroup.value) &&
+            this.allFilterOff(this.categoryGroup.value)) {
+            return true;
+        }
+
+        let matchFound = false;
+
+        this.locations.forEach(location => {
+            if (this.locationGroup.value[location.id]) {
+                if (scannable.location.id === location.id) {
+                    matchFound = true;
+                }
+            }
+        });
+
+        this.categories.forEach(category => {
+            if (this.categoryGroup.value[category.id]) {
+                if (scannable.category.id === category.id) {
+                    matchFound = true;
+                }
+            }
+        });
+
+        return matchFound;
+    }
+
+    private filterDevices() {
+        const searchValue = this.searchControl.value;
+
+        this.sortedDevices = this.devices.filter(device =>
+            (device.name.toLowerCase().includes(searchValue.toLowerCase()) ||
+                device.maker.toLowerCase().includes(searchValue.toLowerCase()) ||
+                device.type.toLowerCase().includes(searchValue.toLowerCase()) ||
+                device.location.name.toLowerCase().includes(searchValue.toLowerCase()) ||
+                device.category.name.toLowerCase().includes(searchValue.toLowerCase()) ||
+                device.textIdentifier.toLowerCase().includes(searchValue.toLowerCase()) ||
+                device.barcode.toLowerCase().includes(searchValue.toLowerCase())) &&
+            this.checkBoxFilter(device));
+
+        this.setDevicePage();
+    }
 }
 
 function compare(a: number | string, b: number | string, isAsc: boolean) {

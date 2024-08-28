@@ -41,6 +41,8 @@ export class EditDeviceModalComponent implements OnInit {
     admin = false;
     deleteConfirmed = false;
 
+    warrantyActive: boolean;
+
     currentCategoryInput = '';
     currentLocationInput = '';
     currentOwnerInput = '';
@@ -93,6 +95,8 @@ export class EditDeviceModalComponent implements OnInit {
             })
         } else {
             this.setFormFields();
+
+            this.warrantyActive = this.device.endOfWarranty < new Date();
 
             this.scannableService.getRentsOfScannable(this.device.id).subscribe(result => {
                 this.rentitemsAndRents = result
@@ -290,4 +294,5 @@ export class EditDeviceModalComponent implements OnInit {
             z_index: 2000
         })
     }
+
 }

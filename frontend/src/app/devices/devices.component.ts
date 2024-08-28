@@ -449,7 +449,6 @@ export class DevicesComponent implements OnInit {
 
             this.locationGroup.valueChanges.subscribe(groupItem => {
                 if (this.currentTab === 'devices') {
-                    console.log('filter value change in devices');
                     this.filterDevices();
                 }
             });
@@ -467,7 +466,6 @@ export class DevicesComponent implements OnInit {
 
             this.categoryGroup.valueChanges.subscribe(groupItem => {
                 if (this.currentTab === 'devices') {
-                    console.log('filter value change in devices');
                     this.filterDevices();
                 }
             });
@@ -486,25 +484,16 @@ export class DevicesComponent implements OnInit {
         return true;
     }
 
-    private checkBoxFilter(scannable: Scannable) {
-        if (this.allFilterOff(this.locationGroup.value) &&
-            this.allFilterOff(this.categoryGroup.value)) {
+    private checkBoxFilter(relevantIdOfScannable: number, filterGroupValue: Object, allOfType: Object[]) {
+        if (this.allFilterOff(filterGroupValue)) {
             return true;
         }
 
         let matchFound = false;
 
-        this.locations.forEach(location => {
-            if (this.locationGroup.value[location.id]) {
-                if (scannable.location.id === location.id) {
-                    matchFound = true;
-                }
-            }
-        });
-
-        this.categories.forEach(category => {
-            if (this.categoryGroup.value[category.id]) {
-                if (scannable.category.id === category.id) {
+        allOfType.forEach(item => {
+            if (filterGroupValue[item['id']]) {
+                if (relevantIdOfScannable === item['id']) {
                     matchFound = true;
                 }
             }
@@ -524,7 +513,8 @@ export class DevicesComponent implements OnInit {
                 device.category.name.toLowerCase().includes(searchValue.toLowerCase()) ||
                 device.textIdentifier.toLowerCase().includes(searchValue.toLowerCase()) ||
                 device.barcode.toLowerCase().includes(searchValue.toLowerCase())) &&
-            this.checkBoxFilter(device));
+            this.checkBoxFilter(device.location.id, this.locationGroup.value, this.locations) &&
+            this.checkBoxFilter(device.category.id, this.categoryGroup.value, this.categories));
 
         this.setDevicePage();
     }

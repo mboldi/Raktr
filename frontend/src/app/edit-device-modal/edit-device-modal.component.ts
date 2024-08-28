@@ -20,7 +20,7 @@ import {OwnerService} from '../_services/owner.service';
 import {RentItemWithRentData} from '../_model/RentItemWithRentData';
 import {Ticket} from '../_model/Ticket';
 import {Router} from '@angular/router';
-import {TicketStatus} from "../_model/TicketStatus";
+import {TicketStatus} from '../_model/TicketStatus';
 
 @Component({
     selector: 'app-edit-device-modal',
@@ -79,7 +79,7 @@ export class EditDeviceModalComponent implements OnInit {
             quantity: ['1'],
             acquiredFrom: [''],
             dateOfAcquisition: [new Date()],
-            endOfWarranty: [new Date()],
+            endOfWarranty: [null],
             owner: [''],
             comment: ['']
         });
@@ -215,7 +215,7 @@ export class EditDeviceModalComponent implements OnInit {
         this.device.quantity = values.quantity;
         this.device.aquiredFrom = values.acquiredFrom;
         this.device.dateOfAcquisition = new Date(values.dateOfAcquisition);
-        this.device.endOfWarranty = new Date(values.endOfWarranty);
+        this.device.endOfWarranty = (values.endOfWarranty !== null) ? new Date(values.endOfWarranty) : null;
         this.device.owner = values.owner.toString() !== '' ? new Owner(-1, values.owner.toString()) : null;
         this.device.comment = values.comment.toString();
 

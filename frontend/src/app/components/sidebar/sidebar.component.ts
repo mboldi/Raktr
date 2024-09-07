@@ -1,6 +1,6 @@
-import {Component, OnInit} from '@angular/core';
-import {AuthService} from '../../_services/auth.service';
-import {Router} from '@angular/router';
+import { Component, inject, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { OidcSecurityService } from 'angular-auth-oidc-client';
 
 declare const $: any;
 
@@ -22,27 +22,27 @@ export const ROUTES: RouteInfo[] = [
 ];
 
 @Component({
-    selector: 'app-sidebar',
-    templateUrl: './sidebar.component.html',
-    styleUrls: ['./sidebar.component.css']
+  selector: 'app-sidebar',
+  templateUrl: './sidebar.component.html',
+  styleUrls: ['./sidebar.component.css']
 })
 export class SidebarComponent implements OnInit {
-    menuItems: any[];
+  private readonly oidcSecurityService = inject(OidcSecurityService);
 
-    constructor(private authService: AuthService,
-                private router: Router) {
-    }
+  menuItems: any[];
 
-    ngOnInit() {
-        this.menuItems = ROUTES.filter(menuItem => menuItem);
-    }
+  constructor(private router: Router) {}
 
-    isMobileMenu() {
-        return $(window).width() <= 991;
-    };
+  ngOnInit() {
+      this.menuItems = ROUTES.filter(menuItem => menuItem);
+  }
 
-    logout() {
-        this.authService.logout();
-        this.router.navigateByUrl('/login');
-    }
+  isMobileMenu() {
+    return $(window).width() <= 991;
+  };
+
+  logout() {
+    this.oidcSecurityService.logoff();
+    this.router.navigateByUrl('/login');
+  }
 }

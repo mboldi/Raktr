@@ -25,7 +25,6 @@ import {LoginComponent} from './login/login.component';
 import {DeviceToRentModalComponent} from './device-to-rent-modal/device-to-rent-modal.component';
 import {EditCompositeModalComponent} from './edit-composite-modal/edit-composite-modal.component';
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
-import {AuthInterceptor} from './helpers/auth.interceptor';
 import {ConfirmDialogComponent} from './confirm-dialog/confirm-dialog.component';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
@@ -42,6 +41,8 @@ import {EditProjectComponent} from './edit-project/edit-project.component';
 import {EditTicketComponent} from './edit-ticket/edit-ticket.component';
 import {MatFabMenuModule} from '@angular-material-extensions/fab-menu';
 import {MatTabsModule} from "@angular/material/tabs";
+import {AuthConfigModule} from './auth-config.module';
+import {AuthInterceptor} from 'angular-auth-oidc-client';
 
 @NgModule({
     imports: [
@@ -73,6 +74,7 @@ import {MatTabsModule} from "@angular/material/tabs";
         MatPaginatorModule,
         MatFabMenuModule,
         MatTabsModule,
+        AuthConfigModule,
     ],
     declarations: [
         AppComponent,

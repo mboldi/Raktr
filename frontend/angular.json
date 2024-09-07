@@ -39,6 +39,14 @@
             ]
           },
           "configurations": {
+            "development": {
+              "buildOptimizer": false,
+              "optimization": false,
+              "vendorChunk": true,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true
+            },
             "production": {
               "optimization": true,
               "outputHashing": "all",
@@ -65,6 +73,9 @@
           "configurations": {
             "production": {
               "browserTarget": "material-dashboard-angular:build:production"
+            },
+            "development": {
+              "browserTarget": "material-dashboard-angular:build:development"
             }
           }
         },

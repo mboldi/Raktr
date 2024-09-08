@@ -10,11 +10,8 @@ export class AppComponent implements OnInit {
   private readonly oidcSecurityService = inject(OidcSecurityService);
 
   ngOnInit() {
-    this.oidcSecurityService
-      .checkAuth()
-      .subscribe(({ isAuthenticated, userData }) => {
-        console.log(isAuthenticated);
-        console.log(userData);
-      });
+    this.oidcSecurityService.checkAuth().subscribe(({ userData }) => {
+      localStorage.setItem('username', userData['preferred_username']);
+    });
   }
 }

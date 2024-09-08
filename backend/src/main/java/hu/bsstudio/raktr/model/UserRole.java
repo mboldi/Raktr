@@ -3,7 +3,13 @@ package hu.bsstudio.raktr.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import java.util.List;
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -12,11 +18,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import java.util.Set;
 
 @Entity
 @Table(name = "user_role")
@@ -24,6 +26,7 @@ import lombok.ToString;
 @JsonDeserialize(builder = UserRole.Builder.class)
 @NoArgsConstructor
 @Data
+@ToString(onlyExplicitlyIncluded = true)
 public class UserRole {
 
     @Id
@@ -32,13 +35,14 @@ public class UserRole {
     private Long id;
 
     @NotBlank
+    @ToString.Include
     @Column(unique = true)
     private String roleName;
 
     @ManyToMany(mappedBy = "roles")
-    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     @JsonIgnore
-    private List<User> users;
+    private Set<User> users;
 
     public UserRole(final Builder builder) {
         this.id = builder.id;

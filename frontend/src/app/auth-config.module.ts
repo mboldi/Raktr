@@ -10,7 +10,7 @@ import { AuthLocalStorageService } from './helpers/auth-local-storage.service';
         redirectUrl: window.location.origin,
         postLogoutRedirectUri: window.location.origin,
         clientId: 'H2w2dOKxioUPmjghbPNbXMcEiGxqT7A82mLO811d',
-        scope: 'openid profile email offline_access',
+        scope: 'openid profile offline_access',
         responseType: 'code',
         silentRenew: true,
         useRefreshToken: true,

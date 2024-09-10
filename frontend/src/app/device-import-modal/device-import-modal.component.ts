@@ -138,7 +138,7 @@ export class DeviceImportModalComponent implements OnInit {
             row['status'],
             new Category(-1, row['category']),
             row['quantity'],
-            row['aquiredFrom'],
+            row['acquiredFrom'],
             row['dateOfAcquisition'] === '' ? null : new Date(row['dateOfAcquisition']),
             row['owner'] === '' ? null : row['owner'],
             row['endOfWarranty'] === '' ? null : new Date(row['endOfWarranty']),

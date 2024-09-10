@@ -334,43 +334,6 @@ export class DevicesComponent implements OnInit {
         this.searchControl.setValue('');
     }
 
-    showNotification(message_: string, type: string) {
-        $['notify']({
-            icon: 'add_alert',
-            message: message_
-        }, {
-            type: type,
-            timer: 1000,
-            placement: {
-                from: 'top',
-                align: 'right'
-            },
-            z_index: 2000
-        })
-    }
-
-    addLotOfDevices(start: number, num: number) {
-        for (let i = start; i < start + num; i++) {
-            this.deviceService.addDevice(new Device(
-                -1,
-                `name:_${i}`,
-                (i).toString().padStart(7, '0'),
-                `azonos_${i}`,
-                false,
-                `gyartooo_${i}`,
-                `tippuuuuus_${i}`,
-                `kredenc_${i}`,
-                1000 * (i % 5) + 2 * i,
-                100 * (i % 5) + 2 * i,
-                new Location(-1, 'almaaa'),
-                DeviceStatus.GOOD,
-                new Category(-1, 'asd'),
-            )).subscribe(device => {
-                console.log(`${device.name} added`);
-            })
-        }
-    }
-
     handleExcelImport($event: any) {
         const files = $event.target.files;
         if (files.length) {
@@ -405,7 +368,7 @@ export class DevicesComponent implements OnInit {
             'weight',
             'status',
             'quantity',
-            'aquiredFrom',
+            'acquiredFrom',
             'dateOfAcquisition',
             'owner',
             'endOfWarranty',
@@ -577,6 +540,21 @@ export class DevicesComponent implements OnInit {
             default:
                 return 0;
         }
+    }
+
+    showNotification(message_: string, type: string) {
+        $['notify']({
+            icon: 'add_alert',
+            message: message_
+        }, {
+            type: type,
+            timer: 1000,
+            placement: {
+                from: 'top',
+                align: 'right'
+            },
+            z_index: 2000
+        })
     }
 
 }

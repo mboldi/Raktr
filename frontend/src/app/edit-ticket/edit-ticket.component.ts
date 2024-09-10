@@ -150,7 +150,6 @@ export class EditTicketComponent implements OnInit {
             if (change) {
                 this.ticketService.updateTicket(this.ticket).subscribe(updatedTicket => {
                     this.ticket = updatedTicket;
-                    console.log(this.ticket);
                 })
             }
 

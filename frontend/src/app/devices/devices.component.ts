@@ -26,6 +26,7 @@ import {CategoryService} from '../_services/category.service';
 import {MatCheckboxChange} from '@angular/material/checkbox';
 import {Scannable} from '../_model/Scannable';
 import {Obj} from '@popperjs/core';
+import {DeviceImportModalComponent} from '../device-import-modal/device-import-modal.component';
 
 @Component({
     selector: 'app-table-list',
@@ -243,13 +244,17 @@ export class DevicesComponent implements OnInit {
         editModal.componentInstance.device.id = -1;
 
         editModal.result.catch(() => {
-            this.deviceService.getDevices().subscribe(devices => {
-                this.devices = devices;
-                this.sortedDevices = devices;
-
-                this.setDevicePage();
-            });
+            this.getDevices();
         })
+    }
+
+    private getDevices() {
+        this.deviceService.getDevices().subscribe(devices => {
+            this.devices = devices;
+            this.sortedDevices = devices;
+
+            this.setDevicePage();
+        });
     }
 
 
@@ -373,24 +378,17 @@ export class DevicesComponent implements OnInit {
         const files = $event.target.files;
         if (files.length) {
             const file = files[0];
-            const reader = new FileReader();
 
-            reader.onload = (event: any) => {
-                const wb = read(event.target.result);
-                const sheets = wb.SheetNames;
+            const importModal = this.modalService.open(DeviceImportModalComponent, {size: 'lg'});
+            importModal.componentInstance.importFile = file;
 
-                if (sheets.length) {
-                    const headings = [[
-                        'apple',
-                        'orange',
-                        'pear'
-                    ]];
-                    utils.sheet_add_aoa(wb, headings);
-                    const rows = utils.sheet_to_json(wb.Sheets[sheets[0]]);
-                    console.log(rows)
-                }
-            }
-            reader.readAsArrayBuffer(file);
+            importModal.result.catch(reason => {
+                this.showNotification('Eszközimport befejeződött', 'success');
+
+                this.getDevices();
+
+                $event.target.value = null;
+            });
         }
     }
 

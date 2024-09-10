@@ -41,7 +41,10 @@ import {TicketsComponent} from './tickets/tickets.component';
 import {EditProjectComponent} from './edit-project/edit-project.component';
 import {EditTicketComponent} from './edit-ticket/edit-ticket.component';
 import {MatFabMenuModule} from '@angular-material-extensions/fab-menu';
-import {MatTabsModule} from "@angular/material/tabs";
+import {MatTabsModule} from '@angular/material/tabs';
+import {DeviceImportModalComponent} from './device-import-modal/device-import-modal.component';
+import {MatSortModule} from '@angular/material/sort';
+import {MatProgressBarModule} from '@angular/material/progress-bar';
 
 @NgModule({
     imports: [
@@ -73,6 +76,8 @@ import {MatTabsModule} from "@angular/material/tabs";
         MatPaginatorModule,
         MatFabMenuModule,
         MatTabsModule,
+        MatSortModule,
+        MatProgressBarModule,
     ],
     declarations: [
         AppComponent,
@@ -82,6 +87,7 @@ import {MatTabsModule} from "@angular/material/tabs";
         EditRentComponent,
         LoginComponent,
         DeviceToRentModalComponent,
+        DeviceImportModalComponent,
         EditCompositeModalComponent,
         ConfirmDialogComponent,
         PdfGenerationModalComponent,

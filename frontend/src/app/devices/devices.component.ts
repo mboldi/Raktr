@@ -15,7 +15,7 @@ import {Category} from '../_model/Category';
 import {DeviceStatus} from '../_model/DeviceStatus';
 import {Location} from '../_model/Location';
 import {HunPaginator} from '../helpers/hun-paginator';
-import {read, utils, writeFile} from 'xlsx';
+import {utils, writeFile} from 'xlsx';
 import {User} from '../_model/User';
 import {UserService} from '../_services/user.service';
 import {DeviceForExcel} from '../_model/DeviceForExcel';
@@ -23,9 +23,6 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {Location as RouterLocation} from '@angular/common' ;
 import {LocationService} from '../_services/location.service';
 import {CategoryService} from '../_services/category.service';
-import {MatCheckboxChange} from '@angular/material/checkbox';
-import {Scannable} from '../_model/Scannable';
-import {Obj} from '@popperjs/core';
 import {DeviceImportModalComponent} from '../device-import-modal/device-import-modal.component';
 
 @Component({

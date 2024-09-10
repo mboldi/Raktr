@@ -108,8 +108,12 @@ public final class DeviceService {
         var deviceToUpdate = deviceRepository.findById(deviceRequest.getId());
 
         if (deviceToUpdate.isEmpty()) {
-            log.warn("Device not found in db to update: {}", deviceRequest);
-            return deviceToUpdate;
+            log.warn("Device not found in db to update, creating it instead: {}", deviceRequest);
+            deviceToUpdate = Optional.of(new Device());
+
+            if(deviceRequest.getId() != null) {
+                deviceToUpdate.get().setId(deviceRequest.getId());
+            }
         }
 
         if (deviceRequest.getOwner() != null) {

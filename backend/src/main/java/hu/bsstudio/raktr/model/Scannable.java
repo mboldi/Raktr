@@ -41,7 +41,6 @@ import lombok.experimental.SuperBuilder;
 @SuppressWarnings("checkstyle:VisibilityModifier")
 public abstract class Scannable extends DomainAuditModel {
     @Id
-    @Setter(AccessLevel.NONE)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected Long id;
 

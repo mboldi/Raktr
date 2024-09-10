@@ -79,7 +79,7 @@
                                     </div>
                                 </button>
                                 <button class="ml-1 mr-1 popupBase" mat-button mat-icon-button aria-label="bulk-tools"
-                                        *ngIf="currUser.isAdmin()"
+                                        *ngIf="currUser.isAdmin() && currentTab == 'devices'"
                                         onClick='document.getElementById("bulkToolsPopup").classList.toggle("show");
                                                  document.getElementById("filterPopup").classList.remove("show")'>
                                     <mat-icon>difference</mat-icon>

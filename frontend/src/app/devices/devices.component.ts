@@ -529,8 +529,8 @@ export class DevicesComponent implements OnInit {
 
         this.sortedComposites = this.compositeItems.filter(compositeItem =>
             (compositeItem.name.toLowerCase().includes(value) ||
-            compositeItem.textIdentifier.toLowerCase().includes(value) ||
-            compositeItem.barcode.toLowerCase().includes(value)) &&
+                compositeItem.textIdentifier.toLowerCase().includes(value) ||
+                compositeItem.barcode.toLowerCase().includes(value)) &&
             this.checkBoxFilter(compositeItem.location.id, this.locationGroup.value, this.locations) &&
             this.checkBoxFilter(compositeItem.category.id, this.categoryGroup.value, this.categories));
 
@@ -561,6 +561,29 @@ export class DevicesComponent implements OnInit {
                 break;
         }
     }
+
+    public numOfLocation(loc: Location): number {
+        switch (this.currentTab) {
+            case 'devices':
+                return this.devices.filter(device => device.location.name === loc.name).length;
+            case 'composites':
+                return this.compositeItems.filter(item => item.location.name === loc.name).length;
+            default:
+                return 0;
+        }
+    }
+
+    public numOfCategory(cat: Category): number {
+        switch (this.currentTab) {
+            case 'devices':
+                return this.devices.filter(device => device.category.name === cat.name).length;
+            case 'composites':
+                return this.compositeItems.filter(item => item.category.name === cat.name).length;
+            default:
+                return 0;
+        }
+    }
+
 }
 
 function compare(a: number | string, b: number | string, isAsc: boolean) {

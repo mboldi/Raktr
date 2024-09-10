@@ -55,10 +55,10 @@
                                         <section class="location-section" [formGroup]="locationGroup">
                                             <p *ngFor="let location of locations"
                                                class="mb-0">
-                                                <mat-checkbox class="ml-2" color="accent" disableRipple="true"
+                                                <mat-checkbox class="ml-2" color="accent" disableRipple="true" *ngIf="numOfLocation(location) != 0"
                                                               formControlName="{{ location.id }}"
                                                               onClick="event.stopPropagation();">
-                                                    <span style="color: white">{{ location.name }}</span>
+                                                    <span style="color: white">{{ location.name }} ({{numOfLocation(location)}} db)</span>
                                                 </mat-checkbox>
                                             </p>
                                         </section>
@@ -67,10 +67,10 @@
                                         <section class="category-section" [formGroup]="categoryGroup">
                                             <p *ngFor="let category of categories"
                                                class="mb-0">
-                                                <mat-checkbox class="ml-2" color="accent" disableRipple="true"
+                                                <mat-checkbox class="ml-2" color="accent" disableRipple="true" *ngIf="numOfCategory(category) != 0"
                                                               formControlName="{{ category.id }}"
                                                               onClick="event.stopPropagation();">
-                                                    <span style="color: white">{{ category.name }}</span>
+                                                    <span style="color: white">{{ category.name }} ({{numOfCategory(category)}} db)</span>
                                                 </mat-checkbox>
                                             </p>
                                         </section>

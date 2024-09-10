@@ -96,7 +96,7 @@ export class EditDeviceModalComponent implements OnInit {
         } else {
             this.setFormFields();
 
-            this.warrantyActive = this.device.endOfWarranty < new Date();
+            this.warrantyActive = this.device.endOfWarranty >= new Date();
 
             this.scannableService.getRentsOfScannable(this.device.id).subscribe(result => {
                 this.rentitemsAndRents = result

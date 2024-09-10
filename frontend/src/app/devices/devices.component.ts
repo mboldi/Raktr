@@ -170,10 +170,10 @@ export class DevicesComponent implements OnInit {
     }
 
     sortDevices(sort: Sort) {
-        if (this.devices.length === 0) {
+        if (this.sortedDevices.length === 0) {
             return;
         }
-        const data = this.devices.slice();
+        const data = this.sortedDevices.slice();
         if (!sort.active || sort.direction === '') {
             this.sortedDevices = data;
             return;
@@ -207,10 +207,10 @@ export class DevicesComponent implements OnInit {
     }
 
     sortComposites(sort: Sort) {
-        if (this.compositeItems.length === 0) {
+        if (this.sortedComposites.length === 0) {
             return;
         }
-        const data = this.compositeItems.slice();
+        const data = this.sortedComposites.slice();
         if (!sort.active || sort.direction === '') {
             this.sortedComposites = data;
             return;

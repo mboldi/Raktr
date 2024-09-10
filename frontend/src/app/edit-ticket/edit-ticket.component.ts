@@ -53,12 +53,13 @@ export class EditTicketComponent implements OnInit {
             this.ticket = new Ticket();
         }
 
-        if (this.scannable === null || this.scannable === undefined) {
-            this.ticket.scannableOfProblem = this.scannable;
-        }
     }
 
     ngOnInit() {
+        if (this.scannable !== null && this.scannable !== undefined) {
+            this.ticket.scannableOfProblem = this.scannable;
+        }
+
         this.userService.getCurrentUser().subscribe(user => {
             this.currUser = user;
 

@@ -3,7 +3,7 @@ import {UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
 import {Category} from '../_model/Category';
 import {Location} from '../_model/Location';
 import {switchMap, tap} from 'rxjs/operators';
-import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
+import {NgbActiveModal, NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {Device} from '../_model/Device';
 import {LocationService} from '../_services/location.service';
 import {CategoryService} from '../_services/category.service';
@@ -21,6 +21,8 @@ import {RentItemWithRentData} from '../_model/RentItemWithRentData';
 import {Ticket} from '../_model/Ticket';
 import {Router} from '@angular/router';
 import {TicketStatus} from '../_model/TicketStatus';
+import {EditTicketComponent} from '../edit-ticket/edit-ticket.component';
+import {tick} from '@angular/core/testing';
 
 @Component({
     selector: 'app-edit-device-modal',
@@ -59,7 +61,8 @@ export class EditDeviceModalComponent implements OnInit {
                 private scannableService: ScannableService,
                 private userService: UserService,
                 public dialog: MatDialog,
-                private router: Router) {
+                private router: Router,
+                private modalService: NgbModal) {
         if (this.device === undefined) {
             this.device = new Device();
             this.device.id = -1;
@@ -280,6 +283,19 @@ export class EditDeviceModalComponent implements OnInit {
         this.router.navigateByUrl('/tickets/' + id);
     }
 
+    createTicket() {
+        const ticketModal = this.modalService.open(EditTicketComponent, {size: 'lg'});
+        ticketModal.componentInstance.title = 'Új hibajegy';
+        ticketModal.componentInstance.ticket = new Ticket();
+        ticketModal.componentInstance.scannable = this.device;
+
+        ticketModal.result.catch(reason => {
+            if (reason === 'save') {
+                this.tickets.push(ticketModal.componentInstance.ticket);
+            }
+        })
+    }
+
     showNotification(message_: string, type: string) {
         $['notify']({
             icon: 'add_alert',
@@ -294,5 +310,4 @@ export class EditDeviceModalComponent implements OnInit {
             z_index: 2000
         })
     }
-
 }

@@ -97,6 +97,7 @@ export class EditTicketComponent implements OnInit {
         this.ticket.status = TicketStatus.OPEN;
 
         this.ticketService.addTicket(this.ticket).subscribe(ticket => {
+            this.ticket = ticket;
             this.activeModal.dismiss('save');
         })
 

@@ -278,8 +278,11 @@
                 Eszközhöz tartozó hibajegyek
             </ng-template>
 
-            <h4 class="no-items-text pt-4" *ngIf="tickets.length === 0">Nincs ehhez az eszközhöz tartozó aktív hibajegy!</h4>
-            <button class="pull-right mt-1" mat-flat-button color="accent" (click)="createTicket()"*ngIf="tickets.length === 0">Új hozzáadása</button>
+            <div style="align-content: center; text-align: center" *ngIf="tickets.length === 0">
+                <h4 class="no-items-text pt-4">Nincs ehhez az eszközhöz tartozó aktív hibajegy!</h4>
+                <button class="mt-1 mb-2" mat-flat-button color="accent" (click)="createTicket()">Új hiba jelentése</button>
+            </div>
+
 
             <table class="table" *ngIf="tickets.length > 0">
                 <thead class="text-orange">

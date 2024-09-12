@@ -14,6 +14,8 @@ import {Router} from '@angular/router';
 import {BarcodePurifier} from '../_services/barcode-purifier.service';
 import {TicketService} from '../_services/ticket.service';
 import {TicketStatus} from '../_model/TicketStatus';
+import {EditTicketComponent} from '../edit-ticket/edit-ticket.component';
+import {Ticket} from '../_model/Ticket';
 
 @Component({
     selector: 'app-overview',
@@ -114,5 +116,32 @@ export class OverviewComponent implements OnInit {
         event.preventDefault();
 
         this.router.navigateByUrl('rent/new');
+    }
+
+    newDevice() {
+        const editModal = this.modalService.open(EditDeviceModalComponent, {size: 'lg'});
+        editModal.componentInstance.title = 'Új eszköz';
+        editModal.componentInstance.device = new Device();
+        editModal.componentInstance.device.id = -1;
+
+        editModal.result.catch(() => {
+            this.scannableService.getScannableAmount().subscribe(amount => this.scannableAmount = amount);
+        })
+    }
+
+    newRent() {
+        this.router.navigateByUrl('/rent/new');
+    }
+
+    newTicket() {
+        const ticketModal = this.modalService.open(EditTicketComponent, {size: 'lg'});
+        ticketModal.componentInstance.title = 'Új hibajegy';
+        ticketModal.componentInstance.ticket = new Ticket();
+
+        ticketModal.result.catch(reason => {
+            if (reason === 'save') {
+                this.ticketService.getTickets().subscribe(tickets => this.ticketAmount = tickets.filter(ticket => ticket.status !== TicketStatus.CLOSED).length);
+            }
+        })
     }
 }

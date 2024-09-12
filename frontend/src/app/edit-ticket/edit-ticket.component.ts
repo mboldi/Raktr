@@ -26,6 +26,8 @@ export class EditTicketComponent implements OnInit {
     @Input() title: string;
     @Input() scannable: Scannable;
 
+    protected readonly TicketStatus = TicketStatus;
+
     edit = false;
 
     deleteConfirmed = false;

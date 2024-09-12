@@ -80,7 +80,7 @@
         <div *ngIf="ticket.id !== -1">
             <div>
                 <h4 style="font-weight: 400">Hiba leírása:</h4>
-                <p>{{ticket.body}}</p>
+                <p style="white-space: pre-wrap">{{ticket.body}}</p>
             </div>
             <div class="pull-right mb-3">
                 <mat-slide-toggle *ngIf="admin"
@@ -149,7 +149,7 @@
             <h4>Hozzászólások</h4>
         </div>
         <div class="card-body">
-            <div class="comment-field" *ngIf='ticket.status !== "CLOSED"'>
+            <div class="comment-field" *ngIf='ticket.status !== TicketStatus.CLOSED'>
                 <h5 class="mb-0 pt-1 pl-2">Új hozzászólás:</h5>
                 <form>
                     <mat-form-field class="full-width m-0 pl-3 pr-3">
@@ -182,7 +182,7 @@
                 </div>
                 <mat-divider></mat-divider>
                 <div class="row pt-1 pl-2">
-                    <blockquote class="blockquote">
+                    <blockquote class="blockquote" style="font-size: medium">
                         {{comment.body}}
                     </blockquote>
                 </div>

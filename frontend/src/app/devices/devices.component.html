@@ -120,28 +120,28 @@
                                         <th mat-sort-header="name">
                                             Név
                                         </th>
-                                        <th mat-sort-header="maker">
+                                        <th mat-sort-header="maker" *ngIf="!isMobile()">
                                             Gyártó
                                         </th>
                                         <th mat-sort-header="type">
                                             Típus
                                         </th>
-                                        <th mat-sort-header="quantity">
+                                        <th mat-sort-header="quantity" *ngIf="!isMobile()">
                                             Mennyiség
                                         </th>
-                                        <th mat-sort-header="category">
+                                        <th mat-sort-header="category" *ngIf="!isMobile()">
                                             Kategória
                                         </th>
                                         <th mat-sort-header="location">
                                             Tárolási hely
                                         </th>
-                                        <th mat-sort-header="weight">
+                                        <th mat-sort-header="weight" *ngIf="!isMobile()">
                                             Tömeg
                                         </th>
                                         <th mat-sort-header="textId">
                                             Azonosító
                                         </th>
-                                        <th>
+                                        <th *ngIf="!isMobile()">
                                             Másolás
                                         </th>
                                         </thead>
@@ -150,28 +150,28 @@
                                             <td (click)="editDevice(device)">
                                                 {{ device.name }}
                                             </td>
-                                            <td (click)="editDevice(device)">
+                                            <td (click)="editDevice(device)" *ngIf="!isMobile()">
                                                 {{ device.maker }}
                                             </td>
                                             <td (click)="editDevice(device)">
                                                 {{ device.type }}
                                             </td>
-                                            <td (click)="editDevice(device)">
+                                            <td (click)="editDevice(device)" *ngIf="!isMobile()">
                                                 {{ device.quantity }}
                                             </td>
-                                            <td (click)="editDevice(device)">
+                                            <td (click)="editDevice(device)" *ngIf="!isMobile()">
                                                 {{ device.category.name }}
                                             </td>
                                             <td (click)="editDevice(device)">
                                                 {{ device.location.name }}
                                             </td>
-                                            <td (click)="editDevice(device)">
+                                            <td (click)="editDevice(device)" *ngIf="!isMobile()">
                                                 {{ device.weight / 1000 | number: '1.0-2' }} kg
                                             </td>
                                             <td (click)="editDevice(device)">
                                                 {{ device.textIdentifier }}
                                             </td>
-                                            <td class="pb-0 pt-0">
+                                            <td class="pb-0 pt-0" *ngIf="!isMobile()">
                                                 <button mat-raised-button type="button"
                                                         class="btn btn-info pull-center btn-just-icon"><i
                                                         class="material-icons pb-0 pt-0"

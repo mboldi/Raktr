@@ -557,6 +557,10 @@ export class DevicesComponent implements OnInit {
         })
     }
 
+    isMobile() {
+        return $(window).width() <= 991;
+    };
+
 }
 
 function compare(a: number | string, b: number | string, isAsc: boolean) {

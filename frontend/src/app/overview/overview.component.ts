@@ -45,12 +45,9 @@ export class OverviewComponent implements OnInit {
         this.rentService.getRents().subscribe(rents => {
                 this.rents = rents;
 
-                this.rents = this.rents.sort(((a, b) => {
-                    const aDate = new Date(a.backDate === null ? a.backDate : a.outDate);
-                    const bDate = new Date(b.backDate === null ? b.backDate : b.outDate);
-
-                    return aDate.getTime() - bDate.getTime();
-                }));
+                this.rents = this.rents.sort((a, b) => {
+                    return b.outDate.getTime() - a.outDate.getTime()
+                });
             }
         );
 

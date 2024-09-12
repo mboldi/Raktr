@@ -1,4 +1,4 @@
-import {Component, HostListener, OnInit, ViewEncapsulation} from '@angular/core';
+import {Component, HostListener, OnInit} from '@angular/core';
 import {Title} from '@angular/platform-browser';
 import {RentService} from '../_services/rent.service';
 import {DeviceService} from '../_services/device.service';
@@ -12,6 +12,8 @@ import {EditCompositeModalComponent} from '../edit-composite-modal/edit-composit
 import {CompositeItem} from '../_model/CompositeItem';
 import {Router} from '@angular/router';
 import {BarcodePurifier} from '../_services/barcode-purifier.service';
+import {TicketService} from '../_services/ticket.service';
+import {TicketStatus} from '../_model/TicketStatus';
 
 @Component({
     selector: 'app-overview',
@@ -25,11 +27,13 @@ export class OverviewComponent implements OnInit {
     deviceSearchFormControl = new UntypedFormControl();
     numOfActiveRents = 0;
     scannableAmount = 0;
+    ticketAmount = 0;
 
     constructor(private title: Title,
                 private rentService: RentService,
                 private deviceService: DeviceService,
                 private scannableService: ScannableService,
+                private ticketService: TicketService,
                 private router: Router,
                 private modalService: NgbModal) {
         this.title.setTitle('Raktr - Áttekintés');
@@ -48,13 +52,15 @@ export class OverviewComponent implements OnInit {
             }
         );
 
-        this.scannableService.getScannableAmount().subscribe(amount => this.scannableAmount = amount)
+        this.scannableService.getScannableAmount().subscribe(amount => this.scannableAmount = amount);
+
+        this.ticketService.getTickets().subscribe(tickets => this.ticketAmount = tickets.filter(ticket => ticket.status !== TicketStatus.CLOSED).length);
     }
 
     activeRents(): Rent[] {
         return this.rents.filter(rent => !rent.isClosed);
     }
-    
+
     searchScannable() {
         let barcode = this.deviceSearchFormControl.value;
 

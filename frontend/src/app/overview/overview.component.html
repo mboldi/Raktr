@@ -1,7 +1,7 @@
 <div class="main-content">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-xl-4 col-lg-12">
+            <div class="col-xl-3 col-lg-12">
                 <div class="card card-stats">
                     <div class="card-header card-header-primary card-header-icon">
                         <div class="card-icon">
@@ -25,11 +25,11 @@
                     </div>
                 </div>
             </div>
-            <div class="col-xl-4 col-lg-6">
+            <div class="col-xl-3 col-lg-4">
                 <div class="card card-stats">
-                    <div class="card-header card-header-warning card-header-icon">
+                    <div class="card-header card-header-info card-header-icon">
                         <div class="card-icon">
-                            <i class="material-icons">sd_storage</i>
+                            <i class="material-icons" routerLink="/devices" style="cursor: pointer">sd_storage</i>
                         </div>
                         <p class="card-category">Összes eszköz a rendszerben</p>
                         <h3 class="card-title">{{scannableAmount}}
@@ -40,14 +40,30 @@
                     </div>
                 </div>
             </div>
-            <div class="col-xl-4 col-lg-6">
+            <div class="col-xl-3 col-lg-4">
                 <div class="card card-stats">
                     <div class="card-header card-header-success card-header-icon">
                         <div class="card-icon">
-                            <i class="material-icons">content_paste</i>
+                            <i class="material-icons" routerLink="/rents" style="cursor: pointer">content_paste</i>
                         </div>
                         <p class="card-category">Aktív kivitelek</p>
                         <h3 class="card-title">{{activeRents().length}}
+                            <small>db</small>
+                        </h3>
+                    </div>
+                    <div class="card-footer">
+
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-lg-4">
+                <div class="card card-stats">
+                    <div class="card-header card-header-warning card-header-icon">
+                        <div class="card-icon">
+                            <i class="material-icons" routerLink="/tickets" style="cursor: pointer">bug_report</i>
+                        </div>
+                        <p class="card-category">Aktív hibajegyek</p>
+                        <h3 class="card-title">{{ticketAmount}}
                             <small>db</small>
                         </h3>
                     </div>

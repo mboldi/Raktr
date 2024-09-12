@@ -6,7 +6,6 @@ import {UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
 import {GeneralDataService} from '../_services/general-data.service';
 import {GeneralData} from '../_model/GeneralData';
 import * as $ from 'jquery';
-import {group} from "@angular/animations";
 
 @Component({
     selector: 'app-user-profile',
@@ -21,6 +20,7 @@ export class UserProfileComponent implements OnInit {
     personal_settings: UntypedFormGroup;
     group_settings: UntypedFormGroup;
     global_settings: UntypedFormGroup;
+    ean8Forced = false;
 
     constructor(private title: Title,
                 private fb: UntypedFormBuilder,
@@ -79,6 +79,10 @@ export class UserProfileComponent implements OnInit {
                 secondSignerName: [secondName ? secondName.data : ''],
                 secondSignerTitle: [secondTitle ? secondTitle.data : ''],
             });
+
+            const ean8ForcedData = data[data.findIndex(data_ => data_.key === 'forceEan8Barcode')];
+
+            this.ean8Forced = ean8ForcedData === undefined ? false : ean8ForcedData.data.toLowerCase() === 'true';
         });
     }
 
@@ -145,5 +149,9 @@ export class UserProfileComponent implements OnInit {
             },
             z_index: 2000
         })
+    }
+
+    updateForceEan8(event) {
+        this.generalDataService.updateData(new GeneralData('forceEan8Barcode', event.checked.toString())).subscribe();
     }
 }

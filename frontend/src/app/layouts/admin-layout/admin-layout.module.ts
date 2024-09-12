@@ -17,6 +17,7 @@ import {MatSortModule} from '@angular/material/sort';
 import {MatPaginatorModule} from '@angular/material/paginator';
 import {MatExpansionModule} from "@angular/material/expansion";
 import {MatCheckboxModule} from '@angular/material/checkbox';
+import {MatDividerModule} from '@angular/material/divider';
 
 @NgModule({
     imports: [
@@ -36,6 +37,7 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
         MatPaginatorModule,
         MatExpansionModule,
         MatCheckboxModule,
+        MatDividerModule,
     ],
   declarations: [
     UserProfileComponent,

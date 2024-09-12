@@ -23,6 +23,7 @@ import {Router} from '@angular/router';
 import {TicketStatus} from '../_model/TicketStatus';
 import {EditTicketComponent} from '../edit-ticket/edit-ticket.component';
 import {tick} from '@angular/core/testing';
+import {GeneralDataService} from '../_services/general-data.service';
 
 @Component({
     selector: 'app-edit-device-modal',
@@ -43,6 +44,8 @@ export class EditDeviceModalComponent implements OnInit {
     admin = false;
     deleteConfirmed = false;
 
+    forceEan8 = false;
+
     warrantyActive: boolean;
 
     currentCategoryInput = '';
@@ -60,6 +63,7 @@ export class EditDeviceModalComponent implements OnInit {
                 private deviceService: DeviceService,
                 private scannableService: ScannableService,
                 private userService: UserService,
+                private generalDataService: GeneralDataService,
                 public dialog: MatDialog,
                 private router: Router,
                 private modalService: NgbModal) {
@@ -166,6 +170,12 @@ export class EditDeviceModalComponent implements OnInit {
 
         this.deviceForm.get('barcode').markAsTouched();
         this.deviceForm.get('textIdentifier').markAsTouched();
+        this.deviceForm.get('category').markAsTouched();
+        this.deviceForm.get('location').markAsTouched();
+
+        this.generalDataService.getByKey('forceEan8Barcode').subscribe(result => {
+            this.forceEan8 = result === undefined ? false : result.data.toLowerCase() === 'true';
+        });
     }
 
     private setFormFields() {

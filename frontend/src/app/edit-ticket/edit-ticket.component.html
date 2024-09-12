@@ -115,7 +115,11 @@
                 <div class="row">
                     <mat-form-field class="col-md-12">
                         <mat-label>Hiba leírása</mat-label>
-                        <textarea matInput formControlName="body"></textarea>
+                        <textarea matInput formControlName="body"
+                                  cdkTextareaAutosize
+                                  cdkAutosizeMinRows="10"
+                                  cdkAutosizeMaxRows="15"
+                        ></textarea>
                     </mat-form-field>
                 </div>
                 <div class="pull-right">

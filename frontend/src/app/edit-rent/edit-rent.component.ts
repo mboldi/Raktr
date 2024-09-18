@@ -210,7 +210,7 @@ export class EditRentComponent implements OnInit {
         this.rentDataForm.setValue({
             rentType: this.rent.type === RentType.SIMPLE ? 'SIMPLE' : 'COMPLEX',
             destination: this.rent.destination,
-            issuer: this.rent.issuer.familyName + ' ' + this.rent.issuer.givenName,
+            issuer: this.rent.issuer !== null ? this.rent.issuer.familyName + ' ' + this.rent.issuer.givenName : '',
             renter: this.rent.renter,
             outDate: this.rent.outDate,
             expBackDate: this.rent.expBackDate,

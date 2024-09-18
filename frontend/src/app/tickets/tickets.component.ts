@@ -32,12 +32,15 @@ export class TicketsComponent implements OnInit {
     private tickets: Ticket[];
 
     constructor(
+        private title: Title,
         private ticketService: TicketService,
         private modalService: NgbModal,
         private route: ActivatedRoute,
         private router: Router,
         private routerLocation: RouterLocation
     ) {
+        this.title.setTitle('Raktr - Hibajegyek');
+
         ticketService.getTickets().subscribe(tickets => {
             this.tickets = this.sortTickets(tickets);
 

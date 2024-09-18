@@ -64,7 +64,11 @@
                     </p>
                     <p class="mb-1" *ngIf="asDevice(ticket.scannableOfProblem).dateOfAcquisition !== null">
                         <b>Eszköz beszerzési ideje:</b>
-                        {{asDevice(ticket.scannableOfProblem).dateOfAcquisition | date:'yyyy'}}
+                        {{asDevice(ticket.scannableOfProblem).dateOfAcquisition | date:'yyyy MM.'}}
+                    </p>
+                    <p class="mb-1" *ngIf="asDevice(ticket.scannableOfProblem).endOfWarranty !== null">
+                        <b>Garancia vége:</b>
+                        {{asDevice(ticket.scannableOfProblem).endOfWarranty | date:'yyyy MM. dd.'}}
                     </p>
                     <p class="mb-1" *ngIf="asDevice(ticket.scannableOfProblem).owner !== null">
                         <b>Eszköz tulajdonosa:</b> {{asDevice(ticket.scannableOfProblem).owner.name}}

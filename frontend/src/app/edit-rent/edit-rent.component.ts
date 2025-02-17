@@ -112,19 +112,19 @@ export class EditRentComponent implements OnInit {
 
         userService.getRentIssuerableMembers().subscribe(users => {
             this.rentIssuingMembers = users;
-        })
 
-        this.rentDataForm
-            .get('issuer')
-            .valueChanges
-            .subscribe(
-                value => {
-                    const filteredMembers =
-                        this.rentIssuingMembers.filter(user => (user.familyName + ' ' + user.givenName)
-                            .toLowerCase().includes(value.toLowerCase()));
+            this.rentDataForm
+                .get('issuer')
+                .valueChanges
+                .subscribe(
+                    value => {
+                        const filteredMembers =
+                            this.rentIssuingMembers.filter(user => (user.familyName + ' ' + user.givenName)
+                                .toLowerCase().includes(value.toLowerCase()));
 
-                    this.filteredRentIssuingMembers = filteredMembers.length > 10 ? [] : filteredMembers;
-                });
+                        this.filteredRentIssuingMembers = filteredMembers.length > 10 ? [] : filteredMembers;
+                    });
+        });
 
         this.deviceService.getDevices().subscribe(devices => {
             devices.forEach(device => this.allScannables.push(device));
@@ -213,8 +213,8 @@ export class EditRentComponent implements OnInit {
             issuer: this.rent.issuer !== null ? this.rent.issuer.familyName + ' ' + this.rent.issuer.givenName : '',
             renter: this.rent.renter,
             outDate: this.rent.outDate,
-            expBackDate: this.rent.expBackDate,
-            actBackDate: this.rent.backDate
+            expBackDate: this.rent.expBackDate !== undefined ? this.rent.expBackDate : '',
+            actBackDate: this.rent.backDate !== undefined ? this.rent.backDate : ''
         });
     }
 

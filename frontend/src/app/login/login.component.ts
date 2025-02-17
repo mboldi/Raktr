@@ -1,55 +1,31 @@
-import {Component, OnInit} from '@angular/core';
-import {AuthService} from '../_services/auth.service';
-import {UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
-import {Router} from '@angular/router';
-import {Title} from '@angular/platform-browser';
-import {catchError, delay, timeout} from 'rxjs/operators';
-import {of} from 'rxjs';
+import { Component, inject, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { Title } from '@angular/platform-browser';
+import { OidcSecurityService } from 'angular-auth-oidc-client';
 
 @Component({
-    selector: 'app-login',
-    templateUrl: './login.component.html',
-    styleUrls: ['./login.component.css']
+  selector: 'app-login',
+  templateUrl: './login.component.html',
+  styleUrls: ['./login.component.css'],
 })
 export class LoginComponent implements OnInit {
-    hide = true;
-    loginHappening = false;
-    invalidCreds = false;
-    form: UntypedFormGroup;
+  private readonly oidcSecurityService = inject(OidcSecurityService);
 
-    constructor(private authService: AuthService,
-                private fb: UntypedFormBuilder,
-                private router: Router,
-                private title: Title) {
-        title.setTitle('Raktr - bejelentkezés');
+  constructor(private router: Router, private title: Title) {
+    title.setTitle('Raktr - bejelentkezés');
+  }
 
-        this.form = this.fb.group({
-            username: ['', Validators.required],
-            password: ['', Validators.required]
-        });
-    }
-
-    ngOnInit(): void {
-        if (this.authService.isLoggedIn()) {
-            this.router.navigateByUrl('/overview');
+  ngOnInit(): void {
+    this.oidcSecurityService.isAuthenticated$.subscribe(
+      ({ isAuthenticated }) => {
+        if (isAuthenticated) {
+          this.router.navigateByUrl('/overview');
         }
-    }
+      }
+    );
+  }
 
-    login() {
-        this.loginHappening = true;
-        this.invalidCreds = false;
-        const val = this.form.value;
-
-        if (val.username && val.password) {
-            this.authService.login(val.username, val.password).pipe(delay(50)).subscribe(resp => {
-                    if (resp.ok) {
-                        this.router.navigateByUrl('/overview');
-                    }
-                },
-                error => {
-                    this.loginHappening = false;
-                    this.invalidCreds = true;
-                });
-        }
-    }
+  login() {
+    this.oidcSecurityService.authorize();
+  }
 }

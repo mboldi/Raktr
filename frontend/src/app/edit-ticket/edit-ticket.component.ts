@@ -26,6 +26,8 @@ export class EditTicketComponent implements OnInit {
     @Input() title: string;
     @Input() scannable: Scannable;
 
+    protected readonly TicketStatus = TicketStatus;
+
     edit = false;
 
     deleteConfirmed = false;
@@ -53,12 +55,13 @@ export class EditTicketComponent implements OnInit {
             this.ticket = new Ticket();
         }
 
-        if (this.scannable === null || this.scannable === undefined) {
-            this.ticket.scannableOfProblem = this.scannable;
-        }
     }
 
     ngOnInit() {
+        if (this.scannable !== null && this.scannable !== undefined) {
+            this.ticket.scannableOfProblem = this.scannable;
+        }
+
         this.userService.getCurrentUser().subscribe(user => {
             this.currUser = user;
 
@@ -78,7 +81,7 @@ export class EditTicketComponent implements OnInit {
 
     sortComments() {
         this.ticket.comments = this.ticket.comments.sort((a, b) => {
-                return compare(new Date(a.dateOfWriting).getTime(), new Date(b.dateOfWriting).getTime(), false);
+                return compare(new Date(b.dateOfWriting).getTime(), new Date(a.dateOfWriting).getTime(), false);
             }
         );
     }
@@ -96,6 +99,7 @@ export class EditTicketComponent implements OnInit {
         this.ticket.status = TicketStatus.OPEN;
 
         this.ticketService.addTicket(this.ticket).subscribe(ticket => {
+            this.ticket = ticket;
             this.activeModal.dismiss('save');
         })
 
@@ -150,7 +154,6 @@ export class EditTicketComponent implements OnInit {
             if (change) {
                 this.ticketService.updateTicket(this.ticket).subscribe(updatedTicket => {
                     this.ticket = updatedTicket;
-                    console.log(this.ticket);
                 })
             }
 

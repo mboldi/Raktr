@@ -40,9 +40,13 @@ import {TicketsComponent} from './tickets/tickets.component';
 import {EditProjectComponent} from './edit-project/edit-project.component';
 import {EditTicketComponent} from './edit-ticket/edit-ticket.component';
 import {MatFabMenuModule} from '@angular-material-extensions/fab-menu';
-import {MatTabsModule} from "@angular/material/tabs";
+
 import {AuthConfigModule} from './auth-config.module';
 import {AuthInterceptor} from 'angular-auth-oidc-client';
+import {MatTabsModule} from '@angular/material/tabs';
+import {DeviceImportModalComponent} from './device-import-modal/device-import-modal.component';
+import {MatSortModule} from '@angular/material/sort';
+import {MatProgressBarModule} from '@angular/material/progress-bar';
 
 @NgModule({
     imports: [
@@ -75,6 +79,8 @@ import {AuthInterceptor} from 'angular-auth-oidc-client';
         MatFabMenuModule,
         MatTabsModule,
         AuthConfigModule,
+        MatSortModule,
+        MatProgressBarModule
     ],
     declarations: [
         AppComponent,
@@ -84,6 +90,7 @@ import {AuthInterceptor} from 'angular-auth-oidc-client';
         EditRentComponent,
         LoginComponent,
         DeviceToRentModalComponent,
+        DeviceImportModalComponent,
         EditCompositeModalComponent,
         ConfirmDialogComponent,
         PdfGenerationModalComponent,

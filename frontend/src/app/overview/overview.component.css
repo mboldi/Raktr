@@ -17,3 +17,12 @@
 ::ng-deep ngb-modal-backdrop {
     z-index: 100 !important;
 }
+
+.infocard-footer {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.infocard-row {
+    align-items: flex-end;
+}

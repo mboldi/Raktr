@@ -15,7 +15,7 @@ import {Category} from '../_model/Category';
 import {DeviceStatus} from '../_model/DeviceStatus';
 import {Location} from '../_model/Location';
 import {HunPaginator} from '../helpers/hun-paginator';
-import {read, utils, writeFile} from 'xlsx';
+import {utils, writeFile} from 'xlsx';
 import {User} from '../_model/User';
 import {UserService} from '../_services/user.service';
 import {DeviceForExcel} from '../_model/DeviceForExcel';
@@ -23,9 +23,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {Location as RouterLocation} from '@angular/common' ;
 import {LocationService} from '../_services/location.service';
 import {CategoryService} from '../_services/category.service';
-import {MatCheckboxChange} from '@angular/material/checkbox';
-import {Scannable} from '../_model/Scannable';
-import {Obj} from '@popperjs/core';
+import {DeviceImportModalComponent} from '../device-import-modal/device-import-modal.component';
 
 @Component({
     selector: 'app-table-list',
@@ -169,10 +167,10 @@ export class DevicesComponent implements OnInit {
     }
 
     sortDevices(sort: Sort) {
-        if (this.devices.length === 0) {
+        if (this.sortedDevices.length === 0) {
             return;
         }
-        const data = this.devices.slice();
+        const data = this.sortedDevices.slice();
         if (!sort.active || sort.direction === '') {
             this.sortedDevices = data;
             return;
@@ -206,10 +204,10 @@ export class DevicesComponent implements OnInit {
     }
 
     sortComposites(sort: Sort) {
-        if (this.compositeItems.length === 0) {
+        if (this.sortedComposites.length === 0) {
             return;
         }
-        const data = this.compositeItems.slice();
+        const data = this.sortedComposites.slice();
         if (!sort.active || sort.direction === '') {
             this.sortedComposites = data;
             return;
@@ -243,13 +241,17 @@ export class DevicesComponent implements OnInit {
         editModal.componentInstance.device.id = -1;
 
         editModal.result.catch(() => {
-            this.deviceService.getDevices().subscribe(devices => {
-                this.devices = devices;
-                this.sortedDevices = devices;
-
-                this.setDevicePage();
-            });
+            this.getDevices();
         })
+    }
+
+    private getDevices() {
+        this.deviceService.getDevices().subscribe(devices => {
+            this.devices = devices;
+            this.sortedDevices = devices;
+
+            this.setDevicePage();
+        });
     }
 
 
@@ -332,65 +334,21 @@ export class DevicesComponent implements OnInit {
         this.searchControl.setValue('');
     }
 
-    showNotification(message_: string, type: string) {
-        $['notify']({
-            icon: 'add_alert',
-            message: message_
-        }, {
-            type: type,
-            timer: 1000,
-            placement: {
-                from: 'top',
-                align: 'right'
-            },
-            z_index: 2000
-        })
-    }
-
-    addLotOfDevices(start: number, num: number) {
-        for (let i = start; i < start + num; i++) {
-            this.deviceService.addDevice(new Device(
-                -1,
-                `name:_${i}`,
-                (i).toString().padStart(7, '0'),
-                `azonos_${i}`,
-                false,
-                `gyartooo_${i}`,
-                `tippuuuuus_${i}`,
-                `kredenc_${i}`,
-                1000 * (i % 5) + 2 * i,
-                100 * (i % 5) + 2 * i,
-                new Location(-1, 'almaaa'),
-                DeviceStatus.GOOD,
-                new Category(-1, 'asd'),
-            )).subscribe(device => {
-                console.log(`${device.name} added`);
-            })
-        }
-    }
-
     handleExcelImport($event: any) {
         const files = $event.target.files;
         if (files.length) {
             const file = files[0];
-            const reader = new FileReader();
 
-            reader.onload = (event: any) => {
-                const wb = read(event.target.result);
-                const sheets = wb.SheetNames;
+            const importModal = this.modalService.open(DeviceImportModalComponent, {size: 'lg'});
+            importModal.componentInstance.importFile = file;
 
-                if (sheets.length) {
-                    const headings = [[
-                        'apple',
-                        'orange',
-                        'pear'
-                    ]];
-                    utils.sheet_add_aoa(wb, headings);
-                    const rows = utils.sheet_to_json(wb.Sheets[sheets[0]]);
-                    console.log(rows)
-                }
-            }
-            reader.readAsArrayBuffer(file);
+            importModal.result.catch(reason => {
+                this.showNotification('Eszközimport befejeződött', 'success');
+
+                this.getDevices();
+
+                $event.target.value = null;
+            });
         }
     }
 
@@ -410,7 +368,7 @@ export class DevicesComponent implements OnInit {
             'weight',
             'status',
             'quantity',
-            'aquiredFrom',
+            'acquiredFrom',
             'dateOfAcquisition',
             'owner',
             'endOfWarranty',
@@ -529,8 +487,8 @@ export class DevicesComponent implements OnInit {
 
         this.sortedComposites = this.compositeItems.filter(compositeItem =>
             (compositeItem.name.toLowerCase().includes(value) ||
-            compositeItem.textIdentifier.toLowerCase().includes(value) ||
-            compositeItem.barcode.toLowerCase().includes(value)) &&
+                compositeItem.textIdentifier.toLowerCase().includes(value) ||
+                compositeItem.barcode.toLowerCase().includes(value)) &&
             this.checkBoxFilter(compositeItem.location.id, this.locationGroup.value, this.locations) &&
             this.checkBoxFilter(compositeItem.category.id, this.categoryGroup.value, this.categories));
 
@@ -561,6 +519,48 @@ export class DevicesComponent implements OnInit {
                 break;
         }
     }
+
+    public numOfLocation(loc: Location): number {
+        switch (this.currentTab) {
+            case 'devices':
+                return this.devices.filter(device => device.location.name === loc.name).length;
+            case 'composites':
+                return this.compositeItems.filter(item => item.location.name === loc.name).length;
+            default:
+                return 0;
+        }
+    }
+
+    public numOfCategory(cat: Category): number {
+        switch (this.currentTab) {
+            case 'devices':
+                return this.devices.filter(device => device.category.name === cat.name).length;
+            case 'composites':
+                return this.compositeItems.filter(item => item.category.name === cat.name).length;
+            default:
+                return 0;
+        }
+    }
+
+    showNotification(message_: string, type: string) {
+        $['notify']({
+            icon: 'add_alert',
+            message: message_
+        }, {
+            type: type,
+            timer: 1000,
+            placement: {
+                from: 'top',
+                align: 'right'
+            },
+            z_index: 2000
+        })
+    }
+
+    isMobile() {
+        return $(window).width() <= 991;
+    };
+
 }
 
 function compare(a: number | string, b: number | string, isAsc: boolean) {

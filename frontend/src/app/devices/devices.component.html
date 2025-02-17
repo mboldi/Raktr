@@ -55,10 +55,10 @@
                                         <section class="location-section" [formGroup]="locationGroup">
                                             <p *ngFor="let location of locations"
                                                class="mb-0">
-                                                <mat-checkbox class="ml-2" color="accent" disableRipple="true"
+                                                <mat-checkbox class="ml-2" color="accent" disableRipple="true" *ngIf="numOfLocation(location) != 0"
                                                               formControlName="{{ location.id }}"
                                                               onClick="event.stopPropagation();">
-                                                    <span style="color: white">{{ location.name }}</span>
+                                                    <span style="color: white">{{ location.name }} ({{numOfLocation(location)}} db)</span>
                                                 </mat-checkbox>
                                             </p>
                                         </section>
@@ -67,10 +67,10 @@
                                         <section class="category-section" [formGroup]="categoryGroup">
                                             <p *ngFor="let category of categories"
                                                class="mb-0">
-                                                <mat-checkbox class="ml-2" color="accent" disableRipple="true"
+                                                <mat-checkbox class="ml-2" color="accent" disableRipple="true" *ngIf="numOfCategory(category) != 0"
                                                               formControlName="{{ category.id }}"
                                                               onClick="event.stopPropagation();">
-                                                    <span style="color: white">{{ category.name }}</span>
+                                                    <span style="color: white">{{ category.name }} ({{numOfCategory(category)}} db)</span>
                                                 </mat-checkbox>
                                             </p>
                                         </section>
@@ -79,7 +79,7 @@
                                     </div>
                                 </button>
                                 <button class="ml-1 mr-1 popupBase" mat-button mat-icon-button aria-label="bulk-tools"
-                                        *ngIf="currUser.isAdmin()"
+                                        *ngIf="currUser.isAdmin() && currentTab == 'devices'"
                                         onClick='document.getElementById("bulkToolsPopup").classList.toggle("show");
                                                  document.getElementById("filterPopup").classList.remove("show")'>
                                     <mat-icon>difference</mat-icon>
@@ -120,28 +120,28 @@
                                         <th mat-sort-header="name">
                                             Név
                                         </th>
-                                        <th mat-sort-header="maker">
+                                        <th mat-sort-header="maker" *ngIf="!isMobile()">
                                             Gyártó
                                         </th>
                                         <th mat-sort-header="type">
                                             Típus
                                         </th>
-                                        <th mat-sort-header="quantity">
+                                        <th mat-sort-header="quantity" *ngIf="!isMobile()">
                                             Mennyiség
                                         </th>
-                                        <th mat-sort-header="category">
+                                        <th mat-sort-header="category" *ngIf="!isMobile()">
                                             Kategória
                                         </th>
                                         <th mat-sort-header="location">
                                             Tárolási hely
                                         </th>
-                                        <th mat-sort-header="weight">
+                                        <th mat-sort-header="weight" *ngIf="!isMobile()">
                                             Tömeg
                                         </th>
                                         <th mat-sort-header="textId">
                                             Azonosító
                                         </th>
-                                        <th>
+                                        <th *ngIf="!isMobile()">
                                             Másolás
                                         </th>
                                         </thead>
@@ -150,28 +150,28 @@
                                             <td (click)="editDevice(device)">
                                                 {{ device.name }}
                                             </td>
-                                            <td (click)="editDevice(device)">
+                                            <td (click)="editDevice(device)" *ngIf="!isMobile()">
                                                 {{ device.maker }}
                                             </td>
                                             <td (click)="editDevice(device)">
                                                 {{ device.type }}
                                             </td>
-                                            <td (click)="editDevice(device)">
+                                            <td (click)="editDevice(device)" *ngIf="!isMobile()">
                                                 {{ device.quantity }}
                                             </td>
-                                            <td (click)="editDevice(device)">
+                                            <td (click)="editDevice(device)" *ngIf="!isMobile()">
                                                 {{ device.category.name }}
                                             </td>
                                             <td (click)="editDevice(device)">
                                                 {{ device.location.name }}
                                             </td>
-                                            <td (click)="editDevice(device)">
+                                            <td (click)="editDevice(device)" *ngIf="!isMobile()">
                                                 {{ device.weight / 1000 | number: '1.0-2' }} kg
                                             </td>
                                             <td (click)="editDevice(device)">
                                                 {{ device.textIdentifier }}
                                             </td>
-                                            <td class="pb-0 pt-0">
+                                            <td class="pb-0 pt-0" *ngIf="!isMobile()">
                                                 <button mat-raised-button type="button"
                                                         class="btn btn-info pull-center btn-just-icon"><i
                                                         class="material-icons pb-0 pt-0"

@@ -89,9 +89,11 @@
                                         <mat-form-field class="mt-3 ml-3" floatLabel="always" style="width: 90%">
                                             <mat-label style="color: white; font-size: large">Eszközlista importálása
                                             </mat-label>
-                                            <input matInput type="file" name="excelImportFile" id="excelImportFile"
+                                            <ngx-mat-file-input name="excelImportFile" id="excelImportFile"
                                                    (change)="handleExcelImport($event)"
                                                    accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+                                            </ngx-mat-file-input>
+                                            <mat-icon matSuffix>folder</mat-icon>
                                         </mat-form-field>
 
                                         <button class="ml-3 mb-2" mat-raised-button color="accent"

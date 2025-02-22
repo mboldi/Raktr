@@ -18,6 +18,7 @@ import {MatPaginatorModule} from '@angular/material/paginator';
 import {MatExpansionModule} from "@angular/material/expansion";
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatDividerModule} from '@angular/material/divider';
+import {MaterialFileInputModule} from 'ngx-material-file-input';
 
 @NgModule({
     imports: [
@@ -38,6 +39,7 @@ import {MatDividerModule} from '@angular/material/divider';
         MatExpansionModule,
         MatCheckboxModule,
         MatDividerModule,
+        MaterialFileInputModule,
     ],
   declarations: [
     UserProfileComponent,

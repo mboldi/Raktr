@@ -147,6 +147,7 @@ export class DeviceImportModalComponent implements OnInit {
 
         this.deviceService.updateDevice(actDevice).subscribe(deviceResult => {
             this.handledDevices++;
+            this.successfulHandles++;
             this.importMessages.push({
                 'row': row['__rowNum__'],
                 'status': 'success',

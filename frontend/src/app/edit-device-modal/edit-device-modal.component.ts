@@ -79,6 +79,7 @@ export class EditDeviceModalComponent implements OnInit {
             isPublicRentable: [''],
             maker: [''],
             type: [''],
+            serial: [''],
             category: ['', Validators.required],
             location: ['', Validators.required],
             barcode: ['', Validators.required, barcodeValidator(this.scannableService, this.device.id)],
@@ -184,6 +185,7 @@ export class EditDeviceModalComponent implements OnInit {
             isPublicRentable: this.device.isPublicRentable,
             maker: this.device.maker,
             type: this.device.type,
+            serial: this.device.serial,
             category: this.device.category === null ? '' : this.device.category.name,
             location: this.device.location === null ? '' : this.device.location.name,
             barcode: this.device.barcode,
@@ -223,6 +225,7 @@ export class EditDeviceModalComponent implements OnInit {
         this.device.isPublicRentable = values.isPublicRentable;
         this.device.maker = values.maker.toString();
         this.device.type = values.type.toString();
+        this.device.serial = values.serial.toString();
         this.device.category = new Category(-1, values.category.toString());
         this.device.location = new Location(-1, values.location.toString());
         this.device.barcode = values.barcode.toString();

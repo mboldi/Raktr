@@ -35,6 +35,7 @@
                             </mat-paginator>
                             <table class="table">
                                 <thead class="text-orange">
+                                <th></th>
                                 <th>
                                     Kiadó
                                 </th>
@@ -62,6 +63,10 @@
                                 </thead>
                                 <tbody>
                                 <tr class="rent-row" *ngFor="let rent of pagedRents" (click)="openRent(rent.id)">
+                                    <td class="icon-column">
+                                        <mat-icon style="color: #c62828" *ngIf="!rent.isClosed">camera_outdoor</mat-icon>
+                                        <mat-icon style="color: #8bc34a" *ngIf="rent.isClosed">done_all</mat-icon>
+                                    </td>
                                     <td>
                                         {{rent.issuer.nickName}}
                                     </td>

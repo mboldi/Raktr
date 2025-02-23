@@ -55,10 +55,12 @@
                                         <section class="location-section" [formGroup]="locationGroup">
                                             <p *ngFor="let location of locations"
                                                class="mb-0">
-                                                <mat-checkbox class="ml-2" color="accent" disableRipple="true" *ngIf="numOfLocation(location) != 0"
+                                                <mat-checkbox class="ml-2" color="accent" disableRipple="true"
+                                                              *ngIf="numOfLocation(location) != 0"
                                                               formControlName="{{ location.id }}"
                                                               onClick="event.stopPropagation();">
-                                                    <span style="color: white">{{ location.name }} ({{numOfLocation(location)}} db)</span>
+                                                    <span style="color: white">{{ location.name }}
+                                                        ({{ numOfLocation(location) }} db)</span>
                                                 </mat-checkbox>
                                             </p>
                                         </section>
@@ -67,10 +69,12 @@
                                         <section class="category-section" [formGroup]="categoryGroup">
                                             <p *ngFor="let category of categories"
                                                class="mb-0">
-                                                <mat-checkbox class="ml-2" color="accent" disableRipple="true" *ngIf="numOfCategory(category) != 0"
+                                                <mat-checkbox class="ml-2" color="accent" disableRipple="true"
+                                                              *ngIf="numOfCategory(category) != 0"
                                                               formControlName="{{ category.id }}"
                                                               onClick="event.stopPropagation();">
-                                                    <span style="color: white">{{ category.name }} ({{numOfCategory(category)}} db)</span>
+                                                    <span style="color: white">{{ category.name }}
+                                                        ({{ numOfCategory(category) }} db)</span>
                                                 </mat-checkbox>
                                             </p>
                                         </section>
@@ -90,8 +94,8 @@
                                             <mat-label style="color: white; font-size: large">Eszközlista importálása
                                             </mat-label>
                                             <ngx-mat-file-input name="excelImportFile" id="excelImportFile"
-                                                   (change)="handleExcelImport($event)"
-                                                   accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+                                                                (change)="handleExcelImport($event)"
+                                                                accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
                                             </ngx-mat-file-input>
                                             <mat-icon matSuffix>folder</mat-icon>
                                         </mat-form-field>
@@ -122,6 +126,9 @@
                                         <th mat-sort-header="name">
                                             Név
                                         </th>
+                                        <th mat-sort-header="textId">
+                                            Azonosító
+                                        </th>
                                         <th mat-sort-header="maker" *ngIf="!isMobile()">
                                             Gyártó
                                         </th>
@@ -140,35 +147,33 @@
                                         <th mat-sort-header="weight" *ngIf="!isMobile()">
                                             Tömeg
                                         </th>
-                                        <th mat-sort-header="textId">
-                                            Azonosító
-                                        </th>
                                         </thead>
                                         <tbody>
-                                        <tr class="device-row" *ngFor="let device of pagedDevices">
-                                            <td (click)="editDevice(device)">
+                                        <tr class="device-row" (click)="editDevice(device)"
+                                            *ngFor="let device of pagedDevices">
+                                            <td>
                                                 {{ device.name }}
                                             </td>
-                                            <td (click)="editDevice(device)" *ngIf="!isMobile()">
+                                            <td>
+                                                {{ device.textIdentifier }}
+                                            </td>
+                                            <td *ngIf="!isMobile()">
                                                 {{ device.maker }}
                                             </td>
-                                            <td (click)="editDevice(device)">
+                                            <td>
                                                 {{ device.type }}
                                             </td>
-                                            <td (click)="editDevice(device)" *ngIf="!isMobile()">
+                                            <td *ngIf="!isMobile()">
                                                 {{ device.quantity }}
                                             </td>
-                                            <td (click)="editDevice(device)" *ngIf="!isMobile()">
+                                            <td *ngIf="!isMobile()">
                                                 {{ device.category.name }}
                                             </td>
-                                            <td (click)="editDevice(device)">
+                                            <td>
                                                 {{ device.location.name }}
                                             </td>
-                                            <td (click)="editDevice(device)" *ngIf="!isMobile()">
+                                            <td *ngIf="!isMobile()">
                                                 {{ device.weight / 1000 | number: '1.0-2' }} kg
-                                            </td>
-                                            <td (click)="editDevice(device)">
-                                                {{ device.textIdentifier }}
                                             </td>
                                         </tr>
                                         </tbody>
@@ -187,6 +192,9 @@
                                         <th mat-sort-header="name">
                                             Név
                                         </th>
+                                        <th mat-sort-header="textId">
+                                            Azonosító
+                                        </th>
                                         <th>
                                             Tartalmazott eszközök száma
                                         </th>
@@ -199,30 +207,28 @@
                                         <th mat-sort-header="weight">
                                             Tömeg
                                         </th>
-                                        <th mat-sort-header="textId">
-                                            Azonosító
-                                        </th>
                                         </thead>
                                         <tbody>
                                         <tr class="device-row"
+                                            (click)="editCompositeItem(compositeItem)"
                                             *ngFor="let compositeItem of pagedComposites">
-                                            <td (click)="editCompositeItem(compositeItem)">
+                                            <td>
                                                 {{ compositeItem.name }}
                                             </td>
-                                            <td (click)="editCompositeItem(compositeItem)">
+                                            <td>
+                                                {{ compositeItem.textIdentifier }}
+                                            </td>
+                                            <td>
                                                 {{ compositeItem.devices.length }}
                                             </td>
-                                            <td (click)="editCompositeItem(compositeItem)">
+                                            <td>
                                                 {{ compositeItem.category.name }}
                                             </td>
-                                            <td (click)="editCompositeItem(compositeItem)">
+                                            <td>
                                                 {{ compositeItem.location.name }}
                                             </td>
-                                            <td (click)="editCompositeItem(compositeItem)">
+                                            <td>
                                                 {{ compositeItem.getWeight() / 1000 | number: '1.0-2' }} kg
-                                            </td>
-                                            <td (click)="editCompositeItem(compositeItem)">
-                                                {{ compositeItem.textIdentifier }}
                                             </td>
                                         </tr>
                                         </tbody>

@@ -79,7 +79,7 @@ export class EditRentComponent implements OnInit {
         this.title.setTitle('Raktr - Kivitel szerkesztése');
 
         this.rentDataForm = fb.group({
-            rentType: ['SIMPLE'],
+            rentType: [{value: 'SIMPLE', disabled: !this.fullAccessMember}],
             destination: ['', Validators.required],
             issuer: ['', Validators.required],
             renter: ['', Validators.required],
@@ -98,6 +98,10 @@ export class EditRentComponent implements OnInit {
 
             this.fullAccessMember = user.isFullAccessMember();
             this.admin = user.isAdmin();
+
+            if (this.fullAccessMember) {
+                this.rentDataForm.get('rentType').enable();
+            }
 
             if (this.route.snapshot.paramMap.get('id') === 'new') {
                 this.rent.issuer = this.user;

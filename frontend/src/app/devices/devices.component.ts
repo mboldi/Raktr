@@ -54,8 +54,8 @@ export class DevicesComponent implements OnInit {
 
     locations: Location[] = [];
     categories: Category[] = [];
-    locationGroup: FormGroup;
-    categoryGroup: FormGroup;
+    locationGroup: FormGroup = this.formBuilder.group({});
+    categoryGroup: FormGroup = this.formBuilder.group({});
 
     constructor(private title: Title,
                 private deviceService: DeviceService,

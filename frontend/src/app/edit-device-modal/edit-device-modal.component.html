@@ -221,7 +221,15 @@
                                 <mat-icon>delete</mat-icon>
                             </button>
                         </mat-slide-toggle>
-                        <button mat-raised-button type="button" mat-dialog-close style="margin-right: 4px"
+                        <button *ngIf="admin && device.id !== -1"
+                                mat-raised-button type="button"
+                                class="btn btn-info pull-center btn-just-icon"><i
+                                class="material-icons pb-0 pt-0"
+                                (click)="copyDevice(device)">content_copy</i>
+                        </button>
+                        <button mat-raised-button type="button" mat-dialog-close
+                                class="ml-2"
+                                style="margin-right: 4px"
                                 (click)="activeModal.dismiss(0)">
                             Vissza
                         </button>

@@ -143,9 +143,6 @@
                                         <th mat-sort-header="textId">
                                             Azonosító
                                         </th>
-                                        <th *ngIf="!isMobile()">
-                                            Másolás
-                                        </th>
                                         </thead>
                                         <tbody>
                                         <tr class="device-row" *ngFor="let device of pagedDevices">
@@ -172,13 +169,6 @@
                                             </td>
                                             <td (click)="editDevice(device)">
                                                 {{ device.textIdentifier }}
-                                            </td>
-                                            <td class="pb-0 pt-0" *ngIf="!isMobile()">
-                                                <button mat-raised-button type="button"
-                                                        class="btn btn-info pull-center btn-just-icon"><i
-                                                        class="material-icons pb-0 pt-0"
-                                                        (click)="copyDevice(device)">content_copy</i>
-                                                </button>
                                             </td>
                                         </tr>
                                         </tbody>

@@ -333,6 +333,10 @@ export class EditDeviceModalComponent implements OnInit {
         })
     }
 
+    copyDevice(device: Device) {
+        this.activeModal.dismiss('copy');
+    }
+
     showNotification(message_: string, type: string) {
         $['notify']({
             icon: 'add_alert',

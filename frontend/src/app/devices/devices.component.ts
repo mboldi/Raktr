@@ -234,17 +234,6 @@ export class DevicesComponent implements OnInit {
         this.setCompositePage();
     }
 
-    copyDevice(device: Device) {
-        const editModal = this.modalService.open(EditDeviceModalComponent, {size: 'lg'});
-        editModal.componentInstance.title = 'Új eszköz másik alapján';
-        editModal.componentInstance.device = device;
-        editModal.componentInstance.device.id = -1;
-
-        editModal.result.catch(() => {
-            this.getDevices();
-        })
-    }
-
     private getDevices() {
         this.deviceService.getDevices().subscribe(devices => {
             this.devices = devices;
@@ -263,7 +252,29 @@ export class DevicesComponent implements OnInit {
         this.routerLocation.go(`/devices/${device.id}`);
 
         editModal.result.catch(reason => {
-            if (reason === 'delete') {
+            if (reason === 'copy') {
+                const copyModal = this.modalService.open(EditDeviceModalComponent, {size: 'lg'});
+                copyModal.componentInstance.title = 'Új eszköz másik alapján';
+                copyModal.componentInstance.device = structuredClone(device);
+                copyModal.componentInstance.device.id = -1;
+
+                copyModal.result.catch(result => {
+                    if (result.type_ !== undefined) {
+                        const index = this.devices.indexOf(result);
+                        if (index === -1) {
+                            this.devices.push(result as Device);
+                            this.searchControl.setValue('');
+                            this.showNotification(result.name + ' hozzáadva sikeresen!', 'success');
+                        } else {
+                            this.devices[index] = (result as Device);
+                        }
+
+                        this.setDevicePage();
+                    }
+                })
+            }
+
+            if (reason === 'delete' || reason === 'add') {
                 this.deviceService.getDevices().subscribe(devices => {
                     this.devices = devices;
                     this.sortedDevices = devices;

@@ -235,11 +235,11 @@
                                             {{rentItem.scannable.name}}
                                         </td>
                                         <td style="white-space: nowrap;">
-                                            <input matInput type="number" value="{{rentItem.outQuantity}}"
+                                            <input class="blackDisabled" matInput type="number" value="{{rentItem.outQuantity}}"
                                                    min="1"
                                                    max="{{rentItem.scannable.type_ === 'compositeItem' ? 1 : rentItem.scannable['quantity']}}"
                                                    autocomplete="off"
-                                                   [disabled]="rentItem.scannable.type_ === 'compositeItem' || rent.isClosed"
+                                                   [disabled]="!scannableAmountMultiple(rentItem.scannable) || rent.isClosed"
                                                    style="text-align: right; display: inline-block; width: 90%"
                                                    (change)="quantityChanged($event, rentItem)">
                                             <p class="mb-0" style="display: inline-block;">db</p>

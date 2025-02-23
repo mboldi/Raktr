@@ -737,4 +737,12 @@ export class EditRentComponent implements OnInit {
     }
 
     protected readonly Device = Device;
+
+    scannableAmountMultiple(scannable: Scannable) {
+        if (scannable.type_ === 'compositeItem') {
+            return false;
+        } else {
+            return (scannable as Device).quantity > 1;
+        }
+    }
 }

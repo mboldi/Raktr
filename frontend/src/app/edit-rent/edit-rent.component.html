@@ -308,11 +308,6 @@
                             </div>
                             <div class="row date-delete-row">
                                 <p class="pl-2 pt-0 mb-0 text-muted">{{comment.dateOfWriting | date:'medium'}}  </p>
-                                <a class="pl-1 comment-deleter"
-                                   *ngIf="comment.writer.id === user.id || admin"
-                                   (click)="deleteComment(comment)">
-                                    Megjegyzés törlése
-                                </a>
                             </div>
                             <mat-divider></mat-divider>
                             <div class="row pt-1 pl-2">

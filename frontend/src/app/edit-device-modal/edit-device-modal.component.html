@@ -1,5 +1,5 @@
 <div class="modal-header">
-    <h3>{{title}}</h3>
+    <h3>{{ title }}</h3>
 </div>
 
 <div class="modal-body">
@@ -38,7 +38,8 @@
                             </mat-form-field>
                         </div>
                         <div class="col-md-5  col-sm-12">
-                            <mat-form-field class="full-width-form-element" hintLabel="{{forceEan8 ? '7 számból kell álljon!' : '5-20 karakterből kell álljon!'}}">
+                            <mat-form-field class="full-width-form-element"
+                                            hintLabel="{{forceEan8 ? '7 számból kell álljon!' : '5-20 karakterből kell álljon!'}}">
                                 <input matInput placeholder="Vonalkód tartalma" type="text" required
                                        minlength="{{forceEan8 ? 7 : 5}}" maxlength="{{forceEan8 ? 7 : 20}}"
                                        formControlName="barcode" #barcode
@@ -46,7 +47,8 @@
                                 <mat-error *ngIf="deviceForm.get('barcode').hasError('barcodeTaken')">
                                     Ez a vonalkód már foglalt!
                                 </mat-error>
-                                <mat-hint align="end">{{barcode.value?.length || 0}}/{{forceEan8 ? 7 : 20}}</mat-hint>
+                                <mat-hint align="end">{{ barcode.value?.length || 0 }}/{{ forceEan8 ? 7 : 20 }}
+                                </mat-hint>
                             </mat-form-field>
                         </div>
                     </div>
@@ -54,7 +56,14 @@
                         <div class="col-lg-3 col-md-5  col-sm-12">
                             <mat-form-field class="full-width-form-element">
                                 <input matInput placeholder="Gyártó" type="text" autocomplete="off"
-                                       formControlName="maker">
+                                       formControlName="maker"
+                                       [matAutocomplete]="autoMaker">
+                                <mat-autocomplete #autoMaker="matAutocomplete">
+                                    <mat-option *ngFor="let option of filteredMakerOptions"
+                                                [value]="option">
+                                        {{ option }}
+                                    </mat-option>
+                                </mat-autocomplete>
                             </mat-form-field>
                         </div>
                         <div class="col-lg-5 col-md-7  col-sm-12">
@@ -81,7 +90,7 @@
                                 <mat-autocomplete #autoCategory="matAutocomplete">
                                     <mat-option *ngFor="let option of filteredCategoryOptions"
                                                 [value]="option.name">
-                                        {{option.name}}
+                                        {{ option.name }}
                                     </mat-option>
                                 </mat-autocomplete>
                             </mat-form-field>
@@ -96,7 +105,7 @@
                                 <mat-autocomplete #autoLocation="matAutocomplete">
                                     <mat-option *ngFor="let option of filteredLocationOptions"
                                                 [value]="option.name">
-                                        {{option.name}}
+                                        {{ option.name }}
                                     </mat-option>
                                 </mat-autocomplete>
                             </mat-form-field>
@@ -123,7 +132,9 @@
                         <div class="col-lg-3 col-md-6  col-sm-12">
                             <mat-form-field class="full-width">
                                 <mat-label>Garancia vége</mat-label>
-                                <mat-icon matSuffix style="color: #bf360c" *ngIf="device.endOfWarranty != null && !warrantyActive">sentiment_dissatisfied</mat-icon>
+                                <mat-icon matSuffix style="color: #bf360c"
+                                          *ngIf="device.endOfWarranty != null && !warrantyActive">sentiment_dissatisfied
+                                </mat-icon>
                                 <input matInput [matDatepicker]="picker_warranty"
                                        formControlName="endOfWarranty"
                                        autocomplete="off">
@@ -159,7 +170,7 @@
                                 <mat-autocomplete #autoOwner="matAutocomplete">
                                     <mat-option *ngFor="let option of filteredOwnerOptions"
                                                 [value]="option.name">
-                                        {{option.name}}
+                                        {{ option.name }}
                                     </mat-option>
                                 </mat-autocomplete>
                             </mat-form-field>
@@ -230,7 +241,8 @@
                 Eszközhöz tartozó szállítók
             </ng-template>
 
-            <h4 class="no-items-text pt-4" *ngIf="rentitemsAndRents.length === 0">Nincs ehhez az eszközhöz tartozó kivitel!</h4>
+            <h4 class="no-items-text pt-4" *ngIf="rentitemsAndRents.length === 0">Nincs ehhez az eszközhöz tartozó
+                kivitel!</h4>
 
             <div class="table-responsive" *ngIf="rentitemsAndRents.length > 0">
                 <table class="table">
@@ -253,25 +265,27 @@
                     </th>
                     </thead>
                     <tbody>
-                    <tr class="list-row {{item.rent.isClosed ? 'finished' : ''}}" *ngFor="let item of rentitemsAndRents" (click)="goToRent(item.rent.id)">
+                    <tr class="list-row {{item.rent.isClosed ? 'finished' : ''}}" *ngFor="let item of rentitemsAndRents"
+                        (click)="goToRent(item.rent.id)">
                         <td class="icon-column">
                             <mat-icon style="color: #c62828" *ngIf="!item.rent.isClosed">camera_outdoor</mat-icon>
                             <mat-icon style="color: #8bc34a" *ngIf="item.rent.isClosed">done_all</mat-icon>
                         </td>
                         <td class="pt-1">
-                            {{item.rent.destination}}
+                            {{ item.rent.destination }}
                         </td>
                         <td class="pt-1">
-                            {{item.rent.issuer.nickName}} ({{item.rent.issuer.familyName}} {{item.rent.issuer.givenName}})
+                            {{ item.rent.issuer.nickName }}
+                            ({{ item.rent.issuer.familyName }} {{ item.rent.issuer.givenName }})
                         </td>
                         <td class="pt-1">
-                            {{item.rent.outDate | date:'yyyy. MM. dd.'}}
+                            {{ item.rent.outDate | date:'yyyy. MM. dd.' }}
                         </td>
                         <td class="pt-1">
-                            {{item.rent.expBackDate | date:'yyyy. MM. dd.'}}
+                            {{ item.rent.expBackDate | date:'yyyy. MM. dd.' }}
                         </td>
                         <td class="pt-1" *ngIf="device.quantity > 1">
-                            {{item.rentItem.outQuantity}} db
+                            {{ item.rentItem.outQuantity }} db
                         </td>
                     </tr>
                     </tbody>
@@ -286,7 +300,8 @@
 
             <div style="align-content: center; text-align: center" *ngIf="tickets.length === 0">
                 <h4 class="no-items-text pt-4">Nincs ehhez az eszközhöz tartozó aktív hibajegy!</h4>
-                <button class="mt-1 mb-2" mat-flat-button color="accent" (click)="createTicket()">Új hiba jelentése</button>
+                <button class="mt-1 mb-2" mat-flat-button color="accent" (click)="createTicket()">Új hiba jelentése
+                </button>
             </div>
 
 
@@ -306,28 +321,43 @@
                 <th>
                     Leírás
                 </th>
-                <button class="pull-right mt-1" mat-mini-fab color="accent" (click)="createTicket()"><mat-icon>add</mat-icon></button>
+                <button class="pull-right mt-1" mat-mini-fab color="accent" (click)="createTicket()">
+                    <mat-icon>add</mat-icon>
+                </button>
                 </thead>
                 <tbody>
-                <tr class="list-row {{ticket.status === 2 ? 'finished' : ''}}" *ngFor="let ticket of tickets" (click)="editTicket(ticket.id)">
+                <tr class="list-row {{ticket.status === 2 ? 'finished' : ''}}" *ngFor="let ticket of tickets"
+                    (click)="editTicket(ticket.id)">
                     <td class="icon-column">
-                        <mat-icon style="color: #c62828" *ngIf="ticket.severity === 2 || ticket.severity === 'SEVERE'">report</mat-icon>
-                        <mat-icon style="color: #ffbe3b" *ngIf="ticket.severity === 1 || ticket.severity === 'MEDIUM'">warning</mat-icon>
-                        <mat-icon style="color: #8bc34a" *ngIf="ticket.severity === 0 || ticket.severity === 'LIGHT'">announcement</mat-icon>
+                        <mat-icon style="color: #c62828" *ngIf="ticket.severity === 2 || ticket.severity === 'SEVERE'">
+                            report
+                        </mat-icon>
+                        <mat-icon style="color: #ffbe3b" *ngIf="ticket.severity === 1 || ticket.severity === 'MEDIUM'">
+                            warning
+                        </mat-icon>
+                        <mat-icon style="color: #8bc34a" *ngIf="ticket.severity === 0 || ticket.severity === 'LIGHT'">
+                            announcement
+                        </mat-icon>
                     </td>
                     <td class="icon-column">
-                        <mat-icon style="color: #c62828" *ngIf="ticket.status === 0 || ticket.status === 'OPEN'">help_outline</mat-icon>
-                        <mat-icon style="color: #ffbe3b" *ngIf="ticket.status === 1 || ticket.status === 'WORKING_ON_IT'">construction</mat-icon>
-                        <mat-icon style="color: #8bc34a" *ngIf="ticket.status === 2 || ticket.status === 'CLOSED'">done</mat-icon>
+                        <mat-icon style="color: #c62828" *ngIf="ticket.status === 0 || ticket.status === 'OPEN'">
+                            help_outline
+                        </mat-icon>
+                        <mat-icon style="color: #ffbe3b"
+                                  *ngIf="ticket.status === 1 || ticket.status === 'WORKING_ON_IT'">construction
+                        </mat-icon>
+                        <mat-icon style="color: #8bc34a" *ngIf="ticket.status === 2 || ticket.status === 'CLOSED'">
+                            done
+                        </mat-icon>
                     </td>
                     <td class="pt-1">
-                        {{ticket.dateOfWriting | date:'yyyy. MM. dd.'}}
+                        {{ ticket.dateOfWriting | date:'yyyy. MM. dd.' }}
                     </td>
                     <td class="pt-1">
-                        {{ticket.writer.nickName}}
+                        {{ ticket.writer.nickName }}
                     </td>
                     <td class="pt-1">
-                        {{ticket.body.slice(0, 75)}}<span *ngIf="ticket.body.length > 75">...</span>
+                        {{ ticket.body.slice(0, 75) }}<span *ngIf="ticket.body.length > 75">...</span>
                     </td>
                 </tr>
                 </tbody>

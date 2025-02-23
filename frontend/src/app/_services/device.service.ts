@@ -26,6 +26,10 @@ export class DeviceService {
             );
     }
 
+    getMakers(): Observable<string[]> {
+        return this.http.get<string[]>(`${environment.apiUrl}/api/device/makers`);
+    }
+
     getDevice(id: number): Observable<Device> {
         return this.http.get<Device>(`${environment.apiUrl}/api/device/${id}`)
             .pipe(

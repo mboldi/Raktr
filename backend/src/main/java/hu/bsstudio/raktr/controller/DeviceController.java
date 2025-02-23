@@ -3,6 +3,8 @@ package hu.bsstudio.raktr.controller;
 import hu.bsstudio.raktr.model.Device;
 import hu.bsstudio.raktr.service.DeviceService;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -58,7 +60,7 @@ public class DeviceController {
     }
 
     @DeleteMapping
-    @Secured("ROLE_Stúdiós")
+    @Secured("ROLE_Admin")
     public ResponseEntity<Device> deleteDevice(@Valid @RequestBody final Device deviceRequest) {
         log.info("Incoming request to delete device: {}", deviceRequest);
 
@@ -82,7 +84,7 @@ public class DeviceController {
     }
 
     @PutMapping("/undelete")
-    @Secured("ROLE_Stúdiós")
+    @Secured("ROLE_Admin")
     public ResponseEntity<Device> unDeleteDevice(@Valid @RequestBody final Device deviceRequest) {
         log.info("Incoming request to restore device: {}", deviceRequest);
 
@@ -112,5 +114,15 @@ public class DeviceController {
         return device
             .map(ResponseEntity::ok)
             .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/makers")
+    public List<String> getAllMakers() {
+        log.info("Incoming request for all makers");
+
+        return deviceService.getAllMakers()
+                .stream()
+                .filter(maker -> !Objects.equals(maker, ""))
+                .collect(Collectors.toList());
     }
 }

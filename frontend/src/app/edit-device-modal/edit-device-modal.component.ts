@@ -40,6 +40,9 @@ export class EditDeviceModalComponent implements OnInit {
     filteredLocationOptions: Location[];
     ownerOptions: Owner[];
     filteredOwnerOptions: Owner[];
+    makerOptions: string[];
+    filteredMakerOptions: string[];
+
     deviceForm: UntypedFormGroup;
     admin = false;
     deleteConfirmed = false;
@@ -51,6 +54,7 @@ export class EditDeviceModalComponent implements OnInit {
     currentCategoryInput = '';
     currentLocationInput = '';
     currentOwnerInput = '';
+    currentMakerInput = '';
 
     rentitemsAndRents: RentItemWithRentData[] = [];
     tickets: Ticket[] = [];
@@ -166,7 +170,19 @@ export class EditDeviceModalComponent implements OnInit {
             )
             .subscribe(owners => {
                 this.ownerOptions = owners;
-                this.filteredOwnerOptions = this._filterOwners(owners, this.currentOwnerInput);
+                this.filteredOwnerOptions = this._filterOwners(owners, this.currentOwnerInput).slice(0, 4);
+            });
+
+        this.deviceForm
+            .get('maker')
+            .valueChanges
+            .pipe(
+                tap(value => this.currentMakerInput = value),
+                switchMap(value => this.deviceService.getMakers())
+            )
+            .subscribe(makers => {
+                this.makerOptions = makers;
+                this.filteredMakerOptions = this._filterMakers(makers, this.currentMakerInput).slice(0, 4);
             });
 
         this.deviceForm.get('barcode').markAsTouched();
@@ -216,7 +232,15 @@ export class EditDeviceModalComponent implements OnInit {
     private _filterOwners(owners: Owner[], value: string) {
         const filterValue = value.toLowerCase();
 
-        return owners.filter(owner => owner.name.toLowerCase().includes(filterValue));
+        return owners.filter(owner => owner.name.toLowerCase().includes(filterValue))
+            .sort((a, b) => a.name.localeCompare(b.name));
+    }
+
+    private _filterMakers(makers: string[], value: string) {
+        const filterValue = value.toLowerCase();
+
+        return makers.filter(owner => owner.toLowerCase().includes(filterValue))
+            .sort((a, b) => a.localeCompare(b));
     }
 
     save() {

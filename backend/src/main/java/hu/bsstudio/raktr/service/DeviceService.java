@@ -190,4 +190,10 @@ public final class DeviceService {
             return deviceToDelete;
         }
     }
+
+    public List<String> getAllMakers() {
+        var fetched = deviceRepository.findAllMakers();
+        log.info("Makers fetched from DB: {}", fetched);
+        return fetched;
+    }
 }

@@ -4,7 +4,7 @@ import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators} fr
 import {Location} from '../_model/Location';
 import {CompositeService} from '../_services/composite.service';
 import {LocationService} from '../_services/location.service';
-import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
+import {NgbActiveModal, NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {Device} from '../_model/Device';
 import * as $ from 'jquery';
 import {DeviceService} from '../_services/device.service';
@@ -17,7 +17,12 @@ import {barcodeValidator} from '../helpers/barcode.validator';
 import {textIdValidator} from '../helpers/textId.validator';
 import {Category} from '../_model/Category';
 import {CategoryService} from '../_services/category.service';
-import {Scannable} from "../_model/Scannable";
+import {Scannable} from '../_model/Scannable';
+import {TicketStatus} from '../_model/TicketStatus';
+import {RentItemWithRentData} from '../_model/RentItemWithRentData';
+import {Ticket} from '../_model/Ticket';
+import {Router} from '@angular/router';
+import {EditTicketComponent} from '../edit-ticket/edit-ticket.component';
 
 @Component({
     selector: 'app-edit-composite-modal',
@@ -44,6 +49,9 @@ export class EditCompositeModalComponent implements OnInit {
     allDevices: Device[] = [];
     filteredNewDeviceOptions: Scannable[] = [];
 
+    rentitemsAndRents: RentItemWithRentData[] = [];
+    tickets: Ticket[] = [];
+
     constructor(public activeModal: NgbActiveModal,
                 private fb: UntypedFormBuilder,
                 private compositeItemService: CompositeService,
@@ -51,7 +59,9 @@ export class EditCompositeModalComponent implements OnInit {
                 private categoryService: CategoryService,
                 private deviceService: DeviceService,
                 private scannableService: ScannableService,
-                private userService: UserService) {
+                private userService: UserService,
+                private router: Router,
+                private modalService: NgbModal) {
         if (this.compositeItem === undefined) {
             this.compositeItem = new CompositeItem();
         }
@@ -109,6 +119,28 @@ export class EditCompositeModalComponent implements OnInit {
                 });
         } else {
             this.setFormData();
+
+            this.scannableService.getRentsOfScannable(this.compositeItem.id).subscribe(result => {
+                this.rentitemsAndRents = result
+                    .filter(item => !item.rent.isClosed)
+                    .sort((a, b) => b.rent.expBackDate.getTime() - a.rent.expBackDate.getTime());
+
+                result
+                    .filter(item => item.rent.isClosed)
+                    .sort((a, b) => b.rent.expBackDate.getTime() - a.rent.expBackDate.getTime())
+                    .forEach(item => this.rentitemsAndRents.push(item));
+            });
+
+            this.scannableService.getTicketsOfScannable(this.compositeItem.id).subscribe(result => {
+                this.tickets = result.filter(item => !(item.status === TicketStatus.CLOSED));
+
+                this.tickets.sort((a, b) => b.dateOfWriting.getTime() - a.dateOfWriting.getTime());
+
+                result
+                    .filter(item => (item.status === TicketStatus.CLOSED))
+                    .sort((a, b) => b.dateOfWriting.getTime() - a.dateOfWriting.getTime())
+                    .forEach(item => this.tickets.push(item));
+            });
         }
 
         this.compositeDataForm.get('barcode').markAsTouched();
@@ -124,7 +156,7 @@ export class EditCompositeModalComponent implements OnInit {
 
             const items = this.allDevices.sort((a, b) => a.name.localeCompare(b.name));
             filteredItems = items.filter(item => item.name.toLowerCase().includes(value.toLowerCase()))
-                                 .filter(item => this.compositeItem.devices.find(i => i.id === item.id) === undefined)
+                .filter(item => this.compositeItem.devices.find(i => i.id === item.id) === undefined)
 
             if (filteredItems.length < 10) {
                 this.filteredNewDeviceOptions = filteredItems;
@@ -247,6 +279,31 @@ export class EditCompositeModalComponent implements OnInit {
         this.compositeItemService.deleteComposite(compositeItem).subscribe(
             compositeItem_ => this.activeModal.dismiss('delete')
         )
+    }
+
+    goToRent(rentId: number) {
+        this.activeModal.dismiss('noRedirect');
+
+        this.router.navigateByUrl('/rent/' + rentId);
+    }
+
+    editTicket(id: number) {
+        this.activeModal.dismiss('noRedirect');
+
+        this.router.navigateByUrl('/tickets/' + id);
+    }
+
+    createTicket() {
+        const ticketModal = this.modalService.open(EditTicketComponent, {size: 'lg'});
+        ticketModal.componentInstance.title = 'Új hibajegy';
+        ticketModal.componentInstance.ticket = new Ticket();
+        ticketModal.componentInstance.scannable = this.compositeItem;
+
+        ticketModal.result.catch(reason => {
+            if (reason === 'save') {
+                this.tickets.push(ticketModal.componentInstance.ticket);
+            }
+        })
     }
 
     showNotification(message_: string, type: string) {

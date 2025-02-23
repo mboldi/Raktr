@@ -1,170 +1,301 @@
 <div class="modal-header">
-    <h3>{{title}}</h3>
+    <h3>{{ title }}</h3>
 </div>
 
 <div class="modal-body">
-    <div class="container-fluid">
-        <form [formGroup]="compositeDataForm" class="mb-0">
-            <div class="row">
-                <div class="col-md-7  col-sm-12">
-                    <mat-form-field class="full-width-form-element">
-                        <mat-label>Összetett eszköz neve</mat-label>
-                        <input matInput type="text" autocomplete="off"
-                               formControlName="name">
-                    </mat-form-field>
-                </div>
-                <div class="col-md-5 col-sm-12 publicRentableCheckbox">
-                    <mat-checkbox class="full-width-form-element"
-                                  formControlName="isPublicRentable">
-                        Bárki által kölcsönözhető?
-                    </mat-checkbox>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6  col-sm-12">
-                    <mat-form-field class="full-width-form-element">
-                        <mat-label>Kategória</mat-label>
-                        <input type="text" matInput
-                               formControlName="category"
-                               [matAutocomplete]="autoCategory"
-                               required>
-                        <mat-autocomplete #autoCategory="matAutocomplete">
-                            <mat-option *ngFor="let option of filteredCategoryOptions"
-                                        [value]="option.name">
-                                {{option.name}}
-                            </mat-option>
-                        </mat-autocomplete>
-                    </mat-form-field>
-                </div>
-                <div class="col-md-6  col-sm-12">
-                    <mat-form-field class="full-width-form-element">
-                        <mat-label>Tárolási hely</mat-label>
-                        <input type="text" matInput
-                               formControlName="location"
-                               [matAutocomplete]="autoLocation">
-                        <mat-autocomplete #autoLocation="matAutocomplete">
-                            <mat-option *ngFor="let option of filteredLocationOptions"
-                                        [value]="option.name">
-                                {{option.name}}
-                            </mat-option>
-                        </mat-autocomplete>
-                    </mat-form-field>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-7  col-sm-12">
-                    <mat-form-field class="full-width-form-element">
-                        <mat-label>Azonosító</mat-label>
-                        <input matInput type="text" autocomplete="off"
-                               formControlName="textIdentifier">
-                        <mat-error *ngIf="compositeDataForm.get('textIdentifier').hasError('textIdTaken')">
-                            Ez az azonosító már foglalt!
-                        </mat-error>
-                    </mat-form-field>
+    <mat-tab-group dynamicHeight>
+        <mat-tab>
+            <ng-template mat-tab-label>
+                <mat-icon class="tab-icon">edit_note</mat-icon>
+                Összetett eszköz adatok
+            </ng-template>
+            <div class="container-fluid mt-4">
+                <form [formGroup]="compositeDataForm" class="mb-0">
+                    <div class="row">
+                        <div class="col-md-7  col-sm-12">
+                            <mat-form-field class="full-width-form-element">
+                                <mat-label>Összetett eszköz neve</mat-label>
+                                <input matInput type="text" autocomplete="off"
+                                       formControlName="name">
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-5 col-sm-12 publicRentableCheckbox">
+                            <mat-checkbox class="full-width-form-element"
+                                          formControlName="isPublicRentable">
+                                Bárki által kölcsönözhető?
+                            </mat-checkbox>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6  col-sm-12">
+                            <mat-form-field class="full-width-form-element">
+                                <mat-label>Kategória</mat-label>
+                                <input type="text" matInput
+                                       formControlName="category"
+                                       [matAutocomplete]="autoCategory"
+                                       required>
+                                <mat-autocomplete #autoCategory="matAutocomplete">
+                                    <mat-option *ngFor="let option of filteredCategoryOptions"
+                                                [value]="option.name">
+                                        {{ option.name }}
+                                    </mat-option>
+                                </mat-autocomplete>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-6  col-sm-12">
+                            <mat-form-field class="full-width-form-element">
+                                <mat-label>Tárolási hely</mat-label>
+                                <input type="text" matInput
+                                       formControlName="location"
+                                       [matAutocomplete]="autoLocation">
+                                <mat-autocomplete #autoLocation="matAutocomplete">
+                                    <mat-option *ngFor="let option of filteredLocationOptions"
+                                                [value]="option.name">
+                                        {{ option.name }}
+                                    </mat-option>
+                                </mat-autocomplete>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-7  col-sm-12">
+                            <mat-form-field class="full-width-form-element">
+                                <mat-label>Azonosító</mat-label>
+                                <input matInput type="text" autocomplete="off"
+                                       formControlName="textIdentifier">
+                                <mat-error *ngIf="compositeDataForm.get('textIdentifier').hasError('textIdTaken')">
+                                    Ez az azonosító már foglalt!
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+
+                        <div class="col-md-5  col-sm-12">
+                            <mat-form-field class="full-width-form-element">
+                                <mat-label>Vonalkód tartalma</mat-label>
+                                <input matInput type="text" autocomplete="off"
+                                       formControlName="barcode">
+                                <mat-error *ngIf="compositeDataForm.get('barcode').hasError('barcodeTaken')">
+                                    Ez a vonalkód már foglalt!
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </form>
+                <div class="row ">
+                    <div class="col-md-12">
+                        <div class=" pull-right">
+                            <mat-slide-toggle *ngIf="fullAccessMember && compositeItem.id !== -1"
+                                              class="pt-3"
+                                              (change)="deleteConfirmed = $event.checked"
+                                              color="warn">
+                                <button mat-icon-button color="warn" type="button"
+                                        (click)="delete(compositeItem)"
+                                        [disabled]="!deleteConfirmed">
+                                    <mat-icon>delete</mat-icon>
+                                </button>
+                            </mat-slide-toggle>
+                            <button mat-raised-button type="submit" mat-dialog-close style="margin-right: 4px"
+                                    (click)="this.activeModal.dismiss(0)">
+                                Vissza
+                            </button>
+                            <button mat-raised-button type="submit" class="btn btn-info pb-2"
+                                    [disabled]="compositeDataForm.invalid"
+                                    (click)="save()">
+                                Mentés
+                            </button>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="col-md-5  col-sm-12">
-                    <mat-form-field class="full-width-form-element">
-                        <mat-label>Vonalkód tartalma</mat-label>
-                        <input matInput type="text" autocomplete="off"
-                               formControlName="barcode">
-                        <mat-error *ngIf="compositeDataForm.get('barcode').hasError('barcodeTaken')">
-                            Ez a vonalkód már foglalt!
-                        </mat-error>
-                    </mat-form-field>
-                </div>
-            </div>
-        </form>
-        <div class="row ">
-            <div class="col-md-12">
-                <div class=" pull-right">
-                    <mat-slide-toggle *ngIf="fullAccessMember && compositeItem.id !== -1"
-                                      class="pt-3"
-                                      (change)="deleteConfirmed = $event.checked"
-                                      color="warn">
-                        <button mat-icon-button color="warn" type="button"
-                                (click)="delete(compositeItem)"
-                                [disabled]="!deleteConfirmed">
-                            <mat-icon>delete</mat-icon>
+                <div class="row" *ngIf="compositeItem.id !== -1">
+                    <h5 class="col-lg-7 col-md-12 pt-3">Tartalmazott eszközök</h5>
+                    <mat-form-field class="col-lg-5 col-md-12">
+                        <input matInput placeholder="Új hozzáadása"
+                               autocomplete="off"
+                               [formControl]="addDeviceFormControl"
+                               [matAutocomplete]="autoNewDevice"
+                               (keyup.escape)="addDeviceFormControl.reset()"
+                               (keyup.enter)="addDeviceToComposite()"
+                               (select)="addDeviceToComposite()">
+
+                        <mat-autocomplete #autoNewDevice="matAutocomplete">
+                            <mat-option *ngFor="let option of filteredNewDeviceOptions"
+                                        [value]="option.barcode">
+                                {{ option.name }} - {{ option.textIdentifier }}
+                            </mat-option>
+                        </mat-autocomplete>
+
+                        <button mat-button mat-icon-button matSuffix type="button"
+                                *ngIf="addDeviceFormControl.value"
+                                (click)="addDeviceToComposite()">
+                            <mat-icon>add</mat-icon>
                         </button>
-                    </mat-slide-toggle>
-                    <button mat-raised-button type="submit" mat-dialog-close style="margin-right: 4px"
-                            (click)="this.activeModal.dismiss(0)">
-                        Vissza
-                    </button>
-                    <button mat-raised-button type="submit" class="btn btn-info pb-2"
-                            [disabled]="compositeDataForm.invalid"
-                            (click)="save()">
-                        Mentés
-                    </button>
+                    </mat-form-field>
                 </div>
+                <div class="table-responsive" *ngIf="compositeItem.id !== -1">
+                    <table class="table">
+                        <thead class="text-orange">
+                        <th>
+                            Eszköz neve
+                        </th>
+                        <th>
+                            Típus
+                        </th>
+                        <th>
+                            Azonosító
+                        </th>
+                        <th>
+                            Törlés
+                        </th>
+                        </thead>
+                        <tbody *ngIf="compositeItem.devices !== null">
+                        <tr class="device-row" *ngFor="let device of compositeItem.devices">
+                            <td>
+                                {{ device.name }}
+                            </td>
+                            <td>
+                                {{ device.maker }} {{ device.type }}
+                            </td>
+                            <td>
+                                {{ device.textIdentifier }}
+                            </td>
+                            <td class="pb-0 pt-0">
+                                <button mat-raised-button type="button"
+                                        class="btn btn-info pull-center btn-just-icon"
+                                        data-toggle="modal" data-target=".edit-rental-dialog"
+                                        (click)="removeFromComposite(device)">
+                                    <i class="material-icons">delete</i>
+                                </button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="clearfix"></div>
             </div>
-        </div>
+        </mat-tab>
+        <mat-tab *ngIf="compositeItem.id != -1">
+            <ng-template mat-tab-label>
+                <mat-icon class="tab-icon">local_shipping</mat-icon>
+                Eszközhöz tartozó szállítók
+            </ng-template>
 
-        <div class="row" *ngIf="compositeItem.id !== -1">
-            <h5 class="col-lg-7 col-md-12 pt-3">Tartalmazott eszközök</h5>
-            <mat-form-field class="col-lg-5 col-md-12">
-                <input matInput placeholder="Új hozzáadása"
-                       autocomplete="off"
-                       [formControl]="addDeviceFormControl"
-                       [matAutocomplete]="autoNewDevice"
-                       (keyup.escape)="addDeviceFormControl.reset()"
-                       (keyup.enter)="addDeviceToComposite()"
-                       (select)="addDeviceToComposite()">
+            <h4 class="no-items-text pt-4" *ngIf="rentitemsAndRents.length === 0">Nincs ehhez az összetett eszközhöz tartozó
+                kivitel!</h4>
 
-                <mat-autocomplete #autoNewDevice="matAutocomplete">
-                    <mat-option *ngFor="let option of filteredNewDeviceOptions"
-                                [value]="option.barcode">
-                        {{option.name}} - {{option.textIdentifier}}
-                    </mat-option>
-                </mat-autocomplete>
+            <div class="table-responsive" *ngIf="rentitemsAndRents.length > 0">
+                <table class="table">
+                    <thead class="text-orange">
+                    <th></th>
+                    <th>
+                        Kivitel célja
+                    </th>
+                    <th>
+                        Kivitel felelőse
+                    </th>
+                    <th>
+                        Kivitel dátuma
+                    </th>
+                    <th>
+                        Várható visszaérkezés
+                    </th>
+                    </thead>
+                    <tbody>
+                    <tr class="list-row {{item.rent.isClosed ? 'finished' : ''}}" *ngFor="let item of rentitemsAndRents"
+                        (click)="goToRent(item.rent.id)">
+                        <td class="icon-column">
+                            <mat-icon style="color: #c62828" *ngIf="!item.rent.isClosed">camera_outdoor</mat-icon>
+                            <mat-icon style="color: #8bc34a" *ngIf="item.rent.isClosed">done_all</mat-icon>
+                        </td>
+                        <td class="pt-1">
+                            {{ item.rent.destination }}
+                        </td>
+                        <td class="pt-1">
+                            {{ item.rent.issuer.nickName }}
+                            ({{ item.rent.issuer.familyName }} {{ item.rent.issuer.givenName }})
+                        </td>
+                        <td class="pt-1">
+                            {{ item.rent.outDate | date:'yyyy. MM. dd.' }}
+                        </td>
+                        <td class="pt-1">
+                            {{ item.rent.expBackDate | date:'yyyy. MM. dd.' }}
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </mat-tab>
+        <mat-tab *ngIf="compositeItem.id != -1">
+            <ng-template mat-tab-label>
+                <mat-icon class="tab-icon">bug_report</mat-icon>
+                Eszközhöz tartozó hibajegyek
+            </ng-template>
 
-                <button mat-button mat-icon-button matSuffix type="button"
-                        *ngIf="addDeviceFormControl.value"
-                        (click)="addDeviceToComposite()">
-                    <mat-icon>add</mat-icon>
+            <div style="align-content: center; text-align: center" *ngIf="tickets.length === 0">
+                <h4 class="no-items-text pt-4">Nincs ehhez az eszközhöz tartozó aktív hibajegy!</h4>
+                <button class="mt-1 mb-2" mat-flat-button color="accent" (click)="createTicket()">Új hiba jelentése
                 </button>
-            </mat-form-field>
-        </div>
-        <div class="table-responsive" *ngIf="compositeItem.id !== -1">
-            <table class="table">
+            </div>
+
+
+            <table class="table" *ngIf="tickets.length > 0">
                 <thead class="text-orange">
                 <th>
-                    Eszköz neve
+
                 </th>
                 <th>
-                    Típus
                 </th>
                 <th>
-                    Azonosító
+                    Létrehozva
                 </th>
                 <th>
-                    Törlés
+                    Létrehozó
                 </th>
+                <th>
+                    Leírás
+                </th>
+                <button class="pull-right mt-1" mat-mini-fab color="accent" (click)="createTicket()">
+                    <mat-icon>add</mat-icon>
+                </button>
                 </thead>
-                <tbody *ngIf="compositeItem.devices !== null">
-                <tr class="device-row" *ngFor="let device of compositeItem.devices">
-                    <td>
-                        {{device.name}}
+                <tbody>
+                <tr class="list-row {{ticket.status === 2 ? 'finished' : ''}}" *ngFor="let ticket of tickets"
+                    (click)="editTicket(ticket.id)">
+                    <td class="icon-column">
+                        <mat-icon style="color: #c62828" *ngIf="ticket.severity === 2 || ticket.severity === 'SEVERE'">
+                            report
+                        </mat-icon>
+                        <mat-icon style="color: #ffbe3b" *ngIf="ticket.severity === 1 || ticket.severity === 'MEDIUM'">
+                            warning
+                        </mat-icon>
+                        <mat-icon style="color: #8bc34a" *ngIf="ticket.severity === 0 || ticket.severity === 'LIGHT'">
+                            announcement
+                        </mat-icon>
                     </td>
-                    <td>
-                        {{device.maker}} {{device.type}}
+                    <td class="icon-column">
+                        <mat-icon style="color: #c62828" *ngIf="ticket.status === 0 || ticket.status === 'OPEN'">
+                            help_outline
+                        </mat-icon>
+                        <mat-icon style="color: #ffbe3b"
+                                  *ngIf="ticket.status === 1 || ticket.status === 'WORKING_ON_IT'">construction
+                        </mat-icon>
+                        <mat-icon style="color: #8bc34a" *ngIf="ticket.status === 2 || ticket.status === 'CLOSED'">
+                            done
+                        </mat-icon>
                     </td>
-                    <td>
-                        {{device.textIdentifier}}
+                    <td class="pt-1">
+                        {{ ticket.dateOfWriting | date:'yyyy. MM. dd.' }}
                     </td>
-                    <td class="pb-0 pt-0">
-                        <button mat-raised-button type="button"
-                                class="btn btn-info pull-center btn-just-icon"
-                                data-toggle="modal" data-target=".edit-rental-dialog"
-                                (click)="removeFromComposite(device)">
-                            <i class="material-icons">delete</i>
-                        </button>
+                    <td class="pt-1">
+                        {{ ticket.writer.nickName }}
+                    </td>
+                    <td class="pt-1">
+                        {{ ticket.body.slice(0, 75) }}<span *ngIf="ticket.body.length > 75">...</span>
                     </td>
                 </tr>
                 </tbody>
             </table>
-        </div>
-        <div class="clearfix"></div>
-    </div>
+
+        </mat-tab>
+    </mat-tab-group>
 </div>

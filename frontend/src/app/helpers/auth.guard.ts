@@ -1,28 +1,34 @@
-import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot} from '@angular/router';
-import {Injectable} from '@angular/core';
-import {UserService} from '../_services/user.service';
-import {AuthService} from '../_services/auth.service';
+import {
+  ActivatedRouteSnapshot,
+  CanActivate,
+  Router,
+  RouterStateSnapshot,
+  UrlTree,
+} from '@angular/router';
+import { inject, Injectable } from '@angular/core';
+import { OidcSecurityService } from 'angular-auth-oidc-client';
+import { Observable, take, map } from 'rxjs';
 
-@Injectable({providedIn: 'root'})
+@Injectable({ providedIn: 'root' })
 export class AuthGuard implements CanActivate {
+  private readonly oidcSecurityService = inject(OidcSecurityService);
+  private readonly router = inject(Router);
 
-    constructor(
-        private router: Router,
-        private userService: UserService,
-        private authService: AuthService
-    ) {
-    }
-
-    canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
-        const token = localStorage.getItem('id_token');
-        const expires_at = localStorage.getItem('expires_at');
-        const username = localStorage.getItem('username');
-
-        if (!this.authService.isLoggedIn() || new Date(expires_at) < new Date()) {
-            this.router.navigate(['/login']);
-            return false;
+  canActivate(
+    route: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot
+  ): Observable<boolean | UrlTree> {
+    return this.oidcSecurityService.isAuthenticated$.pipe(
+      take(1),
+      map(({ isAuthenticated }) => {
+        // allow navigation if authenticated
+        if (isAuthenticated) {
+          return true;
         }
 
-        return true;
-    }
+        // redirect if not authenticated
+        return this.router.parseUrl('/login');
+      })
+    );
+  }
 }

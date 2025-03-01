@@ -3,7 +3,7 @@ import {Title} from '@angular/platform-browser';
 import 'bootstrap-notify'
 import {Rent} from '../_model/Rent';
 import {RentService} from '../_services/rent.service';
-import {FormControl} from '@angular/forms';
+import {UntypedFormControl} from '@angular/forms';
 import {map, startWith} from 'rxjs/operators';
 import {Router} from '@angular/router';
 import {MatPaginatorIntl, PageEvent} from '@angular/material/paginator';
@@ -18,13 +18,13 @@ import {HunPaginator} from '../helpers/hun-paginator';
 })
 export class RentsComponent implements OnInit {
     rents: Rent[] = [];
-    filteredRents: Rent[];
+    filteredRents: Rent[] = [];
     pagedRents: Rent[];
 
     currPageIndex = 0;
     currPageSize = 25;
 
-    rentSearchControl = new FormControl();
+    rentSearchControl = new UntypedFormControl();
 
     constructor(private title: Title,
                 private rentService: RentService,

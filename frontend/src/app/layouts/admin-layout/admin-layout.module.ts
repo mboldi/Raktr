@@ -15,6 +15,10 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {MatIconModule} from '@angular/material/icon';
 import {MatSortModule} from '@angular/material/sort';
 import {MatPaginatorModule} from '@angular/material/paginator';
+import {MatExpansionModule} from "@angular/material/expansion";
+import {MatCheckboxModule} from '@angular/material/checkbox';
+import {MatDividerModule} from '@angular/material/divider';
+import {MaterialFileInputModule} from 'ngx-material-file-input';
 
 @NgModule({
     imports: [
@@ -32,6 +36,10 @@ import {MatPaginatorModule} from '@angular/material/paginator';
         MatIconModule,
         MatSortModule,
         MatPaginatorModule,
+        MatExpansionModule,
+        MatCheckboxModule,
+        MatDividerModule,
+        MaterialFileInputModule,
     ],
   declarations: [
     UserProfileComponent,

@@ -4,7 +4,7 @@ import {UserService} from '../_services/user.service';
 import {Title} from '@angular/platform-browser';
 import {ActivatedRoute, Router} from '@angular/router';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
 import {ProjectService} from '../_services/project.service';
 import {User} from '../_model/User';
 import * as $ from 'jquery';
@@ -26,7 +26,7 @@ export class EditProjectComponent implements OnInit {
     admin = false;
     user: User;
 
-    projectForm: FormGroup;
+    projectForm: UntypedFormGroup;
     private currentStartDate: Date;
     deleteConfirmed = false;
 
@@ -35,7 +35,7 @@ export class EditProjectComponent implements OnInit {
                 private title: Title,
                 private route: ActivatedRoute,
                 private modalService: NgbModal,
-                private fb: FormBuilder,
+                private fb: UntypedFormBuilder,
                 private router: Router) {
 
         this.projectForm = fb.group({

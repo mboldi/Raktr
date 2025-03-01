@@ -56,6 +56,20 @@
             <div class="col-xl-10 col-lg-12">
                 <div class="card">
                     <div class="card-header card-header-primary">
+                        <h4 class="card-title">Alkalmazásbeállítások</h4>
+                    </div>
+                    <div class="card-body">
+                        <h5>Vonalkódokkal kapcsolatos beállítások</h5>
+                        <mat-checkbox class="ml-2" [checked]="ean8Forced" (change)="updateForceEan8($event)"><span style="color: black">EAN-8 vonalkódtípus kényszerítése</span></mat-checkbox>
+                        <mat-divider></mat-divider>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row" *ngIf="admin">
+            <div class="col-xl-10 col-lg-12">
+                <div class="card">
+                    <div class="card-header card-header-primary">
                         <h4 class="card-title">Körös adatok szerkesztése</h4>
                     </div>
                     <div class="card-body">

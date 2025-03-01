@@ -17,6 +17,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.time.LocalDateTime;
+import java.util.Date;
+
 import static javax.persistence.FetchType.*;
 
 @EqualsAndHashCode(callSuper = true)
@@ -47,10 +50,18 @@ public class RentItem extends DomainAuditModel {
     @NotNull
     private Integer outQuantity;
 
+    @NotNull
+    private Date addedAt;
+
+    @ManyToOne(targetEntity = User.class, fetch = LAZY)
+    @EqualsAndHashCode.Exclude
+    @JoinColumn(name = "addedByUserId")
+    private User addedBy;
+
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     @JsonIgnore
-    @ManyToOne
+    @ManyToOne(targetEntity = Rent.class, fetch = LAZY)
     @JoinColumn(name = "rent_id")
     private Rent rent;
 

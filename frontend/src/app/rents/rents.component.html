@@ -9,7 +9,9 @@
                             <div class="form-inline pull-right">
                                 <mat-form-field class="rent-search-field">
                                     <mat-label>Keresés...</mat-label>
-                                    <input matInput class="searchInput" type="text" [formControl]="rentSearchControl" autocomplete="off">
+                                    <input matInput class="searchInput" type="text" [formControl]="rentSearchControl"
+                                           (keyup.escape)="rentSearchControl.setValue('')"
+                                           autocomplete="off">
                                     <button mat-button matSuffix mat-icon-button
                                             *ngIf="rentSearchControl.value !== ''" aria-label="deviceSearch">
                                         <mat-icon (click)="rentSearchControl.setValue('')">clear</mat-icon>
@@ -33,6 +35,7 @@
                             </mat-paginator>
                             <table class="table">
                                 <thead class="text-orange">
+                                <th></th>
                                 <th>
                                     Kiadó
                                 </th>
@@ -60,6 +63,10 @@
                                 </thead>
                                 <tbody>
                                 <tr class="rent-row" *ngFor="let rent of pagedRents" (click)="openRent(rent.id)">
+                                    <td class="icon-column">
+                                        <mat-icon style="color: #c62828" *ngIf="!rent.isClosed">camera_outdoor</mat-icon>
+                                        <mat-icon style="color: #8bc34a" *ngIf="rent.isClosed">done_all</mat-icon>
+                                    </td>
                                     <td>
                                         {{rent.issuer.nickName}}
                                     </td>
@@ -83,7 +90,7 @@
                                         {{rent.rentItems.length}}
                                     </td>
                                     <td>
-                                        {{rent.getSumWeight() / 1000}} kg
+                                        {{rent.getSumWeight() / 1000 | number: '1.0-2'}} kg
                                     </td>
                                 </tr>
                                 </tbody>

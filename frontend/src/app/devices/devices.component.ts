@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {Title} from '@angular/platform-browser';
-import {FormControl} from '@angular/forms';
+import {FormBuilder, FormGroup, UntypedFormControl} from '@angular/forms';
 import {Device} from '../_model/Device';
 import {DeviceService} from '../_services/device.service';
 import {CompositeItem} from '../_model/CompositeItem';
@@ -15,6 +15,15 @@ import {Category} from '../_model/Category';
 import {DeviceStatus} from '../_model/DeviceStatus';
 import {Location} from '../_model/Location';
 import {HunPaginator} from '../helpers/hun-paginator';
+import {utils, writeFile} from 'xlsx';
+import {User} from '../_model/User';
+import {UserService} from '../_services/user.service';
+import {DeviceForExcel} from '../_model/DeviceForExcel';
+import {ActivatedRoute, Router} from '@angular/router';
+import {Location as RouterLocation} from '@angular/common' ;
+import {LocationService} from '../_services/location.service';
+import {CategoryService} from '../_services/category.service';
+import {DeviceImportModalComponent} from '../device-import-modal/device-import-modal.component';
 
 @Component({
     selector: 'app-table-list',
@@ -25,32 +34,54 @@ import {HunPaginator} from '../helpers/hun-paginator';
 })
 export class DevicesComponent implements OnInit {
     currentTab = 'devices';
+    currUser: User = new User();
 
-    searchControl = new FormControl();
+    searchControl = new UntypedFormControl();
 
     devices: Device[];
-    sortedDevices: Device[];
+    sortedDevices: Device[] = [];
     pagedDevices: Device[];
 
     currDevicePageIndex = 0;
     currDevicePageSize = 25;
 
     compositeItems: CompositeItem[];
-    sortedComposites: CompositeItem[];
+    sortedComposites: CompositeItem[] = [];
     pagedComposites: CompositeItem[];
 
     currCompositePageIndex = 0;
     currCompositePageSize = 25;
 
+    locations: Location[] = [];
+    categories: Category[] = [];
+    locationGroup: FormGroup = this.formBuilder.group({});
+    categoryGroup: FormGroup = this.formBuilder.group({});
+
     constructor(private title: Title,
                 private deviceService: DeviceService,
                 private compositeService: CompositeService,
-                private modalService: NgbModal) {
+                private modalService: NgbModal,
+                private userService: UserService,
+                private locationService: LocationService,
+                private categoryService: CategoryService,
+                private router: Router,
+                private route: ActivatedRoute,
+                private routerLocation: RouterLocation,
+                private formBuilder: FormBuilder) {
         this.title.setTitle('Raktr - Eszközök');
+
+        if (this.router.url.toString().includes('compositeItems')) {
+            this.setTab('composites');
+        }
     }
 
     ngOnInit() {
+
         this.searchControl.setValue('');
+
+        this.userService.getCurrentUser().subscribe(user => {
+            this.currUser = user;
+        });
 
         this.devices = [];
 
@@ -60,29 +91,38 @@ export class DevicesComponent implements OnInit {
             this.setDevicePage();
 
             this.searchControl.valueChanges.subscribe(value => {
-                this.sortedDevices = this.devices.filter(device =>
-                    device.name.toLowerCase().includes(value.toLowerCase()) ||
-                    device.maker.toLowerCase().includes(value.toLowerCase()) ||
-                    device.type.toLowerCase().includes(value.toLowerCase()) ||
-                    device.location.name.toLowerCase().includes(value.toLowerCase()) ||
-                    device.category.name.toLowerCase().includes(value.toLowerCase()) ||
-                    device.textIdentifier.toLowerCase().includes(value.toLowerCase()) ||
-                    device.barcode.toLowerCase().includes(value.toLowerCase()));
-
-                this.setDevicePage();
+                this.filterDevices();
             });
         });
 
         this.getComposites();
+        this.getLocAndCat();
 
         this.searchControl.valueChanges.subscribe(value => {
-            this.sortedComposites = this.compositeItems.filter(compositeItem =>
-                compositeItem.name.toLowerCase().includes(value) ||
-                compositeItem.textIdentifier.toLowerCase().includes(value) ||
-                compositeItem.barcode.toLowerCase().includes(value))
-
-            this.setCompositePage();
+            this.filterCompositeItems();
         });
+
+        // opening device if ID in URL is present
+
+        if (this.route.snapshot.paramMap.get('id') !== null) {
+            const id = this.route.snapshot.paramMap.get('id') as unknown as number;
+
+            if (this.currentTab === 'devices') {
+                this.deviceService.getDevice(id).subscribe(dev => {
+                    this.editDevice(dev);
+                }, error => {
+                    this.showNotification('Nem találtam eszközt az URL-ben megadott ID-vel!', 'danger');
+                    this.router.navigateByUrl('/devices');
+                });
+            } else {
+                this.compositeService.getCompositeItem(id).subscribe(compositeItem => {
+                    this.editCompositeItem(compositeItem);
+                }, error => {
+                    this.showNotification('Nem találtam eszközt az URL-ben megadott ID-vel!', 'danger');
+                    this.router.navigateByUrl('/compositeItems');
+                });
+            }
+        }
     }
 
     private setDevicePage() {
@@ -127,10 +167,10 @@ export class DevicesComponent implements OnInit {
     }
 
     sortDevices(sort: Sort) {
-        if (this.devices.length === 0) {
+        if (this.sortedDevices.length === 0) {
             return;
         }
-        const data = this.devices.slice();
+        const data = this.sortedDevices.slice();
         if (!sort.active || sort.direction === '') {
             this.sortedDevices = data;
             return;
@@ -164,10 +204,10 @@ export class DevicesComponent implements OnInit {
     }
 
     sortComposites(sort: Sort) {
-        if (this.compositeItems.length === 0) {
+        if (this.sortedComposites.length === 0) {
             return;
         }
-        const data = this.compositeItems.slice();
+        const data = this.sortedComposites.slice();
         if (!sort.active || sort.direction === '') {
             this.sortedComposites = data;
             return;
@@ -194,29 +234,47 @@ export class DevicesComponent implements OnInit {
         this.setCompositePage();
     }
 
-    copyDevice(device: Device) {
-        const editModal = this.modalService.open(EditDeviceModalComponent, {size: 'lg', windowClass: 'modal-holder'});
-        editModal.componentInstance.title = 'Új eszköz másik alapján';
-        editModal.componentInstance.device = device;
-        editModal.componentInstance.device.id = -1;
+    private getDevices() {
+        this.deviceService.getDevices().subscribe(devices => {
+            this.devices = devices;
+            this.sortedDevices = devices;
 
-        editModal.result.catch(() => {
-            this.deviceService.getDevices().subscribe(devices => {
-                this.devices = devices;
-                this.sortedDevices = devices;
-
-                this.setDevicePage();
-            });
-        })
+            this.setDevicePage();
+        });
     }
 
+
     editDevice(device: Device) {
-        const editModal = this.modalService.open(EditDeviceModalComponent, {size: 'lg', backdrop: false});
+        const editModal = this.modalService.open(EditDeviceModalComponent, {size: 'lg'});
         editModal.componentInstance.title = 'Eszköz szerkesztése';
         editModal.componentInstance.device = device;
 
+        this.routerLocation.go(`/devices/${device.id}`);
+
         editModal.result.catch(reason => {
-            if (reason === 'delete') {
+            if (reason === 'copy') {
+                const copyModal = this.modalService.open(EditDeviceModalComponent, {size: 'lg'});
+                copyModal.componentInstance.title = 'Új eszköz másik alapján';
+                copyModal.componentInstance.device = structuredClone(device);
+                copyModal.componentInstance.device.id = -1;
+
+                copyModal.result.catch(result => {
+                    if (result.type_ !== undefined) {
+                        const index = this.devices.indexOf(result);
+                        if (index === -1) {
+                            this.devices.push(result as Device);
+                            this.searchControl.setValue('');
+                            this.showNotification(result.name + ' hozzáadva sikeresen!', 'success');
+                        } else {
+                            this.devices[index] = (result as Device);
+                        }
+
+                        this.setDevicePage();
+                    }
+                })
+            }
+
+            if (reason === 'delete' || reason === 'add') {
                 this.deviceService.getDevices().subscribe(devices => {
                     this.devices = devices;
                     this.sortedDevices = devices;
@@ -224,27 +282,40 @@ export class DevicesComponent implements OnInit {
                     this.setDevicePage();
                 });
             }
-        })
+
+            if (reason !== 'noRedirect') {
+                this.routerLocation.go('/devices');
+            }
+
+            this.getLocAndCat();
+        });
     }
 
     editCompositeItem(compositeItem: CompositeItem) {
-        const editModal = this.modalService.open(EditCompositeModalComponent, {size: 'lg', backdrop: false});
+        const editModal = this.modalService.open(EditCompositeModalComponent, {size: 'lg'});
         editModal.componentInstance.title = 'Összetett eszköz szerkesztése';
         editModal.componentInstance.compositeItem = compositeItem;
 
-        editModal.result.catch(() => {
+        this.routerLocation.go(`/compositeItems/${compositeItem.id}`);
+
+        editModal.result.catch(reason => {
             this.getComposites();
+
+            if (reason !== 'noRedirect') {
+                this.routerLocation.go('/compositeItems');
+            }
+
+            this.getLocAndCat();
         });
     }
 
     create() {
         switch (this.currentTab) {
             case 'devices':
-                const editDeviceModal = this.modalService.open(EditDeviceModalComponent, {size: 'lg', backdrop: false});
+                const editDeviceModal = this.modalService.open(EditDeviceModalComponent, {size: 'lg'});
                 editDeviceModal.componentInstance.title = 'Új eszköz';
 
                 editDeviceModal.result.catch(result => {
-                    console.log(result);
                     if (result !== 0 && result !== 1) {
                         const index = this.devices.indexOf(result);
                         if (index === -1) {
@@ -260,7 +331,7 @@ export class DevicesComponent implements OnInit {
                 });
                 break;
             case 'composites':
-                const editCompositeModal = this.modalService.open(EditCompositeModalComponent, {size: 'lg', backdrop: false});
+                const editCompositeModal = this.modalService.open(EditCompositeModalComponent, {size: 'lg'});
                 editCompositeModal.componentInstance.title = 'Új összetett eszköz';
                 editCompositeModal.result.catch(() => {
                     this.getComposites();
@@ -272,6 +343,214 @@ export class DevicesComponent implements OnInit {
     setTab(tabName: string) {
         this.currentTab = tabName;
         this.searchControl.setValue('');
+    }
+
+    handleExcelImport($event: any) {
+        const files = $event.target.files;
+        if (files.length) {
+            const file = files[0];
+
+            const importModal = this.modalService.open(DeviceImportModalComponent, {size: 'lg'});
+            importModal.componentInstance.importFile = file;
+
+            importModal.result.catch(reason => {
+                this.showNotification('Eszközimport befejeződött', 'success');
+
+                this.getDevices();
+
+                $event.target.value = null;
+            });
+        }
+    }
+
+    exportDevices() {
+        const header = [[
+            'id',
+            'name',
+            'barcode',
+            'textIdentifier',
+            'category',
+            'location',
+            'isPublicRentable',
+            'maker',
+            'type',
+            'serial',
+            'value',
+            'weight',
+            'status',
+            'quantity',
+            'acquiredFrom',
+            'dateOfAcquisition',
+            'owner',
+            'endOfWarranty',
+            'comment'
+        ]];
+
+        const wb = utils.book_new();
+        const ws: any = utils.json_to_sheet([]);
+
+        utils.sheet_add_aoa(ws, header);
+
+        const exportDevices: DeviceForExcel[] = [];
+
+        this.sortedDevices.forEach(device => exportDevices.push(new DeviceForExcel(device)));
+
+        utils.sheet_add_json(ws, exportDevices, {origin: 'A2', skipHeader: true});
+        utils.book_append_sheet(wb, ws, 'Devices');
+        writeFile(wb, 'raktr-devices.xlsx');
+    }
+
+    private getLocAndCat() {
+        this.locationService.getLocations().subscribe(value => {
+            this.locations = value;
+
+            const locGroupItems = {};
+            this.locations.forEach(location => {
+                locGroupItems[location.id] = false;
+            });
+
+            this.locationGroup = this.formBuilder.group(locGroupItems);
+
+            this.locationGroup.valueChanges.subscribe(groupItem => {
+                switch (this.currentTab) {
+                    case 'devices':
+                        this.filterDevices();
+                        break;
+                    case 'composites':
+                        this.filterCompositeItems();
+                        break;
+                }
+            });
+        });
+
+        this.categoryService.getCategories().subscribe(value => {
+            this.categories = value;
+
+            const catGroupItems = {};
+            this.categories.forEach(category => {
+                catGroupItems[category.id] = false;
+            });
+
+            this.categoryGroup = this.formBuilder.group(catGroupItems);
+
+            this.categoryGroup.valueChanges.subscribe(groupItem => {
+                switch (this.currentTab) {
+                    case 'devices':
+                        this.filterDevices();
+                        break;
+                    case 'composites':
+                        this.filterCompositeItems();
+                        break;
+                }
+            });
+        });
+    }
+
+    private allFilterOff(filters: Object) {
+        const keys = Object.keys(filters);
+
+        for (let i = 0; i < keys.length; i++) {
+            if (filters[keys[i]]) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private checkBoxFilter(relevantIdOfScannable: number, filterGroupValue: Object, allOfType: Object[]) {
+        if (this.allFilterOff(filterGroupValue)) {
+            return true;
+        }
+
+        let matchFound = false;
+
+        allOfType.forEach(item => {
+            if (filterGroupValue[item['id']]) {
+                if (relevantIdOfScannable === item['id']) {
+                    matchFound = true;
+                }
+            }
+        });
+
+        return matchFound;
+    }
+
+    private filterDevices() {
+        const value = this.searchControl.value;
+
+        this.sortedDevices = this.devices.filter(device =>
+            (device.name.toLowerCase().includes(value.toLowerCase()) ||
+                device.maker.toLowerCase().includes(value.toLowerCase()) ||
+                device.type.toLowerCase().includes(value.toLowerCase()) ||
+                device.location.name.toLowerCase().includes(value.toLowerCase()) ||
+                device.category.name.toLowerCase().includes(value.toLowerCase()) ||
+                device.textIdentifier.toLowerCase().includes(value.toLowerCase()) ||
+                device.barcode.toLowerCase().includes(value.toLowerCase())) &&
+            this.checkBoxFilter(device.location.id, this.locationGroup.value, this.locations) &&
+            this.checkBoxFilter(device.category.id, this.categoryGroup.value, this.categories));
+
+        this.setDevicePage();
+    }
+
+    private filterCompositeItems() {
+        const value = this.searchControl.value;
+
+        this.sortedComposites = this.compositeItems.filter(compositeItem =>
+            (compositeItem.name.toLowerCase().includes(value) ||
+                compositeItem.textIdentifier.toLowerCase().includes(value) ||
+                compositeItem.barcode.toLowerCase().includes(value)) &&
+            this.checkBoxFilter(compositeItem.location.id, this.locationGroup.value, this.locations) &&
+            this.checkBoxFilter(compositeItem.category.id, this.categoryGroup.value, this.categories));
+
+        this.setCompositePage();
+    }
+
+    deleteFilters() {
+        const locGroupItems = {};
+        this.locations.forEach(location => {
+            locGroupItems[location.id] = false;
+        });
+
+        this.locationGroup.setValue(locGroupItems);
+
+        const catGroupItems = {};
+        this.categories.forEach(category => {
+            catGroupItems[category.id] = false;
+        });
+
+        this.categoryGroup.setValue(catGroupItems);
+
+        switch (this.currentTab) {
+            case 'devices':
+                this.setDevicePage();
+                break;
+            case 'composites':
+                this.setCompositePage();
+                break;
+        }
+    }
+
+    public numOfLocation(loc: Location): number {
+        switch (this.currentTab) {
+            case 'devices':
+                return this.devices.filter(device => device.location.name === loc.name).length;
+            case 'composites':
+                return this.compositeItems.filter(item => item.location.name === loc.name).length;
+            default:
+                return 0;
+        }
+    }
+
+    public numOfCategory(cat: Category): number {
+        switch (this.currentTab) {
+            case 'devices':
+                return this.devices.filter(device => device.category.name === cat.name).length;
+            case 'composites':
+                return this.compositeItems.filter(item => item.category.name === cat.name).length;
+            default:
+                return 0;
+        }
     }
 
     showNotification(message_: string, type: string) {
@@ -289,27 +568,10 @@ export class DevicesComponent implements OnInit {
         })
     }
 
-    addLotOfDevices(start: number, num: number) {
-        for (let i = start; i < start + num; i++) {
-            this.deviceService.addDevice(new Device(
-                -1,
-                `name:_${i}`,
-                (i).toString().padStart(7, '0'),
-                `azonos_${i}`,
-                false,
-                `gyartooo_${i}`,
-                `tippuuuuus_${i}`,
-                `kredenc_${i}`,
-                1000 * (i % 5) + 2 * i,
-                100 * (i % 5) + 2 * i,
-                new Location(-1, 'almaaa'),
-                DeviceStatus.GOOD,
-                new Category(-1, 'asd'),
-            )).subscribe(device => {
-                console.log(`${device.name} added`);
-            })
-        }
-    }
+    isMobile() {
+        return $(window).width() <= 991;
+    };
+
 }
 
 function compare(a: number | string, b: number | string, isAsc: boolean) {

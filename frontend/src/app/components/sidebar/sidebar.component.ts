@@ -1,6 +1,6 @@
-import {Component, OnInit} from '@angular/core';
-import {AuthService} from '../../_services/auth.service';
-import {Router} from '@angular/router';
+import { Component, inject, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { OidcSecurityService } from 'angular-auth-oidc-client';
 
 declare const $: any;
 
@@ -15,33 +15,34 @@ declare interface RouteInfo {
 export const ROUTES: RouteInfo[] = [
     {path: '/overview', title: 'Áttekintés', icon: 'dashboard', class: '', inMenuBar: true},
     {path: '/devices', title: 'Eszközök kezelése', icon: 'sd_storage', class: '', inMenuBar: true},
+    {path: '/compositeItems', title: 'Összetett eszközök kezelése', icon: 'sd_storage', class: '', inMenuBar: false},
     {path: '/rents', title: 'Kivitelek kezelése', icon: 'local_shipping', class: '', inMenuBar: true},
     {path: '/tickets', title: 'Hibajegyek', icon: 'bug_report', class: '', inMenuBar: true},
-    {path: '/user-profile', title: 'Beállítások', icon: 'person', class: '', inMenuBar: true},
+    {path: '/settings', title: 'Beállítások', icon: 'person', class: '', inMenuBar: true},
 ];
 
 @Component({
-    selector: 'app-sidebar',
-    templateUrl: './sidebar.component.html',
-    styleUrls: ['./sidebar.component.css']
+  selector: 'app-sidebar',
+  templateUrl: './sidebar.component.html',
+  styleUrls: ['./sidebar.component.css']
 })
 export class SidebarComponent implements OnInit {
-    menuItems: any[];
+  private readonly oidcSecurityService = inject(OidcSecurityService);
 
-    constructor(private authService: AuthService,
-                private router: Router) {
-    }
+  menuItems: any[];
 
-    ngOnInit() {
-        this.menuItems = ROUTES.filter(menuItem => menuItem);
-    }
+  constructor(private router: Router) {}
 
-    isMobileMenu() {
-        return $(window).width() <= 991;
-    };
+  ngOnInit() {
+      this.menuItems = ROUTES.filter(menuItem => menuItem);
+  }
 
-    logout() {
-        this.authService.logout();
-        this.router.navigateByUrl('/login');
-    }
+  isMobileMenu() {
+    return $(window).width() <= 991;
+  };
+
+  logout() {
+    this.oidcSecurityService.logoff();
+    this.router.navigateByUrl('/login');
+  }
 }

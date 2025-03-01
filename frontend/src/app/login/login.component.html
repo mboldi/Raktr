@@ -7,32 +7,11 @@
                     <h3 class="card-title">Raktr</h3>
                 </div>
                 <div class="card-body">
-                    <form [formGroup]="form">
-                        <mat-form-field>
-                            <mat-label>Felhasználónév</mat-label>
-                            <input matInput autocomplete="off" formControlName="username">
-                        </mat-form-field>
-                        <mat-form-field>
-                            <mat-label>Jelszó</mat-label>
-                            <input matInput [type]="hide ? 'password' : 'text'" formControlName="password">
-                            <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
-                                    [attr.aria-pressed]="hide"
-                                    type="button">
-                                <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
-                            </button>
-                        </mat-form-field>
-                        <div class="mt-1 invalid-box" [hidden]="!invalidCreds">
-                            <h5 class="invalid-creds">Hibás felhasználónév, vagy jelszó!</h5>
-                        </div>
+                    <form>
                         <div class="pull-right mt-2">
-                            <button color="primary" mat-raised-button type="submit"
-                                    (click)="login()" [hidden]="loginHappening" [disabled]="form.invalid">
+                            <button color="primary" mat-raised-button type="submit" (click)="login()">
                                 Bejelentkezés
                             </button>
-                            <span>
-                                <mat-spinner [hidden]="!loginHappening" color="accent" [diameter]="20"
-                                             style="align-self: center; margin: 4px"></mat-spinner>
-                            </span>
                         </div>
                     </form>
                 </div>

@@ -7,11 +7,14 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
 @Transactional
 public interface RentItemRepository extends JpaRepository<RentItem, Long> {
+
+    Optional<List<RentItem>> findRentItemsByScannable_Id(Long id);
 
     @Query("SELECT rent from Rent rent, RentItem rentItem " +
             "WHERE rentItem.id = :rentItemId " +

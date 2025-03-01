@@ -26,6 +26,10 @@ export class GeneralDataService {
             );
     }
 
+    getByKey(key: string): Observable<GeneralData> {
+        return this.http.get<GeneralData>(`${environment.apiUrl}/api/generaldata/${key}`);
+    }
+
     updateData(generalData: GeneralData): Observable<GeneralData> {
         const headers = new HttpHeaders().set('Content-Type', 'application/json');
 

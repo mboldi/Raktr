@@ -26,6 +26,19 @@ export class DeviceService {
             );
     }
 
+    getMakers(): Observable<string[]> {
+        return this.http.get<string[]>(`${environment.apiUrl}/api/device/makers`);
+    }
+
+    getDevice(id: number): Observable<Device> {
+        return this.http.get<Device>(`${environment.apiUrl}/api/device/${id}`)
+            .pipe(
+                map(device => {
+                    return Device.fromJson(device);
+                })
+            );
+    }
+
     addDevice(device: Device): Observable<Device> {
         const headers = new HttpHeaders().set('Content-Type', 'application/json');
         device.id = null;

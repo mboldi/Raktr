@@ -2,11 +2,15 @@ import {Component, OnInit} from '@angular/core';
 import {Title} from '@angular/platform-browser';
 import {MatPaginatorIntl, PageEvent} from '@angular/material/paginator';
 import {HunPaginator} from '../helpers/hun-paginator';
-import {FormControl} from '@angular/forms';
+import {UntypedFormControl} from '@angular/forms';
 import {Ticket} from '../_model/Ticket';
 import {EditTicketComponent} from '../edit-ticket/edit-ticket.component';
 import {TicketService} from '../_services/ticket.service';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import { Location as RouterLocation } from '@angular/common' ;
+import {tick} from "@angular/core/testing";
+import {ActivatedRoute, Router} from "@angular/router";
+import * as $ from "jquery";
 
 @Component({
     selector: 'app-tickets',
@@ -19,18 +23,24 @@ import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 export class TicketsComponent implements OnInit {
 
     activeTab = 'open'
-    searchControl = new FormControl();
+    searchControl = new UntypedFormControl();
 
     pagedTickets: Ticket[];
-    filteredTickets: Ticket[];
+    filteredTickets: Ticket[] = [];
     currPageIndex = 0;
     private currPageSize = 10;
-    private tickets: Ticket[]
+    private tickets: Ticket[];
 
     constructor(
+        private title: Title,
         private ticketService: TicketService,
-        private modalService: NgbModal
+        private modalService: NgbModal,
+        private route: ActivatedRoute,
+        private router: Router,
+        private routerLocation: RouterLocation
     ) {
+        this.title.setTitle('Raktr - Hibajegyek');
+
         ticketService.getTickets().subscribe(tickets => {
             this.tickets = this.sortTickets(tickets);
 
@@ -50,7 +60,21 @@ export class TicketsComponent implements OnInit {
             )
 
             this.setTicketsPage();
-        })
+        });
+
+        // opening ticket if ID in URL is present
+
+        if (this.route.snapshot.paramMap.get('id') !== null) {
+            const id = this.route.snapshot.paramMap.get('id') as unknown as number;
+
+            this.ticketService.getTicket(id).subscribe(ticket => {
+                this.editTicket(ticket);
+            }, error => {
+                this.showNotification('Nem találtam eszközt az URL-ben megadott ID-vel!', 'danger');
+                this.router.navigateByUrl('/devices');
+            });
+
+        }
     }
 
     setTab(tab: string) {
@@ -82,7 +106,7 @@ export class TicketsComponent implements OnInit {
     }
 
     create() {
-        const ticketModal = this.modalService.open(EditTicketComponent, {size: 'lg', backdrop: false});
+        const ticketModal = this.modalService.open(EditTicketComponent, {size: 'lg'});
         ticketModal.componentInstance.title = 'Új hibajegy';
         ticketModal.componentInstance.ticket = new Ticket();
 
@@ -99,9 +123,13 @@ export class TicketsComponent implements OnInit {
     }
 
     editTicket(ticket: Ticket) {
-        const ticketModal = this.modalService.open(EditTicketComponent, {size: 'lg', backdrop: false});
+        const ticketModal = this.modalService.open(EditTicketComponent, {size: 'lg'});
         ticketModal.componentInstance.title = 'Hibajegy szerkesztése';
         ticketModal.componentInstance.ticket = ticket;
+
+        if (!this.route.snapshot.url.toString().includes(ticket.id.toString())) {
+            this.routerLocation.go(`/tickets/${ticket.id}`);
+        }
 
         ticketModal.result.catch(reason => {
             this.ticketService.getTickets().subscribe(tickets => {
@@ -110,6 +138,23 @@ export class TicketsComponent implements OnInit {
 
                 this.setTicketsPage();
             });
+        }).then(result => {
+            this.routerLocation.go('/tickets');
+        });
+    }
+
+    private showNotification(message_: string, type: string) {
+        $['notify']({
+            icon: 'add_alert',
+            message: message_
+        }, {
+            type: type,
+            timer: 1000,
+            placement: {
+                from: 'top',
+                align: 'right'
+            },
+            z_index: 2000
         })
     }
 }

@@ -45,9 +45,9 @@ export class Device extends Scannable {
             deviceJson.category,
             deviceJson.quantity,
             deviceJson.aquiredFrom,
-            deviceJson.dateOfAcquisition,
+            deviceJson.dateOfAcquisition != null ? new Date(deviceJson.dateOfAcquisition) : null,
             deviceJson.owner,
-            deviceJson.endOfWarranty,
+            deviceJson.endOfWarranty != null ? new Date(deviceJson.endOfWarranty) : null,
             deviceJson.comment
         )
     }
@@ -56,7 +56,7 @@ export class Device extends Scannable {
                 maker: string = '', type: string = '', serial: string = '', value: number = 1, weight: number = 1,
                 location: Location = null, status: DeviceStatus = DeviceStatus.GOOD, category: Category = null, quantity: number = 1,
                 acquiredFrom: string = '', dateOfAcquisition: Date = new Date(), owner: Owner = null, endOfWarranty: Date = null,
-                comment: string = '') {
+                comment: string = '', addedAt: Date = null) {
         super('device', id, name, barcode, textIdentifier, category, location, isPublicRentable);
         this.maker = maker;
         this.type = type;

@@ -18,9 +18,9 @@ import hu.bsstudio.raktr.repository.RentRepository;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
+import java.time.LocalDateTime;
+import java.util.*;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -95,8 +95,10 @@ public class RentService {
 
                 rentItemRepository.save(rentItemToUpdate);
             }
-        } else {
+        } else { //New item
             if (newRentItem.getOutQuantity() != 0) {
+                newRentItem.setAddedAt(new Date());
+
                 savedDeviceItem = rentItemRepository.save(newRentItem);
                 rentToUpdate.get().getRentItems().add(savedDeviceItem);
             }
@@ -265,7 +267,7 @@ public class RentService {
             .withFileName(fileName)
             .withRenterName(rentPdfRequest.getRenterFullName())
             .withRenterId(rentPdfRequest.getRenterId())
-            .withItems(new HashMap<>())
+            .withItems(new TreeMap<>())
             .build();
 
         for (var item : rentToGenerate.getRentItems()) {

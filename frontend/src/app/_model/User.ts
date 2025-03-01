@@ -37,7 +37,7 @@ export class User {
         for (let i = 0; i < this.roles.length; i++) {
             const role = this.roles[i];
 
-            if (role.roleName === wantedRole) {
+            if (role.roleName.toLowerCase() === wantedRole.toLowerCase()) {
                 return true;
             }
         }
@@ -45,7 +45,7 @@ export class User {
         return false;
     }
 
-    constructor(id: number, username: string, nickName: string, familyName: string, givenName: string, personalId: string, roles: UserRole[] = [], token?: string) {
+    constructor(id: number = -1, username: string = '', nickName: string = '', familyName: string = '', givenName: string = '', personalId: string = '', roles: UserRole[] = [], token?: string) {
         this.id = id;
         this.username = username;
         this.nickName = nickName;

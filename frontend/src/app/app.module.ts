@@ -25,7 +25,6 @@ import {LoginComponent} from './login/login.component';
 import {DeviceToRentModalComponent} from './device-to-rent-modal/device-to-rent-modal.component';
 import {EditCompositeModalComponent} from './edit-composite-modal/edit-composite-modal.component';
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
-import {AuthInterceptor} from './helpers/auth.interceptor';
 import {ConfirmDialogComponent} from './confirm-dialog/confirm-dialog.component';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
@@ -40,6 +39,14 @@ import {MatPaginatorModule} from '@angular/material/paginator';
 import {TicketsComponent} from './tickets/tickets.component';
 import {EditProjectComponent} from './edit-project/edit-project.component';
 import {EditTicketComponent} from './edit-ticket/edit-ticket.component';
+import {MatFabMenuModule} from '@angular-material-extensions/fab-menu';
+
+import {AuthConfigModule} from './auth-config.module';
+import {AuthInterceptor} from 'angular-auth-oidc-client';
+import {MatTabsModule} from '@angular/material/tabs';
+import {DeviceImportModalComponent} from './device-import-modal/device-import-modal.component';
+import {MatSortModule} from '@angular/material/sort';
+import {MatProgressBarModule} from '@angular/material/progress-bar';
 
 @NgModule({
     imports: [
@@ -69,6 +76,11 @@ import {EditTicketComponent} from './edit-ticket/edit-ticket.component';
         MatDividerModule,
         MatExpansionModule,
         MatPaginatorModule,
+        MatFabMenuModule,
+        MatTabsModule,
+        AuthConfigModule,
+        MatSortModule,
+        MatProgressBarModule
     ],
     declarations: [
         AppComponent,
@@ -78,6 +90,7 @@ import {EditTicketComponent} from './edit-ticket/edit-ticket.component';
         EditRentComponent,
         LoginComponent,
         DeviceToRentModalComponent,
+        DeviceImportModalComponent,
         EditCompositeModalComponent,
         ConfirmDialogComponent,
         PdfGenerationModalComponent,

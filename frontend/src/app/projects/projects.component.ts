@@ -3,7 +3,7 @@ import {Title} from '@angular/platform-browser';
 import {MatPaginatorIntl, PageEvent} from '@angular/material/paginator';
 import {HunPaginator} from '../helpers/hun-paginator';
 import {Project} from '../_model/Project';
-import {FormControl} from '@angular/forms';
+import {UntypedFormControl} from '@angular/forms';
 import {Router} from '@angular/router';
 import {ProjectService} from '../_services/project.service';
 
@@ -22,7 +22,7 @@ export class ProjectsComponent implements OnInit {
     currPageIndex = 0;
     currPageSize = 10;
 
-    projectSearchControl = new FormControl();
+    projectSearchControl = new UntypedFormControl();
 
     constructor(private title: Title,
                 private projectService: ProjectService,

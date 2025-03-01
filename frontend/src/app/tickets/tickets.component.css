@@ -32,3 +32,7 @@
     text-align: center;
     width: 1.5em;
 }
+
+::ng-deep ngb-modal-backdrop {
+    z-index: 100 !important;
+}

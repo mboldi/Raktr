@@ -2,6 +2,7 @@ package hu.bsstudio.raktr.service;
 
 import hu.bsstudio.raktr.exception.ObjectNotFoundException;
 import hu.bsstudio.raktr.model.User;
+import hu.bsstudio.raktr.model.UserRole;
 import hu.bsstudio.raktr.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -31,6 +33,20 @@ public class UserDataService {
             log.info("Found user: {}", foundUser.get());
             return foundUser.get();
         }
+    }
+
+    public final User createUser(final User user) {
+        log.info("Creating user for {} {} ({})", user.getGivenName(), user.getFamilyName(), user.getUsername());
+        return userRepository.save(user);
+    }
+
+    public final User setUserRoles(final User user, final Set<UserRole> roles) {
+        log.info("Setting roles {} for user {}",
+                roles.stream().map(UserRole::getRoleName).collect(Collectors.toList()),
+                user.getUsername()
+        );
+        user.setRoles(roles);
+        return userRepository.save(user);
     }
 
     public final User updateUser(final User user) {

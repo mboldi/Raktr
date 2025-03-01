@@ -44,7 +44,7 @@ public class ScannableController {
             .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @GetMapping("/{id}/rentItems")
+    @GetMapping("/rentItems/{id}")
     public ResponseEntity<List<RentItemWithRentData>> getRentItemsOfScannable(@PathVariable final Long id) {
         log.info("Incoming request for rentITems of scannable item with id {}", id);
 

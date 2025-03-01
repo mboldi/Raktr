@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {Title} from '@angular/platform-browser';
 import {UserService} from '../_services/user.service';
 import {User} from '../_model/User';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
 import {GeneralDataService} from '../_services/general-data.service';
 import {GeneralData} from '../_model/GeneralData';
 import * as $ from 'jquery';
@@ -17,12 +17,13 @@ export class UserProfileComponent implements OnInit {
     user: User;
     admin = false;
 
-    personal_settings: FormGroup;
-    group_settings: FormGroup;
-    global_settings: FormGroup;
+    personal_settings: UntypedFormGroup;
+    group_settings: UntypedFormGroup;
+    global_settings: UntypedFormGroup;
+    ean8Forced = false;
 
     constructor(private title: Title,
-                private fb: FormBuilder,
+                private fb: UntypedFormBuilder,
                 private userService: UserService,
                 private generalDataService: GeneralDataService) {
         this.title.setTitle('Raktr - Adatok szerkesztése');
@@ -59,17 +60,29 @@ export class UserProfileComponent implements OnInit {
         });
 
         this.generalDataService.getAll().subscribe(data => {
+            const groupNameData = data[data.findIndex(data_ => data_.key === 'groupName')];
+            const groupLeaderData = data[data.findIndex(data_ => data_.key === 'groupLeader')];
+
             this.group_settings.setValue({
-                groupName: [data[data.findIndex(data_ => data_.key === 'groupName')].data],
-                groupLeaderName: [data[data.findIndex(data_ => data_.key === 'groupLeader')].data],
+                groupName: [groupNameData ? groupNameData.data : ''],
+                groupLeaderName: [groupLeaderData ? groupLeaderData.data : ''],
             });
 
+            const firstName = data[data.findIndex(data_ => data_.key === 'firstSignerName')];
+            const firstTitle = data[data.findIndex(data_ => data_.key === 'firstSignerTitle')];
+            const secondName = data[data.findIndex(data_ => data_.key === 'secondSignerName')];
+            const secondTitle = data[data.findIndex(data_ => data_.key === 'secondSignerTitle')];
+
             this.global_settings.setValue({
-                firstSignerName: [data[data.findIndex(data_ => data_.key === 'firstSignerName')].data],
-                firstSignerTitle: [data[data.findIndex(data_ => data_.key === 'firstSignerTitle')].data],
-                secondSignerName: [data[data.findIndex(data_ => data_.key === 'secondSignerName')].data],
-                secondSignerTitle: [data[data.findIndex(data_ => data_.key === 'secondSignerTitle')].data],
+                firstSignerName: [firstName ? firstName.data : ''],
+                firstSignerTitle: [firstTitle ? firstTitle.data : ''],
+                secondSignerName: [secondName ? secondName.data : ''],
+                secondSignerTitle: [secondTitle ? secondTitle.data : ''],
             });
+
+            const ean8ForcedData = data[data.findIndex(data_ => data_.key === 'forceEan8Barcode')];
+
+            this.ean8Forced = ean8ForcedData === undefined ? false : ean8ForcedData.data.toLowerCase() === 'true';
         });
     }
 
@@ -136,5 +149,9 @@ export class UserProfileComponent implements OnInit {
             },
             z_index: 2000
         })
+    }
+
+    updateForceEan8(event) {
+        this.generalDataService.updateData(new GeneralData('forceEan8Barcode', event.checked.toString())).subscribe();
     }
 }

@@ -15,6 +15,9 @@ public interface DeviceRepository extends JpaRepository<Device, Long> {
 
     Optional<Device> findByTextIdentifier(String textIdentifier);
 
+    @Query("SELECT DISTINCT d.maker FROM Device d")
+    List<String> findAllMakers();
+
     @Query(value = "SELECT max(id) FROM Scannable")
     long getMaxId();
 

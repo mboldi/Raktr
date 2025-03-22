@@ -2,6 +2,7 @@ package hu.bsstudio.raktr.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
 import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Column;
@@ -9,10 +10,13 @@ import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
+import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+@Getter
 @JsonSerialize
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
@@ -30,11 +34,4 @@ public abstract class DomainAuditModel implements Serializable {
     @JsonIgnore
     private Date updatedAt;
 
-    public Date getCreatedAt() {
-        return createdAt;
-    }
-
-    public Date getUpdatedAt() {
-        return updatedAt;
-    }
 }

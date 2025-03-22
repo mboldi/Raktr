@@ -26,6 +26,7 @@ public class ScannableController {
 
     private final ScannableService scannableService;
 
+
     @GetMapping("/barcode/{barcode}")
     public ResponseEntity<Scannable> getScannableByBarcode(@PathVariable final String barcode) {
         log.info("Incoming request for scannable item with barcode {}", barcode);

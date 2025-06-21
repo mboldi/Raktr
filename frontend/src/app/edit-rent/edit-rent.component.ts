@@ -25,6 +25,7 @@ import {Comment} from '../_model/Comment';
 import {MatFabMenu} from '@angular-material-extensions/fab-menu';
 import {CompositeService} from '../_services/composite.service';
 import {locale} from 'moment';
+import {PageEvent} from '@angular/material/paginator';
 
 @Component({
     selector: 'app-edit-rent',
@@ -39,8 +40,12 @@ export class EditRentComponent implements OnInit {
     filteredRentIssuingMembers: User[];
     selectedIssuer = '';
 
+    currPageIndex = 0;
+    currPageSize = 25;
+
     rent: Rent;
     filteredRentItems: RentItem[];
+    pagedRentItems: RentItem[];
     currentOutDate: Date = new Date();
 
     searchControl = new UntypedFormControl();
@@ -158,6 +163,9 @@ export class EditRentComponent implements OnInit {
                     this.sortComments();
 
                     this.filteredRentItems = this.rent.rentItems;
+
+                    this.setPage();
+
                     this.currentOutDate = this.rent.outDate;
 
                     this.rentDataForm.get('issuer').disable();
@@ -675,6 +683,23 @@ export class EditRentComponent implements OnInit {
 
     filterRentItems($event: any) {
         this.filteredRentItems = this._filterRentItems(this.rent.rentItems, $event);
+
+        this.setPage();
+    }
+
+    private setPage() {
+        for (; this.filteredRentItems.length < this.currPageIndex * this.currPageSize; this.currPageIndex--) {
+        }
+
+        this.pagedRentItems = this.filteredRentItems.slice(this.currPageIndex * this.currPageSize,
+            (this.currPageIndex + 1) * this.currPageSize);
+    }
+
+    pageChanged(event: PageEvent) {
+        this.currPageIndex = event.pageIndex;
+        this.currPageSize = event.pageSize;
+
+        this.setPage();
     }
 
     @HostListener('document:keyDown.control.a', ['$event'])

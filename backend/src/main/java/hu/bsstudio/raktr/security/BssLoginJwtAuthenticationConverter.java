@@ -6,6 +6,7 @@ import hu.bsstudio.raktr.model.UserRole;
 import hu.bsstudio.raktr.service.UserDataService;
 import hu.bsstudio.raktr.service.UserRoleService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import net.minidev.json.JSONArray;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.core.GrantedAuthority;
@@ -23,10 +24,13 @@ import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class BssLoginJwtAuthenticationConverter implements Converter<Jwt, Collection<GrantedAuthority>> {
 
     private final UserDataService userDataService;
     private final UserRoleService userRoleService;
+
+    private final List<String> roleCache = new ArrayList<>();
 
     @Override
     public Collection<GrantedAuthority> convert(Jwt jwt) {
@@ -52,6 +56,24 @@ public class BssLoginJwtAuthenticationConverter implements Converter<Jwt, Collec
 
     private User setUserRoles(User user, Jwt jwt) {
         JSONArray array = (JSONArray) jwt.getClaims().get("groups");
+
+        for (Object role : array.stream()
+                .map(role -> role.toString().equals("Öregtag") ? "Stúdiós" : role.toString())
+                .distinct()
+                .toArray()) {
+            if(!roleCache.contains(role.toString())) {
+                UserRole foundRole = userRoleService.getRole(role.toString());
+
+                if(foundRole == null) {
+                    log.info("Role not found, creating it: {}", role.toString());
+
+                    userRoleService.createRole(role.toString());
+                }
+
+                roleCache.add(role.toString());
+            }
+        }
+
         Set<UserRole> userRoles = array.stream()
                 .map(role -> role.toString().equals("Öregtag") ? "Stúdiós" : role.toString())
                 .map(userRoleService::getRole)

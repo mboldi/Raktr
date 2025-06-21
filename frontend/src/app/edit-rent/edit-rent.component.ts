@@ -24,6 +24,7 @@ import {User} from '../_model/User';
 import {Comment} from '../_model/Comment';
 import {MatFabMenu} from '@angular-material-extensions/fab-menu';
 import {CompositeService} from '../_services/composite.service';
+import {locale} from 'moment';
 
 @Component({
     selector: 'app-edit-rent',
@@ -745,4 +746,6 @@ export class EditRentComponent implements OnInit {
             return (scannable as Device).quantity > 1;
         }
     }
+
+    protected readonly locale = locale;
 }

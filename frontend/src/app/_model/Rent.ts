@@ -101,4 +101,12 @@ export class Rent {
 
         return sumWeight;
     }
+
+    getNumOfItems(): number {
+        let num = 0;
+
+        this.rentItems.forEach(rentItem => num += rentItem.outQuantity);
+
+        return num;
+    }
 }

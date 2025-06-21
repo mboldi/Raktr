@@ -47,6 +47,7 @@ import {MatTabsModule} from '@angular/material/tabs';
 import {DeviceImportModalComponent} from './device-import-modal/device-import-modal.component';
 import {MatSortModule} from '@angular/material/sort';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
+import {MatListModule} from '@angular/material/list';
 
 @NgModule({
     imports: [
@@ -80,7 +81,8 @@ import {MatProgressBarModule} from '@angular/material/progress-bar';
         MatTabsModule,
         AuthConfigModule,
         MatSortModule,
-        MatProgressBarModule
+        MatProgressBarModule,
+        MatListModule
     ],
     declarations: [
         AppComponent,

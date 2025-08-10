@@ -50,7 +50,7 @@
     "moment": "2.29.4",
     "ngx-material-file-input": "^4.0.1",
     "perfect-scrollbar": "1.1.0",
-    "rxjs": "7.5.4",
+    "rxjs": "7.8.2",
     "rxjs-compat": "6.5.2",
     "web-animations-js": "^2.3.2",
     "xlsx": "^0.18.5",

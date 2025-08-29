@@ -223,6 +223,11 @@
                                 </mat-form-field>
                             </div>
                             <div class="table-responsive">
+                                <mat-paginator [length]="filteredRentItems.length" [pageSize]="10"
+                                               [pageSizeOptions]="[10, 25, 50]"
+                                               [pageIndex]="currPageIndex"
+                                               (page)="pageChanged($event)">
+                                </mat-paginator>
                                 <table class="table">
                                     <thead class="text-orange">
                                     <th>
@@ -252,7 +257,7 @@
                                     </thead>
                                     <tbody>
                                     <tr class="device-row"
-                                        *ngFor="let rentItem of filteredRentItems; let i = index">
+                                        *ngFor="let rentItem of pagedRentItems; let i = index">
                                         <td>
                                             {{rentItem.scannable.name}}
                                         </td>

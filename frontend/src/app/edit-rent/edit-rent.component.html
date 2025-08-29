@@ -13,7 +13,7 @@
                 <div class="card" *ngIf="rent">
                     <div class="card-header {{!rent.isClosed ? 'card-header-warning' : 'card-header-success'}}"
                          style="max-height: 90px">
-                        <h3 style="display: inline-block" class="mt-2 mb-1">Kivitel szerkesztése</h3>
+                        <h3 style="display: inline-block" class="mt-0 mb-1">Kivitel szerkesztése</h3>
                         <div class="form-inline pull-right" *ngIf="rent.id !== -1">
                             <mat-fab-menu color="accent"
                                           icon="ios_share"
@@ -23,9 +23,10 @@
                                 <mat-icon>exit_to_app</mat-icon>
                             </mat-fab-menu>
                         </div>
+                        <h4 style="font-style: italic" class="ml-2 pb-1" *ngIf="rent.id != -1">{{rent.destination}} - {{rent.outDate | date:'yyyy. MM. dd.'}}</h4>
                     </div>
                     <div class="card-body container-fluid">
-                        <mat-expansion-panel class="mb-4" expanded="true">
+                        <mat-expansion-panel class="mb-4" expanded="{{rent.id ==-1 ? 'true' : 'false'}}">
                             <mat-expansion-panel-header>
                                 <mat-panel-title>
                                     Kivitel alaptulajdonságai
@@ -154,6 +155,27 @@
                                     </div>
                                 </div>
                             </form>
+                        </mat-expansion-panel>
+
+                        <mat-expansion-panel class="mb-4" expanded="false" *ngIf="rent.id != -1">
+                            <mat-expansion-panel-header>
+                                <mat-panel-title>
+                                    Statisztika
+                                </mat-panel-title>
+                            </mat-expansion-panel-header>
+
+                            <mat-list dense class="pt-0">
+                                <mat-list-item>
+                                    <b>Szállítmány össztömege:</b>&nbsp;{{rent.getSumWeight() / 1000 | number: '1.0-2'}} kg
+                                </mat-list-item>
+                                <mat-list-item>
+                                    <b>Kivitt eszköztípusok száma:</b>&nbsp;{{rent.rentItems.length}} db
+                                </mat-list-item>
+                                <mat-list-item>
+                                    <b>Kivitt tételek száma:</b>&nbsp;{{rent.getNumOfItems()}} db
+                                </mat-list-item>
+                            </mat-list>
+
                         </mat-expansion-panel>
 
                         <h4 *ngIf="rent.id === -1">

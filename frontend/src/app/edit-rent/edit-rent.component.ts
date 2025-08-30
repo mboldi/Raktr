@@ -449,6 +449,10 @@ export class EditRentComponent implements OnInit {
             // new
             this.rentService.addRent(this.rent).subscribe(rent_ => {
                     this.rent = rent_;
+
+                    this.filteredRentItems = this.rent.rentItems;
+                    this.setPage();
+
                     this.showNotification('Sikeresen mentve', 'success');
 
                     this.rentDataForm.get('issuer').disable();

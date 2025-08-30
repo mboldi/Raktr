@@ -56,7 +56,7 @@ export class UserProfileComponent implements OnInit {
             });
             this.user = user;
 
-            this.admin = user.isFullAccessMember();
+            this.admin = user.isAdmin();
         });
 
         this.generalDataService.getAll().subscribe(data => {

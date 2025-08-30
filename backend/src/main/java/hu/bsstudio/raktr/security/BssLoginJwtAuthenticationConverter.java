@@ -44,12 +44,24 @@ public class BssLoginJwtAuthenticationConverter implements Converter<Jwt, Collec
         try {
             return userDataService.getByUsername(username);
         } catch (ObjectNotFoundException e) {
+            String[] names = jwt.getClaims().get("given_name").toString().split(" ");
+
+            String familyName = names[names.length - 1];
+            StringBuilder givenNameBuilder = new StringBuilder();
+            for (int i = 0; i < names.length - 1; i++) {
+                givenNameBuilder.append(names[i]);
+            }
+            String givenName = givenNameBuilder.toString();
+
             User user = User.builder()
                     .withUsername(username)
-                    .withFamilyName(jwt.getClaims().get("family_name").toString())
-                    .withGivenName(jwt.getClaims().get("given_name").toString())
+                    .withFamilyName(familyName)
+                    .withGivenName(givenName)
+                    .withNickName(givenName)
                     .withPersonalId("")
                     .build();
+
+            String familyNameads = user.getFamilyName();
             return userDataService.createUser(user);
         }
     }

@@ -1,4 +1,4 @@
-FROM node:16-alpine as build
+FROM node:22-alpine as build
 
 # change user from root to rootless node user
 USER node
@@ -17,4 +17,5 @@ RUN npm run build
 
 FROM nginx:latest
 # copy the compiled application to the webserver
+COPY proxy-conf/default.conf /etc/nginx/conf.d
 COPY --from=build /home/node/app/dist /usr/share/nginx/html

@@ -6,7 +6,7 @@ import { AuthLocalStorageService } from './helpers/auth-local-storage.service';
   imports: [
     AuthModule.forRoot({
       config: {
-        authority: 'https://login.bsstudio.hu/application/o/raktr/',
+        authority: 'https://login.bsstudio.hu/application/o/raktr',
         redirectUrl: window.location.origin,
         postLogoutRedirectUri: window.location.origin,
         clientId: '2wD6qaqGsYefuYv271cwjUYUDeL2HXJFhj2Omfbg',
@@ -14,7 +14,7 @@ import { AuthLocalStorageService } from './helpers/auth-local-storage.service';
         responseType: 'code',
         silentRenew: true,
         useRefreshToken: true,
-        //logLevel: LogLevel.Debug,
+        logLevel: LogLevel.Debug,
         secureRoutes: ['http://localhost:8080'],
       },
     }),

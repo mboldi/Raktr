@@ -48,8 +48,11 @@ public class BssLoginJwtAuthenticationConverter implements Converter<Jwt, Collec
                     .withUsername(username)
                     .withFamilyName(jwt.getClaims().get("family_name").toString())
                     .withGivenName(jwt.getClaims().get("given_name").toString())
+                    .withNickName(jwt.getClaims().get("given_name").toString())
                     .withPersonalId("")
                     .build();
+
+            String familyNameads = user.getFamilyName();
             return userDataService.createUser(user);
         }
     }

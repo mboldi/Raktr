@@ -6,15 +6,15 @@ import { AuthLocalStorageService } from './helpers/auth-local-storage.service';
   imports: [
     AuthModule.forRoot({
       config: {
-        authority: 'https://login.bsstudio.hu/application/o/website-test',
+        authority: 'https://login.bsstudio.hu/application/o/raktr',
         redirectUrl: window.location.origin,
         postLogoutRedirectUri: window.location.origin,
-        clientId: 'H2w2dOKxioUPmjghbPNbXMcEiGxqT7A82mLO811d',
+        clientId: '2wD6qaqGsYefuYv271cwjUYUDeL2HXJFhj2Omfbg',
         scope: 'openid profile offline_access',
         responseType: 'code',
         silentRenew: true,
         useRefreshToken: true,
-        //logLevel: LogLevel.Debug,
+        logLevel: LogLevel.Debug,
         secureRoutes: ['http://localhost:8080'],
       },
     }),

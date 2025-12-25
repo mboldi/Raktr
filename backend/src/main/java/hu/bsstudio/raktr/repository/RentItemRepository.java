@@ -4,14 +4,10 @@ import hu.bsstudio.raktr.model.Rent;
 import hu.bsstudio.raktr.model.RentItem;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
-@Repository
-@Transactional
 public interface RentItemRepository extends JpaRepository<RentItem, Long> {
 
     Optional<List<RentItem>> findRentItemsByScannable_Id(Long id);

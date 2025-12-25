@@ -1,23 +1,19 @@
 package hu.bsstudio.raktr.controller;
 
 import hu.bsstudio.raktr.dto.RentItemWithRentData;
-import hu.bsstudio.raktr.model.RentItem;
 import hu.bsstudio.raktr.model.Scannable;
-import hu.bsstudio.raktr.model.Ticket;
 import hu.bsstudio.raktr.service.ScannableService;
-import java.util.List;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
-@CrossOrigin(origins = "*", allowedHeaders = "*")
 @Slf4j
 @RequestMapping("/api/scannable")
 @RequiredArgsConstructor

@@ -1,12 +1,13 @@
 package hu.bsstudio.raktr.service;
 
+import hu.bsstudio.raktr.dal.repository.GeneralDataRepository;
 import hu.bsstudio.raktr.model.GeneralData;
-import hu.bsstudio.raktr.repository.GeneralDataRepository;
-import java.util.List;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @Slf4j

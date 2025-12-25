@@ -1,19 +1,20 @@
 package hu.bsstudio.raktr.service;
 
+import hu.bsstudio.raktr.dal.repository.CategoryRepository;
+import hu.bsstudio.raktr.dal.repository.CompositeItemRepository;
+import hu.bsstudio.raktr.dal.repository.DeviceRepository;
+import hu.bsstudio.raktr.dal.repository.LocationRepository;
 import hu.bsstudio.raktr.exception.ObjectConflictException;
 import hu.bsstudio.raktr.model.Category;
 import hu.bsstudio.raktr.model.CompositeItem;
 import hu.bsstudio.raktr.model.Device;
 import hu.bsstudio.raktr.model.Location;
-import hu.bsstudio.raktr.repository.CategoryRepository;
-import hu.bsstudio.raktr.repository.CompositeItemRepository;
-import hu.bsstudio.raktr.repository.DeviceRepository;
-import hu.bsstudio.raktr.repository.LocationRepository;
-import java.util.List;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @Slf4j

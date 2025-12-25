@@ -1,8 +1,8 @@
 package hu.bsstudio.raktr.service;
 
+import hu.bsstudio.raktr.dal.repository.OwnerRepository;
 import hu.bsstudio.raktr.exception.ObjectConflictException;
 import hu.bsstudio.raktr.model.Owner;
-import hu.bsstudio.raktr.repository.OwnerRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

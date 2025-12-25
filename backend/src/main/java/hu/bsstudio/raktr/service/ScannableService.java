@@ -1,13 +1,13 @@
 package hu.bsstudio.raktr.service;
 
+import hu.bsstudio.raktr.dal.repository.CompositeItemRepository;
+import hu.bsstudio.raktr.dal.repository.DeviceRepository;
+import hu.bsstudio.raktr.dal.repository.RentItemRepository;
+import hu.bsstudio.raktr.dal.repository.RentRepository;
 import hu.bsstudio.raktr.dto.RentItemWithRentData;
 import hu.bsstudio.raktr.model.CompositeItem;
 import hu.bsstudio.raktr.model.Device;
 import hu.bsstudio.raktr.model.Scannable;
-import hu.bsstudio.raktr.repository.CompositeItemRepository;
-import hu.bsstudio.raktr.repository.DeviceRepository;
-import hu.bsstudio.raktr.repository.RentItemRepository;
-import hu.bsstudio.raktr.repository.RentRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

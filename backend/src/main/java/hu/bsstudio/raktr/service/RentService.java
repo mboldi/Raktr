@@ -1,20 +1,12 @@
 package hu.bsstudio.raktr.service;
 
+import hu.bsstudio.raktr.dal.repository.*;
 import hu.bsstudio.raktr.exception.NotAvailableQuantityException;
 import hu.bsstudio.raktr.exception.ObjectNotFoundException;
-import hu.bsstudio.raktr.model.Comment;
-import hu.bsstudio.raktr.model.Device;
-import hu.bsstudio.raktr.model.GeneralData;
-import hu.bsstudio.raktr.model.Rent;
-import hu.bsstudio.raktr.model.RentItem;
+import hu.bsstudio.raktr.model.*;
 import hu.bsstudio.raktr.pdfgeneration.RentPdfCreator;
 import hu.bsstudio.raktr.pdfgeneration.RentPdfData;
 import hu.bsstudio.raktr.pdfgeneration.RentPdfRequest;
-import hu.bsstudio.raktr.repository.CommentRepository;
-import hu.bsstudio.raktr.repository.DeviceRepository;
-import hu.bsstudio.raktr.repository.GeneralDataRepository;
-import hu.bsstudio.raktr.repository.RentItemRepository;
-import hu.bsstudio.raktr.repository.RentRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;

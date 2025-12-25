@@ -1,7 +1,7 @@
 package hu.bsstudio.raktr.service;
 
+import hu.bsstudio.raktr.dal.repository.UserRoleRepository;
 import hu.bsstudio.raktr.model.UserRole;
-import hu.bsstudio.raktr.repository.UserRoleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

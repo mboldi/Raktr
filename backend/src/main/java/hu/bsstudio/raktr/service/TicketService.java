@@ -1,14 +1,15 @@
 package hu.bsstudio.raktr.service;
 
+import hu.bsstudio.raktr.dal.repository.CommentRepository;
+import hu.bsstudio.raktr.dal.repository.TicketRepository;
 import hu.bsstudio.raktr.model.Comment;
 import hu.bsstudio.raktr.model.Ticket;
-import hu.bsstudio.raktr.repository.CommentRepository;
-import hu.bsstudio.raktr.repository.TicketRepository;
-import java.util.List;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @Slf4j

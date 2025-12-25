@@ -1,6 +1,7 @@
 package hu.bsstudio.raktr.security;
 
 import java.io.IOException;
+
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.FilterConfig;
@@ -17,7 +18,6 @@ public class CorsFilter implements Filter {
 
     }
 
-    @SuppressWarnings("checkstyle:DesignForExtension")
     @Override
     public void doFilter(final ServletRequest servletRequest,
                          final ServletResponse servletResponse,

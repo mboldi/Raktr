@@ -38,7 +38,6 @@ import lombok.experimental.SuperBuilder;
     @JsonSubTypes.Type(value = Device.class, name = "device"),
     @JsonSubTypes.Type(value = CompositeItem.class, name = "compositeItem")
 })
-@SuppressWarnings("checkstyle:VisibilityModifier")
 public abstract class Scannable extends DomainAuditModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

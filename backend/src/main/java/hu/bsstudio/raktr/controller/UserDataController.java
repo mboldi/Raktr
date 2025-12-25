@@ -17,7 +17,6 @@ import java.util.List;
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequestMapping("/api/user")
-@SuppressWarnings("checkstyle:DesignForExtension")
 public class UserDataController {
 
     private final UserDataService userDataService;

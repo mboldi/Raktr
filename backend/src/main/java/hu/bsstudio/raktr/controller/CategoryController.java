@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @Slf4j
 @RequestMapping("/api/category")
-@SuppressWarnings("checkstyle:DesignForExtension")
 public class CategoryController {
 
     private static final int CONFLICT = 409;

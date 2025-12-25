@@ -56,7 +56,7 @@ public class RentService {
     @Value("${generalData.secondSignerTitleKey}")
     private String SECOND_SIGNER_TITLE_KEY;
 
-    @SuppressWarnings("checkstyle:DesignForExtension")
+
     public boolean checkIfAvailable(final RentItem deviceRentItem, final RentItem rentItemToUpdate) {
         Integer maxAvailableQuantity = deviceRepository.getOne(deviceRentItem.getScannable().getId()).getQuantity();
         List<RentItem> rentItems = rentItemRepository.findAll();
@@ -237,7 +237,6 @@ public class RentService {
         return Optional.of(savedRent);
     }
 
-    @SuppressWarnings({"checkstyle:InnerAssignment", "checkstyle:AvoidInlineConditionals"})
     public final ResponseEntity<byte[]> getPdf(final Long rentId, final RentPdfRequest rentPdfRequest) throws IOException {
         Rent rentToGenerate = rentRepository.findById(rentId).orElse(null);
 

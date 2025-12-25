@@ -42,9 +42,9 @@ public class CompositeItem extends Scannable {
     }
 
     @JsonPOJOBuilder(withPrefix = "")
-    public static class CompositeItemBuilder{}
+    public static class CompositeItemBuilder {
+    }
 
-    @SuppressWarnings("checkstyle:DesignForExtension")
     @Override
     public String toString() {
         return "CompositeItem{"

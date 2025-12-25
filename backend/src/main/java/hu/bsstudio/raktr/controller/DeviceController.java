@@ -25,7 +25,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @Slf4j
-@SuppressWarnings("checkstyle:DesignForExtension")
 @RequestMapping("/api/device")
 @PropertySource("classpath:userInfo.properties")
 @RequiredArgsConstructor

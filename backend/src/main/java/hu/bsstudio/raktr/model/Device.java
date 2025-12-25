@@ -20,7 +20,6 @@ import lombok.ToString;
 import java.util.Date;
 import java.util.List;
 
-@SuppressWarnings("checkstyle:FinalClass")
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "devices")

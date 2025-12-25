@@ -30,7 +30,6 @@ import java.util.Set;
 @JsonDeserialize(builder = User.Builder.class)
 @NoArgsConstructor
 @Data
-@SuppressWarnings("checkstyle:DesignForExtension")
 public class User implements UserDetails {
 
     @Id

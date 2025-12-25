@@ -8,13 +8,10 @@ import com.itextpdf.kernel.geom.PageSize;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.layout.Document;
-import com.itextpdf.layout.element.Cell;
-import com.itextpdf.layout.element.Paragraph;
-import com.itextpdf.layout.element.Tab;
-import com.itextpdf.layout.element.TabStop;
-import com.itextpdf.layout.element.Table;
+import com.itextpdf.layout.element.*;
 import com.itextpdf.layout.properties.TabAlignment;
 import com.itextpdf.layout.properties.TextAlignment;
+
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -22,12 +19,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-@SuppressWarnings("checkstyle:HideUtilityClassConstructor")
 public class RentPdfCreator {
 
     private static final String DATEFORMAT = "yyyy.MM.dd.";
 
-    @SuppressWarnings({"checkstyle:MethodLength", "checkstyle:MagicNumber"})
     public static void generatePdf(final RentPdfData rentData) {
         String teamName = rentData.getTeamName();
         String teamLeaderName = rentData.getTeamLeaderName();

@@ -83,7 +83,6 @@ public class Rent extends DomainAuditModel {
     @JsonIgnore
     private Boolean isDeleted;
 
-    @SuppressWarnings("checkstyle:DesignForExtension")
     public RentItem getRentItemOfScannable(final Scannable scannableToFind) {
         for (RentItem rentItem : rentItems) {
             if (rentItem.getScannable().getId().equals(scannableToFind.getId())) {

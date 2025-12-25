@@ -26,7 +26,6 @@ public final class DeviceService {
     private final CategoryRepository categoryRepository;
     private final LocationRepository locationRepository;
 
-    @SuppressWarnings("checkstyle:AvoidInlineConditionals")
     public Optional<Device> create(final Device deviceRequest) {
         var foundDevice = deviceRequest.getId() == null ? Optional.empty() : deviceRepository.findById(deviceRequest.getId());
 

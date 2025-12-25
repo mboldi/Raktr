@@ -22,7 +22,6 @@ import java.util.Optional;
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @Slf4j
-@SuppressWarnings("checkstyle:DesignForExtension")
 @RequiredArgsConstructor
 @RequestMapping("/api/owner")
 public class OwnerController {

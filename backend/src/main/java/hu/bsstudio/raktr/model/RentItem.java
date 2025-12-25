@@ -27,7 +27,6 @@ import static jakarta.persistence.FetchType.EAGER;
 import static jakarta.persistence.FetchType.LAZY;
 
 @EqualsAndHashCode(callSuper = true)
-@SuppressWarnings("checkstyle:FinalClass")
 @Entity
 @Data
 @JsonSerialize

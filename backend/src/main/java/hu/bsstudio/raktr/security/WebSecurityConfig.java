@@ -17,7 +17,6 @@ import org.springframework.security.web.SecurityFilterChain;
 @Slf4j
 @Configuration
 @RequiredArgsConstructor
-@SuppressWarnings("checkstyle:StaticVariableName")
 @EnableWebSecurity
 @EnableMethodSecurity(securedEnabled = true, jsr250Enabled = true)
 @Profile("!integrationtest")
@@ -38,7 +37,6 @@ public class WebSecurityConfig {
         return http.build();
     }
 
-    @SuppressWarnings("checkstyle:DesignForExtension")
     @Bean
     CorsFilter corsFilter() {
         return new CorsFilter();

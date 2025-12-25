@@ -10,7 +10,7 @@ version = "0.1.0"
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(21)
+        languageVersion = JavaLanguageVersion.of(25)
     }
 }
 
@@ -31,13 +31,13 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-web")
-    implementation("com.itextpdf:itext7-core:9.3.0")
+    implementation("com.itextpdf:itext7-core:9.4.0")
 
-    compileOnly("org.projectlombok:lombok:1.18.32")
+    compileOnly("org.projectlombok:lombok:1.18.42")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
-    runtimeOnly("org.postgresql:postgresql:42.7.0")
+    runtimeOnly("org.postgresql:postgresql:42.7.8")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
-    annotationProcessor("org.projectlombok:lombok:1.18.32")
+    annotationProcessor("org.projectlombok:lombok:1.18.42")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")

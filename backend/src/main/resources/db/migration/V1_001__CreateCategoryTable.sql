@@ -1,0 +1,5 @@
+CRATE TABLE category (
+      name TEXT PRIMARY KEY,
+      created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL,
+      updated_at TIMESTAMP WITHOUT TIME ZONE NOT NULL,
+);

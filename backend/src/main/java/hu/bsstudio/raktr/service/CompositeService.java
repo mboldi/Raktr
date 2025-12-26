@@ -1,11 +1,11 @@
 package hu.bsstudio.raktr.service;
 
+import hu.bsstudio.raktr.dal.entity.Category;
 import hu.bsstudio.raktr.dal.repository.CategoryRepository;
 import hu.bsstudio.raktr.dal.repository.CompositeItemRepository;
 import hu.bsstudio.raktr.dal.repository.DeviceRepository;
 import hu.bsstudio.raktr.dal.repository.LocationRepository;
 import hu.bsstudio.raktr.exception.ObjectConflictException;
-import hu.bsstudio.raktr.model.Category;
 import hu.bsstudio.raktr.model.CompositeItem;
 import hu.bsstudio.raktr.model.Device;
 import hu.bsstudio.raktr.model.Location;

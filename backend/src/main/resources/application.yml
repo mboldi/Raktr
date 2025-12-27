@@ -19,3 +19,11 @@ spring:
       resourceserver:
         jwt:
           issuer-uri: https://login.bsstudio.hu/application/o/raktr/
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+          - health
+          - info

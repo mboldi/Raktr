@@ -1,7 +1,9 @@
 plugins {
     java
+    jacoco
     id("org.springframework.boot") version "3.5.6"
     id("io.spring.dependency-management") version "1.1.7"
+    id("io.freefair.lombok") version "9.1.0"
 }
 
 group = "hu.bsstudio"
@@ -34,21 +36,35 @@ dependencies {
     implementation("org.mapstruct:mapstruct:1.6.3")
     implementation("org.flywaydb:flyway-core:11.20.0")
 
-    compileOnly("org.projectlombok:lombok:1.18.42")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     runtimeOnly("org.postgresql:postgresql:42.7.8")
     runtimeOnly("org.flywaydb:flyway-database-postgresql:11.20.0")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
-    annotationProcessor("org.projectlombok:lombok:1.18.42")
     annotationProcessor("org.mapstruct:mapstruct-processor:1.6.3")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")
+    testImplementation("org.testcontainers:testcontainers:2.0.3")
+    testImplementation("org.testcontainers:testcontainers-junit-jupiter:2.0.3")
+    testImplementation("org.testcontainers:testcontainers-postgresql:2.0.3")
+    testImplementation("io.rest-assured:rest-assured:5.5.6")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+}
+
+springBoot {
+    buildInfo()
 }
 
 tasks.withType<Test> {
     useJUnitPlatform()
+    finalizedBy(tasks.jacocoTestReport)
+}
+
+tasks.jacocoTestReport {
+    dependsOn(tasks.test)
+    reports {
+        xml.required.set(true)
+    }
 }
 
 tasks.compileJava {

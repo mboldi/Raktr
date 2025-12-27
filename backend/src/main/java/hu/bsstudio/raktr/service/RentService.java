@@ -1,15 +1,23 @@
 package hu.bsstudio.raktr.service;
 
-import hu.bsstudio.raktr.dal.repository.*;
+import hu.bsstudio.raktr.dal.repository.CommentRepository;
+import hu.bsstudio.raktr.dal.repository.DeviceRepository;
+import hu.bsstudio.raktr.dal.repository.GeneralDataRepository;
+import hu.bsstudio.raktr.dal.repository.RentItemRepository;
+import hu.bsstudio.raktr.dal.repository.RentRepository;
 import hu.bsstudio.raktr.exception.NotAvailableQuantityException;
 import hu.bsstudio.raktr.exception.ObjectNotFoundException;
-import hu.bsstudio.raktr.model.*;
+import hu.bsstudio.raktr.model.Comment;
+import hu.bsstudio.raktr.model.Device;
+import hu.bsstudio.raktr.model.GeneralData;
+import hu.bsstudio.raktr.model.Rent;
+import hu.bsstudio.raktr.model.RentItem;
 import hu.bsstudio.raktr.pdfgeneration.RentPdfCreator;
 import hu.bsstudio.raktr.pdfgeneration.RentPdfData;
 import hu.bsstudio.raktr.pdfgeneration.RentPdfRequest;
+import hu.bsstudio.raktr.properties.RentProperties;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -35,19 +43,7 @@ public class RentService {
     private final DeviceRepository deviceRepository;
     private final GeneralDataRepository generalDataRepository;
     private final CommentRepository commentRepository;
-    @Value("${generalData.groupNameKey}")
-    private String GROUP_NAME_KEY;
-    @Value("${generalData.groupLeaderNameKey}")
-    private String GROUP_LEADER_NAME_KEY;
-    @Value("${generalData.firstSignerNameKey}")
-    private String FIRST_SIGNER_NAME_KEY;
-    @Value("${generalData.firstSignerTitleKey}")
-    private String FIRST_SIGNER_TITLE_KEY;
-    @Value("${generalData.secondSignerNameKey}")
-    private String SECOND_SIGNER_NAME_KEY;
-    @Value("${generalData.secondSignerTitleKey}")
-    private String SECOND_SIGNER_TITLE_KEY;
-
+    private final RentProperties rentProperties;
 
     public boolean checkIfAvailable(final RentItem deviceRentItem, final RentItem rentItemToUpdate) {
         Integer maxAvailableQuantity = deviceRepository.getOne(deviceRentItem.getScannable().getId()).getQuantity();
@@ -240,13 +236,13 @@ public class RentService {
         String fileName = "pdf/rent_" + rentToGenerate.getId();
 
         Optional<GeneralData> foundData;
-        String groupName = (foundData = generalDataRepository.findById(GROUP_NAME_KEY)).isPresent()
+        String groupName = (foundData = generalDataRepository.findById(rentProperties.getGroupName())).isPresent()
                 ? foundData.get().getData() : "Budavári Schönherz Stúdió";
-        String groupLeaderName = (foundData = generalDataRepository.findById(GROUP_LEADER_NAME_KEY)).isPresent() ? foundData.get().getData() : "";
-        String firstSignerName = (foundData = generalDataRepository.findById(FIRST_SIGNER_NAME_KEY)).isPresent() ? foundData.get().getData() : "";
-        String firstSignerTitle = (foundData = generalDataRepository.findById(FIRST_SIGNER_TITLE_KEY)).isPresent() ? foundData.get().getData() : "";
-        String secondSignerName = (foundData = generalDataRepository.findById(SECOND_SIGNER_NAME_KEY)).isPresent() ? foundData.get().getData() : "";
-        String secondSignerTitle = (foundData = generalDataRepository.findById(SECOND_SIGNER_TITLE_KEY)).isPresent() ? foundData.get().getData() : "";
+        String groupLeaderName = (foundData = generalDataRepository.findById(rentProperties.getGroupLeader())).isPresent() ? foundData.get().getData() : "";
+        String firstSignerName = (foundData = generalDataRepository.findById(rentProperties.getFirstSignerName())).isPresent() ? foundData.get().getData() : "";
+        String firstSignerTitle = (foundData = generalDataRepository.findById(rentProperties.getFirstSignerTitle())).isPresent() ? foundData.get().getData() : "";
+        String secondSignerName = (foundData = generalDataRepository.findById(rentProperties.getSecondSignerName())).isPresent() ? foundData.get().getData() : "";
+        String secondSignerTitle = (foundData = generalDataRepository.findById(rentProperties.getSecondSignerTitle())).isPresent() ? foundData.get().getData() : "";
 
         RentPdfData rentPdfData = RentPdfData.builder()
                 .withTeamName(groupName)

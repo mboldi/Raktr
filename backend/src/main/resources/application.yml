@@ -27,3 +27,11 @@ management:
         include:
           - health
           - info
+
+rent:
+  group-name: groupName
+  group-leader: groupLeader
+  first-signer-name: firstSignerName
+  first-signer-title: firstSignerTitle
+  second-signer-name: secondSignerName
+  second-signer-title: secondSignerTitle

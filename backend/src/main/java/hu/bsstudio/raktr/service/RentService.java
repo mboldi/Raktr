@@ -2,14 +2,12 @@ package hu.bsstudio.raktr.service;
 
 import hu.bsstudio.raktr.dal.repository.CommentRepository;
 import hu.bsstudio.raktr.dal.repository.DeviceRepository;
-import hu.bsstudio.raktr.dal.repository.GeneralDataRepository;
 import hu.bsstudio.raktr.dal.repository.RentItemRepository;
 import hu.bsstudio.raktr.dal.repository.RentRepository;
 import hu.bsstudio.raktr.exception.NotAvailableQuantityException;
 import hu.bsstudio.raktr.exception.ObjectNotFoundException;
 import hu.bsstudio.raktr.model.Comment;
 import hu.bsstudio.raktr.model.Device;
-import hu.bsstudio.raktr.model.GeneralData;
 import hu.bsstudio.raktr.model.Rent;
 import hu.bsstudio.raktr.model.RentItem;
 import hu.bsstudio.raktr.pdfgeneration.RentPdfCreator;
@@ -18,7 +16,6 @@ import hu.bsstudio.raktr.pdfgeneration.RentPdfRequest;
 import hu.bsstudio.raktr.properties.RentProperties;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,14 +31,12 @@ import java.util.TreeMap;
 
 @Service
 @Slf4j
-@PropertySource("classpath:generalData.properties")
 @RequiredArgsConstructor
 public class RentService {
 
     private final RentRepository rentRepository;
     private final RentItemRepository rentItemRepository;
     private final DeviceRepository deviceRepository;
-    private final GeneralDataRepository generalDataRepository;
     private final CommentRepository commentRepository;
     private final RentProperties rentProperties;
 
@@ -235,22 +230,13 @@ public class RentService {
 
         String fileName = "pdf/rent_" + rentToGenerate.getId();
 
-        Optional<GeneralData> foundData;
-        String groupName = (foundData = generalDataRepository.findById(rentProperties.getGroupName())).isPresent()
-                ? foundData.get().getData() : "Budavári Schönherz Stúdió";
-        String groupLeaderName = (foundData = generalDataRepository.findById(rentProperties.getGroupLeader())).isPresent() ? foundData.get().getData() : "";
-        String firstSignerName = (foundData = generalDataRepository.findById(rentProperties.getFirstSignerName())).isPresent() ? foundData.get().getData() : "";
-        String firstSignerTitle = (foundData = generalDataRepository.findById(rentProperties.getFirstSignerTitle())).isPresent() ? foundData.get().getData() : "";
-        String secondSignerName = (foundData = generalDataRepository.findById(rentProperties.getSecondSignerName())).isPresent() ? foundData.get().getData() : "";
-        String secondSignerTitle = (foundData = generalDataRepository.findById(rentProperties.getSecondSignerTitle())).isPresent() ? foundData.get().getData() : "";
-
         RentPdfData rentPdfData = RentPdfData.builder()
-                .withTeamName(groupName)
-                .withTeamLeaderName(groupLeaderName)
-                .withFirstSignerName(firstSignerName)
-                .withFirstSignerTitle(firstSignerTitle)
-                .withSecondSignerName(secondSignerName)
-                .withSecondSignerTitle(secondSignerTitle)
+                .withTeamName(rentProperties.getGroupName())
+                .withTeamLeaderName(rentProperties.getGroupLeader())
+                .withFirstSignerName(rentProperties.getFirstSignerName())
+                .withFirstSignerTitle(rentProperties.getFirstSignerTitle())
+                .withSecondSignerName(rentProperties.getSecondSignerName())
+                .withSecondSignerTitle(rentProperties.getSecondSignerTitle())
                 .withOutDate(rentToGenerate.getOutDate())
                 .withBackDate(rentToGenerate.getExpBackDate())
                 .withFileName(fileName)

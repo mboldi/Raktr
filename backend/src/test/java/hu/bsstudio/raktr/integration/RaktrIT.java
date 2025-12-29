@@ -1,34 +1,48 @@
 package hu.bsstudio.raktr.integration;
 
 import hu.bsstudio.raktr.RaktrApplication;
+import hu.bsstudio.raktr.support.DatabaseQueryHelper;
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.filter.log.RequestLoggingFilter;
 import io.restassured.filter.log.ResponseLoggingFilter;
 import io.restassured.http.ContentType;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.jdbc.datasource.init.ScriptUtils;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
-import org.springframework.test.context.jdbc.Sql;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.postgresql.PostgreSQLContainer;
 
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.SQLException;
+
 @Slf4j
 @ActiveProfiles("it")
 @Testcontainers
-@Sql(scripts = "/db-cleanup.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 @SpringBootTest(classes = RaktrApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class RaktrIT {
 
     @Container
     static PostgreSQLContainer postgres = new PostgreSQLContainer("postgres:18");
+
     @LocalServerPort
     protected int port;
+
+    @Autowired
+    private DataSource dataSource;
+
+    @Autowired
+    protected DatabaseQueryHelper databaseQueryHelper;
 
     @DynamicPropertySource
     static void registerProperties(DynamicPropertyRegistry registry) {
@@ -46,6 +60,13 @@ public class RaktrIT {
                 .build();
 
         RestAssured.requestSpecification.port(port);
+    }
+
+    @AfterEach
+    void cleanup() throws SQLException {
+        try (Connection connection = dataSource.getConnection()) {
+            ScriptUtils.executeSqlScript(connection, new ClassPathResource("/db-cleanup.sql"));
+        }
     }
 
 }

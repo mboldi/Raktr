@@ -9,7 +9,6 @@ import hu.bsstudio.raktr.exception.ObjectConflictException;
 import hu.bsstudio.raktr.exception.ObjectNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,13 +32,13 @@ public class CategoryService {
 
     @Transactional
     public CategoryDetailsDto createCategory(CategoryCreateDto createDto) {
-        var category = categoryMapper.createDtoToEntity(createDto);
-
-        try {
-            categoryRepository.saveAndFlush(category);
-        } catch (DataIntegrityViolationException e) {
+        if (categoryRepository.existsById(createDto.getName())) {
             throw new ObjectConflictException();
         }
+
+        var category = categoryMapper.createDtoToEntity(createDto);
+
+        category = categoryRepository.saveAndFlush(category);
 
         log.info("Created Category with name [{}]", category.getName());
 

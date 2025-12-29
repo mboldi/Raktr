@@ -30,12 +30,13 @@ public class CategoryController {
     }
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public CategoryDetailsDto createCategory(@RequestBody @Valid CategoryCreateDto createDto) {
         return categoryService.createCategory(createDto);
     }
 
     @DeleteMapping("/{categoryName}")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteCategory(@PathVariable String categoryName) {
         categoryService.deleteCategory(categoryName);
     }

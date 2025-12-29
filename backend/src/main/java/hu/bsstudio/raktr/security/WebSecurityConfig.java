@@ -19,7 +19,7 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 @EnableMethodSecurity(securedEnabled = true)
 @RequiredArgsConstructor
-@Profile("!integrationtest")
+@Profile("!it")
 public class WebSecurityConfig {
 
     private final BssLoginJwtAuthenticationConverter bssLoginJwtAuthenticationConverter;

@@ -48,7 +48,7 @@ public class CategoryService {
 
     @Transactional
     public void deleteCategory(String categoryName) {
-        var category = categoryRepository.findByName(categoryName)
+        var category = categoryRepository.findById(categoryName)
                 .orElseThrow(ObjectNotFoundException::new);
 
         if (deviceRepository.existsByCategory(category)) {

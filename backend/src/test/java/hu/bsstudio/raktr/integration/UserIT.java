@@ -73,7 +73,55 @@ public class UserIT extends RaktrIT {
                 .extract()
                 .asString();
 
-        assertJson(response).equalTo(loadFileContent("/user/get-not-found-response.json"));
+        assertJson(response)
+                .excluding("timestamp")
+                .equalTo(loadFileContent("/user/get-not-found-response.json"));
+    }
+
+    @Test
+    void testUpdateOwnUser() {
+        var response = givenAuthenticatedAdmin()
+                .body(loadFileContent("/user/update-request.json"))
+                .when()
+                .put("/v1/user/admin_user")
+                .then()
+                .statusCode(HttpStatus.OK.value())
+                .extract()
+                .asString();
+
+        assertJson(response).equalTo(loadFileContent("/user/update-response.json"));
+    }
+
+    @Test
+    void testUpdateOtherUserForbidden() {
+        var response = givenAuthenticatedAdmin()
+                .body(loadFileContent("/user/update-request.json"))
+                .when()
+                .put("/v1/user/member_user")
+                .then()
+                .statusCode(HttpStatus.FORBIDDEN.value())
+                .extract()
+                .asString();
+
+        assertJson(response)
+                .excluding("timestamp")
+                .equalTo(loadFileContent("/user/update-forbidden-response.json"));
+    }
+
+    @Test
+    void testUpdaterUserNo() {
+        var response = givenAuthenticatedAdmin()
+                .body(loadFileContent("/user/update-request.json"))
+                .when()
+                .put("/v1/user/not_found_user")
+                .then()
+                .statusCode(HttpStatus.NOT_FOUND.value())
+                .extract()
+                .asString();
+
+        assertJson(response)
+                .excluding("timestamp")
+                .equalTo(loadFileContent("/user/update-not-found-response.json"));
     }
 
 }

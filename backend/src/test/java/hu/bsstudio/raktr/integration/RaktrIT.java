@@ -19,8 +19,6 @@ import org.springframework.jdbc.datasource.init.ScriptUtils;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.postgresql.PostgreSQLContainer;
 
 import javax.sql.DataSource;
@@ -29,12 +27,14 @@ import java.sql.SQLException;
 
 @Slf4j
 @ActiveProfiles("it")
-@Testcontainers
 @SpringBootTest(classes = RaktrApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class RaktrIT {
+public abstract class RaktrIT {
 
-    @Container
-    static PostgreSQLContainer postgres = new PostgreSQLContainer("postgres:18");
+    static final PostgreSQLContainer postgres = new PostgreSQLContainer("postgres:18");
+
+    static {
+        postgres.start();
+    }
 
     @LocalServerPort
     protected int port;
@@ -69,7 +69,6 @@ public class RaktrIT {
         try (Connection connection = dataSource.getConnection()) {
             ScriptUtils.executeSqlScript(connection, new ClassPathResource("/db-cleanup.sql"));
         }
-        SsoProviderMock.reset();
     }
 
 }

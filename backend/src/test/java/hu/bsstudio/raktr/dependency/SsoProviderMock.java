@@ -71,10 +71,6 @@ public class SsoProviderMock {
         return signedJWT.serialize();
     }
 
-    public static void reset() {
-        wireMockServer.resetAll();
-    }
-
     private static void stubOpenidConfiguration() {
         wireMockServer.stubFor(get(urlEqualTo("/application/o/raktr/.well-known/openid-configuration"))
                 .willReturn(okJson(loadFileContent("/dependency/sso-provider/openid-configuration.json"))));

@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.test.context.jdbc.Sql;
 
 import static hu.bsstudio.raktr.support.AuthenticationHelper.givenAuthenticatedAdmin;
+import static hu.bsstudio.raktr.support.AuthenticationHelper.givenAuthenticatedCandidate;
 import static hu.bsstudio.raktr.support.JsonAssert.assertJson;
 import static hu.bsstudio.raktr.support.TestResourceHelper.loadFileContent;
 
@@ -108,6 +109,18 @@ public class OwnerIT extends RaktrIT {
         assertJson(response)
                 .excluding("timestamp")
                 .equalTo(loadFileContent("/owner/update-not-found-error-response.json"));
+    }
+
+    @Test
+    void testUpdateOwnerForbiddenError() {
+        givenAuthenticatedCandidate()
+                .body(loadFileContent("/owner/update-request.json"))
+                .when()
+                .put("/v1/owner/1")
+                .then()
+                .statusCode(HttpStatus.FORBIDDEN.value())
+                .extract()
+                .asString();
     }
 
     @Disabled // TODO: Fix after full refactor

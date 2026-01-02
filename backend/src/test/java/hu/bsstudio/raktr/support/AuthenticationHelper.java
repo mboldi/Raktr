@@ -21,4 +21,13 @@ public class AuthenticationHelper {
         return given().header("Authorization", "Bearer " + token);
     }
 
+    public static RequestSpecification givenAuthenticatedCandidate() {
+        var token = SsoProviderMock.generateJwt(
+                "00000000-0000-0000-0000-000000000003",
+                "candidate_user",
+                List.of("Stúdiós jelölt")
+        );
+        return given().header("Authorization", "Bearer " + token);
+    }
+
 }

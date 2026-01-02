@@ -69,6 +69,15 @@ tasks.jacocoTestReport {
     reports {
         xml.required.set(true)
     }
+
+    classDirectories.setFrom(files(classDirectories.files.map {
+        fileTree(it) {
+            exclude(
+                "**/hu/bsstudio/raktr/**/*MapperImpl.class",
+                "**/hu/bsstudio/raktr/**/*MapperImpl$*.class"
+            )
+        }
+    }))
 }
 
 tasks.compileJava {

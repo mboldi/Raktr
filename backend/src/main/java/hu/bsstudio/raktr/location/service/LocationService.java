@@ -32,11 +32,12 @@ public class LocationService {
 
     @Transactional
     public LocationDetailsDto createLocation(LocationCreateDto createDto) {
+        createDto.setName(createDto.getName().trim());
+
         if (locationRepository.existsById(createDto.getName())) {
             throw new ObjectConflictException();
         }
 
-        createDto.setName(createDto.getName().trim());
         var location = locationMapper.createDtoToEntity(createDto);
 
         location = locationRepository.saveAndFlush(location);

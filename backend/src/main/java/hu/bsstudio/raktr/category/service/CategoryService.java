@@ -32,11 +32,12 @@ public class CategoryService {
 
     @Transactional
     public CategoryDetailsDto createCategory(CategoryCreateDto createDto) {
+        createDto.setName(createDto.getName().trim());
+
         if (categoryRepository.existsById(createDto.getName())) {
             throw new ObjectConflictException();
         }
 
-        createDto.setName(createDto.getName().trim());
         var category = categoryMapper.createDtoToEntity(createDto);
 
         category = categoryRepository.saveAndFlush(category);

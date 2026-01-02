@@ -42,8 +42,8 @@ public class UserSyncService {
 
         @SuppressWarnings("unchecked")
         List<String> groups = (List<String>) jwt.getClaims().getOrDefault("groups", List.of());
-        Set<String> normalizedRoles = groups.stream().filter(Objects::nonNull).collect(Collectors.toSet());
-        user.setRoles(normalizedRoles);
+        Set<String> normalizedGroups = groups.stream().filter(Objects::nonNull).collect(Collectors.toSet());
+        user.setGroups(normalizedGroups);
 
         return userRepository.save(user);
     }

@@ -24,6 +24,6 @@ public class UserDetailsDto {
 
     private String personalId;
 
-    private Set<String> roles;
+    private Set<String> groups;
 
 }

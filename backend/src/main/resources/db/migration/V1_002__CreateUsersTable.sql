@@ -5,5 +5,5 @@ CREATE TABLE users (
       given_name TEXT NOT NULL,
       nickname TEXT,
       personal_id TEXT,
-      roles JSONB
+      groups JSONB
 );

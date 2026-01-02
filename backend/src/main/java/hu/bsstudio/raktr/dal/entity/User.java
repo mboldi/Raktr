@@ -47,14 +47,14 @@ public class User implements UserDetails {
     private String personalId;
 
     @JdbcTypeCode(SqlTypes.JSON)
-    private Set<String> roles;
+    private Set<String> groups;
 
     @Override
     public Collection<GrantedAuthority> getAuthorities() {
-        if (roles == null) {
+        if (groups == null) {
             return Collections.emptySet();
         }
-        return roles.stream()
+        return groups.stream()
                 .map(RoleConstants::fromSso)
                 .flatMap(Optional::stream)
                 .map(SimpleGrantedAuthority::new)
@@ -64,6 +64,11 @@ public class User implements UserDetails {
     @Override
     public String getPassword() {
         return null;
+    }
+
+    public boolean hasAnyAuthority(final Collection<String> authorities) {
+        return getAuthorities().stream()
+                .anyMatch(grantedAuthority -> authorities.contains(grantedAuthority.getAuthority()));
     }
 
 }

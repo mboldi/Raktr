@@ -34,7 +34,7 @@ public class UserService {
         return canIssueRent
                 ? users.stream().map(userMapper::entityToDetailsDto).toList()
                 : users.stream()
-                .filter(user -> user.getRoles().stream().anyMatch(ROLES_ALLOWED_TO_ISSUE_RENT::contains))
+                .filter(user -> user.hasAnyAuthority(ROLES_ALLOWED_TO_ISSUE_RENT))
                 .map(userMapper::entityToDetailsDto)
                 .toList();
     }

@@ -46,14 +46,14 @@ public class SsoProviderMock {
     }
 
     @SneakyThrows
-    public static String generateJwt(String username, List<String> roles) {
+    public static String generateJwt(String username, List<String> groups) {
         var signer = new RSASSASigner(rsaKey);
 
         var claimsSet = new JWTClaimsSet.Builder()
                 .subject(String.valueOf(UUID.randomUUID()))
                 .issuer(getBaseUrl())
                 .claim("preferred_username", username)
-                .claim("groups", roles)
+                .claim("groups", groups)
                 .claim("name", "User Test")
                 .claim("family_name", "Test")
                 .claim("given_name", "User")

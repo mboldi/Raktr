@@ -1,0 +1,6 @@
+{
+  "timestamp": "2026-01-02T01:15:06.591+00:00",
+  "status": 404,
+  "error": "Not Found",
+  "path": "/v1/user/not_found_user"
+}

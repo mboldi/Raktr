@@ -1,0 +1,24 @@
+[
+  {
+    "uuid": "00000000-0000-0000-0000-000000000001",
+    "username": "admin_user",
+    "familyName": "Admin",
+    "givenName": "User",
+    "nickname": "Admin",
+    "personalId": "ID-001",
+    "groups": [
+      "ADMIN"
+    ]
+  },
+  {
+    "uuid": "00000000-0000-0000-0000-000000000004",
+    "username": "candidate_candidate_user",
+    "familyName": "Candidate-candidate",
+    "givenName": "User",
+    "nickname": "Candidate-candidate",
+    "personalId": "ID-004",
+    "groups": [
+      "STÚDIÓS JELÖLT-JELÖLT"
+    ]
+  }
+]

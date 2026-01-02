@@ -29,16 +29,18 @@ public class UserService {
 
     private final UserMapper userMapper;
 
+    public List<UserDetailsDto> getUsers() {
+        var users = userRepository.findAll();
+        return users.stream().map(userMapper::entityToDetailsDto).toList();
+    }
+
     public List<UserDetailsDto> getUsers(boolean canIssueRent) {
         var users = userRepository.findAll();
-        return canIssueRent
-                ? users.stream().map(userMapper::entityToDetailsDto).toList()
-                : users.stream()
-                .filter(user -> user.hasAnyAuthority(ROLES_ALLOWED_TO_ISSUE_RENT))
+        return users.stream()
+                .filter(user -> user.hasAnyAuthority(ROLES_ALLOWED_TO_ISSUE_RENT) == canIssueRent)
                 .map(userMapper::entityToDetailsDto)
                 .toList();
     }
-
 
     public UserDetailsDto getUserByUsername(String username) {
         var user = getUser(username);

@@ -24,7 +24,10 @@ public class UserController {
 
     @GetMapping
     public List<UserDetailsDto> getUsers(@RequestParam(required = false) Boolean canIssueRent) {
-        return userService.getUsers(canIssueRent);
+        if (canIssueRent != null) {
+            return userService.getUsers(canIssueRent);
+        }
+        return userService.getUsers();
     }
 
     @GetMapping("/{username}")

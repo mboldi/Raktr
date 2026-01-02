@@ -1,6 +1,7 @@
 package hu.bsstudio.raktr.dal.repository;
 
 import hu.bsstudio.raktr.dal.entity.Category;
+import hu.bsstudio.raktr.dal.entity.Location;
 import hu.bsstudio.raktr.model.Device;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -14,6 +15,8 @@ public interface DeviceRepository extends JpaRepository<Device, Long> {
     Optional<Device> findByTextIdentifier(String textIdentifier);
 
     boolean existsByCategory(Category category);
+
+    boolean existsByLocation(Location location);
 
     @Query("SELECT DISTINCT d.maker FROM Device d")
     List<String> findAllMakers();

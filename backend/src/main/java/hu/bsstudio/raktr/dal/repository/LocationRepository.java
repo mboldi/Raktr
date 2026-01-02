@@ -1,12 +1,7 @@
 package hu.bsstudio.raktr.dal.repository;
 
-import hu.bsstudio.raktr.model.Location;
+import hu.bsstudio.raktr.dal.entity.Location;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.Optional;
-
-public interface LocationRepository extends JpaRepository<Location, Long> {
-
-    Optional<Location> findByName(String name);
-
+public interface LocationRepository extends JpaRepository<Location, String> {
 }

@@ -1,0 +1,6 @@
+{
+  "timestamp": "IGNORE",
+  "status": 409,
+  "error": "Conflict",
+  "path": "/v1/location"
+}

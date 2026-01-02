@@ -1,0 +1,12 @@
+[
+  {
+    "name": "test-location-1",
+    "createdAt": "2026-01-02T09:00:00Z",
+    "updatedAt": "2026-01-02T09:00:00Z"
+  },
+  {
+    "name": "test-location-2",
+    "createdAt": "2026-01-02T17:00:00Z",
+    "updatedAt": "2026-01-02T21:00:00Z"
+  }
+]

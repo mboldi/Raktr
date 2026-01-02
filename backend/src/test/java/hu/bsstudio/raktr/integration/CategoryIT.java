@@ -5,18 +5,18 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.jdbc.Sql;
 
+import static hu.bsstudio.raktr.support.AuthenticationHelper.givenAuthenticatedAdmin;
 import static hu.bsstudio.raktr.support.JsonAssert.assertJson;
 import static hu.bsstudio.raktr.support.TestResourceHelper.loadFileContent;
-import static io.restassured.RestAssured.delete;
-import static io.restassured.RestAssured.get;
-import static io.restassured.RestAssured.given;
 
 @Sql("/category/test-data.sql")
 public class CategoryIT extends RaktrIT {
 
     @Test
     void testListCategories() {
-        var response = get("/v1/category")
+        var response = givenAuthenticatedAdmin()
+                .when()
+                .get("/v1/category")
                 .then()
                 .statusCode(HttpStatus.OK.value())
                 .extract()
@@ -27,7 +27,7 @@ public class CategoryIT extends RaktrIT {
 
     @Test
     void testCreateCategory() {
-        var response = given()
+        var response = givenAuthenticatedAdmin()
                 .body(loadFileContent("/category/create-request.json"))
                 .when()
                 .post("/v1/category")
@@ -48,7 +48,7 @@ public class CategoryIT extends RaktrIT {
 
     @Test
     void testCreateCategoryAlreadyExistsError() {
-        var response = given()
+        var response = givenAuthenticatedAdmin()
                 .body(loadFileContent("/category/create-already-exists-error-request.json"))
                 .when()
                 .post("/v1/category")
@@ -65,7 +65,9 @@ public class CategoryIT extends RaktrIT {
     @Disabled // TODO: Fix after full refactor
     @Test
     void testDeleteCategory() {
-        var response = delete("/v1/category/test-category-1")
+        var response = givenAuthenticatedAdmin()
+                .when()
+                .delete("/v1/category/test-category-1")
                 .then()
                 .statusCode(HttpStatus.NO_CONTENT.value())
                 .extract()
@@ -75,7 +77,9 @@ public class CategoryIT extends RaktrIT {
     @Disabled // TODO: Fix after full refactor
     @Test
     void testDeleteCategoryNotEmptyError() {
-        var response = delete("/v1/category/test-category-1")
+        var response = givenAuthenticatedAdmin()
+                .when()
+                .delete("/v1/category/test-category-1")
                 .then()
                 .statusCode(HttpStatus.CONFLICT.value())
                 .extract()

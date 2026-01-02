@@ -1,6 +1,7 @@
 package hu.bsstudio.raktr.integration;
 
 import hu.bsstudio.raktr.RaktrApplication;
+import hu.bsstudio.raktr.dependency.SsoProviderMock;
 import hu.bsstudio.raktr.support.DatabaseQueryHelper;
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
@@ -49,6 +50,7 @@ public class RaktrIT {
         registry.add("spring.datasource.url", postgres::getJdbcUrl);
         registry.add("spring.datasource.username", postgres::getUsername);
         registry.add("spring.datasource.password", postgres::getPassword);
+        registry.add("spring.security.oauth2.resourceserver.jwt.issuer-uri", SsoProviderMock::getBaseUrl);
     }
 
     @BeforeEach
@@ -63,10 +65,11 @@ public class RaktrIT {
     }
 
     @AfterEach
-    void cleanup() throws SQLException {
+    void teardown() throws SQLException {
         try (Connection connection = dataSource.getConnection()) {
             ScriptUtils.executeSqlScript(connection, new ClassPathResource("/db-cleanup.sql"));
         }
+        SsoProviderMock.reset();
     }
 
 }

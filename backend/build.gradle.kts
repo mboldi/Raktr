@@ -50,6 +50,8 @@ dependencies {
     testImplementation("org.testcontainers:testcontainers-junit-jupiter:2.0.3")
     testImplementation("org.testcontainers:testcontainers-postgresql:2.0.3")
     testImplementation("io.rest-assured:rest-assured:5.5.6")
+    testImplementation("org.wiremock:wiremock-standalone:3.13.2")
+    testImplementation("com.nimbusds:nimbus-jose-jwt:10.6")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 

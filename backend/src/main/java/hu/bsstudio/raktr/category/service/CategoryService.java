@@ -36,6 +36,7 @@ public class CategoryService {
             throw new ObjectConflictException();
         }
 
+        createDto.setName(createDto.getName().trim());
         var category = categoryMapper.createDtoToEntity(createDto);
 
         category = categoryRepository.saveAndFlush(category);

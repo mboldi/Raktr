@@ -1,11 +1,11 @@
 package hu.bsstudio.raktr.service;
 
-import hu.bsstudio.raktr.dal.repository.ProjectRepository;
+import hu.bsstudio.raktr.dal.entity.User;
 import hu.bsstudio.raktr.dal.repository.UserRepository;
+import hu.bsstudio.raktr.dal.repository.old.ProjectRepository;
 import hu.bsstudio.raktr.exception.ObjectConflictException;
 import hu.bsstudio.raktr.model.Project;
 import hu.bsstudio.raktr.model.Rent;
-import hu.bsstudio.raktr.model.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

@@ -1,10 +1,11 @@
 package hu.bsstudio.raktr.pdfgeneration;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor

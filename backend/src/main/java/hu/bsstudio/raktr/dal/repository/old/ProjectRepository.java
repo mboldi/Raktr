@@ -1,4 +1,4 @@
-package hu.bsstudio.raktr.dal.repository;
+package hu.bsstudio.raktr.dal.repository.old;
 
 import hu.bsstudio.raktr.model.Project;
 import org.springframework.data.jpa.repository.JpaRepository;

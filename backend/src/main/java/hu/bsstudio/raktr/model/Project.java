@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import hu.bsstudio.raktr.dal.entity.User;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -62,7 +63,8 @@ public class Project extends DomainAuditModel {
     private Boolean isDeleted;
 
     @JsonPOJOBuilder(withPrefix = "")
-    public static class ProjectBuilder {}
+    public static class ProjectBuilder {
+    }
 
     public Project setDeletedData() {
         isDeleted = true;

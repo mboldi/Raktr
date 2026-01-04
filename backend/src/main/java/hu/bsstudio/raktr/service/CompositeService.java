@@ -1,14 +1,12 @@
 package hu.bsstudio.raktr.service;
 
-import hu.bsstudio.raktr.dal.entity.Category;
 import hu.bsstudio.raktr.dal.repository.CategoryRepository;
-import hu.bsstudio.raktr.dal.repository.CompositeItemRepository;
-import hu.bsstudio.raktr.dal.repository.DeviceRepository;
 import hu.bsstudio.raktr.dal.repository.LocationRepository;
+import hu.bsstudio.raktr.dal.repository.old.CompositeItemRepository;
+import hu.bsstudio.raktr.dal.repository.old.DeviceRepository;
 import hu.bsstudio.raktr.exception.ObjectConflictException;
 import hu.bsstudio.raktr.model.CompositeItem;
 import hu.bsstudio.raktr.model.Device;
-import hu.bsstudio.raktr.model.Location;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -48,7 +46,7 @@ public class CompositeService {
             }
         }
 
-        checkCategoryAndLocation(compositeItemRequest);
+//        checkCategoryAndLocation(compositeItemRequest);
         compositeItemRequest.setIsDeleted(false);
 
         CompositeItem saved = compositeItemRepository.save(compositeItemRequest);
@@ -57,7 +55,7 @@ public class CompositeService {
     }
 
     public final Optional<CompositeItem> update(final CompositeItem compositeItemRequest) {
-        checkCategoryAndLocation(compositeItemRequest);
+//        checkCategoryAndLocation(compositeItemRequest);
 
         var compositeItemToUpdate = compositeItemRepository.findById(compositeItemRequest.getId());
 
@@ -173,23 +171,23 @@ public class CompositeService {
         return Optional.empty();
     }
 
-    private void checkCategoryAndLocation(final CompositeItem compositeItemRequest) {
-        var category = categoryRepository.findByName(compositeItemRequest.getCategory().getName()).orElse(null);
-
-        if (category == null) {
-            category = categoryRepository.save(Category.builder()
-                    .name(compositeItemRequest.getCategory().getName())
-                    .build());
-        }
-        compositeItemRequest.setCategory(category);
-
-        Location location = locationRepository.findByName(compositeItemRequest.getLocation().getName()).orElse(null);
-
-        if (location == null) {
-            location = locationRepository.save(Location.builder()
-                    .name(compositeItemRequest.getLocation().getName())
-                    .build());
-        }
-        compositeItemRequest.setLocation(location);
-    }
+//    private void checkCategoryAndLocation(final CompositeItem compositeItemRequest) {
+//        var category = categoryRepository.findByName(compositeItemRequest.getCategory().getName()).orElse(null);
+//
+//        if (category == null) {
+//            category = categoryRepository.save(Category.builder()
+//                    .name(compositeItemRequest.getCategory().getName())
+//                    .build());
+//        }
+//        compositeItemRequest.setCategory(category);
+//
+//        Location location = locationRepository.findByName(compositeItemRequest.getLocation().getName()).orElse(null);
+//
+//        if (location == null) {
+//            location = locationRepository.save(Location.builder()
+//                    .name(compositeItemRequest.getLocation().getName())
+//                    .build());
+//        }
+//        compositeItemRequest.setLocation(location);
+//    }
 }

@@ -1,9 +1,9 @@
 package hu.bsstudio.raktr.service;
 
-import hu.bsstudio.raktr.dal.repository.CommentRepository;
-import hu.bsstudio.raktr.dal.repository.DeviceRepository;
-import hu.bsstudio.raktr.dal.repository.RentItemRepository;
-import hu.bsstudio.raktr.dal.repository.RentRepository;
+import hu.bsstudio.raktr.dal.repository.old.CommentRepository;
+import hu.bsstudio.raktr.dal.repository.old.DeviceRepository;
+import hu.bsstudio.raktr.dal.repository.old.RentItemRepository;
+import hu.bsstudio.raktr.dal.repository.old.RentRepository;
 import hu.bsstudio.raktr.exception.NotAvailableQuantityException;
 import hu.bsstudio.raktr.exception.ObjectNotFoundException;
 import hu.bsstudio.raktr.model.Comment;

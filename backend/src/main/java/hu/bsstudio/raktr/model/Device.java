@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import hu.bsstudio.raktr.dal.entity.Category;
+import hu.bsstudio.raktr.dal.entity.Location;
+import hu.bsstudio.raktr.dal.entity.Owner;
 import hu.bsstudio.raktr.dal.value.DeviceStatus;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToMany;

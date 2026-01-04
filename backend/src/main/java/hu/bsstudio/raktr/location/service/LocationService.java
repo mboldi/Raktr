@@ -1,7 +1,7 @@
 package hu.bsstudio.raktr.location.service;
 
-import hu.bsstudio.raktr.dal.repository.DeviceRepository;
 import hu.bsstudio.raktr.dal.repository.LocationRepository;
+import hu.bsstudio.raktr.dal.repository.old.DeviceRepository;
 import hu.bsstudio.raktr.dto.location.LocationCreateDto;
 import hu.bsstudio.raktr.dto.location.LocationDetailsDto;
 import hu.bsstudio.raktr.exception.ObjectConflictException;

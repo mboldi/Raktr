@@ -1,8 +1,8 @@
 package hu.bsstudio.raktr.owner.service;
 
 import hu.bsstudio.raktr.dal.entity.Owner;
-import hu.bsstudio.raktr.dal.repository.DeviceRepository;
 import hu.bsstudio.raktr.dal.repository.OwnerRepository;
+import hu.bsstudio.raktr.dal.repository.old.DeviceRepository;
 import hu.bsstudio.raktr.dto.owner.OwnerCreateDto;
 import hu.bsstudio.raktr.dto.owner.OwnerDetailsDto;
 import hu.bsstudio.raktr.dto.owner.OwnerUpdateDto;

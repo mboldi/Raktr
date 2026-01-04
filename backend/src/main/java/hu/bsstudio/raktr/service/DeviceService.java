@@ -1,13 +1,10 @@
 package hu.bsstudio.raktr.service;
 
-import hu.bsstudio.raktr.dal.entity.Category;
 import hu.bsstudio.raktr.dal.repository.CategoryRepository;
-import hu.bsstudio.raktr.dal.repository.DeviceRepository;
 import hu.bsstudio.raktr.dal.repository.LocationRepository;
+import hu.bsstudio.raktr.dal.repository.old.DeviceRepository;
 import hu.bsstudio.raktr.exception.ObjectConflictException;
 import hu.bsstudio.raktr.model.Device;
-import hu.bsstudio.raktr.model.Location;
-import hu.bsstudio.raktr.model.Owner;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -20,7 +17,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public final class DeviceService {
 
-    private final OwnerService ownerService;
+    //    private final OwnerService ownerService;
     private final DeviceRepository deviceRepository;
     private final CategoryRepository categoryRepository;
     private final LocationRepository locationRepository;
@@ -29,15 +26,15 @@ public final class DeviceService {
         var foundDevice = deviceRequest.getId() == null ? Optional.empty() : deviceRepository.findById(deviceRequest.getId());
 
         if (foundDevice.isEmpty()) {
-            checkCategoryAndLocation(deviceRequest);
+//            checkCategoryAndLocation(deviceRequest);
 
             deviceRequest.setIsDeleted(false);
 
-            if (deviceRequest.getOwner() != null) {
-                Optional<Owner> owner = ownerService.create(deviceRequest.getOwner());
-
-                deviceRequest.setOwner(owner.get());
-            }
+//            if (deviceRequest.getOwner() != null) {
+//                Optional<Owner> owner = ownerService.create(deviceRequest.getOwner());
+//
+//                deviceRequest.setOwner(owner.get());
+//            }
 
             var saved = deviceRepository.save(deviceRequest);
             log.info("Device created: {}", deviceRequest);
@@ -101,7 +98,7 @@ public final class DeviceService {
     }
 
     public Optional<Device> update(final Device deviceRequest) {
-        checkCategoryAndLocation(deviceRequest);
+//        checkCategoryAndLocation(deviceRequest);
 
         var deviceToUpdate = deviceRepository.findById(deviceRequest.getId());
 
@@ -116,10 +113,10 @@ public final class DeviceService {
             }
         }
 
-        if (deviceRequest.getOwner() != null) {
-            Optional<Owner> owner = ownerService.create(deviceRequest.getOwner());
-            deviceToUpdate.get().setOwner(owner.get());
-        }
+//        if (deviceRequest.getOwner() != null) {
+//            Optional<Owner> owner = ownerService.create(deviceRequest.getOwner());
+//            deviceToUpdate.get().setOwner(owner.get());
+//        }
 
         deviceToUpdate.get().setBarcode(deviceRequest.getBarcode());
         deviceToUpdate.get().setIsPublicRentable(deviceRequest.getIsPublicRentable());
@@ -156,25 +153,25 @@ public final class DeviceService {
         return foundDevice;
     }
 
-    private void checkCategoryAndLocation(final Device deviceRequest) {
-        var category = categoryRepository.findByName(deviceRequest.getCategory().getName()).orElse(null);
-
-        if (category == null) {
-            category = categoryRepository.save(Category.builder()
-                    .name(deviceRequest.getCategory().getName())
-                    .build());
-        }
-        deviceRequest.setCategory(category);
-
-        Location location = locationRepository.findByName(deviceRequest.getLocation().getName()).orElse(null);
-
-        if (location == null) {
-            location = locationRepository.save(Location.builder()
-                    .name(deviceRequest.getLocation().getName())
-                    .build());
-        }
-        deviceRequest.setLocation(location);
-    }
+//    private void checkCategoryAndLocation(final Device deviceRequest) {
+//        var category = categoryRepository.findByName(deviceRequest.getCategory().getName()).orElse(null);
+//
+//        if (category == null) {
+//            category = categoryRepository.save(Category.builder()
+//                    .name(deviceRequest.getCategory().getName())
+//                    .build());
+//        }
+//        deviceRequest.setCategory(category);
+//
+//        Location location = locationRepository.findByName(deviceRequest.getLocation().getName()).orElse(null);
+//
+//        if (location == null) {
+//            location = locationRepository.save(Location.builder()
+//                    .name(deviceRequest.getLocation().getName())
+//                    .build());
+//        }
+//        deviceRequest.setLocation(location);
+//    }
 
     public Optional<Device> deleteById(final Long id) {
         Optional<Device> deviceToDelete = deviceRepository.findById(id);

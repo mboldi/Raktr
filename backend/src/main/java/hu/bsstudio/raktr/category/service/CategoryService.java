@@ -2,7 +2,7 @@ package hu.bsstudio.raktr.category.service;
 
 import hu.bsstudio.raktr.category.mapper.CategoryMapper;
 import hu.bsstudio.raktr.dal.repository.CategoryRepository;
-import hu.bsstudio.raktr.dal.repository.DeviceRepository;
+import hu.bsstudio.raktr.dal.repository.old.DeviceRepository;
 import hu.bsstudio.raktr.dto.category.CategoryCreateDto;
 import hu.bsstudio.raktr.dto.category.CategoryDetailsDto;
 import hu.bsstudio.raktr.exception.ObjectConflictException;

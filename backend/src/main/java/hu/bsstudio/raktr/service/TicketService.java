@@ -1,7 +1,7 @@
 package hu.bsstudio.raktr.service;
 
-import hu.bsstudio.raktr.dal.repository.CommentRepository;
-import hu.bsstudio.raktr.dal.repository.TicketRepository;
+import hu.bsstudio.raktr.dal.repository.old.CommentRepository;
+import hu.bsstudio.raktr.dal.repository.old.TicketRepository;
 import hu.bsstudio.raktr.model.Comment;
 import hu.bsstudio.raktr.model.Ticket;
 import lombok.RequiredArgsConstructor;

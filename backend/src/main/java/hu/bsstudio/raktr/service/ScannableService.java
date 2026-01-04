@@ -1,9 +1,9 @@
 package hu.bsstudio.raktr.service;
 
-import hu.bsstudio.raktr.dal.repository.CompositeItemRepository;
-import hu.bsstudio.raktr.dal.repository.DeviceRepository;
-import hu.bsstudio.raktr.dal.repository.RentItemRepository;
-import hu.bsstudio.raktr.dal.repository.RentRepository;
+import hu.bsstudio.raktr.dal.repository.old.CompositeItemRepository;
+import hu.bsstudio.raktr.dal.repository.old.DeviceRepository;
+import hu.bsstudio.raktr.dal.repository.old.RentItemRepository;
+import hu.bsstudio.raktr.dal.repository.old.RentRepository;
 import hu.bsstudio.raktr.dto.RentItemWithRentData;
 import hu.bsstudio.raktr.model.CompositeItem;
 import hu.bsstudio.raktr.model.Device;

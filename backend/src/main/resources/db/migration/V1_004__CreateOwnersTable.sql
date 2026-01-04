@@ -3,5 +3,7 @@ CREATE TABLE owners (
       name TEXT UNIQUE NOT NULL,
       in_sch_inventory BOOLEAN NOT NULL,
       created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL,
-      updated_at TIMESTAMP WITHOUT TIME ZONE NOT NULL
+      created_by UUID NOT NULL,
+      updated_at TIMESTAMP WITHOUT TIME ZONE NOT NULL,
+      updated_by UUID NOT NULL
 );

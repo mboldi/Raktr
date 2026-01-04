@@ -7,7 +7,7 @@
     "nickname": "Admin",
     "personalId": "ID-001",
     "groups": [
-      "ADMIN"
+      "Admin"
     ]
   },
   {
@@ -18,7 +18,7 @@
     "nickname": "Member",
     "personalId": "ID-002",
     "groups": [
-      "STÚDIÓS"
+      "Stúdiós"
     ]
   },
   {
@@ -29,7 +29,7 @@
     "nickname": "Candidate",
     "personalId": "ID-003",
     "groups": [
-      "STÚDIÓS JELÖLT"
+      "Stúdiós jelölt"
     ]
   },
   {
@@ -40,7 +40,7 @@
     "nickname": "Candidate-candidate",
     "personalId": "ID-004",
     "groups": [
-      "STÚDIÓS JELÖLT-JELÖLT"
+      "Stúdiós jelölt-jelölt"
     ]
   }
 ]

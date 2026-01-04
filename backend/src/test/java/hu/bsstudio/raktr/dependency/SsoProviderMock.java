@@ -46,7 +46,13 @@ public class SsoProviderMock {
     }
 
     @SneakyThrows
-    public static String generateJwt(String uuid, String username, List<String> groups) {
+    public static String generateJwt(
+            String uuid,
+            String username,
+            String familyName,
+            String givenName,
+            List<String> groups
+    ) {
         var signer = new RSASSASigner(rsaKey);
 
         var claimsSet = new JWTClaimsSet.Builder()
@@ -54,9 +60,9 @@ public class SsoProviderMock {
                 .issuer(getBaseUrl())
                 .claim("preferred_username", username)
                 .claim("groups", groups)
-                .claim("name", "User Test")
-                .claim("family_name", "Test")
-                .claim("given_name", "User")
+                .claim("name", givenName + " " + familyName)
+                .claim("family_name", familyName)
+                .claim("given_name", givenName)
                 .claim("scope", "offline_access profile openid")
                 .expirationTime(Date.from(Instant.now().plusSeconds(3600)))
                 .issueTime(Date.from(Instant.now()))

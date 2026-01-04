@@ -13,7 +13,9 @@ public interface CategoryMapper {
     CategoryDetailsDto entityToDetailsDto(Category category);
 
     @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "createdBy", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
+    @Mapping(target = "updatedBy", ignore = true)
     Category createDtoToEntity(CategoryCreateDto createDto);
 
 }

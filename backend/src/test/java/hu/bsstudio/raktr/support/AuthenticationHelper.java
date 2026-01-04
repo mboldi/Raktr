@@ -16,6 +16,8 @@ public class AuthenticationHelper {
         var token = SsoProviderMock.generateJwt(
                 "00000000-0000-0000-0000-000000000001",
                 "admin_user",
+                "Admin",
+                "User",
                 List.of("Admin")
         );
         return given().header("Authorization", "Bearer " + token);
@@ -25,6 +27,8 @@ public class AuthenticationHelper {
         var token = SsoProviderMock.generateJwt(
                 "00000000-0000-0000-0000-000000000003",
                 "candidate_user",
+                "Candidate",
+                "User",
                 List.of("Stúdiós jelölt")
         );
         return given().header("Authorization", "Bearer " + token);

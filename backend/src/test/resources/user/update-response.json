@@ -6,6 +6,6 @@
   "nickname": "new-nickname",
   "personalId": "new-personal-id",
   "groups": [
-    "ADMIN"
+    "Admin"
   ]
 }

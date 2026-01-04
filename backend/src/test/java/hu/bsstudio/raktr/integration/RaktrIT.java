@@ -14,6 +14,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.datasource.init.ScriptUtils;
 import org.springframework.test.context.ActiveProfiles;
@@ -24,6 +26,7 @@ import org.testcontainers.postgresql.PostgreSQLContainer;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Optional;
 
 @Slf4j
 @ActiveProfiles("it")
@@ -38,6 +41,9 @@ public abstract class RaktrIT {
 
     @LocalServerPort
     protected int port;
+
+    @Autowired
+    private CacheManager cacheManager;
 
     @Autowired
     private DataSource dataSource;
@@ -69,6 +75,9 @@ public abstract class RaktrIT {
         try (Connection connection = dataSource.getConnection()) {
             ScriptUtils.executeSqlScript(connection, new ClassPathResource("/db-cleanup.sql"));
         }
+        cacheManager.getCacheNames().forEach(
+                cacheName -> Optional.ofNullable(cacheManager.getCache(cacheName)).ifPresent(Cache::clear)
+        );
     }
 
 }

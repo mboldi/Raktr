@@ -13,7 +13,9 @@ public interface LocationMapper {
     LocationDetailsDto entityToDetailsDto(Location location);
 
     @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "createdBy", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
+    @Mapping(target = "updatedBy", ignore = true)
     Location createDtoToEntity(LocationCreateDto createDto);
 
 }

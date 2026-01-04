@@ -40,7 +40,7 @@ public class CategoryIT extends RaktrIT {
                 .excluding("createdAt", "updatedAt")
                 .equalTo(loadFileContent("/category/create-response.json"));
 
-        databaseQueryHelper.queryDatabase("SELECT * FROM category WHERE name = 'test-category-99'")
+        databaseQueryHelper.queryDatabase("SELECT * FROM categories WHERE name = 'test-category-99'")
                 .assertRowAsJson()
                 .excluding("created_at", "updated_at")
                 .equalTo(loadFileContent("/category/create-db.json"));

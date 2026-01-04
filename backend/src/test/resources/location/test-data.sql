@@ -3,6 +3,3 @@ VALUES ('test-location-1', '2026-01-02T09:00:00', '00000000-0000-0000-0000-00000
         '00000000-0000-0000-0000-000000000100'),
        ('test-location-2', '2026-01-02T17:00:00', '00000000-0000-0000-0000-000000000100', '2026-01-02T21:00:00',
         '00000000-0000-0000-0000-000000000100');
-
-INSERT INTO users (uuid, username, family_name, given_name, nickname, personal_id, groups)
-VALUES ('00000000-0000-0000-0000-000000000100', 'member_user_100', 'Member', 'User', 'Member', 'ID-100', '["STÚDIÓS"]');

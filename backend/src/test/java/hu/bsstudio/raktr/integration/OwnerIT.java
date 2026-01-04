@@ -10,6 +10,7 @@ import static hu.bsstudio.raktr.support.AuthenticationHelper.givenAuthenticatedC
 import static hu.bsstudio.raktr.support.JsonAssert.assertJson;
 import static hu.bsstudio.raktr.support.TestResourceHelper.loadFileContent;
 
+@Sql("/test-users.sql")
 @Sql("/owner/test-data.sql")
 public class OwnerIT extends RaktrIT {
 

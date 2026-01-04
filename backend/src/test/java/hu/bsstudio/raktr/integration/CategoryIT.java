@@ -9,6 +9,7 @@ import static hu.bsstudio.raktr.support.AuthenticationHelper.givenAuthenticatedA
 import static hu.bsstudio.raktr.support.JsonAssert.assertJson;
 import static hu.bsstudio.raktr.support.TestResourceHelper.loadFileContent;
 
+@Sql("/test-users.sql")
 @Sql("/category/test-data.sql")
 public class CategoryIT extends RaktrIT {
 

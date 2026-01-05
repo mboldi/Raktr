@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import hu.bsstudio.raktr.dal.entity.Comment;
 import hu.bsstudio.raktr.dal.entity.User;
 import hu.bsstudio.raktr.dal.value.RentType;
 import jakarta.persistence.Entity;

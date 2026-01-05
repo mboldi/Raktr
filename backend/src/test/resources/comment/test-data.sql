@@ -1,0 +1,5 @@
+INSERT INTO comments (id, body, created_at, created_by, updated_at, updated_by)
+OVERRIDING SYSTEM VALUE
+VALUES (1, 'Test comment 1', '2026-01-01 10:00:00', '00000000-0000-0000-0000-000000000100', '2026-01-01 10:00:00', '00000000-0000-0000-0000-000000000100');
+
+ALTER SEQUENCE comments_id_seq RESTART WITH 100;

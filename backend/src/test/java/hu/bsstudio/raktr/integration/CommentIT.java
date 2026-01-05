@@ -7,7 +7,6 @@ import org.springframework.test.context.jdbc.Sql;
 import static hu.bsstudio.raktr.support.AuthenticationHelper.givenAuthenticatedAdmin;
 import static hu.bsstudio.raktr.support.AuthenticationHelper.givenAuthenticatedCandidate;
 
-@Sql("/test-users.sql")
 @Sql("/comment/test-data.sql")
 public class CommentIT extends RaktrIT {
 
@@ -19,9 +18,9 @@ public class CommentIT extends RaktrIT {
                 .then()
                 .statusCode(HttpStatus.NO_CONTENT.value());
 
-        databaseQueryHelper.queryDatabase("SELECT * FROM comments WHERE id = 1")
-                .assertRowsAsJson()
-                .equalTo("[]");
+        databaseQueryHelper.queryDatabase("SELECT count(*) FROM comments WHERE id = 1")
+                .assertRowCount()
+                .isEmpty();
     }
 
     @Test
@@ -32,9 +31,9 @@ public class CommentIT extends RaktrIT {
                 .then()
                 .statusCode(HttpStatus.NO_CONTENT.value());
 
-        databaseQueryHelper.queryDatabase("SELECT * FROM comments WHERE id = 2")
-                .assertRowsAsJson()
-                .equalTo("[]");
+        databaseQueryHelper.queryDatabase("SELECT count(*) FROM comments WHERE id = 2")
+                .assertRowCount()
+                .isEmpty();
     }
 
     @Test
@@ -46,8 +45,8 @@ public class CommentIT extends RaktrIT {
                 .statusCode(HttpStatus.FORBIDDEN.value());
 
         databaseQueryHelper.queryDatabase("SELECT count(*) FROM comments WHERE id = 1")
-                .assertRowAsJson()
-                .equalTo("{\"count\":1}");
+                .assertRowCount()
+                .isEqualTo(1);
     }
 
 }

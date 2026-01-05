@@ -40,6 +40,12 @@ public class DatabaseQueryHelper {
             String json = objectMapper.writeValueAsString(row);
             return new JsonAssert(json);
         }
+
+        public RowCountAssert assertRowCount() {
+            var result = jdbcTemplate.queryForObject(sql, Integer.class);
+            return new RowCountAssert(result != null ? result : 0);
+        }
+
     }
 
 }

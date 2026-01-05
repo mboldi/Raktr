@@ -1,6 +1,5 @@
 package hu.bsstudio.raktr.controller;
 
-import hu.bsstudio.raktr.model.Comment;
 import hu.bsstudio.raktr.model.Ticket;
 import hu.bsstudio.raktr.service.TicketService;
 import jakarta.validation.Valid;
@@ -54,8 +53,8 @@ public class TicketController {
         Optional<Ticket> ticket = ticketService.addTicket(newTicket);
 
         return ticket
-            .map(ResponseEntity::ok)
-            .orElseGet(() -> ResponseEntity.status(CONFLICT).build());
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.status(CONFLICT).build());
     }
 
     @PutMapping
@@ -65,20 +64,20 @@ public class TicketController {
         Optional<Ticket> ticket = ticketService.updateTicket(ticketToUpdate);
 
         return ticket
-            .map(ResponseEntity::ok)
-            .orElseGet(() -> ResponseEntity.status(NOT_FOUND).build());
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.status(NOT_FOUND).build());
     }
 
-    @PutMapping("/addcomment/{ticketId}")
-    public ResponseEntity<Ticket> addCommentToTicket(@PathVariable final Long ticketId, @Valid @RequestBody Comment comment) {
-        log.info("Incoming request to add comment: {} to ticket with id: {}", comment, ticketId);
-
-        Optional<Ticket> ticket = ticketService.addCommentToTicket(ticketId, comment);
-
-        return ticket
-            .map(ResponseEntity::ok)
-            .orElseGet(() -> ResponseEntity.status(NOT_FOUND).build());
-    }
+//    @PutMapping("/addcomment/{ticketId}")
+//    public ResponseEntity<Ticket> addCommentToTicket(@PathVariable final Long ticketId, @Valid @RequestBody Comment comment) {
+//        log.info("Incoming request to add comment: {} to ticket with id: {}", comment, ticketId);
+//
+//        Optional<Ticket> ticket = ticketService.addCommentToTicket(ticketId, comment);
+//
+//        return ticket
+//            .map(ResponseEntity::ok)
+//            .orElseGet(() -> ResponseEntity.status(NOT_FOUND).build());
+//    }
 
     @GetMapping("/ofScannable/{scannableId}")
     public List<Ticket> getTicketsOfScannable(@PathVariable final Long scannableId) {

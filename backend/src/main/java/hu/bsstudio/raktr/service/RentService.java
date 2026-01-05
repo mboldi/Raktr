@@ -1,12 +1,11 @@
 package hu.bsstudio.raktr.service;
 
-import hu.bsstudio.raktr.dal.repository.old.CommentRepository;
+import hu.bsstudio.raktr.dal.repository.CommentRepository;
 import hu.bsstudio.raktr.dal.repository.old.DeviceRepository;
 import hu.bsstudio.raktr.dal.repository.old.RentItemRepository;
 import hu.bsstudio.raktr.dal.repository.old.RentRepository;
 import hu.bsstudio.raktr.exception.NotAvailableQuantityException;
 import hu.bsstudio.raktr.exception.ObjectNotFoundException;
-import hu.bsstudio.raktr.model.Comment;
 import hu.bsstudio.raktr.model.Device;
 import hu.bsstudio.raktr.model.Rent;
 import hu.bsstudio.raktr.model.RentItem;
@@ -179,46 +178,46 @@ public class RentService {
         return foundRent.get();
     }
 
-    public Optional<Rent> addCommentToRent(final Long rentId, final Comment commentToAdd) {
-        Optional<Rent> rentToAddTo = rentRepository.findById(rentId);
-
-        if (rentToAddTo.isEmpty()) {
-            log.info("Rent not found with id: {}", rentId);
-            return Optional.empty();
-        }
-
-        Comment savedComment = commentRepository.save(commentToAdd);
-
-        rentToAddTo.get().getComments().add(savedComment);
-
-        Rent updatedRent = rentRepository.save(rentToAddTo.get());
-        log.info("Comment added to rent: {}", updatedRent);
-
-        return Optional.of(updatedRent);
-    }
-
-    public Optional<Rent> removeCommentFromRent(final Long rentId, final Comment commentToRemove) {
-        Optional<Rent> rentToUpdate = rentRepository.findById(rentId);
-        Optional<Comment> commentFound = commentRepository.findById(commentToRemove.getId());
-
-        if (rentToUpdate.isEmpty()) {
-            log.info("Rent not found with id: {}", rentId);
-            return Optional.empty();
-        }
-
-        if (commentFound.isEmpty()) {
-            log.info("Comment not found with id: {}", commentToRemove.getId());
-            return Optional.empty();
-        }
-
-        rentToUpdate.get().getComments().remove(commentFound.get());
-        commentRepository.delete(commentFound.get());
-
-        Rent savedRent = rentRepository.save(rentToUpdate.get());
-
-        log.info("Comment successfully removed from rent: {}", savedRent);
-        return Optional.of(savedRent);
-    }
+//    public Optional<Rent> addCommentToRent(final Long rentId, final Comment commentToAdd) {
+//        Optional<Rent> rentToAddTo = rentRepository.findById(rentId);
+//
+//        if (rentToAddTo.isEmpty()) {
+//            log.info("Rent not found with id: {}", rentId);
+//            return Optional.empty();
+//        }
+//
+//        Comment savedComment = commentRepository.save(commentToAdd);
+//
+//        rentToAddTo.get().getComments().add(savedComment);
+//
+//        Rent updatedRent = rentRepository.save(rentToAddTo.get());
+//        log.info("Comment added to rent: {}", updatedRent);
+//
+//        return Optional.of(updatedRent);
+//    }
+//
+//    public Optional<Rent> removeCommentFromRent(final Long rentId, final Comment commentToRemove) {
+//        Optional<Rent> rentToUpdate = rentRepository.findById(rentId);
+//        Optional<Comment> commentFound = commentRepository.findById(commentToRemove.getId());
+//
+//        if (rentToUpdate.isEmpty()) {
+//            log.info("Rent not found with id: {}", rentId);
+//            return Optional.empty();
+//        }
+//
+//        if (commentFound.isEmpty()) {
+//            log.info("Comment not found with id: {}", commentToRemove.getId());
+//            return Optional.empty();
+//        }
+//
+//        rentToUpdate.get().getComments().remove(commentFound.get());
+//        commentRepository.delete(commentFound.get());
+//
+//        Rent savedRent = rentRepository.save(rentToUpdate.get());
+//
+//        log.info("Comment successfully removed from rent: {}", savedRent);
+//        return Optional.of(savedRent);
+//    }
 
     public final ResponseEntity<byte[]> getPdf(final Long rentId, final RentPdfRequest rentPdfRequest) throws IOException {
         Rent rentToGenerate = rentRepository.findById(rentId).orElse(null);

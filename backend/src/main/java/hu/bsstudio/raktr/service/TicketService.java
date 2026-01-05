@@ -1,8 +1,7 @@
 package hu.bsstudio.raktr.service;
 
-import hu.bsstudio.raktr.dal.repository.old.CommentRepository;
+import hu.bsstudio.raktr.dal.repository.CommentRepository;
 import hu.bsstudio.raktr.dal.repository.old.TicketRepository;
-import hu.bsstudio.raktr.model.Comment;
 import hu.bsstudio.raktr.model.Ticket;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -79,22 +78,22 @@ public class TicketService {
         return ticketsOfScannable;
     }
 
-    public Optional<Ticket> addCommentToTicket(final Long ticketId, final Comment comment) {
-        var ticketToUpdate = ticketRepository.findById(ticketId);
-
-        if (ticketToUpdate.isEmpty()) {
-            log.warn("Ticket not found to add comment to with id: {}", ticketId);
-            return Optional.empty();
-        }
-
-        var savedComment = commentRepository.save(comment);
-
-        ticketToUpdate.get().addComment(savedComment);
-
-        ticketRepository.save(ticketToUpdate.get());
-
-        log.info("Saved ticket with comment: {}", ticketToUpdate.get());
-
-        return ticketToUpdate;
-    }
+//    public Optional<Ticket> addCommentToTicket(final Long ticketId, final Comment comment) {
+//        var ticketToUpdate = ticketRepository.findById(ticketId);
+//
+//        if (ticketToUpdate.isEmpty()) {
+//            log.warn("Ticket not found to add comment to with id: {}", ticketId);
+//            return Optional.empty();
+//        }
+//
+//        var savedComment = commentRepository.save(comment);
+//
+//        ticketToUpdate.get().addComment(savedComment);
+//
+//        ticketRepository.save(ticketToUpdate.get());
+//
+//        log.info("Saved ticket with comment: {}", ticketToUpdate.get());
+//
+//        return ticketToUpdate;
+//    }
 }

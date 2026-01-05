@@ -1,6 +1,5 @@
 package hu.bsstudio.raktr.controller;
 
-import hu.bsstudio.raktr.model.Comment;
 import hu.bsstudio.raktr.model.Rent;
 import hu.bsstudio.raktr.model.RentItem;
 import hu.bsstudio.raktr.pdfgeneration.RentPdfRequest;
@@ -21,7 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @Slf4j
@@ -75,26 +73,26 @@ public class RentController {
         return rentService.manageFinalization(rentRequest);
     }
 
-    @PostMapping("/{rentId}/comment")
-    public ResponseEntity<Rent> addCommentToRent(@PathVariable final Long rentId, @RequestBody @Valid final Comment commentToAdd) {
-        log.info("Incoming request to add comment {} to rent with id: {}", commentToAdd, rentId);
-        Optional<Rent> updatedRent = rentService.addCommentToRent(rentId, commentToAdd);
-
-        return updatedRent
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
-    }
-
-    @DeleteMapping("/{rentId}/comment")
-    @Secured("ROLE_ADMIN")
-    public ResponseEntity<Rent> removeCommentFromRent(@PathVariable final Long rentId, @RequestBody @Valid final Comment commentToRemove) {
-        log.info("Incoming request to remove comment {} from rent with id: {}", commentToRemove, rentId);
-        Optional<Rent> updatedRent = rentService.removeCommentFromRent(rentId, commentToRemove);
-
-        return updatedRent
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
-    }
+//    @PostMapping("/{rentId}/comment")
+//    public ResponseEntity<Rent> addCommentToRent(@PathVariable final Long rentId, @RequestBody @Valid final Comment commentToAdd) {
+//        log.info("Incoming request to add comment {} to rent with id: {}", commentToAdd, rentId);
+//        Optional<Rent> updatedRent = rentService.addCommentToRent(rentId, commentToAdd);
+//
+//        return updatedRent
+//                .map(ResponseEntity::ok)
+//                .orElseGet(() -> ResponseEntity.notFound().build());
+//    }
+//
+//    @DeleteMapping("/{rentId}/comment")
+//    @Secured("ROLE_ADMIN")
+//    public ResponseEntity<Rent> removeCommentFromRent(@PathVariable final Long rentId, @RequestBody @Valid final Comment commentToRemove) {
+//        log.info("Incoming request to remove comment {} from rent with id: {}", commentToRemove, rentId);
+//        Optional<Rent> updatedRent = rentService.removeCommentFromRent(rentId, commentToRemove);
+//
+//        return updatedRent
+//                .map(ResponseEntity::ok)
+//                .orElseGet(() -> ResponseEntity.notFound().build());
+//    }
 
     @DeleteMapping
     @Secured("ROLE_ADMIN")

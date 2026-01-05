@@ -4,13 +4,12 @@ import hu.bsstudio.raktr.dal.entity.User;
 import hu.bsstudio.raktr.dal.repository.UserRepository;
 import hu.bsstudio.raktr.dto.user.UserDetailsDto;
 import hu.bsstudio.raktr.dto.user.UserUpdateDto;
-import hu.bsstudio.raktr.exception.AccessDeniedException;
 import hu.bsstudio.raktr.exception.ObjectNotFoundException;
 import hu.bsstudio.raktr.security.RoleConstants;
+import hu.bsstudio.raktr.security.SecurityService;
 import hu.bsstudio.raktr.user.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,6 +29,8 @@ public class UserService {
     private final UserRepository userRepository;
 
     private final UserMapper userMapper;
+
+    private final SecurityService securityService;
 
     public List<UserDetailsDto> getUsers() {
         var users = userRepository.findAll();
@@ -53,10 +54,7 @@ public class UserService {
     public UserDetailsDto updateUser(String username, UserUpdateDto updateDto) {
         var user = getUser(username);
 
-        var currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
-        if (!currentUsername.equals(user.getUuid().toString())) {
-            throw new AccessDeniedException("You can only update your own profile!");
-        }
+        securityService.checkIsOwnerOrAdmin(user.getUuid());
 
         userMapper.updateDtoToEntity(user, updateDto);
         userRepository.saveAndFlush(user);

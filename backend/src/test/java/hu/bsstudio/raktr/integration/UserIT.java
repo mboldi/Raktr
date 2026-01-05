@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.test.context.jdbc.Sql;
 
 import static hu.bsstudio.raktr.support.AuthenticationHelper.givenAuthenticatedAdmin;
+import static hu.bsstudio.raktr.support.AuthenticationHelper.givenAuthenticatedCandidate;
 import static hu.bsstudio.raktr.support.JsonAssert.assertJson;
 import static hu.bsstudio.raktr.support.TestResourceHelper.loadFileContent;
 
@@ -93,8 +94,22 @@ public class UserIT extends RaktrIT {
     }
 
     @Test
-    void testUpdateOtherUserForbidden() {
+    void testUpdateOtherUserAsAdmin() {
         var response = givenAuthenticatedAdmin()
+                .body(loadFileContent("/user/update-request.json"))
+                .when()
+                .put("/v1/user/member_user")
+                .then()
+                .statusCode(HttpStatus.OK.value())
+                .extract()
+                .asString();
+
+        assertJson(response).equalTo(loadFileContent("/user/update-other-user-as-admin-response.json"));
+    }
+
+    @Test
+    void testUpdateOtherUserForbidden() {
+        var response = givenAuthenticatedCandidate()
                 .body(loadFileContent("/user/update-request.json"))
                 .when()
                 .put("/v1/user/member_user")

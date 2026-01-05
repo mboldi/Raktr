@@ -25,7 +25,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
 import java.util.Date;
 import java.util.List;
@@ -77,11 +76,6 @@ public class Rent extends DomainAuditModel {
 
     @ManyToMany
     private List<Comment> comments;
-
-    @ToString.Exclude
-    @JsonIgnore
-    @ManyToOne(fetch = LAZY, targetEntity = Project.class)
-    private Project project;
 
     @JsonIgnore
     private Boolean isDeleted;

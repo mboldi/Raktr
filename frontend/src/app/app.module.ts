@@ -37,7 +37,6 @@ import {MatDividerModule} from '@angular/material/divider';
 import {MatExpansionModule} from '@angular/material/expansion';
 import {MatPaginatorModule} from '@angular/material/paginator';
 import {TicketsComponent} from './tickets/tickets.component';
-import {EditProjectComponent} from './edit-project/edit-project.component';
 import {EditTicketComponent} from './edit-ticket/edit-ticket.component';
 import {MatFabMenuModule} from '@angular-material-extensions/fab-menu';
 
@@ -97,7 +96,6 @@ import {MatListModule} from '@angular/material/list';
         ConfirmDialogComponent,
         PdfGenerationModalComponent,
         TicketsComponent,
-        EditProjectComponent,
         EditTicketComponent,
     ],
     providers: [

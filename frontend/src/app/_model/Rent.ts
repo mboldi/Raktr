@@ -2,7 +2,6 @@ import {RentItem} from './RentItem';
 import {RentType} from './RentType';
 import {Comment} from './Comment';
 import {User} from './User';
-import {Project} from './Project';
 
 export class Rent {
     id: number;
@@ -16,7 +15,6 @@ export class Rent {
     isClosed: boolean;
     rentItems: RentItem[];
     comments: Comment[];
-    project: Project;
 
     static toJsonWithoutRoot(rent: Rent): string {
         const rentJson = JSON.parse(JSON.stringify(rent));

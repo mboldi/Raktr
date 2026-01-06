@@ -1,7 +1,7 @@
 package hu.bsstudio.raktr.location.service;
 
 import hu.bsstudio.raktr.dal.repository.LocationRepository;
-import hu.bsstudio.raktr.dal.repository.old.DeviceRepository;
+import hu.bsstudio.raktr.dal.repository.ScannableRepository;
 import hu.bsstudio.raktr.dto.location.LocationCreateDto;
 import hu.bsstudio.raktr.dto.location.LocationDetailsDto;
 import hu.bsstudio.raktr.exception.ObjectConflictException;
@@ -21,7 +21,7 @@ public class LocationService {
 
     private final LocationRepository locationRepository;
 
-    private final DeviceRepository deviceRepository;
+    private final ScannableRepository scannableRepository;
 
     private final LocationMapper locationMapper;
 
@@ -52,7 +52,7 @@ public class LocationService {
         var location = locationRepository.findById(locationName)
                 .orElseThrow(ObjectNotFoundException::new);
 
-        if (deviceRepository.existsByLocation(location)) {
+        if (scannableRepository.existsByLocation(location)) {
             throw new ObjectConflictException();
         }
 

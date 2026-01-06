@@ -2,7 +2,7 @@ package hu.bsstudio.raktr.owner.service;
 
 import hu.bsstudio.raktr.dal.entity.Owner;
 import hu.bsstudio.raktr.dal.repository.OwnerRepository;
-import hu.bsstudio.raktr.dal.repository.old.DeviceRepository;
+import hu.bsstudio.raktr.dal.repository.ScannableRepository;
 import hu.bsstudio.raktr.dto.owner.OwnerCreateDto;
 import hu.bsstudio.raktr.dto.owner.OwnerDetailsDto;
 import hu.bsstudio.raktr.dto.owner.OwnerUpdateDto;
@@ -23,7 +23,7 @@ public class OwnerService {
 
     private final OwnerRepository ownerRepository;
 
-    private final DeviceRepository deviceRepository;
+    private final ScannableRepository scannableRepository;
 
     private final OwnerMapper ownerMapper;
 
@@ -69,7 +69,7 @@ public class OwnerService {
     public void deleteOwner(Integer ownerId) {
         var owner = getOwner(ownerId);
 
-        if (deviceRepository.existsByOwner(owner)) {
+        if (scannableRepository.existsByOwner(owner)) {
             throw new ObjectConflictException();
         }
 

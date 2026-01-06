@@ -2,7 +2,7 @@ package hu.bsstudio.raktr.category.service;
 
 import hu.bsstudio.raktr.category.mapper.CategoryMapper;
 import hu.bsstudio.raktr.dal.repository.CategoryRepository;
-import hu.bsstudio.raktr.dal.repository.old.DeviceRepository;
+import hu.bsstudio.raktr.dal.repository.ScannableRepository;
 import hu.bsstudio.raktr.dto.category.CategoryCreateDto;
 import hu.bsstudio.raktr.dto.category.CategoryDetailsDto;
 import hu.bsstudio.raktr.exception.ObjectConflictException;
@@ -21,7 +21,7 @@ public class CategoryService {
 
     private final CategoryRepository categoryRepository;
 
-    private final DeviceRepository deviceRepository;
+    private final ScannableRepository scannableRepository;
 
     private final CategoryMapper categoryMapper;
 
@@ -52,7 +52,7 @@ public class CategoryService {
         var category = categoryRepository.findById(categoryName)
                 .orElseThrow(ObjectNotFoundException::new);
 
-        if (deviceRepository.existsByCategory(category)) {
+        if (scannableRepository.existsByCategory(category)) {
             throw new ObjectConflictException();
         }
 

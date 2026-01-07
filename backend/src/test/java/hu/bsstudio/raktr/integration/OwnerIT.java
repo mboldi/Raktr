@@ -1,6 +1,5 @@
 package hu.bsstudio.raktr.integration;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.jdbc.Sql;
@@ -119,29 +118,39 @@ public class OwnerIT extends RaktrIT {
                 .when()
                 .put("/v1/owner/1")
                 .then()
-                .statusCode(HttpStatus.FORBIDDEN.value())
-                .extract()
-                .asString();
+                .statusCode(HttpStatus.FORBIDDEN.value());
     }
 
-    @Disabled // TODO: Fix after full refactor
     @Test
     void testDeleteOwner() {
         givenAuthenticatedAdmin()
                 .when()
-                .delete("/v1/owner/1")
+                .delete("/v1/owner/2")
                 .then()
                 .statusCode(HttpStatus.NO_CONTENT.value());
+
+        databaseQueryHelper.queryDatabase("SELECT count(*) FROM categories WHERE name = 'test-category-2'")
+                .assertRowCount()
+                .isEmpty();
     }
 
-    @Disabled // TODO: Fix after full refactor
     @Test
     void testDeleteOwnerNotEmpty() {
-        givenAuthenticatedAdmin()
+        var response = givenAuthenticatedAdmin()
                 .when()
                 .delete("/v1/owner/1")
                 .then()
-                .statusCode(HttpStatus.NO_CONTENT.value());
+                .statusCode(HttpStatus.CONFLICT.value())
+                .extract()
+                .asString();
+
+        assertJson(response)
+                .excluding("timestamp")
+                .equalTo(loadFileContent("/owner/delete-not-empty-error-response.json"));
+
+        databaseQueryHelper.queryDatabase("SELECT count(*) FROM owners WHERE id = 1")
+                .assertRowCount()
+                .isEqualTo(1);
     }
 
 }

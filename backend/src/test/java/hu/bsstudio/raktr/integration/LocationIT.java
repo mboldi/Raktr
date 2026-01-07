@@ -1,6 +1,5 @@
 package hu.bsstudio.raktr.integration;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.jdbc.Sql;
@@ -63,19 +62,19 @@ public class LocationIT extends RaktrIT {
                 .equalTo(loadFileContent("/location/create-already-exists-error-response.json"));
     }
 
-    @Disabled // TODO: Fix after full refactor
     @Test
     void testDeleteLocation() {
-        var response = givenAuthenticatedAdmin()
+        givenAuthenticatedAdmin()
                 .when()
-                .delete("/v1/location/test-location-1")
+                .delete("/v1/location/test-location-2")
                 .then()
-                .statusCode(HttpStatus.NO_CONTENT.value())
-                .extract()
-                .asString();
+                .statusCode(HttpStatus.NO_CONTENT.value());
+
+        databaseQueryHelper.queryDatabase("SELECT count(*) FROM categories WHERE name = 'test-category-2'")
+                .assertRowCount()
+                .isEmpty();
     }
 
-    @Disabled // TODO: Fix after full refactor
     @Test
     void testDeleteLocationNotEmptyError() {
         var response = givenAuthenticatedAdmin()
@@ -85,6 +84,14 @@ public class LocationIT extends RaktrIT {
                 .statusCode(HttpStatus.CONFLICT.value())
                 .extract()
                 .asString();
+
+        assertJson(response)
+                .excluding("timestamp")
+                .equalTo(loadFileContent("/location/delete-not-empty-error-response.json"));
+
+        databaseQueryHelper.queryDatabase("SELECT count(*) FROM locations WHERE name = 'test-location-1'")
+                .assertRowCount()
+                .isEqualTo(1);
     }
 
 }

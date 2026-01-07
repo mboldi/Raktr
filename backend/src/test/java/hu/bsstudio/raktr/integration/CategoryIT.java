@@ -1,6 +1,5 @@
 package hu.bsstudio.raktr.integration;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.jdbc.Sql;
@@ -63,19 +62,19 @@ public class CategoryIT extends RaktrIT {
                 .equalTo(loadFileContent("/category/create-already-exists-error-response.json"));
     }
 
-    @Disabled // TODO: Fix after full refactor
     @Test
     void testDeleteCategory() {
-        var response = givenAuthenticatedAdmin()
+        givenAuthenticatedAdmin()
                 .when()
-                .delete("/v1/category/test-category-1")
+                .delete("/v1/category/test-category-2")
                 .then()
-                .statusCode(HttpStatus.NO_CONTENT.value())
-                .extract()
-                .asString();
+                .statusCode(HttpStatus.NO_CONTENT.value());
+
+        databaseQueryHelper.queryDatabase("SELECT count(*) FROM categories WHERE name = 'test-category-2'")
+                .assertRowCount()
+                .isEmpty();
     }
 
-    @Disabled // TODO: Fix after full refactor
     @Test
     void testDeleteCategoryNotEmptyError() {
         var response = givenAuthenticatedAdmin()
@@ -85,6 +84,14 @@ public class CategoryIT extends RaktrIT {
                 .statusCode(HttpStatus.CONFLICT.value())
                 .extract()
                 .asString();
+
+        assertJson(response)
+                .excluding("timestamp")
+                .equalTo(loadFileContent("/category/delete-not-empty-error-response.json"));
+
+        databaseQueryHelper.queryDatabase("SELECT count(*) FROM categories WHERE name = 'test-category-1'")
+                .assertRowCount()
+                .isEqualTo(1);
     }
 
 }

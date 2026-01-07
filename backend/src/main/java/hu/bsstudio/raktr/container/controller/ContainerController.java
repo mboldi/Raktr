@@ -5,9 +5,12 @@ import hu.bsstudio.raktr.dto.container.ContainerAddDevicesDto;
 import hu.bsstudio.raktr.dto.container.ContainerCreateDto;
 import hu.bsstudio.raktr.dto.container.ContainerDetailsDto;
 import hu.bsstudio.raktr.dto.container.ContainerUpdateDto;
+import hu.bsstudio.raktr.scannable.service.ScannableService;
+import hu.bsstudio.raktr.security.RoleConstants;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,6 +30,8 @@ import java.util.List;
 public class ContainerController {
 
     private final ContainerService containerService;
+
+    private final ScannableService scannableService;
 
     @GetMapping
     public List<ContainerDetailsDto> listContainers(
@@ -52,6 +57,18 @@ public class ContainerController {
             @RequestBody @Valid ContainerUpdateDto updateDto
     ) {
         return containerService.updateContainer(containerId, updateDto);
+    }
+
+    @Secured({RoleConstants.ADMIN, RoleConstants.MEMBER})
+    @DeleteMapping("/{containerId}")
+    public void deleteContainer(@PathVariable Long containerId) {
+        scannableService.deleteScannable(containerId);
+    }
+
+    @Secured(RoleConstants.ADMIN)
+    @PostMapping("/{containerId}/restore")
+    public void restoreContainer(@PathVariable Long containerId) {
+        scannableService.restoreScannable(containerId);
     }
 
     @PostMapping("/{containerId}/devices")

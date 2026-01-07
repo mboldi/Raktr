@@ -1,9 +1,11 @@
 package hu.bsstudio.raktr.scannable.service;
 
+import hu.bsstudio.raktr.dal.entity.Scannable;
 import hu.bsstudio.raktr.dal.repository.ScannableRepository;
 import hu.bsstudio.raktr.dto.scannable.ScannableDetailsDto;
 import hu.bsstudio.raktr.exception.ObjectNotFoundException;
 import hu.bsstudio.raktr.scannable.mapper.ScannableMapper;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -16,6 +18,22 @@ public class ScannableService {
     private final ScannableRepository scannableRepository;
 
     private final ScannableMapper scannableMapper;
+
+    @Transactional
+    public void deleteScannable(Long scannableId) {
+        var scannable = getScannable(scannableId);
+        scannable.setDeleted(true);
+        scannableRepository.saveAndFlush(scannable);
+        log.info("Deleted Scannable with ID [{}]", scannableId);
+    }
+
+    @Transactional
+    public void restoreScannable(Long scannableId) {
+        var scannable = getScannable(scannableId);
+        scannable.setDeleted(false);
+        scannableRepository.saveAndFlush(scannable);
+        log.info("Restored Scannable with ID [{}]", scannableId);
+    }
 
     public Long getCount() {
         return scannableRepository.count();
@@ -41,6 +59,10 @@ public class ScannableService {
         if (!scannableRepository.existsByAssetTag(assetTag)) {
             throw new ObjectNotFoundException();
         }
+    }
+
+    private Scannable getScannable(Long scannableId) {
+        return scannableRepository.findById(scannableId).orElseThrow(ObjectNotFoundException::new);
     }
 
 }

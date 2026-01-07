@@ -18,12 +18,12 @@ public class OwnerDetailsDto {
 
     private Boolean inSchInventory;
 
-    private UserAuditDetailsDto createdBy;
-
     private OffsetDateTime createdAt;
 
-    private UserAuditDetailsDto updatedBy;
+    private UserAuditDetailsDto createdBy;
 
     private OffsetDateTime updatedAt;
+
+    private UserAuditDetailsDto updatedBy;
 
 }

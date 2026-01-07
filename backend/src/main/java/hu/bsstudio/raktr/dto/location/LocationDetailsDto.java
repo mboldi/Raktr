@@ -14,12 +14,12 @@ public class LocationDetailsDto {
 
     private String name;
 
-    private UserAuditDetailsDto createdBy;
-
     private OffsetDateTime createdAt;
 
-    private UserAuditDetailsDto updatedBy;
+    private UserAuditDetailsDto createdBy;
 
     private OffsetDateTime updatedAt;
+
+    private UserAuditDetailsDto updatedBy;
 
 }

@@ -8,6 +8,7 @@ import jakarta.persistence.ManyToMany;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -22,7 +23,7 @@ public class Container extends Scannable {
             joinColumns = @JoinColumn(name = "container_id"),
             inverseJoinColumns = @JoinColumn(name = "device_id")
     )
-    private List<Device> devices;
+    private List<Device> devices = new ArrayList<>();
 
     public Integer getTotalWeight() {
         var devicesWeight = devices.stream()

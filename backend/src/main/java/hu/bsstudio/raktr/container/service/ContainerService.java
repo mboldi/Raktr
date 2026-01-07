@@ -27,6 +27,7 @@ public class ContainerService {
 
     private final ContainerMapper containerMapper;
 
+    @Transactional
     public List<ContainerDetailsDto> listContainers(boolean deleted) {
         var containers = containerRepository.findAllByDeleted(deleted);
         return containers.stream().map(containerMapper::entityToDetailsDto).toList();
@@ -51,6 +52,7 @@ public class ContainerService {
         return containerMapper.entityToDetailsDto(container);
     }
 
+    @Transactional
     public ContainerDetailsDto getContainerById(Long containerId) {
         var container = getContainer(containerId);
         return containerMapper.entityToDetailsDto(container);

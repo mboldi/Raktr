@@ -56,7 +56,7 @@ public abstract class Scannable {
 
     private Boolean publicRentable;
 
-    private Boolean deleted;
+    private Boolean deleted = false;
 
     @ManyToOne
     @JoinColumn(name = "category_name")

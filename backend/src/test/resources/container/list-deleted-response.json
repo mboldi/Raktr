@@ -1,0 +1,35 @@
+[
+  {
+    "id": 102,
+    "assetTag": "CONTAINER-003",
+    "barcode": "CONTAINER-BARCODE-003",
+    "name": "Deleted Container",
+    "weight": 750,
+    "publicRentable": false,
+    "deleted": true,
+    "category": "test-category-for-container",
+    "location": "test-location-for-container",
+    "owner": {
+      "id": 100,
+      "name": "test-owner-for-container"
+    },
+    "createdAt": "2025-01-07T12:00:00Z",
+    "createdBy": {
+      "uuid": "00000000-0000-0000-0000-000000000100",
+      "username": "member_user_100",
+      "familyName": "Member",
+      "givenName": "User",
+      "nickname": "Member"
+    },
+    "updatedAt": "2025-01-07T12:00:00Z",
+    "updatedBy": {
+      "uuid": "00000000-0000-0000-0000-000000000100",
+      "username": "member_user_100",
+      "familyName": "Member",
+      "givenName": "User",
+      "nickname": "Member"
+    },
+    "totalWeight": 750,
+    "devices": []
+  }
+]

@@ -2,5 +2,5 @@
   "timestamp": "IGNORE",
   "status": 404,
   "error": "Not Found",
-  "path": "/v1/scannable/999/restore"
+  "path": "/v1/container/999/devices/202"
 }

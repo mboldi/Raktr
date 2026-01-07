@@ -1,6 +1,7 @@
 package hu.bsstudio.raktr.container.mapper;
 
 import hu.bsstudio.raktr.dal.entity.Container;
+import hu.bsstudio.raktr.device.mapper.DeviceMapper;
 import hu.bsstudio.raktr.dto.container.ContainerCreateDto;
 import hu.bsstudio.raktr.dto.container.ContainerDetailsDto;
 import hu.bsstudio.raktr.dto.container.ContainerUpdateDto;
@@ -9,7 +10,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
-@Mapper(uses = DateTimeMapper.class)
+@Mapper(uses = {DateTimeMapper.class, DeviceMapper.class})
 public interface ContainerMapper {
 
     @Mapping(target = "category", source = "category.name")
@@ -27,7 +28,6 @@ public interface ContainerMapper {
     @Mapping(target = "updatedBy", ignore = true)
     @Mapping(target = "devices", ignore = true)
     Container createDtoToEntity(ContainerCreateDto createDto);
-
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "deleted", ignore = true)

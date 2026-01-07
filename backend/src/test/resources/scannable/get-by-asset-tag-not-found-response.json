@@ -1,0 +1,6 @@
+{
+  "timestamp": "IGNORE",
+  "status": 404,
+  "error": "Not Found",
+  "path": "/v1/scannable/asset-tag/NON-EXISTENT"
+}

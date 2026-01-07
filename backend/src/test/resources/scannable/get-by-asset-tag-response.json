@@ -1,0 +1,31 @@
+{
+  "id": 101,
+  "assetTag": "ASSET-002",
+  "barcode": "BARCODE-002",
+  "name": "Second Test Device",
+  "weight": 2000,
+  "publicRentable": false,
+  "deleted": false,
+  "category": "test-category-for-scannable",
+  "location": "test-location-for-scannable",
+  "owner": {
+    "id": 100,
+    "name": "test-owner-for-scannable"
+  },
+  "createdAt": "2025-01-07T11:00:00Z",
+  "createdBy": {
+    "uuid": "00000000-0000-0000-0000-000000000100",
+    "username": "member_user_100",
+    "familyName": "Member",
+    "givenName": "User",
+    "nickname": "Member"
+  },
+  "updatedAt": "2025-01-07T12:00:00Z",
+  "updatedBy": {
+    "uuid": "00000000-0000-0000-0000-000000000100",
+    "username": "member_user_100",
+    "familyName": "Member",
+    "givenName": "User",
+    "nickname": "Member"
+  }
+}

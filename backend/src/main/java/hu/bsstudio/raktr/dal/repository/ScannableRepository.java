@@ -10,7 +10,11 @@ import java.util.Optional;
 
 public interface ScannableRepository extends JpaRepository<Scannable, Long> {
 
+    Optional<Scannable> findByAssetTag(String assetTag);
+
     Optional<Scannable> findByBarcode(String barcode);
+
+    boolean existsByAssetTag(String assetTag);
 
     boolean existsByBarcode(String barcode);
 

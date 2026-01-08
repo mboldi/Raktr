@@ -47,9 +47,9 @@ public class CategoryIT extends RaktrIT {
     }
 
     @Test
-    void testCreateCategoryAlreadyExistsError() {
+    void testCreateCategoryAlreadyExists() {
         var response = givenAuthenticatedAdmin()
-                .body(loadFileContent("/category/create-already-exists-error-request.json"))
+                .body(loadFileContent("/category/create-already-exists-request.json"))
                 .when()
                 .post("/v1/category")
                 .then()
@@ -59,7 +59,7 @@ public class CategoryIT extends RaktrIT {
 
         assertJson(response)
                 .excluding("timestamp")
-                .equalTo(loadFileContent("/category/create-already-exists-error-response.json"));
+                .equalTo(loadFileContent("/category/create-already-exists-response.json"));
     }
 
     @Test
@@ -76,7 +76,7 @@ public class CategoryIT extends RaktrIT {
     }
 
     @Test
-    void testDeleteCategoryNotEmptyError() {
+    void testDeleteCategoryNotEmpty() {
         var response = givenAuthenticatedAdmin()
                 .when()
                 .delete("/v1/category/test-category-1")
@@ -87,7 +87,7 @@ public class CategoryIT extends RaktrIT {
 
         assertJson(response)
                 .excluding("timestamp")
-                .equalTo(loadFileContent("/category/delete-not-empty-error-response.json"));
+                .equalTo(loadFileContent("/category/delete-not-empty-response.json"));
 
         databaseQueryHelper.queryDatabase("SELECT count(*) FROM categories WHERE name = 'test-category-1'")
                 .assertRowCount()

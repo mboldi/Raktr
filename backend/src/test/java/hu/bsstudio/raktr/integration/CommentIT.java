@@ -37,7 +37,7 @@ public class CommentIT extends RaktrIT {
     }
 
     @Test
-    void testDeleteOtherUserCommentError() {
+    void testDeleteOtherUserComment() {
         givenAuthenticatedCandidate()
                 .when()
                 .delete("/v1/comment/1")

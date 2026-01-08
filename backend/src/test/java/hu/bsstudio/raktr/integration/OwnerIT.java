@@ -48,9 +48,9 @@ public class OwnerIT extends RaktrIT {
     }
 
     @Test
-    void testCreateOwnerAlreadyExistsError() {
+    void testCreateOwnerAlreadyExists() {
         var response = givenAuthenticatedAdmin()
-                .body(loadFileContent("/owner/create-already-exists-error-request.json"))
+                .body(loadFileContent("/owner/create-already-exists-request.json"))
                 .when()
                 .post("/v1/owner")
                 .then()
@@ -60,7 +60,7 @@ public class OwnerIT extends RaktrIT {
 
         assertJson(response)
                 .excluding("timestamp")
-                .equalTo(loadFileContent("/owner/create-already-exists-error-response.json"));
+                .equalTo(loadFileContent("/owner/create-already-exists-response.json"));
     }
 
     @Test
@@ -80,9 +80,9 @@ public class OwnerIT extends RaktrIT {
     }
 
     @Test
-    void testUpdateOwnerAlreadyExistsError() {
+    void testUpdateOwnerAlreadyExists() {
         var response = givenAuthenticatedAdmin()
-                .body(loadFileContent("/owner/update-already-exists-error-request.json"))
+                .body(loadFileContent("/owner/update-already-exists-request.json"))
                 .when()
                 .put("/v1/owner/1")
                 .then()
@@ -92,11 +92,11 @@ public class OwnerIT extends RaktrIT {
 
         assertJson(response)
                 .excluding("timestamp")
-                .equalTo(loadFileContent("/owner/update-already-exists-error-response.json"));
+                .equalTo(loadFileContent("/owner/update-already-exists-response.json"));
     }
 
     @Test
-    void testUpdateOwnerNotFoundError() {
+    void testUpdateOwnerNotFound() {
         var response = givenAuthenticatedAdmin()
                 .body(loadFileContent("/owner/update-request.json"))
                 .when()
@@ -108,11 +108,11 @@ public class OwnerIT extends RaktrIT {
 
         assertJson(response)
                 .excluding("timestamp")
-                .equalTo(loadFileContent("/owner/update-not-found-error-response.json"));
+                .equalTo(loadFileContent("/owner/update-not-found-response.json"));
     }
 
     @Test
-    void testUpdateOwnerForbiddenError() {
+    void testUpdateOwnerForbidden() {
         givenAuthenticatedCandidate()
                 .body(loadFileContent("/owner/update-request.json"))
                 .when()
@@ -146,7 +146,7 @@ public class OwnerIT extends RaktrIT {
 
         assertJson(response)
                 .excluding("timestamp")
-                .equalTo(loadFileContent("/owner/delete-not-empty-error-response.json"));
+                .equalTo(loadFileContent("/owner/delete-not-empty-response.json"));
 
         databaseQueryHelper.queryDatabase("SELECT count(*) FROM owners WHERE id = 1")
                 .assertRowCount()

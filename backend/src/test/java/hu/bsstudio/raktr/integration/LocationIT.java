@@ -47,9 +47,9 @@ public class LocationIT extends RaktrIT {
     }
 
     @Test
-    void testCreateLocationAlreadyExistsError() {
+    void testCreateLocationAlreadyExists() {
         var response = givenAuthenticatedAdmin()
-                .body(loadFileContent("/location/create-already-exists-error-request.json"))
+                .body(loadFileContent("/location/create-already-exists-request.json"))
                 .when()
                 .post("/v1/location")
                 .then()
@@ -59,7 +59,7 @@ public class LocationIT extends RaktrIT {
 
         assertJson(response)
                 .excluding("timestamp")
-                .equalTo(loadFileContent("/location/create-already-exists-error-response.json"));
+                .equalTo(loadFileContent("/location/create-already-exists-response.json"));
     }
 
     @Test
@@ -76,7 +76,7 @@ public class LocationIT extends RaktrIT {
     }
 
     @Test
-    void testDeleteLocationNotEmptyError() {
+    void testDeleteLocationNotEmpty() {
         var response = givenAuthenticatedAdmin()
                 .when()
                 .delete("/v1/location/test-location-1")
@@ -87,7 +87,7 @@ public class LocationIT extends RaktrIT {
 
         assertJson(response)
                 .excluding("timestamp")
-                .equalTo(loadFileContent("/location/delete-not-empty-error-response.json"));
+                .equalTo(loadFileContent("/location/delete-not-empty-response.json"));
 
         databaseQueryHelper.queryDatabase("SELECT count(*) FROM locations WHERE name = 'test-location-1'")
                 .assertRowCount()

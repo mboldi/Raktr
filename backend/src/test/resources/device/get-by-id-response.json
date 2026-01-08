@@ -1,0 +1,41 @@
+{
+  "id": 100,
+  "assetTag": "DEVICE-001",
+  "barcode": "DEVICE-BARCODE-001",
+  "name": "Test Camera",
+  "weight": 1500,
+  "publicRentable": true,
+  "deleted": false,
+  "category": "test-category-for-device",
+  "location": "test-location-for-device",
+  "owner": {
+    "id": 100,
+    "name": "test-owner-for-device"
+  },
+  "createdAt": "2025-01-08T10:00:00Z",
+  "createdBy": {
+    "uuid": "00000000-0000-0000-0000-000000000100",
+    "username": "member_user_100",
+    "familyName": "Member",
+    "givenName": "User",
+    "nickname": "Member"
+  },
+  "updatedAt": "2025-01-08T10:00:00Z",
+  "updatedBy": {
+    "uuid": "00000000-0000-0000-0000-000000000100",
+    "username": "member_user_100",
+    "familyName": "Member",
+    "givenName": "User",
+    "nickname": "Member"
+  },
+  "manufacturer": "Sony",
+  "model": "A7III",
+  "serialNumber": "SN-001",
+  "estimatedValue": 250000,
+  "status": "GOOD",
+  "quantity": 1,
+  "acquisitionSource": "Purchase",
+  "acquisitionDate": "2024-01-15",
+  "warrantyEndDate": "2026-01-15",
+  "notes": "Main camera for studio"
+}

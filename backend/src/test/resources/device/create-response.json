@@ -1,0 +1,41 @@
+{
+  "id": 1,
+  "assetTag": "NEW-DEVICE",
+  "barcode": "NEW-DEVICE-BARCODE",
+  "name": "New Device",
+  "weight": 500,
+  "publicRentable": true,
+  "deleted": false,
+  "category": "test-category-for-device",
+  "location": "test-location-for-device",
+  "owner": {
+    "id": 100,
+    "name": "test-owner-for-device"
+  },
+  "createdAt": "IGNORE",
+  "createdBy": {
+    "uuid": "00000000-0000-0000-0000-000000000001",
+    "username": "admin_user",
+    "familyName": "Admin",
+    "givenName": "User",
+    "nickname": null
+  },
+  "updatedAt": "IGNORE",
+  "updatedBy": {
+    "uuid": "00000000-0000-0000-0000-000000000001",
+    "username": "admin_user",
+    "familyName": "Admin",
+    "givenName": "User",
+    "nickname": null
+  },
+  "manufacturer": "Panasonic",
+  "model": "GH6",
+  "serialNumber": "SN-NEW",
+  "estimatedValue": 200000,
+  "status": "GOOD",
+  "quantity": 1,
+  "acquisitionSource": "Purchase",
+  "acquisitionDate": "2025-01-01",
+  "warrantyEndDate": "2027-01-01",
+  "notes": "New camera"
+}

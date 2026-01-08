@@ -5,8 +5,10 @@ import hu.bsstudio.raktr.dto.container.ContainerAddDevicesDto;
 import hu.bsstudio.raktr.dto.container.ContainerCreateDto;
 import hu.bsstudio.raktr.dto.container.ContainerDetailsDto;
 import hu.bsstudio.raktr.dto.container.ContainerUpdateDto;
+import hu.bsstudio.raktr.dto.ticket.TicketDetailsDto;
 import hu.bsstudio.raktr.scannable.service.ScannableService;
 import hu.bsstudio.raktr.security.RoleConstants;
+import hu.bsstudio.raktr.ticket.service.TicketService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -32,6 +34,8 @@ public class ContainerController {
     private final ContainerService containerService;
 
     private final ScannableService scannableService;
+
+    private final TicketService ticketService;
 
     @GetMapping
     public List<ContainerDetailsDto> listContainers(
@@ -85,6 +89,11 @@ public class ContainerController {
             @PathVariable Long deviceId
     ) {
         return containerService.removeDeviceFromContainer(containerId, deviceId);
+    }
+
+    @GetMapping("/{containerId}/tickets")
+    public List<TicketDetailsDto> getTicketsForContainer(@PathVariable Long containerId) {
+        return ticketService.getTicketsByScannableId(containerId);
     }
 
 }

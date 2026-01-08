@@ -4,8 +4,10 @@ import hu.bsstudio.raktr.device.service.DeviceService;
 import hu.bsstudio.raktr.dto.device.DeviceCreateDto;
 import hu.bsstudio.raktr.dto.device.DeviceDetailsDto;
 import hu.bsstudio.raktr.dto.device.DeviceUpdateDto;
+import hu.bsstudio.raktr.dto.ticket.TicketDetailsDto;
 import hu.bsstudio.raktr.scannable.service.ScannableService;
 import hu.bsstudio.raktr.security.RoleConstants;
+import hu.bsstudio.raktr.ticket.service.TicketService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -31,6 +33,8 @@ public class DeviceController {
     private final DeviceService deviceService;
 
     private final ScannableService scannableService;
+
+    private final TicketService ticketService;
 
     @GetMapping
     public List<DeviceDetailsDto> listDevices(
@@ -68,6 +72,11 @@ public class DeviceController {
     @PostMapping("/{deviceId}/restore")
     public void restoreDevice(@PathVariable Long deviceId) {
         scannableService.restoreScannable(deviceId);
+    }
+
+    @GetMapping("/{deviceId}/tickets")
+    public List<TicketDetailsDto> getTicketsForDevice(@PathVariable Long deviceId) {
+        return ticketService.getTicketsByScannableId(deviceId);
     }
 
     @GetMapping("/manufacturers")

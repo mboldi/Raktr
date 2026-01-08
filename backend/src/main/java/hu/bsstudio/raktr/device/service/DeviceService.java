@@ -1,12 +1,10 @@
 package hu.bsstudio.raktr.device.service;
 
-import hu.bsstudio.raktr.dal.entity.Device;
 import hu.bsstudio.raktr.dal.repository.DeviceRepository;
 import hu.bsstudio.raktr.device.mapper.DeviceMapper;
 import hu.bsstudio.raktr.dto.device.DeviceCreateDto;
 import hu.bsstudio.raktr.dto.device.DeviceDetailsDto;
 import hu.bsstudio.raktr.dto.device.DeviceUpdateDto;
-import hu.bsstudio.raktr.exception.ObjectNotFoundException;
 import hu.bsstudio.raktr.scannable.service.ScannableLookupService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -51,13 +49,13 @@ public class DeviceService {
     }
 
     public DeviceDetailsDto getDeviceById(Long deviceId) {
-        var device = getDevice(deviceId);
+        var device = lookupService.getDevice(deviceId);
         return deviceMapper.entityToDetailsDto(device);
     }
 
     @Transactional
     public DeviceDetailsDto updateDevice(Long deviceId, DeviceUpdateDto updateDto) {
-        var device = getDevice(deviceId);
+        var device = lookupService.getDevice(deviceId);
 
         deviceMapper.updateDtoToEntity(device, updateDto);
 
@@ -78,10 +76,6 @@ public class DeviceService {
 
     public List<String> getDistinctManufacturers() {
         return deviceRepository.findDistinctManufacturers();
-    }
-
-    private Device getDevice(Long deviceId) {
-        return deviceRepository.findById(deviceId).orElseThrow(ObjectNotFoundException::new);
     }
 
 }

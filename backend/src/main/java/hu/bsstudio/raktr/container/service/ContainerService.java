@@ -1,7 +1,6 @@
 package hu.bsstudio.raktr.container.service;
 
 import hu.bsstudio.raktr.container.mapper.ContainerMapper;
-import hu.bsstudio.raktr.dal.entity.Container;
 import hu.bsstudio.raktr.dal.repository.ContainerRepository;
 import hu.bsstudio.raktr.dto.container.ContainerAddDevicesDto;
 import hu.bsstudio.raktr.dto.container.ContainerCreateDto;
@@ -54,13 +53,13 @@ public class ContainerService {
 
     @Transactional
     public ContainerDetailsDto getContainerById(Long containerId) {
-        var container = getContainer(containerId);
+        var container = lookupService.getContainer(containerId);
         return containerMapper.entityToDetailsDto(container);
     }
 
     @Transactional
     public ContainerDetailsDto updateContainer(Long containerId, ContainerUpdateDto updateDto) {
-        var container = getContainer(containerId);
+        var container = lookupService.getContainer(containerId);
 
         containerMapper.updateDtoToEntity(container, updateDto);
 
@@ -81,7 +80,7 @@ public class ContainerService {
 
     @Transactional
     public ContainerDetailsDto addDevicesToContainer(Long containerId, ContainerAddDevicesDto addDevicesDto) {
-        var container = getContainer(containerId);
+        var container = lookupService.getContainer(containerId);
 
         var devices = addDevicesDto.getDeviceIds().stream()
                 .map(lookupService::getDevice)
@@ -98,7 +97,7 @@ public class ContainerService {
 
     @Transactional
     public ContainerDetailsDto removeDeviceFromContainer(Long containerId, Long deviceId) {
-        var container = getContainer(containerId);
+        var container = lookupService.getContainer(containerId);
         var deviceToRemove = container.getDevices().stream()
                 .filter(device -> device.getId().equals(deviceId))
                 .findFirst()
@@ -111,10 +110,6 @@ public class ContainerService {
         log.info("Removed Device [{}] from Container [{}]", deviceId, containerId);
 
         return containerMapper.entityToDetailsDto(container);
-    }
-
-    private Container getContainer(Long containerId) {
-        return containerRepository.findById(containerId).orElseThrow(ObjectNotFoundException::new);
     }
 
 }

@@ -25,3 +25,5 @@ VALUES (200, 'DEVICE', 'DEVICE-001', 'DEVICE-BARCODE-001', 'Free Device 1', 100,
 -- Link device 202 to container 101
 INSERT INTO container_devices (container_id, device_id)
 VALUES (101, 202);
+
+ALTER SEQUENCE scannables_id_seq RESTART WITH 300;

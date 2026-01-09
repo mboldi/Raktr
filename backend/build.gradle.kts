@@ -34,13 +34,13 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-web")
-    implementation("com.itextpdf:itext7-core:9.4.0")
+    implementation("com.itextpdf:itext7-core:9.5.0")
     implementation("org.mapstruct:mapstruct:1.6.3")
-    implementation("org.flywaydb:flyway-core:11.20.0")
+    implementation("org.flywaydb:flyway-core:11.20.1")
 
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     runtimeOnly("org.postgresql:postgresql:42.7.8")
-    runtimeOnly("org.flywaydb:flyway-database-postgresql:11.20.0")
+    runtimeOnly("org.flywaydb:flyway-database-postgresql:11.20.1")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
     annotationProcessor("org.mapstruct:mapstruct-processor:1.6.3")
 
@@ -50,7 +50,7 @@ dependencies {
     testImplementation("org.testcontainers:testcontainers-postgresql:2.0.3")
     testImplementation("io.rest-assured:rest-assured:5.5.6")
     testImplementation("org.wiremock:wiremock-standalone:3.13.2")
-    testImplementation("com.nimbusds:nimbus-jose-jwt:10.6")
+    testImplementation("com.nimbusds:nimbus-jose-jwt:10.7")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 

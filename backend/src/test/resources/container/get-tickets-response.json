@@ -1,0 +1,74 @@
+[
+  {
+    "id": 1,
+    "description": "Container lid is damaged",
+    "status": "OPEN",
+    "severity": "MAJOR",
+    "scannable": {
+      "id": 100,
+      "assetTag": "CONTAINER-001",
+      "name": "Test Container",
+      "owner": {
+        "id": 100,
+        "name": "test-owner-for-container"
+      },
+      "manufacturer": null,
+      "acquisitionSource": null,
+      "acquisitionDate": null,
+      "warrantyEndDate": null
+    },
+    "comments": [],
+    "createdAt": "2025-01-07T14:00:00Z",
+    "createdBy": {
+      "uuid": "00000000-0000-0000-0000-000000000100",
+      "username": "member_user_100",
+      "familyName": "Member",
+      "givenName": "User",
+      "nickname": "Member"
+    },
+    "updatedAt": "2025-01-07T14:00:00Z",
+    "updatedBy": {
+      "uuid": "00000000-0000-0000-0000-000000000100",
+      "username": "member_user_100",
+      "familyName": "Member",
+      "givenName": "User",
+      "nickname": "Member"
+    }
+  },
+  {
+    "id": 2,
+    "description": "Label is faded",
+    "status": "IN_PROGRESS",
+    "severity": "MINOR",
+    "scannable": {
+      "id": 100,
+      "assetTag": "CONTAINER-001",
+      "name": "Test Container",
+      "owner": {
+        "id": 100,
+        "name": "test-owner-for-container"
+      },
+      "manufacturer": null,
+      "acquisitionSource": null,
+      "acquisitionDate": null,
+      "warrantyEndDate": null
+    },
+    "comments": [],
+    "createdAt": "2025-01-07T15:00:00Z",
+    "createdBy": {
+      "uuid": "00000000-0000-0000-0000-000000000100",
+      "username": "member_user_100",
+      "familyName": "Member",
+      "givenName": "User",
+      "nickname": "Member"
+    },
+    "updatedAt": "2025-01-07T15:00:00Z",
+    "updatedBy": {
+      "uuid": "00000000-0000-0000-0000-000000000100",
+      "username": "member_user_100",
+      "familyName": "Member",
+      "givenName": "User",
+      "nickname": "Member"
+    }
+  }
+]

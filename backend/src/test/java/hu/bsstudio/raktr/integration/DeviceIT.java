@@ -315,4 +315,32 @@ public class DeviceIT extends RaktrIT {
         assertJson(response).equalTo(loadFileContent("/device/manufacturers-response.json"));
     }
 
+    @Test
+    void testGetTicketsForDevice() {
+        var response = givenAuthenticatedAdmin()
+                .when()
+                .get("/v1/device/100/tickets")
+                .then()
+                .statusCode(HttpStatus.OK.value())
+                .extract()
+                .asString();
+
+        assertJson(response).equalTo(loadFileContent("/device/get-tickets-response.json"));
+    }
+
+    @Test
+    void testGetTicketsForDeviceNotFound() {
+        var response = givenAuthenticatedAdmin()
+                .when()
+                .get("/v1/device/999/tickets")
+                .then()
+                .statusCode(HttpStatus.NOT_FOUND.value())
+                .extract()
+                .asString();
+
+        assertJson(response)
+                .excluding("timestamp")
+                .equalTo(loadFileContent("/device/get-tickets-not-found-response.json"));
+    }
+
 }

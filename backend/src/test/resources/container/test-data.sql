@@ -27,3 +27,11 @@ INSERT INTO container_devices (container_id, device_id)
 VALUES (101, 202);
 
 ALTER SEQUENCE scannables_id_seq RESTART WITH 300;
+
+-- Tickets for container 100
+INSERT INTO tickets (id, description, status, severity, scannable_id, created_at, created_by, updated_at, updated_by)
+OVERRIDING SYSTEM VALUE
+VALUES (1, 'Container lid is damaged', 'OPEN', 'MAJOR', 100, '2025-01-07T14:00:00Z', '00000000-0000-0000-0000-000000000100', '2025-01-07T14:00:00Z', '00000000-0000-0000-0000-000000000100'),
+       (2, 'Label is faded', 'IN_PROGRESS', 'MINOR', 100, '2025-01-07T15:00:00Z', '00000000-0000-0000-0000-000000000100', '2025-01-07T15:00:00Z', '00000000-0000-0000-0000-000000000100');
+
+ALTER SEQUENCE tickets_id_seq RESTART WITH 100;

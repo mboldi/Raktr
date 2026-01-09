@@ -43,7 +43,7 @@ public class ScannableDetailsDto {
     @Data
     public static class Owner {
 
-        private Long id;
+        private Integer id;
 
         private String name;
 

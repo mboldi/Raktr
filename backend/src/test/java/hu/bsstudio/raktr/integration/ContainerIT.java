@@ -405,4 +405,32 @@ public class ContainerIT extends RaktrIT {
                 .statusCode(HttpStatus.FORBIDDEN.value());
     }
 
+    @Test
+    void testGetTicketsForContainer() {
+        var response = givenAuthenticatedAdmin()
+                .when()
+                .get("/v1/container/100/tickets")
+                .then()
+                .statusCode(HttpStatus.OK.value())
+                .extract()
+                .asString();
+
+        assertJson(response).equalTo(loadFileContent("/container/get-tickets-response.json"));
+    }
+
+    @Test
+    void testGetTicketsForContainerNotFound() {
+        var response = givenAuthenticatedAdmin()
+                .when()
+                .get("/v1/container/999/tickets")
+                .then()
+                .statusCode(HttpStatus.NOT_FOUND.value())
+                .extract()
+                .asString();
+
+        assertJson(response)
+                .excluding("timestamp")
+                .equalTo(loadFileContent("/container/get-tickets-not-found-response.json"));
+    }
+
 }

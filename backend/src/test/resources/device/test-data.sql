@@ -17,3 +17,10 @@ VALUES (100, 'DEVICE', 'DEVICE-001', 'DEVICE-BARCODE-001', 'Test Camera', 1500, 
        (103, 'DEVICE', 'DEVICE-004', 'DEVICE-BARCODE-004', 'Old Tripod', 2000, false, true, 'test-category-for-device', 'test-location-for-device', 100, 'Manfrotto', 'MT055XPRO3', 'SN-004', 60000, 'SCRAPPED', 1, 'Purchase', '2020-01-01', '2022-01-01', 'Broken leg, needs repair', '2025-01-08T13:00:00Z', '00000000-0000-0000-0000-000000000100', '2025-01-08T14:00:00Z', '00000000-0000-0000-0000-000000000100');
 
 ALTER SEQUENCE scannables_id_seq RESTART WITH 200;
+
+-- Tickets for device 100
+INSERT INTO tickets (id, description, status, severity, scannable_id, created_at, created_by, updated_at, updated_by)
+OVERRIDING SYSTEM VALUE
+VALUES (1, 'Sensor needs cleaning', 'OPEN', 'MINOR', 100, '2025-01-08T14:00:00Z', '00000000-0000-0000-0000-000000000100', '2025-01-08T14:00:00Z', '00000000-0000-0000-0000-000000000100');
+
+ALTER SEQUENCE tickets_id_seq RESTART WITH 100;

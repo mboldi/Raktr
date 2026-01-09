@@ -70,7 +70,7 @@ public class TicketService {
 
         ticketRepository.saveAndFlush(ticket);
 
-        log.info("Updated Ticked with ID [{}]", ticketId);
+        log.info("Updated Ticket with ID [{}]", ticketId);
 
         return ticketMapper.entityToDetailsDto(ticket);
     }

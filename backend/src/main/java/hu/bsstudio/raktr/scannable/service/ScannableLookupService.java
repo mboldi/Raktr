@@ -56,5 +56,4 @@ public class ScannableLookupService {
         return scannableRepository.findById(scannableId).orElseThrow(ObjectNotFoundException::new);
     }
 
-
 }

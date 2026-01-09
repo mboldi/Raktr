@@ -47,7 +47,6 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")
     testImplementation("org.testcontainers:testcontainers:2.0.3")
-    testImplementation("org.testcontainers:testcontainers-junit-jupiter:2.0.3")
     testImplementation("org.testcontainers:testcontainers-postgresql:2.0.3")
     testImplementation("io.rest-assured:rest-assured:5.5.6")
     testImplementation("org.wiremock:wiremock-standalone:3.13.2")

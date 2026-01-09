@@ -1,0 +1,36 @@
+{
+  "id": 100,
+  "description": "New issue - overheating",
+  "status": "OPEN",
+  "severity": "MAJOR",
+  "scannable": {
+    "id": 100,
+    "assetTag": "DEVICE-001",
+    "name": "Test Device",
+    "owner": {
+      "id": 100,
+      "name": "test-owner-for-ticket"
+    },
+    "manufacturer": "TestManufacturer",
+    "acquisitionSource": "Purchase",
+    "acquisitionDate": "2024-01-01",
+    "warrantyEndDate": "2026-01-01"
+  },
+  "comments": [],
+  "createdAt": "IGNORE",
+  "createdBy": {
+    "uuid": "00000000-0000-0000-0000-000000000001",
+    "username": "admin_user",
+    "familyName": "Admin",
+    "givenName": "User",
+    "nickname": null
+  },
+  "updatedAt": "IGNORE",
+  "updatedBy": {
+    "uuid": "00000000-0000-0000-0000-000000000001",
+    "username": "admin_user",
+    "familyName": "Admin",
+    "givenName": "User",
+    "nickname": null
+  }
+}

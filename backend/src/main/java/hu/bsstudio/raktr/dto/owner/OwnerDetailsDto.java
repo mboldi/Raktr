@@ -12,7 +12,7 @@ import java.time.OffsetDateTime;
 @AllArgsConstructor
 public class OwnerDetailsDto {
 
-    private Integer id;
+    private Long id;
 
     private String name;
 

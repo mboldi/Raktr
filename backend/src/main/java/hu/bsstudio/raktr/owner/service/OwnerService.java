@@ -50,7 +50,7 @@ public class OwnerService {
     }
 
     @Transactional
-    public OwnerDetailsDto updateOwner(Integer ownerId, OwnerUpdateDto updateDto) {
+    public OwnerDetailsDto updateOwner(Long ownerId, OwnerUpdateDto updateDto) {
         var owner = getOwner(ownerId);
 
         if (ownerRepository.existsByName(updateDto.getName())) {
@@ -66,7 +66,7 @@ public class OwnerService {
     }
 
     @Transactional
-    public void deleteOwner(Integer ownerId) {
+    public void deleteOwner(Long ownerId) {
         var owner = getOwner(ownerId);
 
         if (scannableRepository.existsByOwner(owner)) {
@@ -78,7 +78,7 @@ public class OwnerService {
         log.info("Deleted Owner with name [{}]", owner.getName());
     }
 
-    private Owner getOwner(Integer ownerId) {
+    private Owner getOwner(Long ownerId) {
         return ownerRepository.findById(ownerId).orElseThrow(ObjectNotFoundException::new);
     }
 

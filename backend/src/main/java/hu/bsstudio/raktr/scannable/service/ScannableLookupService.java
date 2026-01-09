@@ -48,7 +48,7 @@ public class ScannableLookupService {
         return locationRepository.findById(locationName).orElseThrow(ObjectNotFoundException::new);
     }
 
-    public Owner getOwner(Integer ownerId) {
+    public Owner getOwner(Long ownerId) {
         return ownerRepository.findById(ownerId).orElseThrow(ObjectNotFoundException::new);
     }
 

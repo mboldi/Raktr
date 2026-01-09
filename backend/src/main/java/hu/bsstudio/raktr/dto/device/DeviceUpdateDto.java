@@ -38,7 +38,7 @@ public class DeviceUpdateDto {
 
     @Min(1)
     @NotNull
-    private Integer ownerId;
+    private Long ownerId;
 
     private String manufacturer;
 

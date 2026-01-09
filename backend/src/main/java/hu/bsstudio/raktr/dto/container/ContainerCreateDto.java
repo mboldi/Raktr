@@ -35,6 +35,6 @@ public class ContainerCreateDto {
 
     @Min(1)
     @NotNull
-    private Integer ownerId;
+    private Long ownerId;
 
 }

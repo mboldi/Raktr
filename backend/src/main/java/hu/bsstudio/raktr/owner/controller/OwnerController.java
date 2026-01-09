@@ -41,13 +41,13 @@ public class OwnerController {
 
     @Secured({RoleConstants.ADMIN, RoleConstants.MEMBER})
     @PutMapping("/{ownerId}")
-    public OwnerDetailsDto updateOwner(@PathVariable Integer ownerId, @RequestBody @Valid OwnerUpdateDto updateDto) {
+    public OwnerDetailsDto updateOwner(@PathVariable Long ownerId, @RequestBody @Valid OwnerUpdateDto updateDto) {
         return ownerService.updateOwner(ownerId, updateDto);
     }
 
     @DeleteMapping("/{ownerId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteOwner(@PathVariable Integer ownerId) {
+    public void deleteOwner(@PathVariable Long ownerId) {
         ownerService.deleteOwner(ownerId);
     }
 

@@ -58,9 +58,7 @@ public class OwnerIT extends RaktrIT {
                 .extract()
                 .asString();
 
-        assertJson(response)
-                .excluding("timestamp")
-                .equalTo(loadFileContent("/owner/create-already-exists-response.json"));
+        assertJson(response).equalTo(loadFileContent("/owner/create-already-exists-response.json"));
     }
 
     @Test
@@ -90,9 +88,7 @@ public class OwnerIT extends RaktrIT {
                 .extract()
                 .asString();
 
-        assertJson(response)
-                .excluding("timestamp")
-                .equalTo(loadFileContent("/owner/update-already-exists-response.json"));
+        assertJson(response).equalTo(loadFileContent("/owner/update-already-exists-response.json"));
     }
 
     @Test
@@ -106,9 +102,7 @@ public class OwnerIT extends RaktrIT {
                 .extract()
                 .asString();
 
-        assertJson(response)
-                .excluding("timestamp")
-                .equalTo(loadFileContent("/owner/update-not-found-response.json"));
+        assertJson(response).equalTo(loadFileContent("/owner/update-not-found-response.json"));
     }
 
     @Test
@@ -144,9 +138,7 @@ public class OwnerIT extends RaktrIT {
                 .extract()
                 .asString();
 
-        assertJson(response)
-                .excluding("timestamp")
-                .equalTo(loadFileContent("/owner/delete-not-empty-response.json"));
+        assertJson(response).equalTo(loadFileContent("/owner/delete-not-empty-response.json"));
 
         databaseQueryHelper.queryDatabase("SELECT count(*) FROM owners WHERE id = 1")
                 .assertRowCount()

@@ -1,6 +1,6 @@
 {
-  "timestamp": "IGNORE",
-  "status": 404,
-  "error": "Not Found",
-  "path": "/v1/scannable/asset-tag/NON-EXISTENT"
+  "error": "ENTITY_NOT_FOUND",
+  "resourceName": "Scannable",
+  "resourceKey": "NON-EXISTENT",
+  "message": "Resource [Scannable] not found with key [NON-EXISTENT]"
 }

@@ -3,7 +3,7 @@ package hu.bsstudio.raktr.scannable.service;
 import hu.bsstudio.raktr.dal.entity.Scannable;
 import hu.bsstudio.raktr.dal.repository.ScannableRepository;
 import hu.bsstudio.raktr.dto.scannable.ScannableDetailsDto;
-import hu.bsstudio.raktr.exception.ObjectNotFoundException;
+import hu.bsstudio.raktr.exception.EntityNotFoundException;
 import hu.bsstudio.raktr.scannable.mapper.ScannableMapper;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -40,29 +40,32 @@ public class ScannableService {
     }
 
     public ScannableDetailsDto getScannableByBarcode(String barcode) {
-        var scannable = scannableRepository.findByBarcode(barcode).orElseThrow(ObjectNotFoundException::new);
+        var scannable = scannableRepository.findByBarcode(barcode)
+                .orElseThrow(() -> new EntityNotFoundException(Scannable.class, barcode));
         return scannableMapper.entityToDetailsDto(scannable);
     }
 
     public void existsByBarcode(String barcode) {
         if (!scannableRepository.existsByBarcode(barcode)) {
-            throw new ObjectNotFoundException();
+            throw new EntityNotFoundException(Scannable.class, barcode);
         }
     }
 
     public ScannableDetailsDto getScannableByAssetTag(String assetTag) {
-        var scannable = scannableRepository.findByAssetTag(assetTag).orElseThrow(ObjectNotFoundException::new);
+        var scannable = scannableRepository.findByAssetTag(assetTag)
+                .orElseThrow(() -> new EntityNotFoundException(Scannable.class, assetTag));
         return scannableMapper.entityToDetailsDto(scannable);
     }
 
     public void existsByAssetTag(String assetTag) {
         if (!scannableRepository.existsByAssetTag(assetTag)) {
-            throw new ObjectNotFoundException();
+            throw new EntityNotFoundException(Scannable.class, assetTag);
         }
     }
 
     private Scannable getScannable(Long scannableId) {
-        return scannableRepository.findById(scannableId).orElseThrow(ObjectNotFoundException::new);
+        return scannableRepository.findById(scannableId)
+                .orElseThrow(() -> new EntityNotFoundException(Scannable.class, scannableId));
     }
 
 }

@@ -1,11 +1,14 @@
 package hu.bsstudio.raktr.location.service;
 
+import hu.bsstudio.raktr.dal.entity.Location;
+import hu.bsstudio.raktr.dal.entity.Scannable;
 import hu.bsstudio.raktr.dal.repository.LocationRepository;
 import hu.bsstudio.raktr.dal.repository.ScannableRepository;
 import hu.bsstudio.raktr.dto.location.LocationCreateDto;
 import hu.bsstudio.raktr.dto.location.LocationDetailsDto;
-import hu.bsstudio.raktr.exception.ObjectConflictException;
-import hu.bsstudio.raktr.exception.ObjectNotFoundException;
+import hu.bsstudio.raktr.exception.EntityAlreadyExistsException;
+import hu.bsstudio.raktr.exception.EntityInUseException;
+import hu.bsstudio.raktr.exception.EntityNotFoundException;
 import hu.bsstudio.raktr.location.mapper.LocationMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,7 +38,7 @@ public class LocationService {
         createDto.setName(createDto.getName().trim());
 
         if (locationRepository.existsById(createDto.getName())) {
-            throw new ObjectConflictException();
+            throw new EntityAlreadyExistsException(Location.class, createDto.getName());
         }
 
         var location = locationMapper.createDtoToEntity(createDto);
@@ -50,10 +53,10 @@ public class LocationService {
     @Transactional
     public void deleteLocation(String locationName) {
         var location = locationRepository.findById(locationName)
-                .orElseThrow(ObjectNotFoundException::new);
+                .orElseThrow(() -> new EntityNotFoundException(Location.class, locationName));
 
         if (scannableRepository.existsByLocation(location)) {
-            throw new ObjectConflictException();
+            throw new EntityInUseException(Location.class, locationName, Scannable.class);
         }
 
         locationRepository.delete(location);

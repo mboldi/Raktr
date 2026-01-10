@@ -74,9 +74,7 @@ public class UserIT extends RaktrIT {
                 .extract()
                 .asString();
 
-        assertJson(response)
-                .excluding("timestamp")
-                .equalTo(loadFileContent("/user/get-not-found-response.json"));
+        assertJson(response).equalTo(loadFileContent("/user/get-not-found-response.json"));
     }
 
     @Test
@@ -118,9 +116,7 @@ public class UserIT extends RaktrIT {
                 .extract()
                 .asString();
 
-        assertJson(response)
-                .excluding("timestamp")
-                .equalTo(loadFileContent("/user/update-forbidden-response.json"));
+        assertJson(response).equalTo(loadFileContent("/user/update-forbidden-response.json"));
     }
 
     @Test
@@ -134,9 +130,7 @@ public class UserIT extends RaktrIT {
                 .extract()
                 .asString();
 
-        assertJson(response)
-                .excluding("timestamp")
-                .equalTo(loadFileContent("/user/update-not-found-response.json"));
+        assertJson(response).equalTo(loadFileContent("/user/update-not-found-response.json"));
     }
 
 }

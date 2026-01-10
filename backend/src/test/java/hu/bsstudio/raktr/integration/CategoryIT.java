@@ -57,9 +57,7 @@ public class CategoryIT extends RaktrIT {
                 .extract()
                 .asString();
 
-        assertJson(response)
-                .excluding("timestamp")
-                .equalTo(loadFileContent("/category/create-already-exists-response.json"));
+        assertJson(response).equalTo(loadFileContent("/category/create-already-exists-response.json"));
     }
 
     @Test
@@ -85,9 +83,7 @@ public class CategoryIT extends RaktrIT {
                 .extract()
                 .asString();
 
-        assertJson(response)
-                .excluding("timestamp")
-                .equalTo(loadFileContent("/category/delete-not-empty-response.json"));
+        assertJson(response).equalTo(loadFileContent("/category/delete-not-empty-response.json"));
 
         databaseQueryHelper.queryDatabase("SELECT count(*) FROM categories WHERE name = 'test-category-1'")
                 .assertRowCount()

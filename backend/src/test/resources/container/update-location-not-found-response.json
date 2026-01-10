@@ -1,6 +1,6 @@
 {
-  "timestamp": "IGNORE",
-  "status": 404,
-  "error": "Not Found",
-  "path": "/v1/container/100"
+  "error": "ENTITY_NOT_FOUND",
+  "resourceName": "Location",
+  "resourceKey": "non-existent-location",
+  "message": "Resource [Location] not found with key [non-existent-location]"
 }

@@ -12,7 +12,7 @@ import hu.bsstudio.raktr.dal.repository.DeviceRepository;
 import hu.bsstudio.raktr.dal.repository.LocationRepository;
 import hu.bsstudio.raktr.dal.repository.OwnerRepository;
 import hu.bsstudio.raktr.dal.repository.ScannableRepository;
-import hu.bsstudio.raktr.exception.ObjectNotFoundException;
+import hu.bsstudio.raktr.exception.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -33,27 +33,33 @@ public class ScannableLookupService {
     private final ScannableRepository scannableRepository;
 
     public Category getCategory(String categoryName) {
-        return categoryRepository.findById(categoryName).orElseThrow(ObjectNotFoundException::new);
+        return categoryRepository.findById(categoryName)
+                .orElseThrow(() -> new EntityNotFoundException(Category.class, categoryName));
     }
 
     public Container getContainer(Long containerId) {
-        return containerRepository.findById(containerId).orElseThrow(ObjectNotFoundException::new);
+        return containerRepository.findById(containerId)
+                .orElseThrow(() -> new EntityNotFoundException(Container.class, containerId));
     }
 
     public Device getDevice(Long deviceId) {
-        return deviceRepository.findById(deviceId).orElseThrow(ObjectNotFoundException::new);
+        return deviceRepository.findById(deviceId)
+                .orElseThrow(() -> new EntityNotFoundException(Device.class, deviceId));
     }
 
     public Location getLocation(String locationName) {
-        return locationRepository.findById(locationName).orElseThrow(ObjectNotFoundException::new);
+        return locationRepository.findById(locationName)
+                .orElseThrow(() -> new EntityNotFoundException(Location.class, locationName));
     }
 
     public Owner getOwner(Long ownerId) {
-        return ownerRepository.findById(ownerId).orElseThrow(ObjectNotFoundException::new);
+        return ownerRepository.findById(ownerId)
+                .orElseThrow(() -> new EntityNotFoundException(Owner.class, ownerId));
     }
 
     public Scannable getScannable(Long scannableId) {
-        return scannableRepository.findById(scannableId).orElseThrow(ObjectNotFoundException::new);
+        return scannableRepository.findById(scannableId)
+                .orElseThrow(() -> new EntityNotFoundException(Scannable.class, scannableId));
     }
 
 }

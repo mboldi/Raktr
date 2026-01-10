@@ -81,9 +81,7 @@ public class ContainerIT extends RaktrIT {
                 .extract()
                 .asString();
 
-        assertJson(response)
-                .excluding("timestamp")
-                .equalTo(loadFileContent("/container/create-category-not-found-response.json"));
+        assertJson(response).equalTo(loadFileContent("/container/create-category-not-found-response.json"));
     }
 
     @Test
@@ -97,9 +95,7 @@ public class ContainerIT extends RaktrIT {
                 .extract()
                 .asString();
 
-        assertJson(response)
-                .excluding("timestamp")
-                .equalTo(loadFileContent("/container/create-location-not-found-response.json"));
+        assertJson(response).equalTo(loadFileContent("/container/create-location-not-found-response.json"));
     }
 
     @Test
@@ -113,9 +109,7 @@ public class ContainerIT extends RaktrIT {
                 .extract()
                 .asString();
 
-        assertJson(response)
-                .excluding("timestamp")
-                .equalTo(loadFileContent("/container/create-owner-not-found-response.json"));
+        assertJson(response).equalTo(loadFileContent("/container/create-owner-not-found-response.json"));
     }
 
     @Test
@@ -141,9 +135,7 @@ public class ContainerIT extends RaktrIT {
                 .extract()
                 .asString();
 
-        assertJson(response)
-                .excluding("timestamp")
-                .equalTo(loadFileContent("/container/get-by-id-not-found-response.json"));
+        assertJson(response).equalTo(loadFileContent("/container/get-by-id-not-found-response.json"));
     }
 
     @Test
@@ -173,9 +165,7 @@ public class ContainerIT extends RaktrIT {
                 .extract()
                 .asString();
 
-        assertJson(response)
-                .excluding("timestamp")
-                .equalTo(loadFileContent("/container/update-not-found-response.json"));
+        assertJson(response).equalTo(loadFileContent("/container/update-not-found-response.json"));
     }
 
     @Test
@@ -189,9 +179,7 @@ public class ContainerIT extends RaktrIT {
                 .extract()
                 .asString();
 
-        assertJson(response)
-                .excluding("timestamp")
-                .equalTo(loadFileContent("/container/update-category-not-found-response.json"));
+        assertJson(response).equalTo(loadFileContent("/container/update-category-not-found-response.json"));
     }
 
     @Test
@@ -205,9 +193,7 @@ public class ContainerIT extends RaktrIT {
                 .extract()
                 .asString();
 
-        assertJson(response)
-                .excluding("timestamp")
-                .equalTo(loadFileContent("/container/update-location-not-found-response.json"));
+        assertJson(response).equalTo(loadFileContent("/container/update-location-not-found-response.json"));
     }
 
     @Test
@@ -221,9 +207,7 @@ public class ContainerIT extends RaktrIT {
                 .extract()
                 .asString();
 
-        assertJson(response)
-                .excluding("timestamp")
-                .equalTo(loadFileContent("/container/update-location-not-found-response.json"));
+        assertJson(response).equalTo(loadFileContent("/container/update-owner-not-found-response.json"));
     }
 
     @Test
@@ -265,9 +249,7 @@ public class ContainerIT extends RaktrIT {
                 .extract()
                 .asString();
 
-        assertJson(response)
-                .excluding("timestamp")
-                .equalTo(loadFileContent("/container/add-devices-not-found-response.json"));
+        assertJson(response).equalTo(loadFileContent("/container/add-devices-not-found-response.json"));
     }
 
     @Test
@@ -281,9 +263,7 @@ public class ContainerIT extends RaktrIT {
                 .extract()
                 .asString();
 
-        assertJson(response)
-                .excluding("timestamp")
-                .equalTo(loadFileContent("/container/add-devices-device-not-found-response.json"));
+        assertJson(response).equalTo(loadFileContent("/container/add-devices-device-not-found-response.json"));
     }
 
     @Test
@@ -309,9 +289,7 @@ public class ContainerIT extends RaktrIT {
                 .extract()
                 .asString();
 
-        assertJson(response)
-                .excluding("timestamp")
-                .equalTo(loadFileContent("/container/remove-device-not-found-response.json"));
+        assertJson(response).equalTo(loadFileContent("/container/remove-device-not-found-response.json"));
     }
 
     @Test
@@ -324,9 +302,7 @@ public class ContainerIT extends RaktrIT {
                 .extract()
                 .asString();
 
-        assertJson(response)
-                .excluding("timestamp")
-                .equalTo(loadFileContent("/container/remove-device-device-not-found-response.json"));
+        assertJson(response).equalTo(loadFileContent("/container/remove-device-device-not-found-response.json"));
     }
 
     @Test
@@ -353,9 +329,7 @@ public class ContainerIT extends RaktrIT {
                 .extract()
                 .asString();
 
-        assertJson(response)
-                .excluding("timestamp")
-                .equalTo(loadFileContent("/container/delete-not-found-response.json"));
+        assertJson(response).equalTo(loadFileContent("/container/delete-not-found-response.json"));
     }
 
     @Test
@@ -391,9 +365,7 @@ public class ContainerIT extends RaktrIT {
                 .extract()
                 .asString();
 
-        assertJson(response)
-                .excluding("timestamp")
-                .equalTo(loadFileContent("/container/restore-not-found-response.json"));
+        assertJson(response).equalTo(loadFileContent("/container/restore-not-found-response.json"));
     }
 
     @Test
@@ -428,9 +400,7 @@ public class ContainerIT extends RaktrIT {
                 .extract()
                 .asString();
 
-        assertJson(response)
-                .excluding("timestamp")
-                .equalTo(loadFileContent("/container/get-tickets-not-found-response.json"));
+        assertJson(response).equalTo(loadFileContent("/container/get-tickets-not-found-response.json"));
     }
 
 }

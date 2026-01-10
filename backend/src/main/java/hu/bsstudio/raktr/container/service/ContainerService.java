@@ -1,12 +1,13 @@
 package hu.bsstudio.raktr.container.service;
 
 import hu.bsstudio.raktr.container.mapper.ContainerMapper;
+import hu.bsstudio.raktr.dal.entity.Device;
 import hu.bsstudio.raktr.dal.repository.ContainerRepository;
 import hu.bsstudio.raktr.dto.container.ContainerAddDevicesDto;
 import hu.bsstudio.raktr.dto.container.ContainerCreateDto;
 import hu.bsstudio.raktr.dto.container.ContainerDetailsDto;
 import hu.bsstudio.raktr.dto.container.ContainerUpdateDto;
-import hu.bsstudio.raktr.exception.ObjectNotFoundException;
+import hu.bsstudio.raktr.exception.EntityNotFoundException;
 import hu.bsstudio.raktr.scannable.service.ScannableLookupService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -101,7 +102,7 @@ public class ContainerService {
         var deviceToRemove = container.getDevices().stream()
                 .filter(device -> device.getId().equals(deviceId))
                 .findFirst()
-                .orElseThrow(ObjectNotFoundException::new);
+                .orElseThrow(() -> new EntityNotFoundException(Device.class, deviceId));
 
         container.getDevices().remove(deviceToRemove);
 

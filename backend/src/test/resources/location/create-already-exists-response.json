@@ -1,6 +1,6 @@
 {
-  "timestamp": "IGNORE",
-  "status": 409,
-  "error": "Conflict",
-  "path": "/v1/location"
+  "error": "ENTITY_ALREADY_EXISTS",
+  "resourceName": "Location",
+  "resourceKey": "test-location-1",
+  "message": "Resource [Location] already exists with key [test-location-1]"
 }

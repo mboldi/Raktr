@@ -1,6 +1,6 @@
 {
-  "timestamp": "IGNORE",
-  "status": 404,
-  "error": "Not Found",
-  "path": "/v1/device/999"
+  "error": "ENTITY_NOT_FOUND",
+  "resourceName": "Device",
+  "resourceKey": "999",
+  "message": "Resource [Device] not found with key [999]"
 }

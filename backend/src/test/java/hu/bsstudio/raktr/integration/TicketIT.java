@@ -95,9 +95,7 @@ public class TicketIT extends RaktrIT {
                 .extract()
                 .asString();
 
-        assertJson(response)
-                .excluding("timestamp")
-                .equalTo(loadFileContent("/ticket/create-scannable-not-found-response.json"));
+        assertJson(response).equalTo(loadFileContent("/ticket/create-scannable-not-found-response.json"));
     }
 
     @Test
@@ -123,9 +121,7 @@ public class TicketIT extends RaktrIT {
                 .extract()
                 .asString();
 
-        assertJson(response)
-                .excluding("timestamp")
-                .equalTo(loadFileContent("/ticket/get-by-id-not-found-response.json"));
+        assertJson(response).equalTo(loadFileContent("/ticket/get-by-id-not-found-response.json"));
     }
 
     @Test
@@ -155,9 +151,7 @@ public class TicketIT extends RaktrIT {
                 .extract()
                 .asString();
 
-        assertJson(response)
-                .excluding("timestamp")
-                .equalTo(loadFileContent("/ticket/update-not-found-response.json"));
+        assertJson(response).equalTo(loadFileContent("/ticket/update-not-found-response.json"));
     }
 
     @Test
@@ -187,9 +181,7 @@ public class TicketIT extends RaktrIT {
                 .extract()
                 .asString();
 
-        assertJson(response)
-                .excluding("timestamp")
-                .equalTo(loadFileContent("/ticket/add-comment-not-found-response.json"));
+        assertJson(response).equalTo(loadFileContent("/ticket/add-comment-not-found-response.json"));
     }
 
 }

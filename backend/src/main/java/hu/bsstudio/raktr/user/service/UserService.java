@@ -4,7 +4,7 @@ import hu.bsstudio.raktr.dal.entity.User;
 import hu.bsstudio.raktr.dal.repository.UserRepository;
 import hu.bsstudio.raktr.dto.user.UserDetailsDto;
 import hu.bsstudio.raktr.dto.user.UserUpdateDto;
-import hu.bsstudio.raktr.exception.ObjectNotFoundException;
+import hu.bsstudio.raktr.exception.EntityNotFoundException;
 import hu.bsstudio.raktr.security.RoleConstants;
 import hu.bsstudio.raktr.security.SecurityService;
 import hu.bsstudio.raktr.user.mapper.UserMapper;
@@ -65,7 +65,8 @@ public class UserService {
     }
 
     private User getUser(String username) {
-        return userRepository.findByUsername(username).orElseThrow(ObjectNotFoundException::new);
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new EntityNotFoundException(User.class, username));
     }
 
 }

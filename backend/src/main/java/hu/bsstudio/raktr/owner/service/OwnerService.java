@@ -1,13 +1,15 @@
 package hu.bsstudio.raktr.owner.service;
 
 import hu.bsstudio.raktr.dal.entity.Owner;
+import hu.bsstudio.raktr.dal.entity.Scannable;
 import hu.bsstudio.raktr.dal.repository.OwnerRepository;
 import hu.bsstudio.raktr.dal.repository.ScannableRepository;
 import hu.bsstudio.raktr.dto.owner.OwnerCreateDto;
 import hu.bsstudio.raktr.dto.owner.OwnerDetailsDto;
 import hu.bsstudio.raktr.dto.owner.OwnerUpdateDto;
-import hu.bsstudio.raktr.exception.ObjectConflictException;
-import hu.bsstudio.raktr.exception.ObjectNotFoundException;
+import hu.bsstudio.raktr.exception.EntityAlreadyExistsException;
+import hu.bsstudio.raktr.exception.EntityInUseException;
+import hu.bsstudio.raktr.exception.EntityNotFoundException;
 import hu.bsstudio.raktr.owner.mapper.OwnerMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,7 +39,7 @@ public class OwnerService {
         createDto.setName(createDto.getName().trim());
 
         if (ownerRepository.existsByName(createDto.getName())) {
-            throw new ObjectConflictException();
+            throw new EntityAlreadyExistsException(Owner.class, createDto.getName());
         }
 
         var owner = ownerMapper.createDtoToEntity(createDto);
@@ -54,7 +56,7 @@ public class OwnerService {
         var owner = getOwner(ownerId);
 
         if (ownerRepository.existsByName(updateDto.getName())) {
-            throw new ObjectConflictException();
+            throw new EntityAlreadyExistsException(Owner.class, updateDto.getName());
         }
 
         ownerMapper.updateDtoToEntity(owner, updateDto);
@@ -70,7 +72,7 @@ public class OwnerService {
         var owner = getOwner(ownerId);
 
         if (scannableRepository.existsByOwner(owner)) {
-            throw new ObjectConflictException();
+            throw new EntityInUseException(Owner.class, ownerId, Scannable.class);
         }
 
         ownerRepository.delete(owner);
@@ -79,7 +81,7 @@ public class OwnerService {
     }
 
     private Owner getOwner(Long ownerId) {
-        return ownerRepository.findById(ownerId).orElseThrow(ObjectNotFoundException::new);
+        return ownerRepository.findById(ownerId).orElseThrow(() -> new EntityNotFoundException(Owner.class, ownerId));
     }
 
 }

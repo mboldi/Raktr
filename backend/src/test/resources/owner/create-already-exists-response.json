@@ -1,6 +1,6 @@
 {
-  "timestamp": "IGNORE",
-  "status": 409,
-  "error": "Conflict",
-  "path": "/v1/owner"
+  "error": "ENTITY_ALREADY_EXISTS",
+  "resourceName": "Owner",
+  "resourceKey": "test-owner-1",
+  "message": "Resource [Owner] already exists with key [test-owner-1]"
 }

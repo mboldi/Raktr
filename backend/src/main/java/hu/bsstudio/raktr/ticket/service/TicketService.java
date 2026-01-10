@@ -11,7 +11,7 @@ import hu.bsstudio.raktr.dto.comment.CommentDetailsDto;
 import hu.bsstudio.raktr.dto.ticket.TicketCreateDto;
 import hu.bsstudio.raktr.dto.ticket.TicketDetailsDto;
 import hu.bsstudio.raktr.dto.ticket.TicketUpdateDto;
-import hu.bsstudio.raktr.exception.ObjectNotFoundException;
+import hu.bsstudio.raktr.exception.EntityNotFoundException;
 import hu.bsstudio.raktr.scannable.service.ScannableLookupService;
 import hu.bsstudio.raktr.ticket.mapper.TicketMapper;
 import jakarta.transaction.Transactional;
@@ -97,7 +97,8 @@ public class TicketService {
     }
 
     private Ticket getTicket(Long ticketId) {
-        return ticketRepository.findById(ticketId).orElseThrow(ObjectNotFoundException::new);
+        return ticketRepository.findById(ticketId)
+                .orElseThrow(() -> new EntityNotFoundException(Ticket.class, ticketId));
     }
 
 }

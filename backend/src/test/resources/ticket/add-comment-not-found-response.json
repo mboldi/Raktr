@@ -1,6 +1,6 @@
 {
-  "timestamp": "IGNORE",
-  "status": 404,
-  "error": "Not Found",
-  "path": "/v1/ticket/999/comments"
+  "error": "ENTITY_NOT_FOUND",
+  "resourceName": "Ticket",
+  "resourceKey": "999",
+  "message": "Resource [Ticket] not found with key [999]"
 }

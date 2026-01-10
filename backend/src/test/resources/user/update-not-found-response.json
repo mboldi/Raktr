@@ -1,6 +1,6 @@
 {
-  "timestamp": "IGNORE",
-  "status": 404,
-  "error": "Not Found",
-  "path": "/v1/user/not_found_user"
+  "error": "ENTITY_NOT_FOUND",
+  "resourceName": "User",
+  "resourceKey": "not_found_user",
+  "message": "Resource [User] not found with key [not_found_user]"
 }

@@ -57,9 +57,7 @@ public class LocationIT extends RaktrIT {
                 .extract()
                 .asString();
 
-        assertJson(response)
-                .excluding("timestamp")
-                .equalTo(loadFileContent("/location/create-already-exists-response.json"));
+        assertJson(response).equalTo(loadFileContent("/location/create-already-exists-response.json"));
     }
 
     @Test
@@ -85,9 +83,7 @@ public class LocationIT extends RaktrIT {
                 .extract()
                 .asString();
 
-        assertJson(response)
-                .excluding("timestamp")
-                .equalTo(loadFileContent("/location/delete-not-empty-response.json"));
+        assertJson(response).equalTo(loadFileContent("/location/delete-not-empty-response.json"));
 
         databaseQueryHelper.queryDatabase("SELECT count(*) FROM locations WHERE name = 'test-location-1'")
                 .assertRowCount()

@@ -46,9 +46,7 @@ public class ScannableIT extends RaktrIT {
                 .extract()
                 .asString();
 
-        assertJson(response)
-                .excluding("timestamp")
-                .equalTo(loadFileContent("/scannable/get-by-barcode-not-found-response.json"));
+        assertJson(response).equalTo(loadFileContent("/scannable/get-by-barcode-not-found-response.json"));
     }
 
     @Test
@@ -92,9 +90,7 @@ public class ScannableIT extends RaktrIT {
                 .extract()
                 .asString();
 
-        assertJson(response)
-                .excluding("timestamp")
-                .equalTo(loadFileContent("/scannable/get-by-asset-tag-not-found-response.json"));
+        assertJson(response).equalTo(loadFileContent("/scannable/get-by-asset-tag-not-found-response.json"));
     }
 
     @Test

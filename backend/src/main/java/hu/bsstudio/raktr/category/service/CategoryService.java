@@ -1,12 +1,15 @@
 package hu.bsstudio.raktr.category.service;
 
 import hu.bsstudio.raktr.category.mapper.CategoryMapper;
+import hu.bsstudio.raktr.dal.entity.Category;
+import hu.bsstudio.raktr.dal.entity.Scannable;
 import hu.bsstudio.raktr.dal.repository.CategoryRepository;
 import hu.bsstudio.raktr.dal.repository.ScannableRepository;
 import hu.bsstudio.raktr.dto.category.CategoryCreateDto;
 import hu.bsstudio.raktr.dto.category.CategoryDetailsDto;
-import hu.bsstudio.raktr.exception.ObjectConflictException;
-import hu.bsstudio.raktr.exception.ObjectNotFoundException;
+import hu.bsstudio.raktr.exception.EntityAlreadyExistsException;
+import hu.bsstudio.raktr.exception.EntityInUseException;
+import hu.bsstudio.raktr.exception.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -35,7 +38,7 @@ public class CategoryService {
         createDto.setName(createDto.getName().trim());
 
         if (categoryRepository.existsById(createDto.getName())) {
-            throw new ObjectConflictException();
+            throw new EntityAlreadyExistsException(Category.class, createDto.getName());
         }
 
         var category = categoryMapper.createDtoToEntity(createDto);
@@ -50,10 +53,10 @@ public class CategoryService {
     @Transactional
     public void deleteCategory(String categoryName) {
         var category = categoryRepository.findById(categoryName)
-                .orElseThrow(ObjectNotFoundException::new);
+                .orElseThrow(() -> new EntityNotFoundException(Category.class, categoryName));
 
         if (scannableRepository.existsByCategory(category)) {
-            throw new ObjectConflictException();
+            throw new EntityInUseException(Category.class, categoryName, Scannable.class);
         }
 
         categoryRepository.delete(category);

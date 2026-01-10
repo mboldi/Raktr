@@ -81,9 +81,7 @@ public class DeviceIT extends RaktrIT {
                 .extract()
                 .asString();
 
-        assertJson(response)
-                .excluding("timestamp")
-                .equalTo(loadFileContent("/device/create-category-not-found-response.json"));
+        assertJson(response).equalTo(loadFileContent("/device/create-category-not-found-response.json"));
     }
 
     @Test
@@ -97,9 +95,7 @@ public class DeviceIT extends RaktrIT {
                 .extract()
                 .asString();
 
-        assertJson(response)
-                .excluding("timestamp")
-                .equalTo(loadFileContent("/device/create-location-not-found-response.json"));
+        assertJson(response).equalTo(loadFileContent("/device/create-location-not-found-response.json"));
     }
 
     @Test
@@ -113,9 +109,7 @@ public class DeviceIT extends RaktrIT {
                 .extract()
                 .asString();
 
-        assertJson(response)
-                .excluding("timestamp")
-                .equalTo(loadFileContent("/device/create-owner-not-found-response.json"));
+        assertJson(response).equalTo(loadFileContent("/device/create-owner-not-found-response.json"));
     }
 
     @Test
@@ -141,9 +135,7 @@ public class DeviceIT extends RaktrIT {
                 .extract()
                 .asString();
 
-        assertJson(response)
-                .excluding("timestamp")
-                .equalTo(loadFileContent("/device/get-by-id-not-found-response.json"));
+        assertJson(response).equalTo(loadFileContent("/device/get-by-id-not-found-response.json"));
     }
 
     @Test
@@ -173,9 +165,7 @@ public class DeviceIT extends RaktrIT {
                 .extract()
                 .asString();
 
-        assertJson(response)
-                .excluding("timestamp")
-                .equalTo(loadFileContent("/device/update-not-found-response.json"));
+        assertJson(response).equalTo(loadFileContent("/device/update-not-found-response.json"));
     }
 
     @Test
@@ -189,9 +179,7 @@ public class DeviceIT extends RaktrIT {
                 .extract()
                 .asString();
 
-        assertJson(response)
-                .excluding("timestamp")
-                .equalTo(loadFileContent("/device/update-category-not-found-response.json"));
+        assertJson(response).equalTo(loadFileContent("/device/update-category-not-found-response.json"));
     }
 
     @Test
@@ -205,9 +193,7 @@ public class DeviceIT extends RaktrIT {
                 .extract()
                 .asString();
 
-        assertJson(response)
-                .excluding("timestamp")
-                .equalTo(loadFileContent("/device/update-location-not-found-response.json"));
+        assertJson(response).equalTo(loadFileContent("/device/update-location-not-found-response.json"));
     }
 
     @Test
@@ -221,9 +207,7 @@ public class DeviceIT extends RaktrIT {
                 .extract()
                 .asString();
 
-        assertJson(response)
-                .excluding("timestamp")
-                .equalTo(loadFileContent("/device/update-owner-not-found-response.json"));
+        assertJson(response).equalTo(loadFileContent("/device/update-owner-not-found-response.json"));
     }
 
     @Test
@@ -250,9 +234,7 @@ public class DeviceIT extends RaktrIT {
                 .extract()
                 .asString();
 
-        assertJson(response)
-                .excluding("timestamp")
-                .equalTo(loadFileContent("/device/delete-not-found-response.json"));
+        assertJson(response).equalTo(loadFileContent("/device/delete-not-found-response.json"));
     }
 
     @Test
@@ -288,9 +270,7 @@ public class DeviceIT extends RaktrIT {
                 .extract()
                 .asString();
 
-        assertJson(response)
-                .excluding("timestamp")
-                .equalTo(loadFileContent("/device/restore-not-found-response.json"));
+        assertJson(response).equalTo(loadFileContent("/device/restore-not-found-response.json"));
     }
 
     @Test
@@ -338,9 +318,7 @@ public class DeviceIT extends RaktrIT {
                 .extract()
                 .asString();
 
-        assertJson(response)
-                .excluding("timestamp")
-                .equalTo(loadFileContent("/device/get-tickets-not-found-response.json"));
+        assertJson(response).equalTo(loadFileContent("/device/get-tickets-not-found-response.json"));
     }
 
 }

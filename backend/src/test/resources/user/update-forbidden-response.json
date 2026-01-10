@@ -1,6 +1,4 @@
 {
-  "timestamp": "IGNORE",
-  "status": 403,
-  "error": "Forbidden",
-  "path": "/v1/user/member_user"
+  "error": "ACCESS_DENIED",
+  "message": "You do not have permission to perform this action!"
 }

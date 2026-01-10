@@ -3,6 +3,7 @@ package hu.bsstudio.raktr.location.controller;
 import hu.bsstudio.raktr.dto.location.LocationCreateDto;
 import hu.bsstudio.raktr.dto.location.LocationDetailsDto;
 import hu.bsstudio.raktr.location.service.LocationService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+@Tag(name = "Locations")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/v1/location")

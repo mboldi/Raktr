@@ -3,6 +3,7 @@ package hu.bsstudio.raktr.user.controller;
 import hu.bsstudio.raktr.dto.user.UserDetailsDto;
 import hu.bsstudio.raktr.dto.user.UserUpdateDto;
 import hu.bsstudio.raktr.user.service.UserService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+@Tag(name = "Users")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/v1/user")

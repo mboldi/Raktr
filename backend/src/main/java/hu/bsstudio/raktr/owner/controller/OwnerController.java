@@ -5,6 +5,7 @@ import hu.bsstudio.raktr.dto.owner.OwnerDetailsDto;
 import hu.bsstudio.raktr.dto.owner.OwnerUpdateDto;
 import hu.bsstudio.raktr.owner.service.OwnerService;
 import hu.bsstudio.raktr.security.RoleConstants;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+@Tag(name = "Owners")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/v1/owner")

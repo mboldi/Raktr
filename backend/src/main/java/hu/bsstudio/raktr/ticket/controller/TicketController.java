@@ -8,6 +8,7 @@ import hu.bsstudio.raktr.dto.ticket.TicketCreateDto;
 import hu.bsstudio.raktr.dto.ticket.TicketDetailsDto;
 import hu.bsstudio.raktr.dto.ticket.TicketUpdateDto;
 import hu.bsstudio.raktr.ticket.service.TicketService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+@Tag(name = "Tickets")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/v1/ticket")

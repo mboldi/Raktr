@@ -3,6 +3,7 @@ package hu.bsstudio.raktr.category.controller;
 import hu.bsstudio.raktr.category.service.CategoryService;
 import hu.bsstudio.raktr.dto.category.CategoryCreateDto;
 import hu.bsstudio.raktr.dto.category.CategoryDetailsDto;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+@Tag(name = "Categories")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/v1/category")

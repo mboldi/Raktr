@@ -74,6 +74,19 @@ public class CategoryIT extends RaktrIT {
     }
 
     @Test
+    void testDeleteCategoryNotFound() {
+        var response = givenAuthenticatedAdmin()
+                .when()
+                .delete("/v1/category/non-existent-category")
+                .then()
+                .statusCode(HttpStatus.NOT_FOUND.value())
+                .extract()
+                .asString();
+
+        assertJson(response).equalTo(loadFileContent("/category/delete-not-found-response.json"));
+    }
+
+    @Test
     void testDeleteCategoryNotEmpty() {
         var response = givenAuthenticatedAdmin()
                 .when()

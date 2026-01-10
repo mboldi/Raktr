@@ -68,9 +68,22 @@ public class LocationIT extends RaktrIT {
                 .then()
                 .statusCode(HttpStatus.NO_CONTENT.value());
 
-        databaseQueryHelper.queryDatabase("SELECT count(*) FROM categories WHERE name = 'test-category-2'")
+        databaseQueryHelper.queryDatabase("SELECT count(*) FROM locations WHERE name = 'test-location-2'")
                 .assertRowCount()
                 .isEmpty();
+    }
+
+    @Test
+    void testDeleteLocationNotFound() {
+        var response = givenAuthenticatedAdmin()
+                .when()
+                .delete("/v1/location/non-existent-location")
+                .then()
+                .statusCode(HttpStatus.NOT_FOUND.value())
+                .extract()
+                .asString();
+
+        assertJson(response).equalTo(loadFileContent("/location/delete-not-found-response.json"));
     }
 
     @Test

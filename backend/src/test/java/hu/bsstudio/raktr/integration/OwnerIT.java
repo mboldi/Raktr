@@ -123,7 +123,7 @@ public class OwnerIT extends RaktrIT {
                 .then()
                 .statusCode(HttpStatus.NO_CONTENT.value());
 
-        databaseQueryHelper.queryDatabase("SELECT count(*) FROM categories WHERE name = 'test-category-2'")
+        databaseQueryHelper.queryDatabase("SELECT count(*) FROM owners WHERE id = 2")
                 .assertRowCount()
                 .isEmpty();
     }

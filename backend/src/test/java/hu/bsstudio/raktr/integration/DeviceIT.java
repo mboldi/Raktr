@@ -17,7 +17,7 @@ public class DeviceIT extends RaktrIT {
     void testListDevicesDefaultOnlyActive() {
         var response = givenAuthenticatedAdmin()
                 .when()
-                .get("/v1/device")
+                .get("/v1/devices")
                 .then()
                 .statusCode(HttpStatus.OK.value())
                 .extract()
@@ -31,7 +31,7 @@ public class DeviceIT extends RaktrIT {
         var response = givenAuthenticatedAdmin()
                 .queryParam("deleted", false)
                 .when()
-                .get("/v1/device")
+                .get("/v1/devices")
                 .then()
                 .statusCode(HttpStatus.OK.value())
                 .extract()
@@ -45,7 +45,7 @@ public class DeviceIT extends RaktrIT {
         var response = givenAuthenticatedAdmin()
                 .queryParam("deleted", true)
                 .when()
-                .get("/v1/device")
+                .get("/v1/devices")
                 .then()
                 .statusCode(HttpStatus.OK.value())
                 .extract()
@@ -59,7 +59,7 @@ public class DeviceIT extends RaktrIT {
         var response = givenAuthenticatedAdmin()
                 .body(loadFileContent("/device/create-request.json"))
                 .when()
-                .post("/v1/device")
+                .post("/v1/devices")
                 .then()
                 .statusCode(HttpStatus.CREATED.value())
                 .extract()
@@ -75,7 +75,7 @@ public class DeviceIT extends RaktrIT {
         var response = givenAuthenticatedAdmin()
                 .body(loadFileContent("/device/create-category-not-found-request.json"))
                 .when()
-                .post("/v1/device")
+                .post("/v1/devices")
                 .then()
                 .statusCode(HttpStatus.NOT_FOUND.value())
                 .extract()
@@ -89,7 +89,7 @@ public class DeviceIT extends RaktrIT {
         var response = givenAuthenticatedAdmin()
                 .body(loadFileContent("/device/create-location-not-found-request.json"))
                 .when()
-                .post("/v1/device")
+                .post("/v1/devices")
                 .then()
                 .statusCode(HttpStatus.NOT_FOUND.value())
                 .extract()
@@ -103,7 +103,7 @@ public class DeviceIT extends RaktrIT {
         var response = givenAuthenticatedAdmin()
                 .body(loadFileContent("/device/create-owner-not-found-request.json"))
                 .when()
-                .post("/v1/device")
+                .post("/v1/devices")
                 .then()
                 .statusCode(HttpStatus.NOT_FOUND.value())
                 .extract()
@@ -116,7 +116,7 @@ public class DeviceIT extends RaktrIT {
     void testGetDeviceById() {
         var response = givenAuthenticatedAdmin()
                 .when()
-                .get("/v1/device/100")
+                .get("/v1/devices/100")
                 .then()
                 .statusCode(HttpStatus.OK.value())
                 .extract()
@@ -129,7 +129,7 @@ public class DeviceIT extends RaktrIT {
     void testGetDeviceByIdNotFound() {
         var response = givenAuthenticatedAdmin()
                 .when()
-                .get("/v1/device/999")
+                .get("/v1/devices/999")
                 .then()
                 .statusCode(HttpStatus.NOT_FOUND.value())
                 .extract()
@@ -143,7 +143,7 @@ public class DeviceIT extends RaktrIT {
         var response = givenAuthenticatedAdmin()
                 .body(loadFileContent("/device/update-request.json"))
                 .when()
-                .put("/v1/device/100")
+                .put("/v1/devices/100")
                 .then()
                 .statusCode(HttpStatus.OK.value())
                 .extract()
@@ -159,7 +159,7 @@ public class DeviceIT extends RaktrIT {
         var response = givenAuthenticatedAdmin()
                 .body(loadFileContent("/device/update-request.json"))
                 .when()
-                .put("/v1/device/999")
+                .put("/v1/devices/999")
                 .then()
                 .statusCode(HttpStatus.NOT_FOUND.value())
                 .extract()
@@ -173,7 +173,7 @@ public class DeviceIT extends RaktrIT {
         var response = givenAuthenticatedAdmin()
                 .body(loadFileContent("/device/update-category-not-found-request.json"))
                 .when()
-                .put("/v1/device/100")
+                .put("/v1/devices/100")
                 .then()
                 .statusCode(HttpStatus.NOT_FOUND.value())
                 .extract()
@@ -187,7 +187,7 @@ public class DeviceIT extends RaktrIT {
         var response = givenAuthenticatedAdmin()
                 .body(loadFileContent("/device/update-location-not-found-request.json"))
                 .when()
-                .put("/v1/device/100")
+                .put("/v1/devices/100")
                 .then()
                 .statusCode(HttpStatus.NOT_FOUND.value())
                 .extract()
@@ -201,7 +201,7 @@ public class DeviceIT extends RaktrIT {
         var response = givenAuthenticatedAdmin()
                 .body(loadFileContent("/device/update-owner-not-found-request.json"))
                 .when()
-                .put("/v1/device/100")
+                .put("/v1/devices/100")
                 .then()
                 .statusCode(HttpStatus.NOT_FOUND.value())
                 .extract()
@@ -214,7 +214,7 @@ public class DeviceIT extends RaktrIT {
     void testDeleteDevice() {
         givenAuthenticatedAdmin()
                 .when()
-                .delete("/v1/device/100")
+                .delete("/v1/devices/100")
                 .then()
                 .statusCode(HttpStatus.OK.value());
 
@@ -228,7 +228,7 @@ public class DeviceIT extends RaktrIT {
     void testDeleteDeviceNotFound() {
         var response = givenAuthenticatedAdmin()
                 .when()
-                .delete("/v1/device/999")
+                .delete("/v1/devices/999")
                 .then()
                 .statusCode(HttpStatus.NOT_FOUND.value())
                 .extract()
@@ -241,7 +241,7 @@ public class DeviceIT extends RaktrIT {
     void testDeleteDeviceForbidden() {
         givenAuthenticatedCandidate()
                 .when()
-                .delete("/v1/device/100")
+                .delete("/v1/devices/100")
                 .then()
                 .statusCode(HttpStatus.FORBIDDEN.value());
     }
@@ -250,7 +250,7 @@ public class DeviceIT extends RaktrIT {
     void testRestoreDevice() {
         givenAuthenticatedAdmin()
                 .when()
-                .post("/v1/device/103/restore")
+                .post("/v1/devices/103/restore")
                 .then()
                 .statusCode(HttpStatus.OK.value());
 
@@ -264,7 +264,7 @@ public class DeviceIT extends RaktrIT {
     void testRestoreDeviceNotFound() {
         var response = givenAuthenticatedAdmin()
                 .when()
-                .post("/v1/device/999/restore")
+                .post("/v1/devices/999/restore")
                 .then()
                 .statusCode(HttpStatus.NOT_FOUND.value())
                 .extract()
@@ -277,7 +277,7 @@ public class DeviceIT extends RaktrIT {
     void testRestoreDeviceForbidden() {
         givenAuthenticatedCandidate()
                 .when()
-                .post("/v1/device/103/restore")
+                .post("/v1/devices/103/restore")
                 .then()
                 .statusCode(HttpStatus.FORBIDDEN.value());
     }
@@ -286,7 +286,7 @@ public class DeviceIT extends RaktrIT {
     void testListManufacturers() {
         var response = givenAuthenticatedAdmin()
                 .when()
-                .get("/v1/device/manufacturers")
+                .get("/v1/devices/manufacturers")
                 .then()
                 .statusCode(HttpStatus.OK.value())
                 .extract()
@@ -299,7 +299,7 @@ public class DeviceIT extends RaktrIT {
     void testGetTicketsForDevice() {
         var response = givenAuthenticatedAdmin()
                 .when()
-                .get("/v1/device/100/tickets")
+                .get("/v1/devices/100/tickets")
                 .then()
                 .statusCode(HttpStatus.OK.value())
                 .extract()
@@ -312,7 +312,7 @@ public class DeviceIT extends RaktrIT {
     void testGetTicketsForDeviceNotFound() {
         var response = givenAuthenticatedAdmin()
                 .when()
-                .get("/v1/device/999/tickets")
+                .get("/v1/devices/999/tickets")
                 .then()
                 .statusCode(HttpStatus.NOT_FOUND.value())
                 .extract()

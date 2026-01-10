@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "Scannables", description = "Lookup devices and containers by barcode or asset tag")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/v1/scannable")
+@RequestMapping("/v1/scannables")
 public class ScannableController {
 
     private final ScannableService scannableService;

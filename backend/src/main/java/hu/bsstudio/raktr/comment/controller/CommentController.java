@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "Comments")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/v1/comment")
+@RequestMapping("/v1/comments")
 public class CommentController {
 
     private final CommentService commentService;

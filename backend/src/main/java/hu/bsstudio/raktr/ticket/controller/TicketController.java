@@ -27,7 +27,7 @@ import java.util.List;
 @Tag(name = "Tickets")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/v1/ticket")
+@RequestMapping("/v1/tickets")
 public class TicketController {
 
     private final TicketService ticketService;

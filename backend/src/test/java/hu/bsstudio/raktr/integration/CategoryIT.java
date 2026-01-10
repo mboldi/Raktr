@@ -16,7 +16,7 @@ public class CategoryIT extends RaktrIT {
     void testListCategories() {
         var response = givenAuthenticatedAdmin()
                 .when()
-                .get("/v1/category")
+                .get("/v1/categories")
                 .then()
                 .statusCode(HttpStatus.OK.value())
                 .extract()
@@ -30,7 +30,7 @@ public class CategoryIT extends RaktrIT {
         var response = givenAuthenticatedAdmin()
                 .body(loadFileContent("/category/create-request.json"))
                 .when()
-                .post("/v1/category")
+                .post("/v1/categories")
                 .then()
                 .statusCode(HttpStatus.CREATED.value())
                 .extract()
@@ -51,7 +51,7 @@ public class CategoryIT extends RaktrIT {
         var response = givenAuthenticatedAdmin()
                 .body(loadFileContent("/category/create-already-exists-request.json"))
                 .when()
-                .post("/v1/category")
+                .post("/v1/categories")
                 .then()
                 .statusCode(HttpStatus.CONFLICT.value())
                 .extract()
@@ -64,7 +64,7 @@ public class CategoryIT extends RaktrIT {
     void testDeleteCategory() {
         givenAuthenticatedAdmin()
                 .when()
-                .delete("/v1/category/test-category-2")
+                .delete("/v1/categories/test-category-2")
                 .then()
                 .statusCode(HttpStatus.NO_CONTENT.value());
 
@@ -77,7 +77,7 @@ public class CategoryIT extends RaktrIT {
     void testDeleteCategoryNotFound() {
         var response = givenAuthenticatedAdmin()
                 .when()
-                .delete("/v1/category/non-existent-category")
+                .delete("/v1/categories/non-existent-category")
                 .then()
                 .statusCode(HttpStatus.NOT_FOUND.value())
                 .extract()
@@ -90,7 +90,7 @@ public class CategoryIT extends RaktrIT {
     void testDeleteCategoryNotEmpty() {
         var response = givenAuthenticatedAdmin()
                 .when()
-                .delete("/v1/category/test-category-1")
+                .delete("/v1/categories/test-category-1")
                 .then()
                 .statusCode(HttpStatus.CONFLICT.value())
                 .extract()

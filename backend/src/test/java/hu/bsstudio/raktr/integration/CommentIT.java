@@ -16,7 +16,7 @@ public class CommentIT extends RaktrIT {
     void testDeleteCommentAsAdmin() {
         givenAuthenticatedAdmin()
                 .when()
-                .delete("/v1/comment/1")
+                .delete("/v1/comments/1")
                 .then()
                 .statusCode(HttpStatus.NO_CONTENT.value());
 
@@ -29,7 +29,7 @@ public class CommentIT extends RaktrIT {
     void testDeleteOwnComment() {
         givenAuthenticatedCandidate()
                 .when()
-                .delete("/v1/comment/2")
+                .delete("/v1/comments/2")
                 .then()
                 .statusCode(HttpStatus.NO_CONTENT.value());
 
@@ -42,7 +42,7 @@ public class CommentIT extends RaktrIT {
     void testDeleteCommentNotFound() {
         var response = givenAuthenticatedAdmin()
                 .when()
-                .delete("/v1/comment/999")
+                .delete("/v1/comments/999")
                 .then()
                 .statusCode(HttpStatus.NOT_FOUND.value())
                 .extract()
@@ -55,7 +55,7 @@ public class CommentIT extends RaktrIT {
     void testDeleteOtherUserComment() {
         givenAuthenticatedCandidate()
                 .when()
-                .delete("/v1/comment/1")
+                .delete("/v1/comments/1")
                 .then()
                 .statusCode(HttpStatus.FORBIDDEN.value());
 

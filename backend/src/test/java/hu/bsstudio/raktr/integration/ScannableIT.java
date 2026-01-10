@@ -17,7 +17,7 @@ public class ScannableIT extends RaktrIT {
     void testGetCount() {
         givenAuthenticatedAdmin()
                 .when()
-                .get("/v1/scannable/count")
+                .get("/v1/scannables/count")
                 .then()
                 .statusCode(HttpStatus.OK.value())
                 .body(equalTo("2"));
@@ -27,7 +27,7 @@ public class ScannableIT extends RaktrIT {
     void testGetScannableByBarcode() {
         var response = givenAuthenticatedAdmin()
                 .when()
-                .get("/v1/scannable/barcode/BARCODE-001")
+                .get("/v1/scannables/barcode/BARCODE-001")
                 .then()
                 .statusCode(HttpStatus.OK.value())
                 .extract()
@@ -40,7 +40,7 @@ public class ScannableIT extends RaktrIT {
     void testGetScannableByBarcodeNotFound() {
         var response = givenAuthenticatedAdmin()
                 .when()
-                .get("/v1/scannable/barcode/NON-EXISTENT")
+                .get("/v1/scannables/barcode/NON-EXISTENT")
                 .then()
                 .statusCode(HttpStatus.NOT_FOUND.value())
                 .extract()
@@ -53,7 +53,7 @@ public class ScannableIT extends RaktrIT {
     void testCheckBarcodeExistsReturnsOk() {
         givenAuthenticatedAdmin()
                 .when()
-                .head("/v1/scannable/barcode/BARCODE-002")
+                .head("/v1/scannables/barcode/BARCODE-002")
                 .then()
                 .statusCode(HttpStatus.OK.value());
     }
@@ -62,7 +62,7 @@ public class ScannableIT extends RaktrIT {
     void testCheckBarcodeExistsReturnsNotFound() {
         givenAuthenticatedAdmin()
                 .when()
-                .head("/v1/scannable/barcode/NON-EXISTENT")
+                .head("/v1/scannables/barcode/NON-EXISTENT")
                 .then()
                 .statusCode(HttpStatus.NOT_FOUND.value());
     }
@@ -71,7 +71,7 @@ public class ScannableIT extends RaktrIT {
     void testGetScannableByAssetTag() {
         var response = givenAuthenticatedAdmin()
                 .when()
-                .get("/v1/scannable/asset-tag/ASSET-002")
+                .get("/v1/scannables/asset-tag/ASSET-002")
                 .then()
                 .statusCode(HttpStatus.OK.value())
                 .extract()
@@ -84,7 +84,7 @@ public class ScannableIT extends RaktrIT {
     void testGetScannableByAssetTagNotFound() {
         var response = givenAuthenticatedAdmin()
                 .when()
-                .get("/v1/scannable/asset-tag/NON-EXISTENT")
+                .get("/v1/scannables/asset-tag/NON-EXISTENT")
                 .then()
                 .statusCode(HttpStatus.NOT_FOUND.value())
                 .extract()
@@ -97,7 +97,7 @@ public class ScannableIT extends RaktrIT {
     void testCheckAssetTagExistsReturnsOk() {
         givenAuthenticatedAdmin()
                 .when()
-                .head("/v1/scannable/asset-tag/ASSET-001")
+                .head("/v1/scannables/asset-tag/ASSET-001")
                 .then()
                 .statusCode(HttpStatus.OK.value());
     }
@@ -106,7 +106,7 @@ public class ScannableIT extends RaktrIT {
     void testCheckAssetTagExistsReturnsNotFound() {
         givenAuthenticatedAdmin()
                 .when()
-                .head("/v1/scannable/asset-tag/NON-EXISTENT")
+                .head("/v1/scannables/asset-tag/NON-EXISTENT")
                 .then()
                 .statusCode(HttpStatus.NOT_FOUND.value());
     }

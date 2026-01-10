@@ -16,7 +16,7 @@ public class LocationIT extends RaktrIT {
     void testListCategories() {
         var response = givenAuthenticatedAdmin()
                 .when()
-                .get("/v1/location")
+                .get("/v1/locations")
                 .then()
                 .statusCode(HttpStatus.OK.value())
                 .extract()
@@ -30,7 +30,7 @@ public class LocationIT extends RaktrIT {
         var response = givenAuthenticatedAdmin()
                 .body(loadFileContent("/location/create-request.json"))
                 .when()
-                .post("/v1/location")
+                .post("/v1/locations")
                 .then()
                 .statusCode(HttpStatus.CREATED.value())
                 .extract()
@@ -51,7 +51,7 @@ public class LocationIT extends RaktrIT {
         var response = givenAuthenticatedAdmin()
                 .body(loadFileContent("/location/create-already-exists-request.json"))
                 .when()
-                .post("/v1/location")
+                .post("/v1/locations")
                 .then()
                 .statusCode(HttpStatus.CONFLICT.value())
                 .extract()
@@ -64,7 +64,7 @@ public class LocationIT extends RaktrIT {
     void testDeleteLocation() {
         givenAuthenticatedAdmin()
                 .when()
-                .delete("/v1/location/test-location-2")
+                .delete("/v1/locations/test-location-2")
                 .then()
                 .statusCode(HttpStatus.NO_CONTENT.value());
 
@@ -77,7 +77,7 @@ public class LocationIT extends RaktrIT {
     void testDeleteLocationNotFound() {
         var response = givenAuthenticatedAdmin()
                 .when()
-                .delete("/v1/location/non-existent-location")
+                .delete("/v1/locations/non-existent-location")
                 .then()
                 .statusCode(HttpStatus.NOT_FOUND.value())
                 .extract()
@@ -90,7 +90,7 @@ public class LocationIT extends RaktrIT {
     void testDeleteLocationNotEmpty() {
         var response = givenAuthenticatedAdmin()
                 .when()
-                .delete("/v1/location/test-location-1")
+                .delete("/v1/locations/test-location-1")
                 .then()
                 .statusCode(HttpStatus.CONFLICT.value())
                 .extract()

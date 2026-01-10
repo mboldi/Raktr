@@ -25,7 +25,7 @@ import java.util.List;
 @Tag(name = "Owners")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/v1/owner")
+@RequestMapping("/v1/owners")
 public class OwnerController {
 
     private final OwnerService ownerService;

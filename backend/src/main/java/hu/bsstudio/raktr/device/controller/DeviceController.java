@@ -29,7 +29,7 @@ import java.util.List;
 @Tag(name = "Devices")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/v1/device")
+@RequestMapping("/v1/devices")
 public class DeviceController {
 
     private final DeviceService deviceService;

@@ -17,7 +17,7 @@ public class OwnerIT extends RaktrIT {
     void testListOwners() {
         var response = givenAuthenticatedAdmin()
                 .when()
-                .get("/v1/owner")
+                .get("/v1/owners")
                 .then()
                 .statusCode(HttpStatus.OK.value())
                 .extract()
@@ -31,7 +31,7 @@ public class OwnerIT extends RaktrIT {
         var response = givenAuthenticatedAdmin()
                 .body(loadFileContent("/owner/create-request.json"))
                 .when()
-                .post("/v1/owner")
+                .post("/v1/owners")
                 .then()
                 .statusCode(HttpStatus.CREATED.value())
                 .extract()
@@ -52,7 +52,7 @@ public class OwnerIT extends RaktrIT {
         var response = givenAuthenticatedAdmin()
                 .body(loadFileContent("/owner/create-already-exists-request.json"))
                 .when()
-                .post("/v1/owner")
+                .post("/v1/owners")
                 .then()
                 .statusCode(HttpStatus.CONFLICT.value())
                 .extract()
@@ -66,7 +66,7 @@ public class OwnerIT extends RaktrIT {
         var response = givenAuthenticatedAdmin()
                 .body(loadFileContent("/owner/update-request.json"))
                 .when()
-                .put("/v1/owner/1")
+                .put("/v1/owners/1")
                 .then()
                 .statusCode(HttpStatus.OK.value())
                 .extract()
@@ -82,7 +82,7 @@ public class OwnerIT extends RaktrIT {
         var response = givenAuthenticatedAdmin()
                 .body(loadFileContent("/owner/update-already-exists-request.json"))
                 .when()
-                .put("/v1/owner/1")
+                .put("/v1/owners/1")
                 .then()
                 .statusCode(HttpStatus.CONFLICT.value())
                 .extract()
@@ -96,7 +96,7 @@ public class OwnerIT extends RaktrIT {
         var response = givenAuthenticatedAdmin()
                 .body(loadFileContent("/owner/update-request.json"))
                 .when()
-                .put("/v1/owner/999")
+                .put("/v1/owners/999")
                 .then()
                 .statusCode(HttpStatus.NOT_FOUND.value())
                 .extract()
@@ -110,7 +110,7 @@ public class OwnerIT extends RaktrIT {
         givenAuthenticatedCandidate()
                 .body(loadFileContent("/owner/update-request.json"))
                 .when()
-                .put("/v1/owner/1")
+                .put("/v1/owners/1")
                 .then()
                 .statusCode(HttpStatus.FORBIDDEN.value());
     }
@@ -119,7 +119,7 @@ public class OwnerIT extends RaktrIT {
     void testDeleteOwner() {
         givenAuthenticatedAdmin()
                 .when()
-                .delete("/v1/owner/2")
+                .delete("/v1/owners/2")
                 .then()
                 .statusCode(HttpStatus.NO_CONTENT.value());
 
@@ -132,7 +132,7 @@ public class OwnerIT extends RaktrIT {
     void testDeleteOwnerNotEmpty() {
         var response = givenAuthenticatedAdmin()
                 .when()
-                .delete("/v1/owner/1")
+                .delete("/v1/owners/1")
                 .then()
                 .statusCode(HttpStatus.CONFLICT.value())
                 .extract()

@@ -21,7 +21,7 @@ import java.util.List;
 @Tag(name = "Locations")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/v1/location")
+@RequestMapping("/v1/locations")
 public class LocationController {
 
     private final LocationService locationService;

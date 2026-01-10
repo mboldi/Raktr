@@ -30,7 +30,7 @@ import java.util.List;
 @Tag(name = "Containers")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/v1/container")
+@RequestMapping("/v1/containers")
 public class ContainerController {
 
     private final ContainerService containerService;

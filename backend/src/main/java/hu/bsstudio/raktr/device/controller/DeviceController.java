@@ -64,7 +64,7 @@ public class DeviceController {
         return deviceService.updateDevice(deviceId, updateDto);
     }
 
-    @Secured({RoleConstants.ADMIN, RoleConstants.MEMBER})
+    @Secured(RoleConstants.MEMBER)
     @DeleteMapping("/{deviceId}")
     public void deleteDevice(@PathVariable Long deviceId) {
         scannableService.deleteScannable(deviceId);

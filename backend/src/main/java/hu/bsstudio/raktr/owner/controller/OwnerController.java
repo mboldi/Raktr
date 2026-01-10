@@ -41,7 +41,7 @@ public class OwnerController {
         return ownerService.createOwner(createDto);
     }
 
-    @Secured({RoleConstants.ADMIN, RoleConstants.MEMBER})
+    @Secured(RoleConstants.MEMBER)
     @PutMapping("/{ownerId}")
     public OwnerDetailsDto updateOwner(@PathVariable Long ownerId, @RequestBody @Valid OwnerUpdateDto updateDto) {
         return ownerService.updateOwner(ownerId, updateDto);

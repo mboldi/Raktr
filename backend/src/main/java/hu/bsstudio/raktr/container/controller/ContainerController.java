@@ -65,7 +65,7 @@ public class ContainerController {
         return containerService.updateContainer(containerId, updateDto);
     }
 
-    @Secured({RoleConstants.ADMIN, RoleConstants.MEMBER})
+    @Secured(RoleConstants.MEMBER)
     @DeleteMapping("/{containerId}")
     public void deleteContainer(@PathVariable Long containerId) {
         scannableService.deleteScannable(containerId);

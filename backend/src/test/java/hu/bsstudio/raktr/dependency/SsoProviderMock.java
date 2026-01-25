@@ -45,6 +45,10 @@ public class SsoProviderMock {
         return wireMockServer.baseUrl() + "/application/o/raktr/";
     }
 
+    public static String getJwksUrl() {
+        return wireMockServer.baseUrl() + "/application/o/raktr/jwks/";
+    }
+
     @SneakyThrows
     public static String generateJwt(
             String uuid,

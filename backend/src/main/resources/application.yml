@@ -18,6 +18,7 @@ spring:
     oauth2:
       resourceserver:
         jwt:
+          jwk-set-uri: https://login.bsstudio.hu/application/o/raktr/jwks/
           issuer-uri: https://login.bsstudio.hu/application/o/raktr/
 
 management:

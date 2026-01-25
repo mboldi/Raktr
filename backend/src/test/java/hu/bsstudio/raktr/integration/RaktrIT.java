@@ -57,6 +57,7 @@ public abstract class RaktrIT {
         registry.add("spring.datasource.username", postgres::getUsername);
         registry.add("spring.datasource.password", postgres::getPassword);
         registry.add("spring.security.oauth2.resourceserver.jwt.issuer-uri", SsoProviderMock::getBaseUrl);
+        registry.add("spring.security.oauth2.resourceserver.jwt.jwk-set-uri", SsoProviderMock::getJwksUrl);
     }
 
     @BeforeEach

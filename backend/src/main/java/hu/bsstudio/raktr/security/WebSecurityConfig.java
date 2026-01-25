@@ -1,9 +1,11 @@
 package hu.bsstudio.raktr.security;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.config.Customizer;
@@ -11,8 +13,13 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.client.RestTemplate;
+
+import java.time.Duration;
 
 @Configuration
 @EnableWebSecurity
@@ -57,6 +64,19 @@ public class WebSecurityConfig {
                 ROLE_MEMBER > ROLE_MEMBER_CANDIDATE
                 ROLE_MEMBER_CANDIDATE > ROLE_MEMBER_CANDIDATE_CANDIDATE
                 """);
+    }
+
+    @Bean
+    // TODO: Revisit this later. In local env JWKS URL times out without this.
+    public JwtDecoder jwtDecoder(
+            @Value("${spring.security.oauth2.resourceserver.jwt.jwk-set-uri}") String jwkSetUri) {
+        SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
+        requestFactory.setConnectTimeout(Duration.ofSeconds(30));
+        requestFactory.setReadTimeout(Duration.ofSeconds(30));
+        RestTemplate restTemplate = new RestTemplate(requestFactory);
+        return NimbusJwtDecoder.withJwkSetUri(jwkSetUri)
+                .restOperations(restTemplate)
+                .build();
     }
 
 }

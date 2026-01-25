@@ -28,6 +28,12 @@ management:
           - health
           - info
 
+springdoc:
+  swagger-ui:
+    oauth:
+      client-id: 2wD6qaqGsYefuYv271cwjUYUDeL2HXJFhj2Omfbg
+      use-pkce-with-authorization-code-grant: true
+
 rent:
   group-name: groupName
   group-leader: groupLeader

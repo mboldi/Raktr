@@ -5,7 +5,9 @@ import hu.bsstudio.raktr.dto.container.ContainerAddDevicesDto;
 import hu.bsstudio.raktr.dto.container.ContainerCreateDto;
 import hu.bsstudio.raktr.dto.container.ContainerDetailsDto;
 import hu.bsstudio.raktr.dto.container.ContainerUpdateDto;
+import hu.bsstudio.raktr.dto.rent.RentDetailsDto;
 import hu.bsstudio.raktr.dto.ticket.TicketDetailsDto;
+import hu.bsstudio.raktr.rent.service.RentService;
 import hu.bsstudio.raktr.scannable.service.ScannableService;
 import hu.bsstudio.raktr.security.RoleConstants;
 import hu.bsstudio.raktr.ticket.service.TicketService;
@@ -36,6 +38,8 @@ public class ContainerController {
     private final ContainerService containerService;
 
     private final ScannableService scannableService;
+
+    private final RentService rentService;
 
     private final TicketService ticketService;
 
@@ -91,6 +95,11 @@ public class ContainerController {
             @PathVariable Long deviceId
     ) {
         return containerService.removeDeviceFromContainer(containerId, deviceId);
+    }
+
+    @GetMapping("/{containerId}/rents")
+    public List<RentDetailsDto> getRentsForContainer(@PathVariable Long containerId) {
+        return rentService.getRentsByScannableId(containerId);
     }
 
     @GetMapping("/{containerId}/tickets")

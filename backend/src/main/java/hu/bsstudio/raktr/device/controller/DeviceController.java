@@ -4,7 +4,9 @@ import hu.bsstudio.raktr.device.service.DeviceService;
 import hu.bsstudio.raktr.dto.device.DeviceCreateDto;
 import hu.bsstudio.raktr.dto.device.DeviceDetailsDto;
 import hu.bsstudio.raktr.dto.device.DeviceUpdateDto;
+import hu.bsstudio.raktr.dto.rent.RentDetailsDto;
 import hu.bsstudio.raktr.dto.ticket.TicketDetailsDto;
+import hu.bsstudio.raktr.rent.service.RentService;
 import hu.bsstudio.raktr.scannable.service.ScannableService;
 import hu.bsstudio.raktr.security.RoleConstants;
 import hu.bsstudio.raktr.ticket.service.TicketService;
@@ -35,6 +37,8 @@ public class DeviceController {
     private final DeviceService deviceService;
 
     private final ScannableService scannableService;
+
+    private final RentService rentService;
 
     private final TicketService ticketService;
 
@@ -74,6 +78,11 @@ public class DeviceController {
     @PostMapping("/{deviceId}/restore")
     public void restoreDevice(@PathVariable Long deviceId) {
         scannableService.restoreScannable(deviceId);
+    }
+
+    @GetMapping("/{deviceId}/rents")
+    public List<RentDetailsDto> getRentsForDevice(@PathVariable Long deviceId) {
+        return rentService.getRentsByScannableId(deviceId);
     }
 
     @GetMapping("/{deviceId}/tickets")

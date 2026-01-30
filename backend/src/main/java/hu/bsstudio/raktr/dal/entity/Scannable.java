@@ -54,7 +54,7 @@ public abstract class Scannable {
 
     private Integer weight;
 
-    private Boolean publicRentable;
+    private Boolean publicRentable = false;
 
     private Boolean deleted = false;
 

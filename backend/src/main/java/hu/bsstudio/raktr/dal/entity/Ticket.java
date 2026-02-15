@@ -48,7 +48,7 @@ public class Ticket {
 
     @Enumerated(EnumType.STRING)
     @ToString.Include
-    private TicketStatus status;
+    private TicketStatus status = TicketStatus.OPEN;
 
     @Enumerated(EnumType.STRING)
     @ToString.Include

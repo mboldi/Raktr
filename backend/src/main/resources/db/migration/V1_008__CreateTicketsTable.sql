@@ -1,7 +1,7 @@
 CREATE TABLE tickets (
     id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     description TEXT NOT NULL,
-    status TEXT NOT NULL,
+    status TEXT NOT NULL DEFAULT 'OPEN',
     severity TEXT NOT NULL,
     scannable_id BIGINT NOT NULL REFERENCES scannables(id),
     created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL,

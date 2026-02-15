@@ -1,7 +1,6 @@
 package hu.bsstudio.raktr.dto.ticket;
 
 import hu.bsstudio.raktr.dal.value.ProblemSeverity;
-import hu.bsstudio.raktr.dal.value.TicketStatus;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -16,9 +15,6 @@ public class TicketCreateDto {
 
     @NotBlank
     private String description;
-
-    @NotNull
-    private TicketStatus status;
 
     @NotNull
     private ProblemSeverity severity;

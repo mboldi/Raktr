@@ -18,6 +18,7 @@ public interface TicketMapper {
     TicketDetailsDto entityToDetailsDto(Ticket ticket);
 
     @Mapping(target = "id", ignore = true)
+    @Mapping(target = "status", ignore = true)
     @Mapping(target = "scannable", ignore = true)
     @Mapping(target = "comments", ignore = true)
     @Mapping(target = "createdAt", ignore = true)

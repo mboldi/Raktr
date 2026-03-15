@@ -1,0 +1,6 @@
+{
+  "error": "ENTITY_NOT_FOUND",
+  "resourceName": "Rent",
+  "resourceKey": "999",
+  "message": "Resource [Rent] not found with key [999]"
+}

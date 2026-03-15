@@ -77,7 +77,8 @@ tasks.jacocoTestReport {
         fileTree(it) {
             exclude(
                 "**/hu/bsstudio/raktr/**/*MapperImpl.class",
-                "**/hu/bsstudio/raktr/**/*MapperImpl$*.class"
+                "**/hu/bsstudio/raktr/**/*MapperImpl$*.class",
+                "**/hu/bsstudio/raktr/RaktrApplication.class"
             )
         }
     }))

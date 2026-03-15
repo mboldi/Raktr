@@ -1,12 +1,9 @@
-TRUNCATE TABLE categories CASCADE;
-TRUNCATE TABLE comments CASCADE;
-TRUNCATE TABLE container_devices CASCADE;
-TRUNCATE TABLE locations CASCADE;
-TRUNCATE TABLE owners CASCADE;
-TRUNCATE TABLE scannables CASCADE;
-TRUNCATE TABLE users CASCADE;
+CREATE TABLE configs (
+    key TEXT PRIMARY KEY,
+    value TEXT NOT NULL,
+    data_type TEXT NOT NULL
+);
 
-DELETE FROM configs;
 INSERT INTO configs (key, value, data_type) VALUES
     ('RENT_TEAM_NAME', '', 'STRING'),
     ('RENT_TEAM_LEADER_NAME', '', 'STRING'),

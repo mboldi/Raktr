@@ -1,0 +1,37 @@
+[
+  {
+    "key": "RENT_TEAM_NAME",
+    "value": "",
+    "dataType": "STRING"
+  },
+  {
+    "key": "RENT_TEAM_LEADER_NAME",
+    "value": "",
+    "dataType": "STRING"
+  },
+  {
+    "key": "RENT_FIRST_SIGNER_NAME",
+    "value": "",
+    "dataType": "STRING"
+  },
+  {
+    "key": "RENT_FIRST_SIGNER_TITLE",
+    "value": "",
+    "dataType": "STRING"
+  },
+  {
+    "key": "RENT_SECOND_SIGNER_NAME",
+    "value": "",
+    "dataType": "STRING"
+  },
+  {
+    "key": "RENT_SECOND_SIGNER_TITLE",
+    "value": "",
+    "dataType": "STRING"
+  },
+  {
+    "key": "FORCE_EAN8",
+    "value": "false",
+    "dataType": "BOOLEAN"
+  }
+]

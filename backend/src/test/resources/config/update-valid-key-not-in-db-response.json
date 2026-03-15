@@ -1,0 +1,6 @@
+{
+  "error": "ENTITY_NOT_FOUND",
+  "resourceName": "Config",
+  "resourceKey": "FORCE_EAN8",
+  "message": "Resource [Config] not found with key [FORCE_EAN8]"
+}

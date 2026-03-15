@@ -46,6 +46,13 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ErrorResponse> handleIllegalArgument(IllegalArgumentException ex) {
+        log.debug("Invalid argument: {}", ex.getMessage());
+        var response = new ErrorResponse("INVALID_VALUE", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+
     @ExceptionHandler(PdfGenerationException.class)
     public ResponseEntity<ErrorResponse> handlePdfGeneration(PdfGenerationException ex) {
         log.error("PDF generation failed: {}", ex.getMessage(), ex);

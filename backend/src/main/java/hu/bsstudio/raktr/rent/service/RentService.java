@@ -1,6 +1,7 @@
 package hu.bsstudio.raktr.rent.service;
 
 import hu.bsstudio.raktr.comment.mapper.CommentMapper;
+import hu.bsstudio.raktr.config.service.ConfigService;
 import hu.bsstudio.raktr.dal.entity.Device;
 import hu.bsstudio.raktr.dal.entity.Rent;
 import hu.bsstudio.raktr.dal.entity.RentItem;
@@ -11,6 +12,7 @@ import hu.bsstudio.raktr.dal.repository.RentItemRepository;
 import hu.bsstudio.raktr.dal.repository.RentRepository;
 import hu.bsstudio.raktr.dal.repository.UserRepository;
 import hu.bsstudio.raktr.dal.value.BackStatus;
+import hu.bsstudio.raktr.dal.value.ConfigKey;
 import hu.bsstudio.raktr.dal.value.RentType;
 import hu.bsstudio.raktr.dto.comment.CommentCreateDto;
 import hu.bsstudio.raktr.dto.comment.CommentDetailsDto;
@@ -26,7 +28,6 @@ import hu.bsstudio.raktr.exception.EntityNotFoundException;
 import hu.bsstudio.raktr.exception.NotAvailableQuantityException;
 import hu.bsstudio.raktr.pdf.RentPdfRequest;
 import hu.bsstudio.raktr.pdf.RentPdfService;
-import hu.bsstudio.raktr.pdf.RentProperties;
 import hu.bsstudio.raktr.rent.mapper.RentItemMapper;
 import hu.bsstudio.raktr.rent.mapper.RentMapper;
 import hu.bsstudio.raktr.scannable.service.ScannableLookupService;
@@ -55,11 +56,11 @@ public class RentService {
 
     private final UserRepository userRepository;
 
+    private final ConfigService configService;
+
     private final ScannableLookupService lookupService;
 
     private final RentPdfService rentPdfService;
-
-    private final RentProperties rentProperties;
 
     private final RentMapper rentMapper;
 
@@ -209,14 +210,14 @@ public class RentService {
         }
 
         var request = RentPdfRequest.builder()
-                .teamName(rentProperties.getTeamName())
-                .teamLeaderName(rentProperties.getTeamLeaderName())
+                .teamName(configService.getString(ConfigKey.RENT_TEAM_NAME))
+                .teamLeaderName(configService.getString(ConfigKey.RENT_TEAM_LEADER_NAME))
                 .renterName(rent.getRenterName())
                 .renterId(createDto.getRenterId())
-                .firstSignerName(rentProperties.getFirstSignerName())
-                .firstSignerTitle(rentProperties.getFirstSignerTitle())
-                .secondSignerName(rentProperties.getSecondSignerName())
-                .secondSignerTitle(rentProperties.getSecondSignerTitle())
+                .firstSignerName(configService.getString(ConfigKey.RENT_FIRST_SIGNER_NAME))
+                .firstSignerTitle(configService.getString(ConfigKey.RENT_FIRST_SIGNER_TITLE))
+                .secondSignerName(configService.getString(ConfigKey.RENT_SECOND_SIGNER_NAME))
+                .secondSignerTitle(configService.getString(ConfigKey.RENT_SECOND_SIGNER_TITLE))
                 .deliveryDate(rent.getOutDate())
                 .returnDate(rent.getExpectedReturnDate())
                 .items(items)

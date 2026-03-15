@@ -34,11 +34,3 @@ springdoc:
     oauth:
       client-id: 2wD6qaqGsYefuYv271cwjUYUDeL2HXJFhj2Omfbg
       use-pkce-with-authorization-code-grant: true
-
-rent:
-  team-name: teamName
-  team-leader-name: teamLeaderName
-  first-signer-name: firstSignerName
-  first-signer-title: firstSignerTitle
-  second-signer-name: secondSignerName
-  second-signer-title: secondSignerTitle

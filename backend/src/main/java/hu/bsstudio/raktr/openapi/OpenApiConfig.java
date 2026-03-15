@@ -1,4 +1,4 @@
-package hu.bsstudio.raktr.config;
+package hu.bsstudio.raktr.openapi;
 
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;

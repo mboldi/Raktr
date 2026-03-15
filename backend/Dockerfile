@@ -1,26 +1,20 @@
-FROM openjdk:13-alpine as jdk
+FROM eclipse-temurin:25-jdk-noble AS build
 
-#USER spring
-#RUN mkdir /home/spring/app
-#RUN chown spring /home/spring/app
+WORKDIR /app
 
-WORKDIR /home/spring/app
+COPY gradlew settings.gradle.kts build.gradle.kts ./
+COPY gradle ./gradle
 
-FROM jdk as build
-COPY ./gradlew ./
-COPY ./build.gradle ./
-COPY ./gradle ./gradle
+RUN ./gradlew --no-daemon --version
 
-RUN ./gradlew
+COPY src ./src
 
-COPY ./ ./
-ARG BUILD_ARG="bootJar --parallel"
-RUN ./gradlew $BUILD_ARG
+RUN ./gradlew bootJar --parallel --no-daemon
 
-FROM jdk as app
-ARG BOOT_JAR="/home/spring/app/build/libs/*.jar"
+FROM gcr.io/distroless/java25-debian13
 
-RUN mkdir /home/spring/app/pdf
+WORKDIR /app
 
-COPY --from=build $BOOT_JAR ./app.jar
-ENTRYPOINT ["java","-jar","./app.jar"]
+COPY --from=build /app/build/libs/*.jar app.jar
+
+ENTRYPOINT ["java", "-jar", "app.jar"]

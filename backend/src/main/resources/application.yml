@@ -3,7 +3,7 @@ spring:
     name: BSS-Raktr
 
   datasource:
-    url: jdbc:postgresql://db:5432/raktrdb
+    url: jdbc:postgresql://localhost:5432/raktrdb
     username: postgres
     password: postgres
 

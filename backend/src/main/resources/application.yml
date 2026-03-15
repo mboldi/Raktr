@@ -36,8 +36,8 @@ springdoc:
       use-pkce-with-authorization-code-grant: true
 
 rent:
-  group-name: groupName
-  group-leader: groupLeader
+  team-name: teamName
+  team-leader-name: teamLeaderName
   first-signer-name: firstSignerName
   first-signer-title: firstSignerTitle
   second-signer-name: secondSignerName

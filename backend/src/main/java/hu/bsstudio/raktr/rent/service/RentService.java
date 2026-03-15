@@ -23,15 +23,21 @@ import hu.bsstudio.raktr.dto.rentitem.RentItemDetailsDto;
 import hu.bsstudio.raktr.dto.rentitem.RentItemUpdateDto;
 import hu.bsstudio.raktr.exception.EntityNotFoundException;
 import hu.bsstudio.raktr.exception.NotAvailableQuantityException;
+import hu.bsstudio.raktr.pdf.RentPdfRequest;
+import hu.bsstudio.raktr.pdf.RentPdfService;
+import hu.bsstudio.raktr.pdf.RentProperties;
 import hu.bsstudio.raktr.rent.mapper.RentItemMapper;
 import hu.bsstudio.raktr.rent.mapper.RentMapper;
 import hu.bsstudio.raktr.scannable.service.ScannableLookupService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -49,6 +55,10 @@ public class RentService {
     private final UserRepository userRepository;
 
     private final ScannableLookupService lookupService;
+
+    private final RentPdfService rentPdfService;
+
+    private final RentProperties rentProperties;
 
     private final RentMapper rentMapper;
 
@@ -192,9 +202,36 @@ public class RentService {
         closeRentIfAllReturned(rent, rentItemId);
     }
 
+    @Transactional
     public ResponseEntity<byte[]> getRentPdf(Long rentId, RentPdfCreateDto createDto) {
-        // TODO: Implement PDF generation
-        throw new UnsupportedOperationException("PDF generation not yet implemented");
+        var rent = getRent(rentId);
+
+        var items = new LinkedHashMap<String, Integer>();
+        for (var rentItem : rent.getRentItems()) {
+            items.merge(rentItem.getScannable().getName(), rentItem.getQuantity(), Integer::sum);
+        }
+
+        var request = RentPdfRequest.builder()
+                .teamName(rentProperties.getTeamName())
+                .teamLeaderName(rentProperties.getTeamLeaderName())
+                .renterName(rent.getRenterName())
+                .renterId(createDto.getRenterId())
+                .firstSignerName(rentProperties.getFirstSignerName())
+                .firstSignerTitle(rentProperties.getFirstSignerTitle())
+                .secondSignerName(rentProperties.getSecondSignerName())
+                .secondSignerTitle(rentProperties.getSecondSignerTitle())
+                .deliveryDate(rent.getOutDate())
+                .returnDate(rent.getExpectedReturnDate())
+                .items(items)
+                .build();
+
+        var pdfBytes = rentPdfService.generateRentPdf(request);
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_PDF)
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"rent-" + rentId + ".pdf\"")
+                .header(HttpHeaders.CACHE_CONTROL, "no-cache, no-store, must-revalidate")
+                .body(pdfBytes);
     }
 
     private Rent getRent(Long rentId) {

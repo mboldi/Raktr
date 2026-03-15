@@ -1,4 +1,4 @@
-package hu.bsstudio.raktr.properties;
+package hu.bsstudio.raktr.pdf;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -9,9 +9,9 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties(prefix = "rent")
 public class RentProperties {
 
-    private String groupName;
+    private String teamName;
 
-    private String groupLeader;
+    private String teamLeaderName;
 
     private String firstSignerName;
 

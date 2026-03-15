@@ -10,7 +10,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 @EnableCaching
 public class RaktrApplication {
 
-    public static void main(final String[] args) {
+    static void main(final String[] args) {
         SpringApplication.run(RaktrApplication.class, args);
     }
 

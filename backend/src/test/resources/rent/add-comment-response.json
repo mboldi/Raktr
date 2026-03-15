@@ -1,0 +1,20 @@
+{
+  "id": 200,
+  "body": "This is a test comment on the rent",
+  "createdAt": "IGNORE",
+  "createdBy": {
+    "uuid": "00000000-0000-0000-0000-000000000001",
+    "username": "admin_user",
+    "familyName": "Admin",
+    "givenName": "User",
+    "nickname": null
+  },
+  "updatedAt": "IGNORE",
+  "updatedBy": {
+    "uuid": "00000000-0000-0000-0000-000000000001",
+    "username": "admin_user",
+    "familyName": "Admin",
+    "givenName": "User",
+    "nickname": null
+  }
+}

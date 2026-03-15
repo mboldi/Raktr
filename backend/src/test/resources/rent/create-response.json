@@ -1,0 +1,40 @@
+{
+  "id": 200,
+  "type": "SIMPLE",
+  "destination": "New Test Event",
+  "issuer": {
+    "uuid": "00000000-0000-0000-0000-000000000100",
+    "username": "member_user_100",
+    "familyName": "Member",
+    "givenName": "User",
+    "nickname": "Member",
+    "personalId": "ID-100",
+    "groups": [
+      "Stúdiós"
+    ]
+  },
+  "renterName": "Kovács László",
+  "outDate": "2025-06-01",
+  "expectedReturnDate": "2025-06-10",
+  "actualReturnDate": null,
+  "closed": false,
+  "deleted": false,
+  "rentItems": [],
+  "comments": [],
+  "createdAt": "IGNORE",
+  "createdBy": {
+    "uuid": "00000000-0000-0000-0000-000000000001",
+    "username": "admin_user",
+    "familyName": "Admin",
+    "givenName": "User",
+    "nickname": null
+  },
+  "updatedAt": "IGNORE",
+  "updatedBy": {
+    "uuid": "00000000-0000-0000-0000-000000000001",
+    "username": "admin_user",
+    "familyName": "Admin",
+    "givenName": "User",
+    "nickname": null
+  }
+}

@@ -167,11 +167,7 @@ public class RentService {
     @Transactional
     public RentItemDetailsDto updateRentItem(Long rentId, Long rentItemId, RentItemUpdateDto updateDto) {
         var rent = getRent(rentId);
-        var rentItem = getRentItem(rentItemId);
-
-        if (!rentItem.getRent().getId().equals(rent.getId())) {
-            throw new EntityNotFoundException(RentItem.class, rentItemId);
-        }
+        var rentItem = getRentItem(rentItemId, rent);
 
         rentItemMapper.updateDtoToEntity(rentItem, updateDto);
 
@@ -189,11 +185,7 @@ public class RentService {
     @Transactional
     public void deleteRentItem(Long rentId, Long rentItemId) {
         var rent = getRent(rentId);
-        var rentItem = getRentItem(rentItemId);
-
-        if (!rentItem.getRent().getId().equals(rent.getId())) {
-            throw new EntityNotFoundException(RentItem.class, rentItemId);
-        }
+        var rentItem = getRentItem(rentItemId, rent);
 
         rentItemRepository.delete(rentItem);
 
@@ -239,8 +231,8 @@ public class RentService {
                 .orElseThrow(() -> new EntityNotFoundException(Rent.class, rentId));
     }
 
-    private RentItem getRentItem(Long rentItemId) {
-        return rentItemRepository.findById(rentItemId)
+    private RentItem getRentItem(Long rentItemId, Rent rent) {
+        return rentItemRepository.findByIdAndRent(rentItemId, rent)
                 .orElseThrow(() -> new EntityNotFoundException(RentItem.class, rentItemId));
     }
 

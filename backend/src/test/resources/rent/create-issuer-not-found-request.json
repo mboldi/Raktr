@@ -1,0 +1,8 @@
+{
+  "type": "SIMPLE",
+  "destination": "New Test Event",
+  "issuerId": "00000000-0000-0000-0000-999999999999",
+  "renterName": "Kovács László",
+  "outDate": "2025-06-01",
+  "expectedReturnDate": "2025-06-10"
+}

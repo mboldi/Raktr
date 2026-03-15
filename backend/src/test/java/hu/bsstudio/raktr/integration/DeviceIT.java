@@ -3,6 +3,7 @@ package hu.bsstudio.raktr.integration;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.jdbc.SqlMergeMode;
 
 import static hu.bsstudio.raktr.support.AuthenticationHelper.givenAuthenticatedAdmin;
 import static hu.bsstudio.raktr.support.AuthenticationHelper.givenAuthenticatedCandidate;
@@ -11,6 +12,7 @@ import static hu.bsstudio.raktr.support.TestResourceHelper.loadFileContent;
 
 @Sql("/test-users.sql")
 @Sql("/device/test-data.sql")
+@SqlMergeMode(SqlMergeMode.MergeMode.MERGE)
 public class DeviceIT extends RaktrIT {
 
     @Test
@@ -293,6 +295,33 @@ public class DeviceIT extends RaktrIT {
                 .asString();
 
         assertJson(response).equalTo(loadFileContent("/device/manufacturers-response.json"));
+    }
+
+    @Test
+    @Sql("/device/rent-data.sql")
+    void testGetRentsForDevice() {
+        var response = givenAuthenticatedAdmin()
+                .when()
+                .get("/v1/devices/100/rents")
+                .then()
+                .statusCode(HttpStatus.OK.value())
+                .extract()
+                .asString();
+
+        assertJson(response).equalTo(loadFileContent("/device/get-rents-response.json"));
+    }
+
+    @Test
+    void testGetRentsForDeviceEmpty() {
+        var response = givenAuthenticatedAdmin()
+                .when()
+                .get("/v1/devices/101/rents")
+                .then()
+                .statusCode(HttpStatus.OK.value())
+                .extract()
+                .asString();
+
+        assertJson(response).equalTo("[]");
     }
 
     @Test

@@ -1,0 +1,95 @@
+[
+  {
+    "id": 100,
+    "type": "SIMPLE",
+    "destination": "Container Event",
+    "issuer": {
+      "uuid": "00000000-0000-0000-0000-000000000100",
+      "username": "member_user_100",
+      "familyName": "Member",
+      "givenName": "User",
+      "nickname": "Member",
+      "personalId": "ID-100",
+      "groups": [
+        "Stúdiós"
+      ]
+    },
+    "renterName": "Nagy Péter",
+    "outDate": "2025-03-01",
+    "expectedReturnDate": "2025-03-05",
+    "actualReturnDate": null,
+    "closed": false,
+    "deleted": false,
+    "rentItems": [
+      {
+        "id": 100,
+        "scannable": {
+          "id": 100,
+          "assetTag": "CONTAINER-001",
+          "barcode": "CONTAINER-BARCODE-001",
+          "name": "Test Container",
+          "weight": 500,
+          "publicRentable": true,
+          "deleted": false,
+          "category": "test-category-for-container",
+          "location": "test-location-for-container",
+          "owner": {
+            "id": 100,
+            "name": "test-owner-for-container"
+          },
+          "createdAt": "2025-01-07T10:00:00Z",
+          "createdBy": {
+            "uuid": "00000000-0000-0000-0000-000000000100",
+            "username": "member_user_100",
+            "familyName": "Member",
+            "givenName": "User",
+            "nickname": "Member"
+          },
+          "updatedAt": "2025-01-07T10:00:00Z",
+          "updatedBy": {
+            "uuid": "00000000-0000-0000-0000-000000000100",
+            "username": "member_user_100",
+            "familyName": "Member",
+            "givenName": "User",
+            "nickname": "Member"
+          }
+        },
+        "status": "OUT",
+        "quantity": 1,
+        "createdAt": "2025-01-08T10:00:00Z",
+        "createdBy": {
+          "uuid": "00000000-0000-0000-0000-000000000100",
+          "username": "member_user_100",
+          "familyName": "Member",
+          "givenName": "User",
+          "nickname": "Member"
+        },
+        "updatedAt": "2025-01-08T10:00:00Z",
+        "updatedBy": {
+          "uuid": "00000000-0000-0000-0000-000000000100",
+          "username": "member_user_100",
+          "familyName": "Member",
+          "givenName": "User",
+          "nickname": "Member"
+        }
+      }
+    ],
+    "comments": [],
+    "createdAt": "2025-01-08T10:00:00Z",
+    "createdBy": {
+      "uuid": "00000000-0000-0000-0000-000000000100",
+      "username": "member_user_100",
+      "familyName": "Member",
+      "givenName": "User",
+      "nickname": "Member"
+    },
+    "updatedAt": "2025-01-08T10:00:00Z",
+    "updatedBy": {
+      "uuid": "00000000-0000-0000-0000-000000000100",
+      "username": "member_user_100",
+      "familyName": "Member",
+      "givenName": "User",
+      "nickname": "Member"
+    }
+  }
+]

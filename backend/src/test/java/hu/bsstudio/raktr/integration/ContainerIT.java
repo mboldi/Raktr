@@ -3,6 +3,7 @@ package hu.bsstudio.raktr.integration;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.jdbc.SqlMergeMode;
 
 import static hu.bsstudio.raktr.support.AuthenticationHelper.givenAuthenticatedAdmin;
 import static hu.bsstudio.raktr.support.AuthenticationHelper.givenAuthenticatedCandidate;
@@ -11,6 +12,7 @@ import static hu.bsstudio.raktr.support.TestResourceHelper.loadFileContent;
 
 @Sql("/test-users.sql")
 @Sql("/container/test-data.sql")
+@SqlMergeMode(SqlMergeMode.MergeMode.MERGE)
 public class ContainerIT extends RaktrIT {
 
     @Test
@@ -375,6 +377,33 @@ public class ContainerIT extends RaktrIT {
                 .post("/v1/containers/102/restore")
                 .then()
                 .statusCode(HttpStatus.FORBIDDEN.value());
+    }
+
+    @Test
+    @Sql("/container/rent-data.sql")
+    void testGetRentsForContainer() {
+        var response = givenAuthenticatedAdmin()
+                .when()
+                .get("/v1/containers/100/rents")
+                .then()
+                .statusCode(HttpStatus.OK.value())
+                .extract()
+                .asString();
+
+        assertJson(response).equalTo(loadFileContent("/container/get-rents-response.json"));
+    }
+
+    @Test
+    void testGetRentsForContainerEmpty() {
+        var response = givenAuthenticatedAdmin()
+                .when()
+                .get("/v1/containers/101/rents")
+                .then()
+                .statusCode(HttpStatus.OK.value())
+                .extract()
+                .asString();
+
+        assertJson(response).equalTo("[]");
     }
 
     @Test

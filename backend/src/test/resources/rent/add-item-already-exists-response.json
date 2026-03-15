@@ -1,0 +1,6 @@
+{
+  "error": "ENTITY_ALREADY_EXISTS",
+  "resourceName": "RentItem",
+  "resourceKey": "200",
+  "message": "Resource [RentItem] already exists with key [200]"
+}

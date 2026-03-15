@@ -12,6 +12,8 @@ public interface RentItemRepository extends JpaRepository<RentItem, Long> {
 
     Optional<RentItem> findByIdAndRent(Long id, Rent rent);
 
+    boolean existsByRentAndScannableId(Rent rent, Long scannableId);
+
     @Query("""
             SELECT COALESCE(SUM(ri.quantity), 0)
             FROM RentItem ri

@@ -313,6 +313,20 @@ public class RentIT extends RaktrIT {
     }
 
     @Test
+    void testAddRentItemAlreadyExists() {
+        var response = givenAuthenticatedAdmin()
+                .body(loadFileContent("/rent/add-item-already-exists-request.json"))
+                .when()
+                .post("/v1/rents/100/items")
+                .then()
+                .statusCode(HttpStatus.CONFLICT.value())
+                .extract()
+                .asString();
+
+        assertJson(response).equalTo(loadFileContent("/rent/add-item-already-exists-response.json"));
+    }
+
+    @Test
     void testAddRentItemScannableNotFound() {
         var response = givenAuthenticatedAdmin()
                 .body(loadFileContent("/rent/add-item-scannable-not-found-request.json"))

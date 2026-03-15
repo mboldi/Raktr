@@ -1,11 +1,11 @@
 {
   "id": 200,
   "scannable": {
-    "id": 201,
-    "assetTag": "RENT-DEVICE-002",
-    "barcode": "RENT-BARCODE-002",
-    "name": "Test Lens",
-    "weight": 800,
+    "id": 203,
+    "assetTag": "RENT-DEVICE-003",
+    "barcode": "RENT-BARCODE-003",
+    "name": "Test Tripod",
+    "weight": 2500,
     "publicRentable": true,
     "deleted": false,
     "category": "test-category-for-rent",
@@ -14,7 +14,7 @@
       "id": 200,
       "name": "test-owner-for-rent"
     },
-    "createdAt": "2025-01-08T11:00:00Z",
+    "createdAt": "2025-01-08T13:00:00Z",
     "createdBy": {
       "uuid": "00000000-0000-0000-0000-000000000100",
       "username": "member_user_100",
@@ -22,7 +22,7 @@
       "givenName": "User",
       "nickname": "Member"
     },
-    "updatedAt": "2025-01-08T11:00:00Z",
+    "updatedAt": "2025-01-08T13:00:00Z",
     "updatedBy": {
       "uuid": "00000000-0000-0000-0000-000000000100",
       "username": "member_user_100",

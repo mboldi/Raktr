@@ -21,6 +21,7 @@ import hu.bsstudio.raktr.dto.rent.RentUpdateDto;
 import hu.bsstudio.raktr.dto.rentitem.RentItemCreateDto;
 import hu.bsstudio.raktr.dto.rentitem.RentItemDetailsDto;
 import hu.bsstudio.raktr.dto.rentitem.RentItemUpdateDto;
+import hu.bsstudio.raktr.exception.EntityAlreadyExistsException;
 import hu.bsstudio.raktr.exception.EntityNotFoundException;
 import hu.bsstudio.raktr.exception.NotAvailableQuantityException;
 import hu.bsstudio.raktr.pdf.RentPdfRequest;
@@ -147,6 +148,10 @@ public class RentService {
     @Transactional
     public RentItemDetailsDto addRentItemToRent(Long rentId, RentItemCreateDto createDto) {
         var rent = getRent(rentId);
+
+        if (rentItemRepository.existsByRentAndScannableId(rent, createDto.getScannableId())) {
+            throw new EntityAlreadyExistsException(RentItem.class, createDto.getScannableId());
+        }
 
         var rentItem = rentItemMapper.createDtoToEntity(createDto);
 

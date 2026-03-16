@@ -14,7 +14,9 @@ import hu.bsstudio.raktr.security.RoleConstants;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -115,7 +117,12 @@ public class RentController {
             @PathVariable final Long rentId,
             @RequestBody @Valid RentPdfCreateDto createDto
     ) {
-        return rentService.getRentPdf(rentId, createDto);
+        var pdfBytes = rentService.getRentPdf(rentId, createDto);
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_PDF)
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"rent-" + rentId + ".pdf\"")
+                .header(HttpHeaders.CACHE_CONTROL, "no-cache, no-store, must-revalidate")
+                .body(pdfBytes);
     }
 
 }

@@ -33,9 +33,6 @@ import hu.bsstudio.raktr.rent.mapper.RentMapper;
 import hu.bsstudio.raktr.scannable.service.ScannableLookupService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -201,7 +198,7 @@ public class RentService {
     }
 
     @Transactional
-    public ResponseEntity<byte[]> getRentPdf(Long rentId, RentPdfCreateDto createDto) {
+    public byte[] getRentPdf(Long rentId, RentPdfCreateDto createDto) {
         var rent = getRent(rentId);
 
         var items = new LinkedHashMap<String, Integer>();
@@ -223,13 +220,7 @@ public class RentService {
                 .items(items)
                 .build();
 
-        var pdfBytes = rentPdfService.generateRentPdf(request);
-
-        return ResponseEntity.ok()
-                .contentType(MediaType.APPLICATION_PDF)
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"rent-" + rentId + ".pdf\"")
-                .header(HttpHeaders.CACHE_CONTROL, "no-cache, no-store, must-revalidate")
-                .body(pdfBytes);
+        return rentPdfService.generateRentPdf(request);
     }
 
     private Rent getRent(Long rentId) {

@@ -9,7 +9,7 @@ CREATE TABLE scannables (
     deleted BOOLEAN NOT NULL DEFAULT FALSE,
     category_name TEXT REFERENCES categories(name),
     location_name TEXT REFERENCES locations(name),
-    owner_id INT REFERENCES owners(id),
+    owner_id BIGINT REFERENCES owners(id),
     -- Device-specific fields (nullable for containers)
     manufacturer TEXT,
     model TEXT,

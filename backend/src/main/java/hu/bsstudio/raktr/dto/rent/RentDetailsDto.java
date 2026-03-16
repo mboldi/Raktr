@@ -34,9 +34,9 @@ public class RentDetailsDto {
 
     private LocalDate actualReturnDate;
 
-    private Boolean closed;
+    private boolean closed;
 
-    private Boolean deleted;
+    private boolean deleted;
 
     private List<RentItemDetailsDto> rentItems;
 

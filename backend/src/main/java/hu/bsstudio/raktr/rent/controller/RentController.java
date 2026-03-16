@@ -41,7 +41,7 @@ public class RentController {
     private final RentService rentService;
 
     @GetMapping
-    public List<RentDetailsDto> listRents(@RequestParam(required = false, defaultValue = "false") Boolean deleted) {
+    public List<RentDetailsDto> listRents(@RequestParam(required = false, defaultValue = "false") boolean deleted) {
         return rentService.listRents(deleted);
     }
 

@@ -66,7 +66,7 @@ public class RentService {
     private final CommentMapper commentMapper;
 
     @Transactional
-    public List<RentDetailsDto> listRents(Boolean deleted) {
+    public List<RentDetailsDto> listRents(boolean deleted) {
         var rents = rentRepository.findAllByDeleted(deleted);
         return rents.stream().map(rentMapper::entityToDetailsDto).toList();
     }

@@ -16,7 +16,7 @@ public class OwnerDetailsDto {
 
     private String name;
 
-    private Boolean inSchInventory;
+    private boolean inSchInventory;
 
     private OffsetDateTime createdAt;
 

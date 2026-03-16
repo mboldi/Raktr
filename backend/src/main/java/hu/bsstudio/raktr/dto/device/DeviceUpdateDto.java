@@ -28,7 +28,7 @@ public class DeviceUpdateDto {
     @NotNull
     private Integer weight;
 
-    private Boolean publicRentable;
+    private boolean publicRentable;
 
     @NotBlank
     private String categoryName;

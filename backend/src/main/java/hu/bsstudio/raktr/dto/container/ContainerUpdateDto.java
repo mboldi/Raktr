@@ -25,7 +25,7 @@ public class ContainerUpdateDto {
     @NotNull
     private Integer weight;
 
-    private Boolean publicRentable;
+    private boolean publicRentable;
 
     @NotBlank
     private String categoryName;

@@ -45,7 +45,7 @@ public class ContainerController {
 
     @GetMapping
     public List<ContainerDetailsDto> listContainers(
-            @RequestParam(required = false, defaultValue = "false") Boolean deleted
+            @RequestParam(required = false, defaultValue = "false") boolean deleted
     ) {
         return containerService.listContainers(deleted);
     }

@@ -62,9 +62,9 @@ public class Rent {
 
     private LocalDate actualReturnDate;
 
-    private Boolean closed = false;
+    private boolean closed = false;
 
-    private Boolean deleted = false;
+    private boolean deleted = false;
 
     @OneToMany(mappedBy = "rent")
     private List<RentItem> rentItems = new ArrayList<>();

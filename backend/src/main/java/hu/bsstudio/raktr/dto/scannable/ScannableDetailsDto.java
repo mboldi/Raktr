@@ -22,9 +22,9 @@ public class ScannableDetailsDto {
 
     private Integer weight;
 
-    private Boolean publicRentable;
+    private boolean publicRentable;
 
-    private Boolean deleted;
+    private boolean deleted;
 
     private String category;
 

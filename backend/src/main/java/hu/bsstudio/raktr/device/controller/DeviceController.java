@@ -44,7 +44,7 @@ public class DeviceController {
 
     @GetMapping
     public List<DeviceDetailsDto> listDevices(
-            @RequestParam(required = false, defaultValue = "false") Boolean deleted
+            @RequestParam(required = false, defaultValue = "false") boolean deleted
     ) {
         return deviceService.listDevices(deleted);
     }

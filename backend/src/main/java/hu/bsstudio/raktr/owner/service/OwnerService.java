@@ -55,7 +55,7 @@ public class OwnerService {
     public OwnerDetailsDto updateOwner(Long ownerId, OwnerUpdateDto updateDto) {
         var owner = getOwner(ownerId);
 
-        if (ownerRepository.existsByName(updateDto.getName())) {
+        if (ownerRepository.existsByNameAndIdNot(updateDto.getName(), ownerId)) {
             throw new EntityAlreadyExistsException(Owner.class, updateDto.getName());
         }
 

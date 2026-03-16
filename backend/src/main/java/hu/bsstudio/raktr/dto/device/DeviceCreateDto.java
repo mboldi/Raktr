@@ -46,11 +46,13 @@ public class DeviceCreateDto {
 
     private String serialNumber;
 
+    @Min(0)
     private Integer estimatedValue;
 
     @NotNull
     private DeviceStatus status;
 
+    @Min(1)
     private Integer quantity;
 
     private String acquisitionSource;

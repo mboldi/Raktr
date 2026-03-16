@@ -30,7 +30,7 @@ public class WebSecurityConfig {
     private final BssLoginJwtAuthenticationConverter bssLoginJwtAuthenticationConverter;
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) {
         http
                 .cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)

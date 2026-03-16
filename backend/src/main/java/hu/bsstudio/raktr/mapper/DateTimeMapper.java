@@ -11,7 +11,7 @@ import java.time.ZoneOffset;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class DateTimeMapper {
 
-    public static OffsetDateTime offsetDateTimeToLocalDateTime(LocalDateTime localDateTime) {
+    public static OffsetDateTime localDateTimeToOffsetDateTime(LocalDateTime localDateTime) {
         if (localDateTime == null) {
             return null;
         }

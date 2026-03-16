@@ -35,13 +35,14 @@ public class CategoryService {
 
     @Transactional
     public CategoryDetailsDto createCategory(CategoryCreateDto createDto) {
-        createDto.setName(createDto.getName().trim());
+        var trimmedName = createDto.getName().trim();
 
-        if (categoryRepository.existsById(createDto.getName())) {
-            throw new EntityAlreadyExistsException(Category.class, createDto.getName());
+        if (categoryRepository.existsById(trimmedName)) {
+            throw new EntityAlreadyExistsException(Category.class, trimmedName);
         }
 
         var category = categoryMapper.createDtoToEntity(createDto);
+        category.setName(trimmedName);
 
         category = categoryRepository.saveAndFlush(category);
 

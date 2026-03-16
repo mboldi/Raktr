@@ -35,13 +35,14 @@ public class LocationService {
 
     @Transactional
     public LocationDetailsDto createLocation(LocationCreateDto createDto) {
-        createDto.setName(createDto.getName().trim());
+        var trimmedName = createDto.getName().trim();
 
-        if (locationRepository.existsById(createDto.getName())) {
-            throw new EntityAlreadyExistsException(Location.class, createDto.getName());
+        if (locationRepository.existsById(trimmedName)) {
+            throw new EntityAlreadyExistsException(Location.class, trimmedName);
         }
 
         var location = locationMapper.createDtoToEntity(createDto);
+        location.setName(trimmedName);
 
         location = locationRepository.saveAndFlush(location);
 

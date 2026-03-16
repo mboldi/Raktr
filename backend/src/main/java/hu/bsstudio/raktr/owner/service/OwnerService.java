@@ -36,13 +36,14 @@ public class OwnerService {
 
     @Transactional
     public OwnerDetailsDto createOwner(OwnerCreateDto createDto) {
-        createDto.setName(createDto.getName().trim());
+        var trimmedName = createDto.getName().trim();
 
-        if (ownerRepository.existsByName(createDto.getName())) {
-            throw new EntityAlreadyExistsException(Owner.class, createDto.getName());
+        if (ownerRepository.existsByName(trimmedName)) {
+            throw new EntityAlreadyExistsException(Owner.class, trimmedName);
         }
 
         var owner = ownerMapper.createDtoToEntity(createDto);
+        owner.setName(trimmedName);
 
         owner = ownerRepository.saveAndFlush(owner);
 

@@ -7,12 +7,12 @@ import hu.bsstudio.raktr.dal.value.ConfigKey;
 import hu.bsstudio.raktr.dto.appconfig.ConfigDetailsDto;
 import hu.bsstudio.raktr.dto.appconfig.ConfigUpdateDto;
 import hu.bsstudio.raktr.exception.EntityNotFoundException;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 

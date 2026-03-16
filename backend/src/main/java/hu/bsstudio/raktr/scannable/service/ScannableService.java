@@ -5,10 +5,10 @@ import hu.bsstudio.raktr.dal.repository.ScannableRepository;
 import hu.bsstudio.raktr.dto.scannable.ScannableDetailsDto;
 import hu.bsstudio.raktr.exception.EntityNotFoundException;
 import hu.bsstudio.raktr.scannable.mapper.ScannableMapper;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service

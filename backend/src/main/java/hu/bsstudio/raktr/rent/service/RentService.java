@@ -31,13 +31,13 @@ import hu.bsstudio.raktr.pdf.RentPdfService;
 import hu.bsstudio.raktr.rent.mapper.RentItemMapper;
 import hu.bsstudio.raktr.rent.mapper.RentMapper;
 import hu.bsstudio.raktr.scannable.service.ScannableLookupService;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.LinkedHashMap;
 import java.util.List;

@@ -1,6 +1,5 @@
-package hu.bsstudio.raktr.integration;
+package hu.bsstudio.raktr;
 
-import hu.bsstudio.raktr.RaktrApplication;
 import hu.bsstudio.raktr.dependency.SsoProviderMock;
 import hu.bsstudio.raktr.support.DatabaseQueryHelper;
 import io.restassured.RestAssured;
@@ -41,15 +40,12 @@ public abstract class RaktrIT {
 
     @LocalServerPort
     protected int port;
-
-    @Autowired
-    private CacheManager cacheManager;
-
-    @Autowired
-    private DataSource dataSource;
-
     @Autowired
     protected DatabaseQueryHelper databaseQueryHelper;
+    @Autowired
+    private CacheManager cacheManager;
+    @Autowired
+    private DataSource dataSource;
 
     @DynamicPropertySource
     static void registerProperties(DynamicPropertyRegistry registry) {

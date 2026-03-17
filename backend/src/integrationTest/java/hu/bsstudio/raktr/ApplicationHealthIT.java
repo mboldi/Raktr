@@ -1,4 +1,4 @@
-package hu.bsstudio.raktr.integration;
+package hu.bsstudio.raktr;
 
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;

@@ -5,6 +5,7 @@ plugins {
     id("io.freefair.lombok") version "9.2.0"
     id("io.spring.dependency-management") version "1.1.7"
     id("org.springframework.boot") version "4.0.3"
+    id("org.unbroken-dome.test-sets") version "4.1.0"
 }
 
 group = "hu.bsstudio"
@@ -63,26 +64,41 @@ springBoot {
     buildInfo()
 }
 
-tasks.withType<Test> {
-    useJUnitPlatform()
-    finalizedBy(tasks.jacocoTestReport)
-}
+testSets.create("integrationTest")
 
-tasks.jacocoTestReport {
-    dependsOn(tasks.test)
-    reports {
-        xml.required.set(true)
+tasks {
+    withType<Test> {
+        useJUnitPlatform()
+        finalizedBy(jacocoTestReport)
     }
-
-    classDirectories.setFrom(files(classDirectories.files.map {
-        fileTree(it) {
-            exclude(
-                "**/hu/bsstudio/raktr/**/*MapperImpl.class",
-                "**/hu/bsstudio/raktr/**/*MapperImpl$*.class",
-                "**/hu/bsstudio/raktr/RaktrApplication.class"
-            )
+    jar {
+        enabled = false
+    }
+    val integrationTest = getByName<Test>("integrationTest") {
+        maxHeapSize = "1G"
+        shouldRunAfter(test)
+        finalizedBy(jacocoTestReport)
+    }
+    check {
+        dependsOn(integrationTest)
+    }
+    jacocoTestReport {
+        executionData(integrationTest)
+        dependsOn(integrationTest)
+        reports {
+            xml.required.set(true)
         }
-    }))
+
+        classDirectories.setFrom(files(classDirectories.files.map {
+            fileTree(it) {
+                exclude(
+                    "**/hu/bsstudio/raktr/**/*MapperImpl.class",
+                    "**/hu/bsstudio/raktr/**/*MapperImpl$*.class",
+                    "**/hu/bsstudio/raktr/RaktrApplication.class"
+                )
+            }
+        }))
+    }
 }
 
 tasks.compileJava {

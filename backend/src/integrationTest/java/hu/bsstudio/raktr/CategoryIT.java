@@ -1,4 +1,4 @@
-package hu.bsstudio.raktr.integration;
+package hu.bsstudio.raktr;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
@@ -9,28 +9,28 @@ import static hu.bsstudio.raktr.support.JsonAssert.assertJson;
 import static hu.bsstudio.raktr.support.TestResourceHelper.loadFileContent;
 
 @Sql("/test-users.sql")
-@Sql("/location/test-data.sql")
-public class LocationIT extends RaktrIT {
+@Sql("/category/test-data.sql")
+public class CategoryIT extends RaktrIT {
 
     @Test
     void testListCategories() {
         var response = givenAuthenticatedAdmin()
                 .when()
-                .get("/v1/locations")
+                .get("/v1/categories")
                 .then()
                 .statusCode(HttpStatus.OK.value())
                 .extract()
                 .asString();
 
-        assertJson(response).equalTo(loadFileContent("/location/list-response.json"));
+        assertJson(response).equalTo(loadFileContent("/category/list-response.json"));
     }
 
     @Test
-    void testCreateLocation() {
+    void testCreateCategory() {
         var response = givenAuthenticatedAdmin()
-                .body(loadFileContent("/location/create-request.json"))
+                .body(loadFileContent("/category/create-request.json"))
                 .when()
-                .post("/v1/locations")
+                .post("/v1/categories")
                 .then()
                 .statusCode(HttpStatus.CREATED.value())
                 .extract()
@@ -38,67 +38,67 @@ public class LocationIT extends RaktrIT {
 
         assertJson(response)
                 .excluding("createdAt", "updatedAt")
-                .equalTo(loadFileContent("/location/create-response.json"));
+                .equalTo(loadFileContent("/category/create-response.json"));
 
-        databaseQueryHelper.queryDatabase("SELECT * FROM locations WHERE name = 'test-location-99'")
+        databaseQueryHelper.queryDatabase("SELECT * FROM categories WHERE name = 'test-category-99'")
                 .assertRowAsJson()
                 .excluding("created_at", "updated_at")
-                .equalTo(loadFileContent("/location/create-db.json"));
+                .equalTo(loadFileContent("/category/create-db.json"));
     }
 
     @Test
-    void testCreateLocationAlreadyExists() {
+    void testCreateCategoryAlreadyExists() {
         var response = givenAuthenticatedAdmin()
-                .body(loadFileContent("/location/create-already-exists-request.json"))
+                .body(loadFileContent("/category/create-already-exists-request.json"))
                 .when()
-                .post("/v1/locations")
+                .post("/v1/categories")
                 .then()
                 .statusCode(HttpStatus.CONFLICT.value())
                 .extract()
                 .asString();
 
-        assertJson(response).equalTo(loadFileContent("/location/create-already-exists-response.json"));
+        assertJson(response).equalTo(loadFileContent("/category/create-already-exists-response.json"));
     }
 
     @Test
-    void testDeleteLocation() {
+    void testDeleteCategory() {
         givenAuthenticatedAdmin()
                 .when()
-                .delete("/v1/locations/test-location-2")
+                .delete("/v1/categories/test-category-2")
                 .then()
                 .statusCode(HttpStatus.NO_CONTENT.value());
 
-        databaseQueryHelper.queryDatabase("SELECT count(*) FROM locations WHERE name = 'test-location-2'")
+        databaseQueryHelper.queryDatabase("SELECT count(*) FROM categories WHERE name = 'test-category-2'")
                 .assertRowCount()
                 .isEmpty();
     }
 
     @Test
-    void testDeleteLocationNotFound() {
+    void testDeleteCategoryNotFound() {
         var response = givenAuthenticatedAdmin()
                 .when()
-                .delete("/v1/locations/non-existent-location")
+                .delete("/v1/categories/non-existent-category")
                 .then()
                 .statusCode(HttpStatus.NOT_FOUND.value())
                 .extract()
                 .asString();
 
-        assertJson(response).equalTo(loadFileContent("/location/delete-not-found-response.json"));
+        assertJson(response).equalTo(loadFileContent("/category/delete-not-found-response.json"));
     }
 
     @Test
-    void testDeleteLocationNotEmpty() {
+    void testDeleteCategoryNotEmpty() {
         var response = givenAuthenticatedAdmin()
                 .when()
-                .delete("/v1/locations/test-location-1")
+                .delete("/v1/categories/test-category-1")
                 .then()
                 .statusCode(HttpStatus.CONFLICT.value())
                 .extract()
                 .asString();
 
-        assertJson(response).equalTo(loadFileContent("/location/delete-not-empty-response.json"));
+        assertJson(response).equalTo(loadFileContent("/category/delete-not-empty-response.json"));
 
-        databaseQueryHelper.queryDatabase("SELECT count(*) FROM locations WHERE name = 'test-location-1'")
+        databaseQueryHelper.queryDatabase("SELECT count(*) FROM categories WHERE name = 'test-category-1'")
                 .assertRowCount()
                 .isEqualTo(1);
     }

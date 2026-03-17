@@ -1,4 +1,4 @@
-package hu.bsstudio.raktr.integration;
+package hu.bsstudio.raktr;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;

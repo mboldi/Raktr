@@ -23,6 +23,15 @@ public class DatabaseQueryHelper {
 
     private final JdbcTemplate jdbcTemplate;
 
+    private static ObjectMapper createObjectMapper() {
+        var objectMapper = new ObjectMapper();
+        var module = new SimpleModule("DatabaseQueryModule");
+        module.addSerializer(Timestamp.class, new TimestampSerializer());
+        objectMapper.registerModule(module);
+        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        return objectMapper;
+    }
+
     public DatabaseQuery queryDatabase(String sql) {
         return new DatabaseQuery(sql, jdbcTemplate, OBJECT_MAPPER);
     }
@@ -68,15 +77,6 @@ public class DatabaseQueryHelper {
             var offsetDateTime = value.toLocalDateTime().atZone(ZoneOffset.UTC).toOffsetDateTime();
             generator.writeString(offsetDateTime.format(DateTimeFormatter.ISO_DATE_TIME));
         }
-    }
-
-    private static ObjectMapper createObjectMapper() {
-        var objectMapper = new ObjectMapper();
-        var module = new SimpleModule("DatabaseQueryModule");
-        module.addSerializer(Timestamp.class, new TimestampSerializer());
-        objectMapper.registerModule(module);
-        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-        return objectMapper;
     }
 
 }

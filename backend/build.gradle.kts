@@ -9,7 +9,7 @@ plugins {
 }
 
 group = "hu.bsstudio"
-version = "0.1.0"
+version = resolveVersion()
 
 java {
     toolchain {

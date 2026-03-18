@@ -1,11 +1,13 @@
 .git
 .gradle
-build/
+build/*
+!build/extracted
 .idea
 .vscode
 out/
 pdf/*.pdf
 Dockerfile
+Dockerfile.local
 docker-compose.yml
 
 *.iws

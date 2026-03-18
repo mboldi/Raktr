@@ -44,11 +44,25 @@ This starts both the application and a PostgreSQL database.
 
 ## Testing
 
-Tests use TestContainers to spin up a PostgreSQL instance automatically — Docker must be running.
+Unit tests and integration tests are separated into distinct source sets.
 
 ```bash
-./gradlew test
+./gradlew test              # unit tests only
+./gradlew integrationTest   # integration tests only (requires Docker)
+./gradlew check             # both
 ```
+
+Integration tests use TestContainers to spin up a PostgreSQL instance automatically — Docker must be running.
+
+## Docker
+
+There are two Dockerfiles:
+
+- **`Dockerfile`** — lightweight production image that expects a pre-built, extracted JAR. Used in CI.
+- **`Dockerfile.local`** — multi-stage build that compiles the JAR inside Docker. No prerequisites other than Docker
+  itself.
+
+`docker compose up --build` uses `Dockerfile.local` by default.
 
 ## Configuration
 

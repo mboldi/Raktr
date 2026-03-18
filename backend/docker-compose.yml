@@ -1,7 +1,8 @@
 name: raktr
 services:
   app:
-    build: .
+    build:
+      dockerfile: Dockerfile.local
     depends_on:
       db:
         condition: service_healthy

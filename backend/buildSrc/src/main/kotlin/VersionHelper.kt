@@ -4,6 +4,10 @@ import groovy.lang.Closure
 import org.gradle.api.Project
 
 fun Project.resolveVersion(): String {
+    val overridden = findProperty("version")?.toString()
+    if (!overridden.isNullOrBlank() && overridden != "unspecified") {
+        return overridden
+    }
 
     plugins.apply(GitVersionPlugin::class.java)
 

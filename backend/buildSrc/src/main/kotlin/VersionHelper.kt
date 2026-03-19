@@ -22,7 +22,7 @@ fun Project.resolveVersion(): String {
 
     val hash = details.gitHash.take(7)
     return when (val branch = details.branchName.replace("/", "-")) {
-        "main", "master" -> "v$tag-$hash"
+        "main" -> "v$tag-$hash"
         else -> "v$tag-$branch-$hash"
     }
 

@@ -1,30 +1,31 @@
-name: Docker Publish - Backend
+name: Docker Publish
 
 on:
   push:
     branches: [main]
     tags: ['v*.*.*']
-    paths:
-      - 'backend/**'
-      - '.github/workflows/docker-publish-backend.yml'
   pull_request:
     branches: [main]
-    paths:
-      - 'backend/**'
-      - '.github/workflows/docker-publish-backend.yml'
   workflow_dispatch:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}/backend
 
 jobs:
   build-and-push:
-    name: Build and push
+    name: Build and push (${{ matrix.component }})
     runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - component: backend
+            context: backend
+          - component: frontend
+            context: frontend
 
     steps:
       - name: Checkout repository
@@ -32,20 +33,22 @@ jobs:
         with:
           fetch-tags: true
 
-      - name: Set up JDK 25
-        uses: actions/setup-java@v5
-        with:
-          distribution: temurin
-          java-version: 25
-
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v5
-
-      - name: Build and extract layered JAR
-        working-directory: backend
+      - name: Resolve version
+        id: version
         run: |
-          ./gradlew bootJar
-          java -Djarmode=tools -jar build/libs/*.jar extract --destination build/extracted
+          raw=$(git describe --tags --always)
+          tag=${raw#v}
+
+          if [ "$raw" = "$(git tag --points-at HEAD)" ]; then
+            echo "value=v$tag" >> "$GITHUB_OUTPUT"
+          else
+            hash=$(git rev-parse --short HEAD)
+            branch=$(git rev-parse --abbrev-ref HEAD | tr '/' '-')
+            case "$branch" in
+              main) echo "value=v$tag-$hash" >> "$GITHUB_OUTPUT" ;;
+              *)    echo "value=v$tag-$branch-$hash" >> "$GITHUB_OUTPUT" ;;
+            esac
+          fi
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v4
@@ -62,7 +65,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v6
         with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          images: ${{ env.REGISTRY }}/${{ github.repository }}/${{ matrix.component }}
           tags: |
             type=ref,event=branch
             type=ref,event=pr
@@ -72,9 +75,10 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v7
         with:
-          context: backend
+          context: ${{ matrix.context }}
+          build-args: VERSION=${{ steps.version.outputs.value }}
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=gha,scope=backend
-          cache-to: type=gha,mode=max,scope=backend
+          cache-from: type=gha,scope=${{ matrix.component }}
+          cache-to: type=gha,mode=max,scope=${{ matrix.component }}

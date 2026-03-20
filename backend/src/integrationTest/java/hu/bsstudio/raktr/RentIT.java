@@ -341,20 +341,6 @@ public class RentIT extends RaktrIT {
     }
 
     @Test
-    void testAddRentItemNotAvailableQuantity() {
-        var response = givenAuthenticatedAdmin()
-                .body(loadFileContent("/rent/add-item-not-available-request.json"))
-                .when()
-                .post("/v1/rents/100/items")
-                .then()
-                .statusCode(HttpStatus.CONFLICT.value())
-                .extract()
-                .asString();
-
-        assertJson(response).equalTo(loadFileContent("/rent/add-item-not-available-response.json"));
-    }
-
-    @Test
     void testAddContainerItemToRent() {
         var response = givenAuthenticatedAdmin()
                 .body(loadFileContent("/rent/add-container-item-request.json"))
@@ -384,21 +370,6 @@ public class RentIT extends RaktrIT {
         assertJson(response)
                 .excluding("createdAt", "updatedAt")
                 .equalTo(loadFileContent("/rent/add-item-complex-response.json"));
-    }
-
-    @Test
-    @Sql("/rent/cross-rent-data.sql")
-    void testAddRentItemCrossRentNotAvailable() {
-        var response = givenAuthenticatedAdmin()
-                .body(loadFileContent("/rent/add-item-cross-rent-request.json"))
-                .when()
-                .post("/v1/rents/100/items")
-                .then()
-                .statusCode(HttpStatus.CONFLICT.value())
-                .extract()
-                .asString();
-
-        assertJson(response).equalTo(loadFileContent("/rent/add-item-cross-rent-not-available-response.json"));
     }
 
     @Test
@@ -457,20 +428,6 @@ public class RentIT extends RaktrIT {
                 .asString();
 
         assertJson(response).equalTo(loadFileContent("/rent/rent-item-wrong-rent-not-found-response.json"));
-    }
-
-    @Test
-    void testUpdateRentItemNotAvailableQuantity() {
-        var response = givenAuthenticatedAdmin()
-                .body(loadFileContent("/rent/update-item-not-available-request.json"))
-                .when()
-                .put("/v1/rents/100/items/100")
-                .then()
-                .statusCode(HttpStatus.CONFLICT.value())
-                .extract()
-                .asString();
-
-        assertJson(response).equalTo(loadFileContent("/rent/update-item-not-available-response.json"));
     }
 
     @Test
@@ -545,6 +502,88 @@ public class RentIT extends RaktrIT {
                 .asString();
 
         assertJson(response).equalTo(loadFileContent("/rent/rent-item-wrong-rent-not-found-response.json"));
+    }
+
+    @Test
+    void testValidateRentNoIssues() {
+        var response = givenAuthenticatedAdmin()
+                .when()
+                .get("/v1/rents/100/validate")
+                .then()
+                .statusCode(HttpStatus.OK.value())
+                .extract()
+                .asString();
+
+        assertJson(response).equalTo("[]");
+    }
+
+    @Test
+    @Sql("/rent/validate-issues-data.sql")
+    void testValidateRentWithIssues() {
+        var response = givenAuthenticatedAdmin()
+                .when()
+                .get("/v1/rents/100/validate")
+                .then()
+                .statusCode(HttpStatus.OK.value())
+                .extract()
+                .asString();
+
+        assertJson(response).equalTo(loadFileContent("/rent/validate-issues-response.json"));
+    }
+
+    @Test
+    @Sql("/rent/validate-returned-ignored-data.sql")
+    void testValidateRentIgnoresReturnedItems() {
+        var response = givenAuthenticatedAdmin()
+                .when()
+                .get("/v1/rents/100/validate")
+                .then()
+                .statusCode(HttpStatus.OK.value())
+                .extract()
+                .asString();
+
+        assertJson(response).equalTo("[]");
+    }
+
+    @Test
+    @Sql("/rent/validate-container-issues-data.sql")
+    void testValidateRentWithContainerIssues() {
+        var response = givenAuthenticatedAdmin()
+                .when()
+                .get("/v1/rents/100/validate")
+                .then()
+                .statusCode(HttpStatus.OK.value())
+                .extract()
+                .asString();
+
+        assertJson(response).equalTo(loadFileContent("/rent/validate-container-issues-response.json"));
+    }
+
+    @Test
+    @Sql("/rent/validate-combined-issues-data.sql")
+    void testValidateRentWithCombinedDeviceAndContainerIssues() {
+        var response = givenAuthenticatedAdmin()
+                .when()
+                .get("/v1/rents/100/validate")
+                .then()
+                .statusCode(HttpStatus.OK.value())
+                .extract()
+                .asString();
+
+        assertJson(response).equalTo(loadFileContent("/rent/validate-combined-issues-response.json"));
+    }
+
+    @Test
+    void testValidateRentNotFound() {
+        var response = givenAuthenticatedAdmin()
+                .when()
+                .get("/v1/rents/999/validate")
+                .then()
+                .statusCode(HttpStatus.NOT_FOUND.value())
+                .extract()
+                .asString();
+
+        assertJson(response).equalTo(loadFileContent("/rent/rent-not-found-response.json"));
     }
 
     @Test

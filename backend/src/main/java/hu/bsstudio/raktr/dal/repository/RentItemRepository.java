@@ -19,12 +19,12 @@ public interface RentItemRepository extends JpaRepository<RentItem, Long> {
             FROM RentItem ri
             JOIN ri.rent r
             WHERE ri.scannable.id = :scannableId
+                AND r.id <> :excludeRentId
                 AND r.deleted = false
-                AND ri.status <> 'RETURNED'
                 AND r.outDate <= :endDate
+                AND ri.status <> 'RETURNED'
                 AND COALESCE(r.actualReturnDate, r.expectedReturnDate) >= :startDate
-                AND (:excludeRentItemId IS NULL OR ri.id <> :excludeRentItemId)
             """)
-    int sumBookedQuantity(Long scannableId, LocalDate startDate, LocalDate endDate, Long excludeRentItemId);
+    int sumBookedQuantityExcludingRent(Long scannableId, LocalDate startDate, LocalDate endDate, Long excludeRentId);
 
 }

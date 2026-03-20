@@ -1,7 +1,0 @@
-{
-  "error": "QUANTITY_NOT_AVAILABLE",
-  "itemIdentifier": "Test Microphone",
-  "requestedQuantity": 4,
-  "availableQuantity": 3,
-  "message": "Cannot rent [4] of [Test Microphone], only [3] available"
-}

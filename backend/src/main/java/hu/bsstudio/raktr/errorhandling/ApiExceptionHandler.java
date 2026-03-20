@@ -3,7 +3,6 @@ package hu.bsstudio.raktr.errorhandling;
 import hu.bsstudio.raktr.exception.AccessDeniedException;
 import hu.bsstudio.raktr.exception.EntityException;
 import hu.bsstudio.raktr.exception.EntityInUseException;
-import hu.bsstudio.raktr.exception.NotAvailableQuantityException;
 import hu.bsstudio.raktr.exception.PdfGenerationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -31,19 +30,6 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         log.debug("Access denied: {}", ex.getMessage());
         var response = new ErrorResponse("ACCESS_DENIED", ex.getMessage());
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
-    }
-
-    @ExceptionHandler(NotAvailableQuantityException.class)
-    public ResponseEntity<QuantityErrorResponse> handleNotAvailableQuantity(NotAvailableQuantityException ex) {
-        log.debug("Quantity not available: {}", ex.getMessage());
-        var response = new QuantityErrorResponse(
-                "QUANTITY_NOT_AVAILABLE",
-                ex.getItemIdentifier(),
-                ex.getRequestedQuantity(),
-                ex.getAvailableQuantity(),
-                ex.getMessage()
-        );
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
     }
 
     @ExceptionHandler(IllegalArgumentException.class)

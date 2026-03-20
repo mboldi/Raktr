@@ -6,6 +6,7 @@ import hu.bsstudio.raktr.dto.rent.RentCreateDto;
 import hu.bsstudio.raktr.dto.rent.RentDetailsDto;
 import hu.bsstudio.raktr.dto.rent.RentPdfCreateDto;
 import hu.bsstudio.raktr.dto.rent.RentUpdateDto;
+import hu.bsstudio.raktr.dto.rent.RentValidationIssueDto;
 import hu.bsstudio.raktr.dto.rentitem.RentItemCreateDto;
 import hu.bsstudio.raktr.dto.rentitem.RentItemDetailsDto;
 import hu.bsstudio.raktr.dto.rentitem.RentItemUpdateDto;
@@ -109,6 +110,11 @@ public class RentController {
             @PathVariable Long rentItemId
     ) {
         rentService.deleteRentItem(rentId, rentItemId);
+    }
+
+    @GetMapping("/{rentId}/validate")
+    public List<RentValidationIssueDto> validateRent(@PathVariable Long rentId) {
+        return rentService.validateRent(rentId);
     }
 
     @PostMapping("/{rentId}/pdf")

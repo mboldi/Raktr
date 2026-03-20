@@ -6,7 +6,6 @@ import hu.bsstudio.raktr.dal.entity.Container;
 import hu.bsstudio.raktr.dal.entity.Device;
 import hu.bsstudio.raktr.dal.entity.Rent;
 import hu.bsstudio.raktr.dal.entity.RentItem;
-import hu.bsstudio.raktr.dal.entity.Scannable;
 import hu.bsstudio.raktr.dal.entity.User;
 import hu.bsstudio.raktr.dal.repository.CommentRepository;
 import hu.bsstudio.raktr.dal.repository.RentItemRepository;
@@ -21,12 +20,13 @@ import hu.bsstudio.raktr.dto.rent.RentCreateDto;
 import hu.bsstudio.raktr.dto.rent.RentDetailsDto;
 import hu.bsstudio.raktr.dto.rent.RentPdfCreateDto;
 import hu.bsstudio.raktr.dto.rent.RentUpdateDto;
+import hu.bsstudio.raktr.dto.rent.RentValidationIssueDto;
+import hu.bsstudio.raktr.dto.rent.RentValidationSourceDto;
 import hu.bsstudio.raktr.dto.rentitem.RentItemCreateDto;
 import hu.bsstudio.raktr.dto.rentitem.RentItemDetailsDto;
 import hu.bsstudio.raktr.dto.rentitem.RentItemUpdateDto;
 import hu.bsstudio.raktr.exception.EntityAlreadyExistsException;
 import hu.bsstudio.raktr.exception.EntityNotFoundException;
-import hu.bsstudio.raktr.exception.NotAvailableQuantityException;
 import hu.bsstudio.raktr.pdf.RentPdfRequest;
 import hu.bsstudio.raktr.pdf.RentPdfService;
 import hu.bsstudio.raktr.rent.mapper.RentItemMapper;
@@ -37,6 +37,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.UUID;
@@ -155,7 +156,6 @@ public class RentService {
         var rentItem = rentItemMapper.createDtoToEntity(createDto);
 
         var scannable = lookupService.getScannable(createDto.getScannableId());
-        validateDeviceAvailability(scannable, rent, createDto.getQuantity(), null);
 
         rentItem.setRent(rent);
         rentItem.setScannable(scannable);
@@ -174,8 +174,6 @@ public class RentService {
         var rentItem = getRentItem(rentItemId, rent);
 
         rentItemMapper.updateDtoToEntity(rentItem, updateDto);
-
-        validateDeviceAvailability(rentItem.getScannable(), rent, updateDto.getQuantity(), rentItem.getId());
 
         rentItem = rentItemRepository.saveAndFlush(rentItem);
 
@@ -196,6 +194,63 @@ public class RentService {
         log.info("Deleted RentItem [{}] from Rent [{}]", rentItemId, rentId);
 
         closeRentIfAllReturned(rent, rentItemId);
+    }
+
+    @Transactional
+    public List<RentValidationIssueDto> validateRent(Long rentId) {
+        var rent = getRent(rentId);
+
+        var deviceDemand = new LinkedHashMap<Long, Integer>();
+        var deviceSources = new LinkedHashMap<Long, List<RentValidationSourceDto>>();
+        var deviceMap = new LinkedHashMap<Long, Device>();
+
+        for (var rentItem : rent.getRentItems()) {
+            if (rentItem.getStatus() == BackStatus.RETURNED) {
+                continue;
+            }
+
+            switch (rentItem.getScannable()) {
+                case Device device -> {
+                    deviceDemand.merge(device.getId(), rentItem.getQuantity(), Integer::sum);
+                    deviceSources.computeIfAbsent(device.getId(), _ -> new ArrayList<>())
+                            .add(new RentValidationSourceDto(null, rentItem.getQuantity()));
+                    deviceMap.put(device.getId(), device);
+                }
+                case Container container -> container.getItems().forEach(ci -> {
+                    var qty = ci.getQuantity() * rentItem.getQuantity();
+                    deviceDemand.merge(ci.getDevice().getId(), qty, Integer::sum);
+                    deviceSources.computeIfAbsent(ci.getDevice().getId(), _ -> new ArrayList<>())
+                            .add(new RentValidationSourceDto(container.getId(), qty));
+                    deviceMap.put(ci.getDevice().getId(), ci.getDevice());
+                });
+                default -> {
+                }
+            }
+        }
+
+        var issues = new ArrayList<RentValidationIssueDto>();
+
+        for (var entry : deviceDemand.entrySet()) {
+            var device = deviceMap.get(entry.getKey());
+            var needed = entry.getValue();
+
+            var bookedByOthers = rentItemRepository.sumBookedQuantityExcludingRent(
+                    device.getId(),
+                    rent.getOutDate(),
+                    rent.getExpectedReturnDate(),
+                    rent.getId()
+            );
+
+            var available = device.getQuantity() - bookedByOthers;
+
+            if (needed > available) {
+                issues.add(new RentValidationIssueDto(
+                        device.getId(), device.getName(), needed, available, deviceSources.get(entry.getKey())
+                ));
+            }
+        }
+
+        return issues;
     }
 
     @Transactional
@@ -248,40 +303,6 @@ public class RentService {
             rent.setClosed(true);
             rentRepository.saveAndFlush(rent);
             log.info("All items returned, closed Rent [{}]", rent.getId());
-        }
-    }
-
-    private void validateDeviceAvailability(Scannable scannable, Rent rent, int requestedQuantity, Long excludeRentItemId) {
-        switch (scannable) {
-            case Container container -> validateContainerAvailability(container, rent, requestedQuantity, excludeRentItemId);
-            case Device device -> validateSingleDeviceAvailability(device, rent, requestedQuantity, excludeRentItemId);
-            default -> { }
-        }
-    }
-
-    private void validateContainerAvailability(Container container, Rent rent, int requestedQuantity, Long excludeRentItemId) {
-        container.getItems().forEach(containerItem ->
-                validateSingleDeviceAvailability(
-                        containerItem.getDevice(),
-                        rent,
-                        containerItem.getQuantity() * requestedQuantity,
-                        excludeRentItemId
-                )
-        );
-    }
-
-    private void validateSingleDeviceAvailability(Device device, Rent rent, int requestedQuantity, Long excludeRentItemId) {
-        var bookedQuantity = rentItemRepository.sumBookedQuantity(
-                device.getId(),
-                rent.getOutDate(),
-                rent.getExpectedReturnDate(),
-                excludeRentItemId
-        );
-
-        var availableQuantity = device.getQuantity() - bookedQuantity;
-
-        if (requestedQuantity > availableQuantity) {
-            throw new NotAvailableQuantityException(device.getName(), requestedQuantity, availableQuantity);
         }
     }
 

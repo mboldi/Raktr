@@ -1,7 +1,0 @@
-{
-  "error": "QUANTITY_NOT_AVAILABLE",
-  "itemIdentifier": "Test Camera",
-  "requestedQuantity": 6,
-  "availableQuantity": 5,
-  "message": "Cannot rent [6] of [Test Camera], only [5] available"
-}

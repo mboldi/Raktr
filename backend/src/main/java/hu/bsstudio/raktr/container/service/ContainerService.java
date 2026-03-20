@@ -1,12 +1,15 @@
 package hu.bsstudio.raktr.container.service;
 
 import hu.bsstudio.raktr.container.mapper.ContainerMapper;
+import hu.bsstudio.raktr.dal.entity.ContainerItem;
 import hu.bsstudio.raktr.dal.entity.Device;
 import hu.bsstudio.raktr.dal.repository.ContainerRepository;
 import hu.bsstudio.raktr.dto.container.ContainerAddDevicesDto;
 import hu.bsstudio.raktr.dto.container.ContainerCreateDto;
 import hu.bsstudio.raktr.dto.container.ContainerDetailsDto;
+import hu.bsstudio.raktr.dto.container.ContainerItemUpdateDto;
 import hu.bsstudio.raktr.dto.container.ContainerUpdateDto;
+import hu.bsstudio.raktr.exception.EntityAlreadyExistsException;
 import hu.bsstudio.raktr.exception.EntityNotFoundException;
 import hu.bsstudio.raktr.scannable.service.ScannableLookupService;
 import lombok.RequiredArgsConstructor;
@@ -83,15 +86,45 @@ public class ContainerService {
     public ContainerDetailsDto addDevicesToContainer(Long containerId, ContainerAddDevicesDto addDevicesDto) {
         var container = lookupService.getContainer(containerId);
 
-        var devices = addDevicesDto.getDeviceIds().stream()
-                .map(lookupService::getDevice)
-                .toList();
+        for (var item : addDevicesDto.getItems()) {
+            var existingItem = container.getItems().stream()
+                    .filter(ci -> ci.getDevice().getId().equals(item.getDeviceId()))
+                    .findFirst();
 
-        container.getDevices().addAll(devices);
+            if (existingItem.isPresent()) {
+                throw new EntityAlreadyExistsException(ContainerItem.class, item.getDeviceId());
+            }
+
+            var device = lookupService.getDevice(item.getDeviceId());
+
+            var containerItem = new ContainerItem();
+            containerItem.setContainer(container);
+            containerItem.setDevice(device);
+            containerItem.setQuantity(item.getQuantity());
+
+            container.getItems().add(containerItem);
+        }
 
         containerRepository.saveAndFlush(container);
 
-        log.info("Devices added to Container [{}]: [{}]", containerId, addDevicesDto.getDeviceIds());
+        log.info("Devices added to Container [{}]", containerId);
+
+        return containerMapper.entityToDetailsDto(container);
+    }
+
+    @Transactional
+    public ContainerDetailsDto updateDeviceInContainer(Long containerId, Long deviceId, ContainerItemUpdateDto updateDto) {
+        var container = lookupService.getContainer(containerId);
+        var item = container.getItems().stream()
+                .filter(ci -> ci.getDevice().getId().equals(deviceId))
+                .findFirst()
+                .orElseThrow(() -> new EntityNotFoundException(Device.class, deviceId));
+
+        item.setQuantity(updateDto.getQuantity());
+
+        containerRepository.saveAndFlush(container);
+
+        log.info("Updated Device [{}] quantity in Container [{}]", deviceId, containerId);
 
         return containerMapper.entityToDetailsDto(container);
     }
@@ -99,12 +132,12 @@ public class ContainerService {
     @Transactional
     public ContainerDetailsDto removeDeviceFromContainer(Long containerId, Long deviceId) {
         var container = lookupService.getContainer(containerId);
-        var deviceToRemove = container.getDevices().stream()
-                .filter(device -> device.getId().equals(deviceId))
+        var itemToRemove = container.getItems().stream()
+                .filter(item -> item.getDevice().getId().equals(deviceId))
                 .findFirst()
                 .orElseThrow(() -> new EntityNotFoundException(Device.class, deviceId));
 
-        container.getDevices().remove(deviceToRemove);
+        container.getItems().remove(itemToRemove);
 
         containerRepository.saveAndFlush(container);
 

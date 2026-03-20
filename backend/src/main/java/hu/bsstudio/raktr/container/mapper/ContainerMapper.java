@@ -26,7 +26,7 @@ public interface ContainerMapper {
     @Mapping(target = "createdBy", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "updatedBy", ignore = true)
-    @Mapping(target = "devices", ignore = true)
+    @Mapping(target = "items", ignore = true)
     Container createDtoToEntity(ContainerCreateDto createDto);
 
     @Mapping(target = "id", ignore = true)
@@ -38,7 +38,7 @@ public interface ContainerMapper {
     @Mapping(target = "createdBy", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "updatedBy", ignore = true)
-    @Mapping(target = "devices", ignore = true)
+    @Mapping(target = "items", ignore = true)
     void updateDtoToEntity(@MappingTarget Container container, ContainerUpdateDto updateDto);
 
 }

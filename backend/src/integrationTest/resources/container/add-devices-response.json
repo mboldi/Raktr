@@ -29,88 +29,94 @@
     "nickname": "Member"
   },
   "totalWeight": 750,
-  "devices": [
+  "items": [
     {
-      "id": 200,
-      "assetTag": "DEVICE-001",
-      "barcode": "DEVICE-BARCODE-001",
-      "name": "Free Device 1",
-      "weight": 100,
-      "publicRentable": true,
-      "deleted": false,
-      "category": "test-category-for-container",
-      "location": "test-location-for-container",
-      "owner": {
-        "id": 100,
-        "name": "test-owner-for-container"
+      "device": {
+        "id": 200,
+        "assetTag": "DEVICE-001",
+        "barcode": "DEVICE-BARCODE-001",
+        "name": "Free Device 1",
+        "weight": 100,
+        "publicRentable": true,
+        "deleted": false,
+        "category": "test-category-for-container",
+        "location": "test-location-for-container",
+        "owner": {
+          "id": 100,
+          "name": "test-owner-for-container"
+        },
+        "createdAt": "2025-01-07T10:00:00Z",
+        "createdBy": {
+          "uuid": "00000000-0000-0000-0000-000000000100",
+          "username": "member_user_100",
+          "familyName": "Member",
+          "givenName": "User",
+          "nickname": "Member"
+        },
+        "updatedAt": "2025-01-07T10:00:00Z",
+        "updatedBy": {
+          "uuid": "00000000-0000-0000-0000-000000000100",
+          "username": "member_user_100",
+          "familyName": "Member",
+          "givenName": "User",
+          "nickname": "Member"
+        },
+        "manufacturer": "Manufacturer1",
+        "model": "Model1",
+        "serialNumber": null,
+        "estimatedValue": null,
+        "status": "GOOD",
+        "quantity": 1,
+        "acquisitionSource": null,
+        "acquisitionDate": null,
+        "warrantyEndDate": null,
+        "notes": null
       },
-      "createdAt": "2025-01-07T10:00:00Z",
-      "createdBy": {
-        "uuid": "00000000-0000-0000-0000-000000000100",
-        "username": "member_user_100",
-        "familyName": "Member",
-        "givenName": "User",
-        "nickname": "Member"
-      },
-      "updatedAt": "2025-01-07T10:00:00Z",
-      "updatedBy": {
-        "uuid": "00000000-0000-0000-0000-000000000100",
-        "username": "member_user_100",
-        "familyName": "Member",
-        "givenName": "User",
-        "nickname": "Member"
-      },
-      "manufacturer": "Manufacturer1",
-      "model": "Model1",
-      "serialNumber": null,
-      "estimatedValue": null,
-      "status": "GOOD",
-      "quantity": 1,
-      "acquisitionSource": null,
-      "acquisitionDate": null,
-      "warrantyEndDate": null,
-      "notes": null
+      "quantity": 1
     },
     {
-      "id": 201,
-      "assetTag": "DEVICE-002",
-      "barcode": "DEVICE-BARCODE-002",
-      "name": "Free Device 2",
-      "weight": 150,
-      "publicRentable": true,
-      "deleted": false,
-      "category": "test-category-for-container",
-      "location": "test-location-for-container",
-      "owner": {
-        "id": 100,
-        "name": "test-owner-for-container"
+      "device": {
+        "id": 201,
+        "assetTag": "DEVICE-002",
+        "barcode": "DEVICE-BARCODE-002",
+        "name": "Free Device 2",
+        "weight": 150,
+        "publicRentable": true,
+        "deleted": false,
+        "category": "test-category-for-container",
+        "location": "test-location-for-container",
+        "owner": {
+          "id": 100,
+          "name": "test-owner-for-container"
+        },
+        "createdAt": "2025-01-07T10:00:00Z",
+        "createdBy": {
+          "uuid": "00000000-0000-0000-0000-000000000100",
+          "username": "member_user_100",
+          "familyName": "Member",
+          "givenName": "User",
+          "nickname": "Member"
+        },
+        "updatedAt": "2025-01-07T10:00:00Z",
+        "updatedBy": {
+          "uuid": "00000000-0000-0000-0000-000000000100",
+          "username": "member_user_100",
+          "familyName": "Member",
+          "givenName": "User",
+          "nickname": "Member"
+        },
+        "manufacturer": "Manufacturer2",
+        "model": "Model2",
+        "serialNumber": null,
+        "estimatedValue": null,
+        "status": "GOOD",
+        "quantity": 1,
+        "acquisitionSource": null,
+        "acquisitionDate": null,
+        "warrantyEndDate": null,
+        "notes": null
       },
-      "createdAt": "2025-01-07T10:00:00Z",
-      "createdBy": {
-        "uuid": "00000000-0000-0000-0000-000000000100",
-        "username": "member_user_100",
-        "familyName": "Member",
-        "givenName": "User",
-        "nickname": "Member"
-      },
-      "updatedAt": "2025-01-07T10:00:00Z",
-      "updatedBy": {
-        "uuid": "00000000-0000-0000-0000-000000000100",
-        "username": "member_user_100",
-        "familyName": "Member",
-        "givenName": "User",
-        "nickname": "Member"
-      },
-      "manufacturer": "Manufacturer2",
-      "model": "Model2",
-      "serialNumber": null,
-      "estimatedValue": null,
-      "status": "GOOD",
-      "quantity": 1,
-      "acquisitionSource": null,
-      "acquisitionDate": null,
-      "warrantyEndDate": null,
-      "notes": null
+      "quantity": 1
     }
   ]
 }

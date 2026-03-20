@@ -1,6 +1,12 @@
 {
-  "deviceIds": [
-    200,
-    201
+  "items": [
+    {
+      "deviceId": 200,
+      "quantity": 1
+    },
+    {
+      "deviceId": 201,
+      "quantity": 1
+    }
   ]
 }

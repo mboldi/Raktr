@@ -23,8 +23,8 @@ VALUES (200, 'DEVICE', 'DEVICE-001', 'DEVICE-BARCODE-001', 'Free Device 1', 100,
        (202, 'DEVICE', 'DEVICE-003', 'DEVICE-BARCODE-003', 'Device In Container', 200, true, false, 'test-category-for-container', 'test-location-for-container', 100, 'Manufacturer3', 'Model3', 'GOOD', 1, '2025-01-07T10:00:00Z', '00000000-0000-0000-0000-000000000100', '2025-01-07T10:00:00Z', '00000000-0000-0000-0000-000000000100');
 
 -- Link device 202 to container 101
-INSERT INTO container_devices (container_id, device_id)
-VALUES (101, 202);
+INSERT INTO container_devices (container_id, device_id, quantity)
+VALUES (101, 202, 1);
 
 ALTER SEQUENCE scannables_id_seq RESTART WITH 300;
 

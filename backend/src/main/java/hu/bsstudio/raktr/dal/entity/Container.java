@@ -1,10 +1,9 @@
 package hu.bsstudio.raktr.dal.entity;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,17 +16,12 @@ import java.util.List;
 @Setter
 public class Container extends Scannable {
 
-    @ManyToMany
-    @JoinTable(
-            name = "container_devices",
-            joinColumns = @JoinColumn(name = "container_id"),
-            inverseJoinColumns = @JoinColumn(name = "device_id")
-    )
-    private List<Device> devices = new ArrayList<>();
+    @OneToMany(mappedBy = "container", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ContainerItem> items = new ArrayList<>();
 
     public Integer getTotalWeight() {
-        var devicesWeight = devices.stream()
-                .mapToInt(Device::getWeight)
+        var devicesWeight = items.stream()
+                .mapToInt(item -> item.getDevice().getWeight() * item.getQuantity())
                 .sum();
         return getWeight() + devicesWeight;
     }

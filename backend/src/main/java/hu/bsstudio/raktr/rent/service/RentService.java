@@ -2,6 +2,7 @@ package hu.bsstudio.raktr.rent.service;
 
 import hu.bsstudio.raktr.comment.mapper.CommentMapper;
 import hu.bsstudio.raktr.config.service.ConfigService;
+import hu.bsstudio.raktr.dal.entity.Container;
 import hu.bsstudio.raktr.dal.entity.Device;
 import hu.bsstudio.raktr.dal.entity.Rent;
 import hu.bsstudio.raktr.dal.entity.RentItem;
@@ -251,10 +252,25 @@ public class RentService {
     }
 
     private void validateDeviceAvailability(Scannable scannable, Rent rent, int requestedQuantity, Long excludeRentItemId) {
-        if (!(scannable instanceof Device device)) {
-            return;
+        switch (scannable) {
+            case Container container -> validateContainerAvailability(container, rent, requestedQuantity, excludeRentItemId);
+            case Device device -> validateSingleDeviceAvailability(device, rent, requestedQuantity, excludeRentItemId);
+            default -> { }
         }
+    }
 
+    private void validateContainerAvailability(Container container, Rent rent, int requestedQuantity, Long excludeRentItemId) {
+        container.getItems().forEach(containerItem ->
+                validateSingleDeviceAvailability(
+                        containerItem.getDevice(),
+                        rent,
+                        containerItem.getQuantity() * requestedQuantity,
+                        excludeRentItemId
+                )
+        );
+    }
+
+    private void validateSingleDeviceAvailability(Device device, Rent rent, int requestedQuantity, Long excludeRentItemId) {
         var bookedQuantity = rentItemRepository.sumBookedQuantity(
                 device.getId(),
                 rent.getOutDate(),

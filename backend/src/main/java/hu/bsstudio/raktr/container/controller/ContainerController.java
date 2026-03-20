@@ -4,6 +4,7 @@ import hu.bsstudio.raktr.container.service.ContainerService;
 import hu.bsstudio.raktr.dto.container.ContainerAddDevicesDto;
 import hu.bsstudio.raktr.dto.container.ContainerCreateDto;
 import hu.bsstudio.raktr.dto.container.ContainerDetailsDto;
+import hu.bsstudio.raktr.dto.container.ContainerItemUpdateDto;
 import hu.bsstudio.raktr.dto.container.ContainerUpdateDto;
 import hu.bsstudio.raktr.dto.rent.RentDetailsDto;
 import hu.bsstudio.raktr.dto.ticket.TicketDetailsDto;
@@ -87,6 +88,15 @@ public class ContainerController {
             @RequestBody @Valid ContainerAddDevicesDto addDevicesDto
     ) {
         return containerService.addDevicesToContainer(containerId, addDevicesDto);
+    }
+
+    @PutMapping("/{containerId}/devices/{deviceId}")
+    public ContainerDetailsDto updateDeviceInContainer(
+            @PathVariable Long containerId,
+            @PathVariable Long deviceId,
+            @RequestBody @Valid ContainerItemUpdateDto updateDto
+    ) {
+        return containerService.updateDeviceInContainer(containerId, deviceId, updateDto);
     }
 
     @DeleteMapping("/{containerId}/devices/{deviceId}")

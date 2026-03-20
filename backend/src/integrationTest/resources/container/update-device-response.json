@@ -28,7 +28,7 @@
     "givenName": "User",
     "nickname": "Member"
   },
-  "totalWeight": 1300,
+  "totalWeight": 1600,
   "items": [
     {
       "device": {
@@ -72,51 +72,7 @@
         "warrantyEndDate": null,
         "notes": null
       },
-      "quantity": 1
-    },
-    {
-      "device": {
-        "id": 200,
-        "assetTag": "DEVICE-001",
-        "barcode": "DEVICE-BARCODE-001",
-        "name": "Free Device 1",
-        "weight": 100,
-        "publicRentable": true,
-        "deleted": false,
-        "category": "test-category-for-container",
-        "location": "test-location-for-container",
-        "owner": {
-          "id": 100,
-          "name": "test-owner-for-container"
-        },
-        "createdAt": "2025-01-07T10:00:00Z",
-        "createdBy": {
-          "uuid": "00000000-0000-0000-0000-000000000100",
-          "username": "member_user_100",
-          "familyName": "Member",
-          "givenName": "User",
-          "nickname": "Member"
-        },
-        "updatedAt": "2025-01-07T10:00:00Z",
-        "updatedBy": {
-          "uuid": "00000000-0000-0000-0000-000000000100",
-          "username": "member_user_100",
-          "familyName": "Member",
-          "givenName": "User",
-          "nickname": "Member"
-        },
-        "manufacturer": "Manufacturer1",
-        "model": "Model1",
-        "serialNumber": null,
-        "estimatedValue": null,
-        "status": "GOOD",
-        "quantity": 1,
-        "acquisitionSource": null,
-        "acquisitionDate": null,
-        "warrantyEndDate": null,
-        "notes": null
-      },
-      "quantity": 1
+      "quantity": 3
     }
   ]
 }

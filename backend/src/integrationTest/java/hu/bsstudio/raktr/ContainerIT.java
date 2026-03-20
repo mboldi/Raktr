@@ -269,6 +269,48 @@ public class ContainerIT extends RaktrIT {
     }
 
     @Test
+    void testUpdateDeviceInContainer() {
+        var response = givenAuthenticatedAdmin()
+                .body(loadFileContent("/container/update-device-request.json"))
+                .when()
+                .put("/v1/containers/101/devices/202")
+                .then()
+                .statusCode(HttpStatus.OK.value())
+                .extract()
+                .asString();
+
+        assertJson(response).equalTo(loadFileContent("/container/update-device-response.json"));
+    }
+
+    @Test
+    void testUpdateDeviceInContainerNotFound() {
+        var response = givenAuthenticatedAdmin()
+                .body(loadFileContent("/container/update-device-request.json"))
+                .when()
+                .put("/v1/containers/999/devices/202")
+                .then()
+                .statusCode(HttpStatus.NOT_FOUND.value())
+                .extract()
+                .asString();
+
+        assertJson(response).equalTo(loadFileContent("/container/update-device-not-found-response.json"));
+    }
+
+    @Test
+    void testUpdateDeviceInContainerDeviceNotInContainer() {
+        var response = givenAuthenticatedAdmin()
+                .body(loadFileContent("/container/update-device-request.json"))
+                .when()
+                .put("/v1/containers/100/devices/200")
+                .then()
+                .statusCode(HttpStatus.NOT_FOUND.value())
+                .extract()
+                .asString();
+
+        assertJson(response).equalTo(loadFileContent("/container/update-device-device-not-found-response.json"));
+    }
+
+    @Test
     void testRemoveDeviceFromContainer() {
         var response = givenAuthenticatedAdmin()
                 .when()

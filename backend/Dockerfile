@@ -16,7 +16,7 @@ RUN ./gradlew bootJar --parallel --no-daemon -Pversion=$VERSION
 
 RUN java -Djarmode=tools -jar build/libs/*.jar extract --destination build/extracted
 
-FROM gcr.io/distroless/java25-debian13
+FROM gcr.io/distroless/java25-debian13 AS runtime
 
 WORKDIR /app
 

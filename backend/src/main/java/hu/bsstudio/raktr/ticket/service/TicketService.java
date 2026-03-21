@@ -36,7 +36,7 @@ public class TicketService {
 
     private final CommentMapper commentMapper;
 
-    @Transactional
+    @Transactional(readOnly = true)
     public List<TicketDetailsDto> listTickets(TicketStatus status, ProblemSeverity severity) {
         var tickets = ticketRepository.findByFilters(status, severity);
         return tickets.stream().map(ticketMapper::entityToDetailsDto).toList();
@@ -56,7 +56,7 @@ public class TicketService {
         return ticketMapper.entityToDetailsDto(ticket);
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public TicketDetailsDto getTicketById(Long ticketId) {
         var ticket = getTicket(ticketId);
         return ticketMapper.entityToDetailsDto(ticket);
@@ -89,7 +89,7 @@ public class TicketService {
         return commentMapper.entityToDetailsDto(comment);
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public List<TicketDetailsDto> getTicketsByScannableId(Long scannableId) {
         var scannable = lookupService.getScannable(scannableId);
         var tickets = ticketRepository.findByScannable(scannable);

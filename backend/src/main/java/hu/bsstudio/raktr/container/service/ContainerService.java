@@ -30,7 +30,7 @@ public class ContainerService {
 
     private final ContainerMapper containerMapper;
 
-    @Transactional
+    @Transactional(readOnly = true)
     public List<ContainerDetailsDto> listContainers(boolean deleted) {
         var containers = containerRepository.findAllByDeleted(deleted);
         return containers.stream().map(containerMapper::entityToDetailsDto).toList();
@@ -55,7 +55,7 @@ public class ContainerService {
         return containerMapper.entityToDetailsDto(container);
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public ContainerDetailsDto getContainerById(Long containerId) {
         var container = lookupService.getContainer(containerId);
         return containerMapper.entityToDetailsDto(container);

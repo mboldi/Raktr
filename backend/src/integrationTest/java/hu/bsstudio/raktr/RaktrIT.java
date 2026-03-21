@@ -40,10 +40,13 @@ public abstract class RaktrIT {
 
     @LocalServerPort
     protected int port;
+
     @Autowired
     protected DatabaseQueryHelper databaseQueryHelper;
+
     @Autowired
     private CacheManager cacheManager;
+
     @Autowired
     private DataSource dataSource;
 

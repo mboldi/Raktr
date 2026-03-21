@@ -269,6 +269,20 @@ public class ContainerIT extends RaktrIT {
     }
 
     @Test
+    void testAddDevicesToContainerDeviceAlreadyExists() {
+        var response = givenAuthenticatedAdmin()
+                .body(loadFileContent("/container/add-devices-already-exists-request.json"))
+                .when()
+                .post("/v1/containers/101/devices")
+                .then()
+                .statusCode(HttpStatus.CONFLICT.value())
+                .extract()
+                .asString();
+
+        assertJson(response).equalTo(loadFileContent("/container/add-devices-already-exists-response.json"));
+    }
+
+    @Test
     void testUpdateDeviceInContainer() {
         var response = givenAuthenticatedAdmin()
                 .body(loadFileContent("/container/update-device-request.json"))

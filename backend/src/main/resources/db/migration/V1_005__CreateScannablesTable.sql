@@ -7,8 +7,8 @@ CREATE TABLE scannables (
     weight INT NOT NULL,
     public_rentable BOOLEAN NOT NULL DEFAULT FALSE,
     deleted BOOLEAN NOT NULL DEFAULT FALSE,
-    category_name TEXT REFERENCES categories(name),
-    location_name TEXT REFERENCES locations(name),
+    category_name TEXT REFERENCES categories(name) ON UPDATE CASCADE,
+    location_name TEXT REFERENCES locations(name) ON UPDATE CASCADE,
     owner_id BIGINT REFERENCES owners(id),
     -- Device-specific fields (nullable for containers)
     manufacturer TEXT,

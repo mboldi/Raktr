@@ -1,23 +1,30 @@
-version: "3.9"
+name: raktr
 services:
   backend:
-    build:
-      context: "./backend"
-    ports:
-    - "127.0.0.1:8080:8080"
+    image: ghcr.io/mboldi/raktr/backend:main
     depends_on:
-      - db
-  frontend:
-    build:
-      context: "./frontend"
+      db:
+        condition: service_healthy
+    environment:
+      SENTRY_DSN: ""
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/raktrdb
     ports:
-    - "127.0.0.1:80:8080"
+      - "127.0.0.1:8080:8080"
+  frontend:
+    image: ghcr.io/mboldi/raktr/frontend:main
     depends_on:
       - backend
-  db:
-    image: postgres:alpine
-    environment:
-      POSTGRES_PASSWORD: "admin"
-      POSTGRES_DB: "raktrdb"
     ports:
-    - "127.0.0.1:5432:5432"
+      - "127.0.0.1:80:8080"
+  db:
+    image: postgres:18-alpine
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: raktrdb
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    ports:
+      - "127.0.0.1:5432:5432"

@@ -62,6 +62,15 @@ jobs:
           flags: backend
           token: ${{ secrets.CODECOV_TOKEN }}
 
+      - name: Upload test results to Codecov
+        if: always()
+        uses: codecov/codecov-action@v5
+        with:
+          directory: backend
+          flags: backend
+          report_type: test_results
+          token: ${{ secrets.CODECOV_TOKEN }}
+
       - name: Upload generated PDFs
         if: always()
         uses: actions/upload-artifact@v7

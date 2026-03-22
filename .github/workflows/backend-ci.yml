@@ -48,7 +48,7 @@ jobs:
 
       - name: Test report
         if: always()
-        uses: dorny/test-reporter@v2
+        uses: dorny/test-reporter@v3
         with:
           name: Test Results
           path: backend/build/test-results/*/TEST-*.xml
@@ -64,7 +64,7 @@ jobs:
 
       - name: Upload generated PDFs
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: generated-pdfs
           path: backend/build/test-output/

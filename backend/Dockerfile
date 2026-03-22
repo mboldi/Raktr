@@ -12,7 +12,9 @@ RUN ./gradlew --no-daemon --version
 
 COPY src ./src
 
-RUN ./gradlew bootJar --parallel --no-daemon -Pversion=$VERSION
+RUN --mount=type=secret,id=SENTRY_AUTH_TOKEN \
+    SENTRY_AUTH_TOKEN=$(cat /run/secrets/SENTRY_AUTH_TOKEN 2>/dev/null || true) \
+    ./gradlew assemble --parallel --no-daemon -Pversion=$VERSION
 
 RUN java -Djarmode=tools -jar build/libs/*.jar extract --destination build/extracted
 

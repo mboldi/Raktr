@@ -112,6 +112,15 @@ tasks.compileJava {
     )
 }
 
+envOrProperty("SENTRY_AUTH_TOKEN", "sentryAuthToken")?.let { token ->
+    sentry {
+        includeSourceContext.set(true)
+        org.set("budavari-schonherz-studio")
+        projectName.set("raktr-backend-prod")
+        authToken.set(token)
+    }
+}
+
 spotless {
     java {
         importOrder("", "javax|java", "\\#")

@@ -24,6 +24,12 @@ spring:
           jwk-set-uri: https://login.bsstudio.hu/application/o/raktr/jwks/
           issuer-uri: https://login.bsstudio.hu/application/o/raktr/
 
+sentry:
+  dsn: ""
+  send-default-pii: true
+  traces-sample-rate: 0.2
+  exception-resolver-order: -2147483647
+
 management:
   endpoints:
     web:

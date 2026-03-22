@@ -65,6 +65,7 @@ Key settings in `application.yml`:
 | `spring.datasource.password`                            | `postgres`                                 |
 | `spring.security.oauth2.resourceserver.jwt.jwk-set-uri` | Authentik OIDC JWK Set URI                 |
 | `spring.security.oauth2.resourceserver.jwt.issuer-uri`  | Authentik OIDC Issuer                      |
+| `sentry.dsn`                                            | `""` (disabled)                            |
 
 ### Production Profile
 

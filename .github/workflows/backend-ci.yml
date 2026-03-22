@@ -46,14 +46,6 @@ jobs:
       - name: Build and check
         run: ./gradlew check
 
-      - name: Test report
-        if: always()
-        uses: dorny/test-reporter@v3
-        with:
-          name: Test Results
-          path: backend/build/test-results/*/TEST-*.xml
-          reporter: java-junit
-
       - name: Upload coverage to Codecov
         if: always()
         uses: codecov/codecov-action@v5

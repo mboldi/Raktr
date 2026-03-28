@@ -7,5 +7,5 @@ repositories {
 }
 
 dependencies {
-    implementation("com.palantir.gradle.gitversion:gradle-git-version:3.4.0")
+    implementation("com.palantir.gradle.gitversion:gradle-git-version:5.0.0")
 }

@@ -1,17 +1,12 @@
-import { Component, inject, OnInit } from '@angular/core';
-import { OidcSecurityService } from 'angular-auth-oidc-client';
+import { Component } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-root',
+  imports: [RouterOutlet],
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css'],
+  styleUrl: './app.component.scss'
 })
-export class AppComponent implements OnInit {
-  private readonly oidcSecurityService = inject(OidcSecurityService);
-
-  ngOnInit() {
-    this.oidcSecurityService.checkAuth().subscribe(({ userData }) => {
-      localStorage.setItem('username', userData['preferred_username']);
-    });
-  }
+export class AppComponent {
+  title = 'frontend';
 }

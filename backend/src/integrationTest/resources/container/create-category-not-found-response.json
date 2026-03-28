@@ -1,0 +1,6 @@
+{
+  "error": "ENTITY_NOT_FOUND",
+  "resourceName": "Category",
+  "resourceKey": "non-existent-category",
+  "message": "Resource [Category] not found with key [non-existent-category]"
+}

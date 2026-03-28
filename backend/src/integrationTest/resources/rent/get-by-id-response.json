@@ -1,0 +1,145 @@
+{
+  "id": 100,
+  "type": "SIMPLE",
+  "destination": "Test Event",
+  "issuer": {
+    "uuid": "00000000-0000-0000-0000-000000000100",
+    "username": "member_user_100",
+    "familyName": "Member",
+    "givenName": "User",
+    "nickname": "Member",
+    "personalId": "ID-100",
+    "groups": [
+      "Stúdiós"
+    ]
+  },
+  "renterName": "Nagy Péter",
+  "outDate": "2025-03-01",
+  "expectedReturnDate": "2025-03-05",
+  "actualReturnDate": null,
+  "closed": false,
+  "deleted": false,
+  "rentItems": [
+    {
+      "id": 100,
+      "scannable": {
+        "id": 200,
+        "assetTag": "RENT-DEVICE-001",
+        "barcode": "RENT-BARCODE-001",
+        "name": "Test Camera",
+        "weight": 1500,
+        "publicRentable": true,
+        "deleted": false,
+        "category": "test-category-for-rent",
+        "location": "test-location-for-rent",
+        "owner": {
+          "id": 200,
+          "name": "test-owner-for-rent"
+        },
+        "createdAt": "2025-01-08T10:00:00Z",
+        "createdBy": {
+          "uuid": "00000000-0000-0000-0000-000000000100",
+          "username": "member_user_100",
+          "familyName": "Member",
+          "givenName": "User",
+          "nickname": "Member"
+        },
+        "updatedAt": "2025-01-08T10:00:00Z",
+        "updatedBy": {
+          "uuid": "00000000-0000-0000-0000-000000000100",
+          "username": "member_user_100",
+          "familyName": "Member",
+          "givenName": "User",
+          "nickname": "Member"
+        }
+      },
+      "status": "OUT",
+      "quantity": 2,
+      "createdAt": "2025-01-08T10:00:00Z",
+      "createdBy": {
+        "uuid": "00000000-0000-0000-0000-000000000100",
+        "username": "member_user_100",
+        "familyName": "Member",
+        "givenName": "User",
+        "nickname": "Member"
+      },
+      "updatedAt": "2025-01-08T10:00:00Z",
+      "updatedBy": {
+        "uuid": "00000000-0000-0000-0000-000000000100",
+        "username": "member_user_100",
+        "familyName": "Member",
+        "givenName": "User",
+        "nickname": "Member"
+      }
+    },
+    {
+      "id": 101,
+      "scannable": {
+        "id": 201,
+        "assetTag": "RENT-DEVICE-002",
+        "barcode": "RENT-BARCODE-002",
+        "name": "Test Lens",
+        "weight": 800,
+        "publicRentable": true,
+        "deleted": false,
+        "category": "test-category-for-rent",
+        "location": "test-location-for-rent",
+        "owner": {
+          "id": 200,
+          "name": "test-owner-for-rent"
+        },
+        "createdAt": "2025-01-08T11:00:00Z",
+        "createdBy": {
+          "uuid": "00000000-0000-0000-0000-000000000100",
+          "username": "member_user_100",
+          "familyName": "Member",
+          "givenName": "User",
+          "nickname": "Member"
+        },
+        "updatedAt": "2025-01-08T11:00:00Z",
+        "updatedBy": {
+          "uuid": "00000000-0000-0000-0000-000000000100",
+          "username": "member_user_100",
+          "familyName": "Member",
+          "givenName": "User",
+          "nickname": "Member"
+        }
+      },
+      "status": "OUT",
+      "quantity": 1,
+      "createdAt": "2025-01-08T10:00:00Z",
+      "createdBy": {
+        "uuid": "00000000-0000-0000-0000-000000000100",
+        "username": "member_user_100",
+        "familyName": "Member",
+        "givenName": "User",
+        "nickname": "Member"
+      },
+      "updatedAt": "2025-01-08T10:00:00Z",
+      "updatedBy": {
+        "uuid": "00000000-0000-0000-0000-000000000100",
+        "username": "member_user_100",
+        "familyName": "Member",
+        "givenName": "User",
+        "nickname": "Member"
+      }
+    }
+  ],
+  "comments": [],
+  "createdAt": "2025-01-08T10:00:00Z",
+  "createdBy": {
+    "uuid": "00000000-0000-0000-0000-000000000100",
+    "username": "member_user_100",
+    "familyName": "Member",
+    "givenName": "User",
+    "nickname": "Member"
+  },
+  "updatedAt": "2025-01-08T10:00:00Z",
+  "updatedBy": {
+    "uuid": "00000000-0000-0000-0000-000000000100",
+    "username": "member_user_100",
+    "familyName": "Member",
+    "givenName": "User",
+    "nickname": "Member"
+  }
+}

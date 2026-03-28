@@ -1,0 +1,7 @@
+{
+  "error": "ENTITY_IN_USE",
+  "resourceName": "Owner",
+  "resourceKey": "1",
+  "usedByType": "Scannable",
+  "message": "Resource [Owner] with key [1] is in use by [Scannable]"
+}

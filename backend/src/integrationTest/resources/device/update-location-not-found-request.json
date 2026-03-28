@@ -1,0 +1,13 @@
+{
+  "assetTag": "DEVICE-001",
+  "barcode": "DEVICE-BARCODE-001",
+  "name": "Test Camera",
+  "weight": 1500,
+  "publicRentable": true,
+  "categoryName": "test-category-for-device",
+  "locationName": "non-existent-location",
+  "ownerId": 100,
+  "manufacturer": "Sony",
+  "model": "A7III",
+  "status": "GOOD"
+}

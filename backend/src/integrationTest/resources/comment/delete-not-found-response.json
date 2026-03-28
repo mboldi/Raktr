@@ -1,0 +1,6 @@
+{
+  "error": "ENTITY_NOT_FOUND",
+  "resourceName": "Comment",
+  "resourceKey": "999",
+  "message": "Resource [Comment] not found with key [999]"
+}

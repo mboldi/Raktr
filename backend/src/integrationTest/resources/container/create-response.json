@@ -1,0 +1,33 @@
+{
+  "id": 300,
+  "assetTag": "NEW-CONTAINER",
+  "barcode": "NEW-CONTAINER-BARCODE",
+  "name": "New Container",
+  "weight": 600,
+  "publicRentable": true,
+  "deleted": false,
+  "category": "test-category-for-container",
+  "location": "test-location-for-container",
+  "owner": {
+    "id": 100,
+    "name": "test-owner-for-container"
+  },
+  "createdAt": "2026-01-08T00:00:57.9033011Z",
+  "createdBy": {
+    "uuid": "00000000-0000-0000-0000-000000000001",
+    "username": "admin_user",
+    "familyName": "Admin",
+    "givenName": "User",
+    "nickname": null
+  },
+  "updatedAt": "2026-01-08T00:00:57.9033011Z",
+  "updatedBy": {
+    "uuid": "00000000-0000-0000-0000-000000000001",
+    "username": "admin_user",
+    "familyName": "Admin",
+    "givenName": "User",
+    "nickname": null
+  },
+  "totalWeight": 600,
+  "items": []
+}

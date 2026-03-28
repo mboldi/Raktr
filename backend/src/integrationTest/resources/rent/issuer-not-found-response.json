@@ -1,0 +1,6 @@
+{
+  "error": "ENTITY_NOT_FOUND",
+  "resourceName": "User",
+  "resourceKey": "00000000-0000-0000-0000-999999999999",
+  "message": "Resource [User] not found with key [00000000-0000-0000-0000-999999999999]"
+}

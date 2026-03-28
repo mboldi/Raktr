@@ -5,9 +5,7 @@ import {OverviewComponent} from '../../overview/overview.component';
 import {RentsComponent} from '../../rents/rents.component';
 import {EditRentComponent} from '../../edit-rent/edit-rent.component';
 import {AuthGuard} from '../../helpers/auth.guard';
-import {ProjectsComponent} from '../../projects/projects.component';
 import {TicketsComponent} from '../../tickets/tickets.component';
-import {EditProjectComponent} from '../../edit-project/edit-project.component';
 
 export const AdminLayoutRoutes: Routes = [
     {path: 'overview', component: OverviewComponent, canActivate: [AuthGuard]},
@@ -18,8 +16,6 @@ export const AdminLayoutRoutes: Routes = [
     {path: 'rents', component: RentsComponent, canActivate: [AuthGuard]},
     {path: 'tickets', component: TicketsComponent, canActivate: [AuthGuard]},
     {path: 'tickets/:id', component: TicketsComponent, canActivate: [AuthGuard]},
-    {path: 'projects', component: ProjectsComponent, canActivate: [AuthGuard]},
-    {path: 'edit-project/:id', component: EditProjectComponent, canActivate: [AuthGuard]},
     {path: 'settings', component: UserProfileComponent, canActivate: [AuthGuard]},
     {path: 'rent/:id', component: EditRentComponent, canActivate: [AuthGuard]},
 ];

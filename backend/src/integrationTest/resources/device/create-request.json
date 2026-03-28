@@ -1,0 +1,20 @@
+{
+  "assetTag": "NEW-DEVICE",
+  "barcode": "NEW-DEVICE-BARCODE",
+  "name": "New Device",
+  "weight": 500,
+  "publicRentable": true,
+  "categoryName": "test-category-for-device",
+  "locationName": "test-location-for-device",
+  "ownerId": 100,
+  "manufacturer": "Panasonic",
+  "model": "GH6",
+  "serialNumber": "SN-NEW",
+  "estimatedValue": 200000,
+  "status": "GOOD",
+  "quantity": 1,
+  "acquisitionSource": "Purchase",
+  "acquisitionDate": "2025-01-01",
+  "warrantyEndDate": "2027-01-01",
+  "notes": "New camera"
+}

@@ -1,0 +1,31 @@
+{
+  "id": 100,
+  "assetTag": "ASSET-001",
+  "barcode": "BARCODE-001",
+  "name": "Test Scannable Device",
+  "weight": 1500,
+  "publicRentable": true,
+  "deleted": false,
+  "category": "test-category-for-scannable",
+  "location": "test-location-for-scannable",
+  "owner": {
+    "id": 100,
+    "name": "test-owner-for-scannable"
+  },
+  "createdBy": {
+    "uuid": "00000000-0000-0000-0000-000000000100",
+    "username": "member_user_100",
+    "familyName": "Member",
+    "givenName": "User",
+    "nickname": "Member"
+  },
+  "createdAt": "2025-01-07T10:00:00Z",
+  "updatedBy": {
+    "uuid": "00000000-0000-0000-0000-000000000100",
+    "username": "member_user_100",
+    "familyName": "Member",
+    "givenName": "User",
+    "nickname": "Member"
+  },
+  "updatedAt": "2025-01-07T10:00:00Z"
+}

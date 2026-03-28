@@ -1,0 +1,46 @@
+[
+  {
+    "uuid": "00000000-0000-0000-0000-000000000001",
+    "username": "admin_user",
+    "familyName": "Admin",
+    "givenName": "User",
+    "nickname": "Admin",
+    "personalId": "ID-001",
+    "groups": [
+      "Admin"
+    ]
+  },
+  {
+    "uuid": "00000000-0000-0000-0000-000000000002",
+    "username": "member_user",
+    "familyName": "Member",
+    "givenName": "User",
+    "nickname": "Member",
+    "personalId": "ID-002",
+    "groups": [
+      "Stúdiós"
+    ]
+  },
+  {
+    "uuid": "00000000-0000-0000-0000-000000000003",
+    "username": "candidate_user",
+    "familyName": "Candidate",
+    "givenName": "User",
+    "nickname": "Candidate",
+    "personalId": "ID-003",
+    "groups": [
+      "Stúdiós jelölt"
+    ]
+  },
+  {
+    "uuid": "00000000-0000-0000-0000-000000000004",
+    "username": "candidate_candidate_user",
+    "familyName": "Candidate-candidate",
+    "givenName": "User",
+    "nickname": "Candidate-candidate",
+    "personalId": "ID-004",
+    "groups": [
+      "Stúdiós jelölt-jelölt"
+    ]
+  }
+]

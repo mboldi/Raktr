@@ -1,0 +1,6 @@
+{
+  "error": "ENTITY_NOT_FOUND",
+  "resourceName": "Scannable",
+  "resourceKey": "NON-EXISTENT",
+  "message": "Resource [Scannable] not found with key [NON-EXISTENT]"
+}

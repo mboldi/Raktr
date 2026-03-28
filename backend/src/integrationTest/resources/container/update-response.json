@@ -1,0 +1,33 @@
+{
+  "id": 100,
+  "assetTag": "CONTAINER-001-UPDATED",
+  "barcode": "CONTAINER-BARCODE-001-UPDATED",
+  "name": "Test Container Updated",
+  "weight": 550,
+  "publicRentable": false,
+  "deleted": false,
+  "category": "test-category-for-container",
+  "location": "test-location-for-container",
+  "owner": {
+    "id": 100,
+    "name": "test-owner-for-container"
+  },
+  "createdAt": "2025-01-07T10:00:00Z",
+  "createdBy": {
+    "uuid": "00000000-0000-0000-0000-000000000100",
+    "username": "member_user_100",
+    "familyName": "Member",
+    "givenName": "User",
+    "nickname": "Member"
+  },
+  "updatedAt": "IGNORE",
+  "updatedBy": {
+    "uuid": "00000000-0000-0000-0000-000000000001",
+    "username": "admin_user",
+    "familyName": "Admin",
+    "givenName": "User",
+    "nickname": null
+  },
+  "totalWeight": 550,
+  "items": []
+}

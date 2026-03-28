@@ -1,0 +1,6 @@
+{
+  "error": "ENTITY_NOT_FOUND",
+  "resourceName": "Config",
+  "resourceKey": "NON_EXISTENT_KEY",
+  "message": "Resource [Config] not found with key [NON_EXISTENT_KEY]"
+}

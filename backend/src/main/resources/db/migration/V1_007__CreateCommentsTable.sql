@@ -1,0 +1,8 @@
+CREATE TABLE comments (
+    id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    body TEXT NOT NULL,
+    created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL,
+    created_by UUID NOT NULL REFERENCES users(uuid),
+    updated_at TIMESTAMP WITHOUT TIME ZONE NOT NULL,
+    updated_by UUID NOT NULL REFERENCES users(uuid)
+);

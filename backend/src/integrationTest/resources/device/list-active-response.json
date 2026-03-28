@@ -1,0 +1,125 @@
+[
+  {
+    "id": 100,
+    "assetTag": "DEVICE-001",
+    "barcode": "DEVICE-BARCODE-001",
+    "name": "Test Camera",
+    "weight": 1500,
+    "publicRentable": true,
+    "deleted": false,
+    "category": "test-category-for-device",
+    "location": "test-location-for-device",
+    "owner": {
+      "id": 100,
+      "name": "test-owner-for-device"
+    },
+    "createdAt": "2025-01-08T10:00:00Z",
+    "createdBy": {
+      "uuid": "00000000-0000-0000-0000-000000000100",
+      "username": "member_user_100",
+      "familyName": "Member",
+      "givenName": "User",
+      "nickname": "Member"
+    },
+    "updatedAt": "2025-01-08T10:00:00Z",
+    "updatedBy": {
+      "uuid": "00000000-0000-0000-0000-000000000100",
+      "username": "member_user_100",
+      "familyName": "Member",
+      "givenName": "User",
+      "nickname": "Member"
+    },
+    "manufacturer": "Sony",
+    "model": "A7III",
+    "serialNumber": "SN-001",
+    "estimatedValue": 250000,
+    "status": "GOOD",
+    "quantity": 1,
+    "acquisitionSource": "Purchase",
+    "acquisitionDate": "2024-01-15",
+    "warrantyEndDate": "2026-01-15",
+    "notes": "Main camera for studio"
+  },
+  {
+    "id": 101,
+    "assetTag": "DEVICE-002",
+    "barcode": "DEVICE-BARCODE-002",
+    "name": "Test Lens",
+    "weight": 800,
+    "publicRentable": true,
+    "deleted": false,
+    "category": "test-category-for-device",
+    "location": "test-location-for-device",
+    "owner": {
+      "id": 100,
+      "name": "test-owner-for-device"
+    },
+    "createdAt": "2025-01-08T11:00:00Z",
+    "createdBy": {
+      "uuid": "00000000-0000-0000-0000-000000000100",
+      "username": "member_user_100",
+      "familyName": "Member",
+      "givenName": "User",
+      "nickname": "Member"
+    },
+    "updatedAt": "2025-01-08T11:00:00Z",
+    "updatedBy": {
+      "uuid": "00000000-0000-0000-0000-000000000100",
+      "username": "member_user_100",
+      "familyName": "Member",
+      "givenName": "User",
+      "nickname": "Member"
+    },
+    "manufacturer": "Canon",
+    "model": "EF 50mm f/1.4",
+    "serialNumber": "SN-002",
+    "estimatedValue": 45000,
+    "status": "GOOD",
+    "quantity": 1,
+    "acquisitionSource": "Donation",
+    "acquisitionDate": "2023-06-20",
+    "warrantyEndDate": "2025-06-20",
+    "notes": null
+  },
+  {
+    "id": 102,
+    "assetTag": "DEVICE-003",
+    "barcode": "DEVICE-BARCODE-003",
+    "name": "Test Microphone",
+    "weight": 200,
+    "publicRentable": false,
+    "deleted": false,
+    "category": "test-category-for-device",
+    "location": "test-location-for-device",
+    "owner": {
+      "id": 100,
+      "name": "test-owner-for-device"
+    },
+    "createdAt": "2025-01-08T12:00:00Z",
+    "createdBy": {
+      "uuid": "00000000-0000-0000-0000-000000000100",
+      "username": "member_user_100",
+      "familyName": "Member",
+      "givenName": "User",
+      "nickname": "Member"
+    },
+    "updatedAt": "2025-01-08T12:00:00Z",
+    "updatedBy": {
+      "uuid": "00000000-0000-0000-0000-000000000100",
+      "username": "member_user_100",
+      "familyName": "Member",
+      "givenName": "User",
+      "nickname": "Member"
+    },
+    "manufacturer": "Sony",
+    "model": "ECM-B1M",
+    "serialNumber": "SN-003",
+    "estimatedValue": 80000,
+    "status": "GOOD",
+    "quantity": 2,
+    "acquisitionSource": "Purchase",
+    "acquisitionDate": "2024-03-10",
+    "warrantyEndDate": "2026-03-10",
+    "notes": "Wireless microphone set"
+  }
+]

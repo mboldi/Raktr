@@ -1,0 +1,20 @@
+{
+  "assetTag": "DEVICE-001-UPDATED",
+  "barcode": "DEVICE-BARCODE-001-UPDATED",
+  "name": "Test Camera Updated",
+  "weight": 1600,
+  "publicRentable": false,
+  "categoryName": "test-category-for-device",
+  "locationName": "test-location-for-device",
+  "ownerId": 100,
+  "manufacturer": "Sony",
+  "model": "A7IV",
+  "serialNumber": "SN-001-UPDATED",
+  "estimatedValue": 300000,
+  "status": "GOOD",
+  "quantity": 1,
+  "acquisitionSource": "Purchase",
+  "acquisitionDate": "2024-01-15",
+  "warrantyEndDate": "2027-01-15",
+  "notes": "Updated main camera for studio"
+}

@@ -1,0 +1,38 @@
+[
+  {
+    "id": 1,
+    "description": "Sensor needs cleaning",
+    "status": "OPEN",
+    "severity": "MINOR",
+    "scannable": {
+      "id": 100,
+      "assetTag": "DEVICE-001",
+      "name": "Test Camera",
+      "owner": {
+        "id": 100,
+        "name": "test-owner-for-device"
+      },
+      "manufacturer": "Sony",
+      "acquisitionSource": "Purchase",
+      "acquisitionDate": "2024-01-15",
+      "warrantyEndDate": "2026-01-15"
+    },
+    "comments": [],
+    "createdAt": "2025-01-08T14:00:00Z",
+    "createdBy": {
+      "uuid": "00000000-0000-0000-0000-000000000100",
+      "username": "member_user_100",
+      "familyName": "Member",
+      "givenName": "User",
+      "nickname": "Member"
+    },
+    "updatedAt": "2025-01-08T14:00:00Z",
+    "updatedBy": {
+      "uuid": "00000000-0000-0000-0000-000000000100",
+      "username": "member_user_100",
+      "familyName": "Member",
+      "givenName": "User",
+      "nickname": "Member"
+    }
+  }
+]

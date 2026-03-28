@@ -1,0 +1,6 @@
+{
+  "error": "ENTITY_ALREADY_EXISTS",
+  "resourceName": "Owner",
+  "resourceKey": "test-owner-1",
+  "message": "Resource [Owner] already exists with key [test-owner-1]"
+}

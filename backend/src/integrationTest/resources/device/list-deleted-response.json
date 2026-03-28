@@ -1,0 +1,43 @@
+[
+  {
+    "id": 103,
+    "assetTag": "DEVICE-004",
+    "barcode": "DEVICE-BARCODE-004",
+    "name": "Old Tripod",
+    "weight": 2000,
+    "publicRentable": false,
+    "deleted": true,
+    "category": "test-category-for-device",
+    "location": "test-location-for-device",
+    "owner": {
+      "id": 100,
+      "name": "test-owner-for-device"
+    },
+    "createdAt": "2025-01-08T13:00:00Z",
+    "createdBy": {
+      "uuid": "00000000-0000-0000-0000-000000000100",
+      "username": "member_user_100",
+      "familyName": "Member",
+      "givenName": "User",
+      "nickname": "Member"
+    },
+    "updatedAt": "2025-01-08T14:00:00Z",
+    "updatedBy": {
+      "uuid": "00000000-0000-0000-0000-000000000100",
+      "username": "member_user_100",
+      "familyName": "Member",
+      "givenName": "User",
+      "nickname": "Member"
+    },
+    "manufacturer": "Manfrotto",
+    "model": "MT055XPRO3",
+    "serialNumber": "SN-004",
+    "estimatedValue": 60000,
+    "status": "SCRAPPED",
+    "quantity": 1,
+    "acquisitionSource": "Purchase",
+    "acquisitionDate": "2020-01-01",
+    "warrantyEndDate": "2022-01-01",
+    "notes": "Broken leg, needs repair"
+  }
+]

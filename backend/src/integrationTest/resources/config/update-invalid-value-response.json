@@ -1,0 +1,4 @@
+{
+  "error": "INVALID_VALUE",
+  "message": "Invalid BOOLEAN value: not-a-boolean"
+}

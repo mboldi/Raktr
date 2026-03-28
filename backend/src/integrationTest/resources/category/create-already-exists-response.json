@@ -1,0 +1,6 @@
+{
+  "error": "ENTITY_ALREADY_EXISTS",
+  "resourceName": "Category",
+  "resourceKey": "test-category-1",
+  "message": "Resource [Category] already exists with key [test-category-1]"
+}

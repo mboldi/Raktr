@@ -1,0 +1,10 @@
+{
+  "assetTag": "NEW-CONTAINER",
+  "barcode": "NEW-CONTAINER-BARCODE",
+  "name": "New Container",
+  "weight": 600,
+  "publicRentable": true,
+  "categoryName": "test-category-for-container",
+  "locationName": "test-location-for-container",
+  "ownerId": 999
+}

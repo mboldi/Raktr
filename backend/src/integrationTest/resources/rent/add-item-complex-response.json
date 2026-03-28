@@ -1,0 +1,52 @@
+{
+  "id": 200,
+  "scannable": {
+    "id": 203,
+    "assetTag": "RENT-DEVICE-003",
+    "barcode": "RENT-BARCODE-003",
+    "name": "Test Tripod",
+    "weight": 2500,
+    "publicRentable": true,
+    "deleted": false,
+    "category": "test-category-for-rent",
+    "location": "test-location-for-rent",
+    "owner": {
+      "id": 200,
+      "name": "test-owner-for-rent"
+    },
+    "createdAt": "2025-01-08T13:00:00Z",
+    "createdBy": {
+      "uuid": "00000000-0000-0000-0000-000000000100",
+      "username": "member_user_100",
+      "familyName": "Member",
+      "givenName": "User",
+      "nickname": "Member"
+    },
+    "updatedAt": "2025-01-08T13:00:00Z",
+    "updatedBy": {
+      "uuid": "00000000-0000-0000-0000-000000000100",
+      "username": "member_user_100",
+      "familyName": "Member",
+      "givenName": "User",
+      "nickname": "Member"
+    }
+  },
+  "status": "PENDING",
+  "quantity": 1,
+  "createdAt": "IGNORE",
+  "createdBy": {
+    "uuid": "00000000-0000-0000-0000-000000000001",
+    "username": "admin_user",
+    "familyName": "Admin",
+    "givenName": "User",
+    "nickname": null
+  },
+  "updatedAt": "IGNORE",
+  "updatedBy": {
+    "uuid": "00000000-0000-0000-0000-000000000001",
+    "username": "admin_user",
+    "familyName": "Admin",
+    "givenName": "User",
+    "nickname": null
+  }
+}

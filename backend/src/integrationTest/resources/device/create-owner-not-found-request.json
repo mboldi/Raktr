@@ -1,0 +1,13 @@
+{
+  "assetTag": "NEW-DEVICE",
+  "barcode": "NEW-DEVICE-BARCODE",
+  "name": "New Device",
+  "weight": 500,
+  "publicRentable": true,
+  "categoryName": "test-category-for-device",
+  "locationName": "test-location-for-device",
+  "ownerId": 999,
+  "manufacturer": "Panasonic",
+  "model": "GH6",
+  "status": "GOOD"
+}

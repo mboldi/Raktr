@@ -1,0 +1,7 @@
+{
+  "error": "ENTITY_IN_USE",
+  "resourceName": "Location",
+  "resourceKey": "test-location-1",
+  "usedByType": "Scannable",
+  "message": "Resource [Location] with key [test-location-1] is in use by [Scannable]"
+}

@@ -1,0 +1,33 @@
+{
+  "id": 101,
+  "assetTag": "CONTAINER-002",
+  "barcode": "CONTAINER-BARCODE-002",
+  "name": "Container With Devices",
+  "weight": 1000,
+  "publicRentable": false,
+  "deleted": false,
+  "category": "test-category-for-container",
+  "location": "test-location-for-container",
+  "owner": {
+    "id": 100,
+    "name": "test-owner-for-container"
+  },
+  "createdAt": "2025-01-07T11:00:00Z",
+  "createdBy": {
+    "uuid": "00000000-0000-0000-0000-000000000100",
+    "username": "member_user_100",
+    "familyName": "Member",
+    "givenName": "User",
+    "nickname": "Member"
+  },
+  "updatedAt": "2025-01-07T11:00:00Z",
+  "updatedBy": {
+    "uuid": "00000000-0000-0000-0000-000000000100",
+    "username": "member_user_100",
+    "familyName": "Member",
+    "givenName": "User",
+    "nickname": "Member"
+  },
+  "totalWeight": 1000,
+  "items": []
+}

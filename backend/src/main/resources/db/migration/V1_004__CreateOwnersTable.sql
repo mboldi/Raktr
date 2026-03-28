@@ -1,0 +1,9 @@
+CREATE TABLE owners (
+    id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    name TEXT UNIQUE NOT NULL,
+    in_sch_inventory BOOLEAN NOT NULL,
+    created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL,
+    created_by UUID NOT NULL REFERENCES users(uuid),
+    updated_at TIMESTAMP WITHOUT TIME ZONE NOT NULL,
+    updated_by UUID NOT NULL REFERENCES users(uuid)
+);

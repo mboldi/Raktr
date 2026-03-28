@@ -1,0 +1,122 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    ":dependencyDashboard",
+    ":disableRateLimiting",
+    ":enableVulnerabilityAlertsWithLabel(security)",
+    ":ignoreModulesAndTests",
+    ":ignoreUnstable",
+    ":label(dependencies)",
+    ":maintainLockFilesMonthly",
+    ":pinAllExceptPeerDependencies",
+    ":separateMajorReleases",
+    ":timezone(Europe/Budapest)",
+    "abandonments:recommended",
+    "group:monorepos",
+    "group:recommended",
+    "replacements:all",
+    "schedule:weekends",
+    "workarounds:all"
+  ],
+  "packageRules": [
+    {
+      "description": "Gradle wrapper (automerge)",
+      "matchManagers": [
+        "gradle-wrapper"
+      ],
+      "additionalBranchPrefix": "backend/",
+      "addLabels": [
+        "backend"
+      ],
+      "automerge": true
+    },
+    {
+      "description": "Backend major updates",
+      "matchManagers": [
+        "gradle"
+      ],
+      "matchFileNames": [
+        "backend/**"
+      ],
+      "matchUpdateTypes": [
+        "major"
+      ],
+      "additionalBranchPrefix": "backend/",
+      "addLabels": [
+        "backend"
+      ],
+      "groupName": "backend major"
+    },
+    {
+      "description": "Backend minor and patch updates (automerge)",
+      "matchManagers": [
+        "gradle"
+      ],
+      "matchFileNames": [
+        "backend/**"
+      ],
+      "matchUpdateTypes": [
+        "minor",
+        "patch",
+        "digest"
+      ],
+      "additionalBranchPrefix": "backend/",
+      "addLabels": [
+        "backend"
+      ],
+      "groupName": "backend non-major",
+      "automerge": true
+    },
+    {
+      "description": "Frontend major updates",
+      "matchFileNames": [
+        "frontend/**"
+      ],
+      "matchUpdateTypes": [
+        "major"
+      ],
+      "additionalBranchPrefix": "frontend/",
+      "addLabels": [
+        "frontend"
+      ],
+      "groupName": "frontend major"
+    },
+    {
+      "description": "Frontend minor and patch updates",
+      "matchFileNames": [
+        "frontend/**"
+      ],
+      "matchUpdateTypes": [
+        "minor",
+        "patch",
+        "digest"
+      ],
+      "additionalBranchPrefix": "frontend/",
+      "addLabels": [
+        "frontend"
+      ],
+      "groupName": "frontend non-major"
+    },
+    {
+      "description": "GitHub Actions",
+      "matchManagers": [
+        "github-actions"
+      ],
+      "groupName": "github-actions",
+      "addLabels": [
+        "ci"
+      ]
+    },
+    {
+      "description": "Docker base images",
+      "matchManagers": [
+        "dockerfile",
+        "docker-compose"
+      ],
+      "addLabels": [
+        "docker"
+      ]
+    }
+  ],
+  "rebaseWhen": "conflicted"
+}

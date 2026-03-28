@@ -1,0 +1,52 @@
+{
+  "id": 100,
+  "scannable": {
+    "id": 200,
+    "assetTag": "RENT-DEVICE-001",
+    "barcode": "RENT-BARCODE-001",
+    "name": "Test Camera",
+    "weight": 1500,
+    "publicRentable": true,
+    "deleted": false,
+    "category": "test-category-for-rent",
+    "location": "test-location-for-rent",
+    "owner": {
+      "id": 200,
+      "name": "test-owner-for-rent"
+    },
+    "createdAt": "2025-01-08T10:00:00Z",
+    "createdBy": {
+      "uuid": "00000000-0000-0000-0000-000000000100",
+      "username": "member_user_100",
+      "familyName": "Member",
+      "givenName": "User",
+      "nickname": "Member"
+    },
+    "updatedAt": "2025-01-08T10:00:00Z",
+    "updatedBy": {
+      "uuid": "00000000-0000-0000-0000-000000000100",
+      "username": "member_user_100",
+      "familyName": "Member",
+      "givenName": "User",
+      "nickname": "Member"
+    }
+  },
+  "status": "RETURNED",
+  "quantity": 2,
+  "createdAt": "2025-01-08T10:00:00Z",
+  "createdBy": {
+    "uuid": "00000000-0000-0000-0000-000000000100",
+    "username": "member_user_100",
+    "familyName": "Member",
+    "givenName": "User",
+    "nickname": "Member"
+  },
+  "updatedAt": "IGNORE",
+  "updatedBy": {
+    "uuid": "00000000-0000-0000-0000-000000000001",
+    "username": "admin_user",
+    "familyName": "Admin",
+    "givenName": "User",
+    "nickname": null
+  }
+}

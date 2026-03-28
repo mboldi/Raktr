@@ -1,0 +1,42 @@
+[
+  {
+    "id": 101,
+    "type": "COMPLEX",
+    "destination": "Deleted Event",
+    "issuer": {
+      "uuid": "00000000-0000-0000-0000-000000000100",
+      "username": "member_user_100",
+      "familyName": "Member",
+      "givenName": "User",
+      "nickname": "Member",
+      "personalId": "ID-100",
+      "groups": [
+        "Stúdiós"
+      ]
+    },
+    "renterName": "Kiss Anna",
+    "outDate": "2025-04-01",
+    "expectedReturnDate": "2025-04-05",
+    "actualReturnDate": null,
+    "closed": false,
+    "deleted": true,
+    "rentItems": [],
+    "comments": [],
+    "createdAt": "2025-01-08T12:00:00Z",
+    "createdBy": {
+      "uuid": "00000000-0000-0000-0000-000000000100",
+      "username": "member_user_100",
+      "familyName": "Member",
+      "givenName": "User",
+      "nickname": "Member"
+    },
+    "updatedAt": "2025-01-08T12:00:00Z",
+    "updatedBy": {
+      "uuid": "00000000-0000-0000-0000-000000000100",
+      "username": "member_user_100",
+      "familyName": "Member",
+      "givenName": "User",
+      "nickname": "Member"
+    }
+  }
+]

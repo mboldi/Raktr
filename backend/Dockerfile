@@ -1,4 +1,4 @@
-FROM eclipse-temurin:25-jdk-noble AS build
+FROM eclipse-temurin:25.0.2_10-jdk-noble AS build
 
 ARG VERSION=local
 

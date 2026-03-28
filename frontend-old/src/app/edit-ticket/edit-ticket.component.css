@@ -1,0 +1,16 @@
+.creator-subtitle {
+    margin-left: 15px;
+    font-size: 0.8em;
+}
+
+.comment-deleter {
+    cursor: pointer;
+}
+
+.comments-card {
+    margin-top: 8em !important;
+}
+
+.cdk-global-overlay-wrapper, .cdk-overlay-container {
+    z-index: 3000 !important;
+}

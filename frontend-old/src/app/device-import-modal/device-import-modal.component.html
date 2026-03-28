@@ -1,0 +1,73 @@
+<div class="modal-header">
+    <h3>Eszközök importálása</h3>
+</div>
+
+<div class="modal-body">
+    <div class="container-fluid pl-2" *ngIf="!importInProgress">
+        <div class="row">
+            <p class="col-lg-12"><b>Fájl:</b> {{ importFile.name }}</p>
+        </div>
+        <div class="row">
+            <p class="col-lg-12"><b>Eszközsorok száma:</b> {{ firstSheetRows.length }}</p>
+            <p class="col-lg-12 mb-0"><b>Első maximum 5 sor:</b></p>
+        </div>
+        <table class="table" *ngIf="demoRows.length != 0">
+            <thead class="text-orange">
+            <th>
+                Név
+            </th>
+            <th>
+                Gyártó - Típus
+            </th>
+            <th>
+                Kategória
+            </th>
+            <th>
+                Tárolási hely
+            </th>
+            <th>
+                Azonosító
+            </th>
+            <th>
+                Vonalkód
+            </th>
+            </thead>
+            <tbody>
+            <tr class="device-row" *ngFor="let device of demoRows">
+                <td>
+                    {{ device["name"] }}
+                </td>
+                <td>
+                    {{ device["maker"] }} - {{ device["type"] }}
+                </td>
+                <td>
+                    {{ device["category"] }}
+                </td>
+                <td>
+                    {{ device["location"] }}
+                </td>
+                <td>
+                    {{ device["textIdentifier"] }}
+                </td>
+                <td>
+                    {{ device["barcode"] }}
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <span class="row text-muted ml-2" style="font-style: italic"
+              *ngIf="firstSheetRows.length > 5">és további {{ firstSheetRows.length - 5 }} eszköz...</span>
+        <button class="pull-right mb-3" mat-flat-button color="primary" (click)="doImport()">Importálás!</button>
+    </div>
+    <div class="container-fluid pl-2" *ngIf="importInProgress">
+        <h4>Import folyamatban...</h4>
+        <mat-progress-bar mode="determinate"
+                          value="{{(handledDevices / firstSheetRows.length)*100}}"></mat-progress-bar>
+        <div class="ml-2">
+            <h5 class="mt-2 mb-1">Üzenetek:</h5>
+            <p *ngFor="let message of importMessages" [class]="message['status']">{{message['row']}}. sor: {{message['message']}}</p>
+        </div>
+        <span class="row text-muted ml-2" style="font-style: italic">{{successfulHandles}}/{{ firstSheetRows.length }} sikeres import</span>
+        <button class="pull-right mb-3" mat-flat-button color="primary" (click)="exit()" [disabled]="handledDevices !== firstSheetRows.length">Vissza</button>
+    </div>
+</div>

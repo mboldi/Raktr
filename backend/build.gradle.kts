@@ -1,11 +1,11 @@
 plugins {
     java
     jacoco
-    id("com.diffplug.spotless") version "8.3.0"
+    id("com.diffplug.spotless") version "8.4.0"
     id("io.freefair.lombok") version "9.2.0"
-    id("io.sentry.jvm.gradle") version "6.2.0"
+    id("io.sentry.jvm.gradle") version "6.3.0"
     id("io.spring.dependency-management") version "1.1.7"
-    id("org.springframework.boot") version "4.0.3"
+    id("org.springframework.boot") version "4.0.5"
     id("org.unbroken-dome.test-sets") version "4.1.0"
 }
 
@@ -44,7 +44,7 @@ dependencies {
 
     developmentOnly("org.springframework.boot:spring-boot-devtools")
 
-    runtimeOnly("org.flywaydb:flyway-database-postgresql:12.1.0")
+    runtimeOnly("org.flywaydb:flyway-database-postgresql:12.2.0")
     runtimeOnly("org.postgresql:postgresql:42.7.10")
 
     annotationProcessor("org.mapstruct:mapstruct-processor:1.6.3")
@@ -52,8 +52,8 @@ dependencies {
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")
-    testImplementation("org.testcontainers:testcontainers:2.0.3")
-    testImplementation("org.testcontainers:testcontainers-postgresql:2.0.3")
+    testImplementation("org.testcontainers:testcontainers:2.0.4")
+    testImplementation("org.testcontainers:testcontainers-postgresql:2.0.4")
     testImplementation("io.rest-assured:rest-assured:6.0.0")
     testImplementation("org.wiremock:wiremock-standalone:3.13.2")
     testImplementation("com.nimbusds:nimbus-jose-jwt:10.8")

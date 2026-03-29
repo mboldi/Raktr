@@ -6,12 +6,15 @@
 
 html {
   color-scheme: light dark; // enables automatic light/dark support
+  height: 100%;
+  margin: 0;
 
   @include mat.theme((
     color: my-theme.$primary-palette, // pick any built-in M3 palette
     typography: Roboto,
     density: 0,
   ));
+
 }
 
 body {
@@ -20,5 +23,4 @@ body {
   background-color: var(--mat-sys-background);
   color: var(--mat-sys-on-background);
 }
-
 

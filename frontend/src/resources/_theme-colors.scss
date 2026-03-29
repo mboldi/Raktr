@@ -74,11 +74,11 @@ $_palettes: (
     80: #c5c6cc,
     90: #e1e2e8,
     95: #eff0f7,
-    98: #f8f9ff,
+    98: #f8f9ff,      // light-bg
     99: #fdfcff,
     100: #ffffff,
     4: #0c0e13,
-    6: #111318,
+    6: #191c20,       // dark-bg, orig generated: #111318
     12: #1d2024,
     17: #272a2f,
     22: #32353a,
@@ -135,3 +135,4 @@ $_rest: (
 
 $primary-palette: map.merge(map.get($_palettes, primary), $_rest);
 $tertiary-palette: map.merge(map.get($_palettes, tertiary), $_rest);
+

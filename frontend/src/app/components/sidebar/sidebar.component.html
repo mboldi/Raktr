@@ -1,0 +1,35 @@
+<div style="height: 100%; display: flex; flex-direction: column; justify-content: space-between">
+  <div>
+  <h2 class="title">Raktr</h2>
+
+  <mat-divider></mat-divider>
+
+  <mat-nav-list>
+    @for (menuItem of menuItems; track menuItem.path) {
+      @if (menuItem.inMenuBar) {
+        <mat-list-item
+          [routerLink]="[menuItem.path]"
+          routerLinkActive="active-link"
+          [routerLinkActiveOptions]="{ exact: menuItem.path === '/' }"
+          class="nav-item"
+        >
+          <mat-icon matListItemIcon>{{ menuItem.icon }}</mat-icon>
+          <span matListItemTitle>{{ menuItem.title }}</span>
+        </mat-list-item>
+      }
+    }
+
+    <mat-divider></mat-divider>
+
+    <a mat-list-item class="nav-item logout-item" (click)="logout()">
+      <mat-icon matListItemIcon>logout</mat-icon>
+      <span matListItemTitle>Kijelentkezés</span>
+    </a>
+  </mat-nav-list>
+
+  </div>
+  <div class="pb-4">
+    <mat-slide-toggle class="nav-item" [checked]="isDark" (change)="toggleDarkMode($event)">Dark mode</mat-slide-toggle>
+  </div>
+</div>
+

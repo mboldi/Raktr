@@ -1,21 +1,18 @@
 import { Component } from '@angular/core';
 import {OidcSecurityService} from 'angular-auth-oidc-client';
-import {MatButton} from '@angular/material/button';
+import {SidebarComponent} from '../../components/sidebar/sidebar.component';
 
 @Component({
   selector: 'app-main-layout',
   imports: [
-    MatButton
+    SidebarComponent
   ],
   templateUrl: './main-layout.component.html',
   styleUrl: './main-layout.component.scss'
 })
 export class MainLayoutComponent {
 
-  constructor(private oidcSecurityService: OidcSecurityService) {
+  constructor() {
   }
 
-  protected logout() {
-    this.oidcSecurityService.logoff().subscribe();
-  }
 }

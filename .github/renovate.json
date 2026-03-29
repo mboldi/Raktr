@@ -68,34 +68,11 @@
       "automerge": true
     },
     {
-      "description": "Frontend major updates",
+      "description": "Frontend (disabled during refactor)",
       "matchFileNames": [
         "frontend/**"
       ],
-      "matchUpdateTypes": [
-        "major"
-      ],
-      "additionalBranchPrefix": "frontend/",
-      "addLabels": [
-        "frontend"
-      ],
-      "groupName": "frontend major"
-    },
-    {
-      "description": "Frontend minor and patch updates",
-      "matchFileNames": [
-        "frontend/**"
-      ],
-      "matchUpdateTypes": [
-        "minor",
-        "patch",
-        "digest"
-      ],
-      "additionalBranchPrefix": "frontend/",
-      "addLabels": [
-        "frontend"
-      ],
-      "groupName": "frontend non-major"
+      "enabled": false
     },
     {
       "description": "GitHub Actions",
@@ -106,6 +83,20 @@
       "addLabels": [
         "ci"
       ]
+    },
+    {
+      "description": "Docker base images (disable minor/patch)",
+      "matchManagers": [
+        "dockerfile",
+        "docker-compose"
+      ],
+      "matchUpdateTypes": [
+        "minor",
+        "patch",
+        "pin",
+        "digest"
+      ],
+      "enabled": false
     },
     {
       "description": "Docker base images",

@@ -5,14 +5,14 @@ import {autoLoginPartialRoutesGuard} from 'angular-auth-oidc-client';
 
 export const routes: Routes = [
   {
-    path: 'login',
-    component: LoginComponent
-  }, {
     path: '',
     redirectTo: 'login',
     pathMatch: 'full',
   }, {
-    path: '',
+    path: 'login',
+    component: LoginComponent
+  }, {
+    path: 'app',
     component: MainLayoutComponent,
     canActivate: [autoLoginPartialRoutesGuard]
   }

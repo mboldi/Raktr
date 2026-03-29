@@ -11,11 +11,11 @@ import {OidcSecurityService} from 'angular-auth-oidc-client';
 export class AppComponent {
   title = 'Raktr';
 
-  private readonly oidcSecurityService = inject(OidcSecurityService);
+  constructor(private oidcSecurityService: OidcSecurityService) {}
 
   ngOnInit() {
     this.oidcSecurityService.checkAuth().subscribe(({ isAuthenticated, userData }) => {
-      //localStorage.setItem('username', userData['preferred_username']);
+      localStorage.setItem('username', userData['preferred_username']);
       console.log('isAuthenticated', isAuthenticated);
       console.log('userData', userData);
     });

@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import {OidcSecurityService} from 'angular-auth-oidc-client';
 
 @Component({
   selector: 'app-main-layout',
@@ -8,4 +9,10 @@ import { Component } from '@angular/core';
 })
 export class MainLayoutComponent {
 
+  constructor(private oidcSecurityService: OidcSecurityService) {
+  }
+
+  protected logout() {
+    this.oidcSecurityService.logoff().subscribe();
+  }
 }

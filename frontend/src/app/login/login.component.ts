@@ -19,23 +19,18 @@ import {MatCard, MatCardContent, MatCardHeader} from '@angular/material/card';
 export class LoginComponent {
 
   constructor(private router: Router,
-              private titleService: Title) {
+              private titleService: Title,
+              private oidcSecurityService: OidcSecurityService,) {
     this.titleService.setTitle('Raktr - bejelentkezés');
   }
-
-  private readonly oidcSecurityService = inject(OidcSecurityService);
 
   ngOnInit(): void {
     this.oidcSecurityService.isAuthenticated$.subscribe(
       ({isAuthenticated}) => {
         if (isAuthenticated) {
-          this.router.navigateByUrl('/overview');
+          this.router.navigateByUrl('/app');
         }
       }
     );
-  }
-
-  login() {
-    this.oidcSecurityService.authorize();
   }
 }

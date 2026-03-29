@@ -108,6 +108,20 @@
       ]
     },
     {
+      "description": "Docker base images (disable minor/patch)",
+      "matchManagers": [
+        "dockerfile",
+        "docker-compose"
+      ],
+      "matchUpdateTypes": [
+        "minor",
+        "patch",
+        "pin",
+        "digest"
+      ],
+      "enabled": false
+    },
+    {
       "description": "Docker base images",
       "matchManagers": [
         "dockerfile",

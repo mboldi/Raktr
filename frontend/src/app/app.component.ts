@@ -1,4 +1,4 @@
-import {Component, inject} from '@angular/core';
+import {Component} from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import {OidcSecurityService} from 'angular-auth-oidc-client';
 
@@ -16,8 +16,8 @@ export class AppComponent {
   ngOnInit() {
     this.oidcSecurityService.checkAuth().subscribe(({ isAuthenticated, userData }) => {
       localStorage.setItem('username', userData['preferred_username']);
-      console.log('isAuthenticated', isAuthenticated);
-      console.log('userData', userData);
+      //console.log('isAuthenticated', isAuthenticated);
+      //console.log('userData', userData);
     });
   }
 }

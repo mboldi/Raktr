@@ -1,4 +1,24 @@
 /* You can add global styles to this file, and also import other style files */
+@use "resources/_theme-colors" as my-theme;
+@use '@angular/material' as mat;
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; font-weight: 300}
+@include mat.core();
+
+html {
+  color-scheme: light dark; // enables automatic light/dark support
+
+  @include mat.theme((
+    color: my-theme.$primary-palette, // pick any built-in M3 palette
+    typography: Roboto,
+    density: 0,
+  ));
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  background-color: var(--mat-sys-background);
+  color: var(--mat-sys-on-background);
+}
+
+

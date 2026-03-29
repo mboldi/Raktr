@@ -30,7 +30,7 @@ repositories {
 
 dependencies {
     implementation("com.github.ben-manes.caffeine:caffeine:3.2.3")
-    implementation("com.itextpdf:itext7-core:9.5.0")
+    implementation("com.itextpdf:itext-core:9.5.0")
     implementation("org.mapstruct:mapstruct:1.6.3")
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:3.0.2")
     implementation("org.springframework.boot:spring-boot-starter-actuator")

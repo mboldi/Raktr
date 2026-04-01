@@ -17,7 +17,7 @@ export class MainLayoutComponent {
   constructor(private categoryService: CategoryService) {
   }
 
-  protected getCat() {
+  protected getCategories() {
     this.categoryService.getCategories().subscribe(categories => {
       console.log(categories);
     })

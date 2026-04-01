@@ -1,6 +1,6 @@
 import {UserDetails} from '../user/userDetails';
 
-export class Category {
+export class CategoryDetails {
   name: string;
   createdAt: Date;
   createdBy: UserDetails;
@@ -15,8 +15,8 @@ export class Category {
     this.updatedBy = updatedBy;
   }
 
-  static fromJson(json: Record<string, unknown>): Category {
-    return new Category(
+  static fromJson(json: Record<string, unknown>): CategoryDetails {
+    return new CategoryDetails(
       json['name'] as string,
       new Date(json['createdAt'] as string),
       UserDetails.fromJson(json['createdBy'] as Record<string, unknown>),

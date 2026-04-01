@@ -3,7 +3,8 @@ import {provideRouter} from '@angular/router';
 
 import {routes} from './app.routes';
 import {provideHttpClient, withInterceptors} from '@angular/common/http';
-import {authInterceptor, LogLevel, provideAuth} from 'angular-auth-oidc-client';
+import {AbstractSecurityStorage, authInterceptor, LogLevel, provideAuth} from 'angular-auth-oidc-client';
+import {LocalStorageService} from './services/localStorage.service';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -14,14 +15,16 @@ export const appConfig: ApplicationConfig = {
       config: {
         authority: 'https://login.bsstudio.hu/application/o/raktr',
         redirectUrl: window.location.origin,
-        postLogoutRedirectUri: window.location.origin,
+        postLogoutRedirectUri: window.location.origin + '/overview',
         clientId: '2wD6qaqGsYefuYv271cwjUYUDeL2HXJFhj2Omfbg',
         scope: 'openid profile offline_access',
         responseType: 'code',
         silentRenew: true,
         useRefreshToken: true,
         logLevel: LogLevel.Debug,
-        secureRoutes: ['http://localhost:8080'],
+        secureRoutes: ['http://localhost:8080']
       }
-    })]
+    }),
+    { provide: AbstractSecurityStorage, useClass: LocalStorageService }
+  ]
 };

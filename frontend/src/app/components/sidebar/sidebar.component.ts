@@ -1,7 +1,6 @@
 import {Component, OnInit} from '@angular/core';
-import {MatSidenav, MatSidenavContainer, MatSidenavContent} from '@angular/material/sidenav';
 import {OidcSecurityService} from 'angular-auth-oidc-client';
-import {Router, RouterLink, RouterLinkActive, RouterOutlet} from '@angular/router';
+import {Router, RouterLink, RouterLinkActive} from '@angular/router';
 import {MatDivider, MatListItem, MatNavList} from '@angular/material/list';
 import {MatIcon} from '@angular/material/icon';
 import {MatSlideToggle, MatSlideToggleChange} from '@angular/material/slide-toggle';
@@ -29,12 +28,8 @@ export const ROUTES: RouteInfo[] = [
 @Component({
   selector: 'app-sidebar',
   imports: [
-    MatSidenavContainer,
-    MatSidenavContent,
     RouterLink,
     RouterLinkActive,
-    MatSidenav,
-    RouterOutlet,
     MatDivider,
     MatIcon,
     MatNavList,

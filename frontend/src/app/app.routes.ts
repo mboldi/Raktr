@@ -12,8 +12,12 @@ export const routes: Routes = [
     path: 'login',
     component: LoginComponent
   }, {
-    path: 'app',
+    path: '',
     component: MainLayoutComponent,
+    children: [{
+      path: '',
+      loadChildren: () => import('./layouts/main-layout/main-layout.routes').then(m => m.MAIN_LAYOUT_ROUTES)
+    }],
     canActivate: [autoLoginPartialRoutesGuard]
   }
 ];

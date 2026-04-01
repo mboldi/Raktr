@@ -15,9 +15,12 @@ export class AppComponent {
 
   ngOnInit() {
     this.oidcSecurityService.checkAuth().subscribe(({ isAuthenticated, userData }) => {
-      localStorage.setItem('username', userData['preferred_username']);
-      //console.log('isAuthenticated', isAuthenticated);
-      //console.log('userData', userData);
+      if(isAuthenticated) {
+        localStorage.setItem('username', userData['preferred_username']);
+        //console.log('isAuthenticated', isAuthenticated);
+        //console.log('userData', userData);
+      }
+
     });
   }
 }

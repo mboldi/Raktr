@@ -21,16 +21,20 @@ export class LoginComponent {
   constructor(private router: Router,
               private titleService: Title,
               private oidcSecurityService: OidcSecurityService,) {
-    this.titleService.setTitle('Raktr - bejelentkezés');
+    this.titleService.setTitle('Raktr - Bejelentkezés');
   }
 
   ngOnInit(): void {
     this.oidcSecurityService.isAuthenticated$.subscribe(
       ({isAuthenticated}) => {
         if (isAuthenticated) {
-          this.router.navigateByUrl('/app');
+          this.router.navigateByUrl('/overview');
         }
       }
     );
+  }
+
+  login(): void {
+    this.oidcSecurityService.authorize();
   }
 }

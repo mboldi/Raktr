@@ -5,6 +5,7 @@ import {MatDivider, MatListItem, MatNavList} from '@angular/material/list';
 import {MatIcon} from '@angular/material/icon';
 import {MatSlideToggle, MatSlideToggleChange} from '@angular/material/slide-toggle';
 import {ThemeService} from '../../services/theme.service';
+import {MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle} from '@angular/material/expansion';
 
 declare const $: any;
 
@@ -14,14 +15,19 @@ declare interface RouteInfo {
   icon: string;
   class: string;
   inMenuBar: boolean;
+  children?: RouteInfo[];
 }
 
 export const ROUTES: RouteInfo[] = [
-  {path: '/overview', title: 'Áttekintés', icon: 'dashboard', class: '', inMenuBar: true},
-  {path: '/inventory', title: 'Eszközök kezelése', icon: 'sd_storage', class: '', inMenuBar: true},
-  {path: '/rents', title: 'Kivitelek kezelése', icon: 'local_shipping', class: '', inMenuBar: true},
-  {path: '/tickets', title: 'Hibajegyek', icon: 'bug_report', class: '', inMenuBar: true},
-  {path: '/settings', title: 'Beállítások', icon: 'person', class: '', inMenuBar: true},
+  {path: '/overview', title: 'Áttekintés', icon: 'dashboard', class: '', inMenuBar: true, children: []},
+  {path: '/inventory', title: 'Eszközök kezelése', icon: 'sd_storage', class: '', inMenuBar: true, children: [
+      {path: '/devices', title: "Eszközök", icon: 'sd_storage', class: '', inMenuBar: true, children: []},
+      {path: '/compositeitems', title: "Összetett eszközök", icon: 'inventory_2', class: '', inMenuBar: true, children: []},
+      {path: '/containers', title: "Szállítóládák", icon: 'pallet', class: '', inMenuBar: true, children: []},
+    ]},
+  {path: '/rents', title: 'Kivitelek kezelése', icon: 'local_shipping', class: '', inMenuBar: true, children: []},
+  {path: '/tickets', title: 'Hibajegyek', icon: 'bug_report', class: '', inMenuBar: true, children: []},
+  {path: '/settings', title: 'Beállítások', icon: 'person', class: '', inMenuBar: true, children: []},
 ];
 
 @Component({
@@ -33,7 +39,10 @@ export const ROUTES: RouteInfo[] = [
     MatIcon,
     MatNavList,
     MatListItem,
-    MatSlideToggle
+    MatSlideToggle,
+    MatExpansionPanel,
+    MatExpansionPanelHeader,
+    MatExpansionPanelTitle
   ],
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.scss',
@@ -57,6 +66,12 @@ export class SidebarComponent implements OnInit {
   isMobileMenu() {
     return $(window).width() <= 991;
   };
+
+  isActiveParent(menuItem: RouteInfo): boolean {
+    return menuItem.children?.some(child =>
+      this.router.isActive(child.path, false)
+    ) ?? false;
+  }
 
   protected logout() {
     this.oidcSecurityService.logoff().subscribe();

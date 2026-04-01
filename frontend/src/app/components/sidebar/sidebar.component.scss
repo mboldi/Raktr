@@ -8,7 +8,7 @@
 :host {
   display: flex;
   flex-direction: column;
-  width: 250px;
+  width: 270px;
   height: 100%;
   padding-right: 16px;
 
@@ -44,7 +44,7 @@ mat-nav-list {
   }
 
   &.active-link {
-    //background-color: rgba(99, 102, 241, 0.18) !important;
+    background-color: rgba(99, 102, 241, 0.18) !important;
     //color: #818cf8 !important;
 
     mat-icon {
@@ -70,4 +70,24 @@ mat-divider {
       color: #f87171;
     }
   }
+}
+
+// Remove default expansion panel shadows/borders to blend with the nav list
+.nav-expansion-panel {
+  background: transparent;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+
+  ::ng-deep .mat-expansion-panel-body {
+    padding-bottom: 0;
+  }
+
+  .mat-expansion-panel-header {
+    height: 48px;
+  }
+}
+
+// Highlight parent when a child route is active
+.active-panel .mat-expansion-panel-header {
+  background-color: rgba(99, 102, 241, 0.18) !important;
 }

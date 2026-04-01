@@ -1,31 +1,58 @@
 <div style="height: 100%; display: flex; flex-direction: column; justify-content: space-between">
   <div>
-  <h2 class="title">Raktr</h2>
-
-  <mat-divider></mat-divider>
-
-  <mat-nav-list>
-    @for (menuItem of menuItems; track menuItem.path) {
-      @if (menuItem.inMenuBar) {
-        <mat-list-item
-          [routerLink]="[menuItem.path]"
-          routerLinkActive="active-link"
-          [routerLinkActiveOptions]="{ exact: menuItem.path === '/' }"
-          class="nav-item"
-        >
-          <mat-icon matListItemIcon>{{ menuItem.icon }}</mat-icon>
-          <span matListItemTitle>{{ menuItem.title }}</span>
-        </mat-list-item>
-      }
-    }
+    <h2 class="title">Raktr</h2>
 
     <mat-divider></mat-divider>
 
-    <a mat-list-item class="nav-item logout-item" (click)="logout()">
-      <mat-icon matListItemIcon>logout</mat-icon>
-      <span matListItemTitle>Kijelentkezés</span>
-    </a>
-  </mat-nav-list>
+    <mat-nav-list>
+      @for (menuItem of menuItems; track menuItem.path) {
+        @if (menuItem.inMenuBar) {
+
+          @if (menuItem.children?.length) {
+            <!-- Parent item with dropdown -->
+            <mat-expansion-panel class="nav-expansion-panel" [class.active-panel]="isActiveParent(menuItem)">
+              <mat-expansion-panel-header class="nav-item">
+                <mat-panel-title>
+                  <mat-icon>{{ menuItem.icon }}</mat-icon>
+                  <span>{{ menuItem.title }}</span>
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+
+              <!-- Children -->
+              @for (child of menuItem.children; track child.path) {
+                <mat-list-item
+                  [routerLink]="[child.path]"
+                  routerLinkActive="active-link"
+                  class="nav-item nav-item--child">
+                  <mat-icon matListItemIcon>{{ child.icon }}</mat-icon>
+                  <span matListItemTitle>{{ child.title }}</span>
+                </mat-list-item>
+              }
+            </mat-expansion-panel>
+
+          } @else {
+            <!-- Regular item (no children) -->
+            <mat-list-item
+              [routerLink]="[menuItem.path]"
+              routerLinkActive="active-link"
+              [routerLinkActiveOptions]="{ exact: menuItem.path === '/' }"
+              class="nav-item"
+            >
+              <mat-icon matListItemIcon>{{ menuItem.icon }}</mat-icon>
+              <span matListItemTitle>{{ menuItem.title }}</span>
+            </mat-list-item>
+          }
+
+        }
+      }
+
+      <mat-divider></mat-divider>
+
+      <a mat-list-item class="nav-item logout-item" (click)="logout()">
+        <mat-icon matListItemIcon>logout</mat-icon>
+        <span matListItemTitle>Kijelentkezés</span>
+      </a>
+    </mat-nav-list>
 
   </div>
   <div class="pb-4">

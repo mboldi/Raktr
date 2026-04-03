@@ -10,7 +10,10 @@ html {
   margin: 0;
 
   @include mat.theme((
-    color: my-theme.$primary-palette, // pick any built-in M3 palette
+    color:  (
+      primary: my-theme.$primary-palette,
+      tertiary: my-theme.$tertiary-palette,
+    ),
     typography: Roboto,
     density: 0,
   ));
@@ -22,5 +25,30 @@ body {
   font-family: Roboto, "Helvetica Neue", sans-serif;
   background-color: var(--mat-sys-background);
   color: var(--mat-sys-on-background);
+}
+
+
+.card-icon {
+  margin-top: -30px;
+  font-size: 42px;
+  text-align: center;
+  width: 64px !important;
+  height: 64px !important;
+  line-height: 64px;
+
+  border-radius: 4px;
+  color: #eaf1ff;
+}
+
+.card-with-icon {
+  margin-top: 30px
+}
+
+.bg-blue {
+  background: var(--mat-sys-primary );
+}
+
+.bg-green {
+  background: light-dark(#689F38, #33691E);
 }
 

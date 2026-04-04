@@ -1,42 +1,85 @@
 <h2>Üdvözöllek a Raktrban!</h2>
 
-<div style="display: flex; flex-wrap: wrap; padding-right: 8px; gap: 8px">
-  <mat-card class="card-with-icon col-xl-4 col-lg-6 col-sm-12">
-    <mat-card-header style="padding-bottom: 16px">
-      <mat-icon class="card-icon bg-blue">sd_storage</mat-icon>
-      <h4 style="font-weight: lighter; margin-left: 16px">Keresés</h4>
-    </mat-card-header>
-    <mat-card-content>
-      <mat-form-field class="deviceSearchField" style="width: 100%">
-        <mat-label>Eszköz vonalkódja</mat-label>
-        <input matInput autofocus type="text"
-               autocomplete="off"
-               (keyup.enter)="searchDevice()"
-               [formControl]="deviceSearchFormControl">
-        @if (deviceSearchFormControl.value) {
-          <button mat-icon-button matSuffix
-                  aria-label="Search"
-                  (click)="searchDevice()">
-            <mat-icon matSuffix>search</mat-icon>
-          </button>
-        }
-      </mat-form-field>
-    </mat-card-content>
-  </mat-card>
+<div style="display: flex; flex-wrap: wrap">
+    <mat-card class="card-with-icon col-xl-3 col-lg-5 col-md-10 col-sm-12" style="margin-right: 8px">
+        <mat-card-header style="padding-bottom: 16px">
+            <mat-icon class="card-icon bg-blue">sd_storage</mat-icon>
+            <h4 style="font-weight: lighter; margin-left: 16px">Keresés</h4>
+        </mat-card-header>
+        <mat-card-content>
+            <mat-form-field class="deviceSearchField" style="width: 100%">
+                <mat-label>Eszköz vonalkódja</mat-label>
+                <input matInput autofocus type="text"
+                       autocomplete="off"
+                       (keyup.enter)="searchDevice()"
+                       [formControl]="deviceSearchFormControl">
+                @if (deviceSearchFormControl.value) {
+                    <button mat-icon-button matSuffix
+                            aria-label="Search"
+                            (click)="searchDevice()">
+                        <mat-icon matSuffix>search</mat-icon>
+                    </button>
+                }
+            </mat-form-field>
+        </mat-card-content>
+    </mat-card>
 
-  <mat-card class="card-with-icon col-xl-4 col-lg-6 col-sm-12">
-    <mat-card-header style="padding-bottom: 8px">
-      <mat-icon class="card-icon bg-green">content_paste</mat-icon>
-      <h4 style="font-weight: lighter; margin-left: 16px">Aktív kivitelek</h4>
-    </mat-card-header>
-    <mat-card-content style="display: flex; justify-content: space-between">
-      <p style="margin-bottom: 0; padding: 0 8px 0 8px; align-self: start">0 <b>db</b></p>
-      <button matFab
-              style="align-self: end;"
-              aria-label="add-rent"
-              (click)="addRent()">
-        <mat-icon matSuffix>add</mat-icon>
-      </button>
-    </mat-card-content>
-  </mat-card>
+    <mat-card class="card-with-icon col-xl-2 col-lg-5 col-md-5 col-sm-12" style="margin-right: 8px">
+        <mat-card-header style="padding-bottom: 8px">
+            <mat-icon class="card-icon bg-green">content_paste</mat-icon>
+            <h4 style="font-weight: lighter; margin-left: 16px">Aktív kivitelek</h4>
+        </mat-card-header>
+        <mat-card-content style="display: flex; align-items: flex-end; height: 100%">
+            <div style="width: 100%; display: flex; align-items: center; justify-content: space-between; margin-top: 0">
+                <p style="margin-bottom: 0; padding: 0 8px 0 8px; font-size: 22px;">0 <b>db</b></p>
+                <button matFab
+                        aria-label="add-rent"
+                        (click)="addRent()">
+                    <mat-icon matSuffix>add</mat-icon>
+                </button>
+            </div>
+        </mat-card-content>
+    </mat-card>
+
+    <mat-card class="card-with-icon col-xl-2 col-lg-5 col-md-5 col-sm-12" style="margin-right: 8px">
+        <mat-card-header style="padding-bottom: 8px">
+            <mat-icon class="card-icon bg-orange">content_paste</mat-icon>
+            <h4 style="font-weight: lighter; margin-left: 16px">Kezelt tételek</h4>
+        </mat-card-header>
+        <mat-card-content style="display: flex; align-items: flex-end; height: 100%">
+            <div style="width: 100%; display: flex; align-items: center; justify-content: space-between; margin-top: 0">
+                <p style="margin-bottom: 0; padding: 0 8px 0 8px; font-size: 22px;">0 <b>db</b></p>
+                <button matFab
+                        aria-label="add-rent"
+                        (click)="addDevice()">
+                    <mat-icon matSuffix>add</mat-icon>
+                </button>
+            </div>
+        </mat-card-content>
+    </mat-card>
+
+    <mat-card class="card-with-icon col-xl-2 col-lg-5 col-md-5 col-sm-12" style="margin-right: 8px">
+        <mat-card-header style="padding-bottom: 8px">
+            <mat-icon class="card-icon bg-red">content_paste</mat-icon>
+            <h4 style="font-weight: lighter; margin-left: 16px">Aktív hibajegyek</h4>
+        </mat-card-header>
+        <mat-card-content style="display: flex; align-items: flex-end; height: 100%">
+            <div style="width: 100%; display: flex; align-items: center; justify-content: space-between; margin-top: 0">
+                <p style="margin-bottom: 0; padding: 0 8px 0 8px; font-size: 22px;">0 <b>db</b></p>
+                <button matFab
+                        aria-label="add-rent"
+                        (click)="addDevice()">
+                    <mat-icon matSuffix>add</mat-icon>
+                </button>
+            </div>
+        </mat-card-content>
+    </mat-card>
 </div>
+
+<mat-card style="margin: 24px 16px 0 0">
+    <mat-card-title style="padding: 16px 0 16px 16px">
+        Aktív kivitelek
+    </mat-card-title>
+    <mat-card-content>
+    </mat-card-content>
+</mat-card>

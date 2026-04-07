@@ -57,6 +57,16 @@ export class RentDetailsDto {
     this.updatedBy = updatedBy;
   }
 
+  public getSumWeight(): number {
+    let sumWeight = 0;
+
+    this.rentItems.forEach(rentItem => {
+      sumWeight += rentItem.scannable.weight;
+    });
+
+    return sumWeight;
+  }
+
   static fromJson(json: Record<string, unknown>): RentDetailsDto {
     return new RentDetailsDto(
       json['id'] as number,

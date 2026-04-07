@@ -1,9 +1,9 @@
 export class UserDetails {
   uuid: string;
-  userName: string;
+  username: string;
   familyName: string;
   givenName: string;
-  nickName: string;
+  nickname: string;
   personalId: string;
   groups: string[];
 
@@ -11,8 +11,8 @@ export class UserDetails {
     this.uuid = uuid;
     this.familyName = familyName;
     this.givenName = givenName;
-    this.nickName = nickName;
-    this.userName = userName;
+    this.nickname = nickName;
+    this.username = userName;
     this.personalId = personalId;
     this.groups = groups;
   }
@@ -20,10 +20,10 @@ export class UserDetails {
   static fromJson(json: Record<string, unknown>): UserDetails {
     return new UserDetails(
       json['uuid'] as string,
-      json['userName'] as string,
+      json['username'] as string,
       json['familyName'] as string,
       json['givenName'] as string,
-      json['nickName'] as string,
+      json['nickname'] as string,
       json['personalId'] as string,
       Array.isArray(json['groups']) ? (json['groups'] as string[]) : []
     );

@@ -1,5 +1,5 @@
 * @mboldi
 
-.github/ @KOliver94
-backend/ @KOliver94
-docker-compose*.yml @KOliver94
+.github/ @KOliver94 @mboldi
+backend/ @KOliver94 @mboldi
+docker-compose*.yml @KOliver94 @mboldi

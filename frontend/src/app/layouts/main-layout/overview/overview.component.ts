@@ -19,6 +19,7 @@ import {
 } from '@angular/material/table';
 import {DatePipe, DecimalPipe} from '@angular/common';
 import {WindowWidthService} from '../../../services/windowWidth.service';
+import {MatProgressSpinner} from '@angular/material/progress-spinner';
 
 const ALL_COLUMNS: string[] = ['destination', 'issuer', 'renter', 'outDate', 'expectedReturnDate', 'itemCount', 'sumWeight'];
 const REDUCED_COLUMNS: string[] = ['destination', 'issuer', 'renter', 'outDate', 'expectedReturnDate'];
@@ -50,6 +51,7 @@ const REDUCED_COLUMNS: string[] = ['destination', 'issuer', 'renter', 'outDate',
     MatHeaderRowDef,
     DatePipe,
     DecimalPipe,
+    MatProgressSpinner,
   ],
   templateUrl: './overview.component.html',
   styleUrl: './overview.component.scss',
@@ -62,6 +64,7 @@ export class OverviewComponent {
 
   protected activeRents: RentDetailsDto[] = [];
   protected displayedColumns: string[] = ALL_COLUMNS;
+  protected rents_loaded: boolean = false;
 
   constructor(
     private windowService: WindowWidthService,
@@ -80,7 +83,9 @@ export class OverviewComponent {
       count => this.scannableCount = count);
 
     this.rentService.getRents().subscribe(rents => {
-      this.activeRents = rents.filter(rent => !rent.closed);
+      this.activeRents = rents.filter(rent => !rent.closed)
+        .sort((a, b) => a.expectedReturnDate > b.expectedReturnDate ? 1 : -1);  // sorting from first expected to come back to last
+      this.rents_loaded = true;
     });
 
     this.ticketService.getTicketCount().subscribe(
@@ -101,5 +106,9 @@ export class OverviewComponent {
 
   protected addTicket() {
 
+  }
+
+  protected beforeNow(date: Date): boolean {
+    return date.getDate() < new Date().getDate();
   }
 }

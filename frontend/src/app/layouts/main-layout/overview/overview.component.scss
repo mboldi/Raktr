@@ -1,5 +1,4 @@
 
-
 .overview-card {
   mat-card-header {
     padding-bottom: 8px;
@@ -31,4 +30,10 @@
     padding: 0 8px 0 8px;
     font-size: 22px;
   }
+}
+
+.list-loading-spinner {
+  justify-self: center;
+  width: 50px !important;
+  height: 50px !important;
 }

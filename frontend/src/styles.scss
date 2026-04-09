@@ -59,3 +59,13 @@ body {
 .bg-red {
   background: light-dark(#D50000, #C62828);
 }
+
+.text-alert {
+  color: light-dark(#ff2c14, #ff2410);
+}
+
+
+.mat-mdc-row:hover .mat-mdc-cell {
+  background: light-dark(#e1e2e8, #393b40);
+  transition-duration: 200ms;
+}

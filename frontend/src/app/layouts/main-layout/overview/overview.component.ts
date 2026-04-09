@@ -20,6 +20,8 @@ import {
 import {DatePipe, DecimalPipe} from '@angular/common';
 import {WindowWidthService} from '../../../services/windowWidth.service';
 import {MatProgressSpinner} from '@angular/material/progress-spinner';
+import {MatDialog} from '@angular/material/dialog';
+import {DeviceEditDialogComponent} from '../../../components/device-edit-modal/device-edit-dialog.component';
 
 const ALL_COLUMNS: string[] = ['destination', 'issuer', 'renter', 'outDate', 'expectedReturnDate', 'itemCount', 'sumWeight'];
 const REDUCED_COLUMNS: string[] = ['destination', 'issuer', 'renter', 'outDate', 'expectedReturnDate'];
@@ -70,7 +72,8 @@ export class OverviewComponent {
     private windowService: WindowWidthService,
     private scannableService: ScannableService,
     private rentService: RentService,
-    private ticketService: TicketService,) {
+    private ticketService: TicketService,
+    private dialog: MatDialog,) {
 
     effect(() => {
       const width = this.windowService.windowWidth();
@@ -101,7 +104,16 @@ export class OverviewComponent {
   }
 
   protected addDevice() {
+    const addDeviceDialog = this.dialog.open(DeviceEditDialogComponent, {
+      width: '60vw',
+      maxWidth: '100vw',
+    });
 
+    addDeviceDialog.afterClosed().subscribe(result => {
+      if(result) {
+        console.log("Yay, added Device!")
+      }
+    })
   }
 
   protected addTicket() {

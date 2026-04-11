@@ -3,7 +3,7 @@ plugins {
     jacoco
     id("com.diffplug.spotless") version "8.4.0"
     id("io.freefair.lombok") version "9.2.0"
-    id("io.sentry.jvm.gradle") version "6.3.0"
+    id("io.sentry.jvm.gradle") version "6.4.0"
     id("io.spring.dependency-management") version "1.1.7"
     id("org.springframework.boot") version "4.0.5"
     id("org.unbroken-dome.test-sets") version "4.1.0"

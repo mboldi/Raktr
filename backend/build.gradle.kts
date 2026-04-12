@@ -32,7 +32,7 @@ dependencies {
     implementation("com.github.ben-manes.caffeine:caffeine:3.2.3")
     implementation("com.itextpdf:itext-core:9.6.0")
     implementation("org.mapstruct:mapstruct:1.6.3")
-    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:3.0.2")
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:3.0.3")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-cache")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")

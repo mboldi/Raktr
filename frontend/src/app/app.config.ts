@@ -5,6 +5,8 @@ import {routes} from './app.routes';
 import {provideHttpClient, withInterceptors} from '@angular/common/http';
 import {AbstractSecurityStorage, authInterceptor, LogLevel, provideAuth} from 'angular-auth-oidc-client';
 import {LocalStorageService} from './services/localStorage.service';
+import {provideNativeDateAdapter} from '@angular/material/core';
+
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -25,6 +27,7 @@ export const appConfig: ApplicationConfig = {
         secureRoutes: ['http://localhost:8080']
       }
     }),
-    { provide: AbstractSecurityStorage, useClass: LocalStorageService }
+    {provide: AbstractSecurityStorage, useClass: LocalStorageService},
+    provideNativeDateAdapter()
   ]
 };

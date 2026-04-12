@@ -2,7 +2,7 @@
 
 <div class="container-fluid">
   <div class="row">
-    <div class="col-xl-3 col-lg-5 col-md-10 col-sm-12">
+    <div class="col-xl-3 col-lg-6 col-md-12 col-sm-12">
       <mat-card class="card-with-icon">
         <mat-card-header style="padding-bottom: 16px">
           <mat-icon class="card-icon bg-blue">sd_storage</mat-icon>
@@ -27,7 +27,7 @@
       </mat-card>
     </div>
 
-    <div class="col-xl-3 col-lg-5 col-md-5 col-sm-12">
+    <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12">
       <mat-card class="card-with-icon overview-card">
         <mat-card-header>
           <mat-icon class="card-icon bg-green">content_paste</mat-icon>
@@ -46,7 +46,7 @@
       </mat-card>
     </div>
 
-    <div class="col-xl-3 col-lg-5 col-md-5 col-sm-12">
+    <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12">
       <mat-card class="card-with-icon overview-card">
         <mat-card-header>
           <mat-icon class="card-icon bg-orange">sd_storage</mat-icon>
@@ -65,7 +65,7 @@
       </mat-card>
     </div>
 
-    <div class="col-xl-3 col-lg-5 col-md-5 col-sm-12">
+    <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12">
       <mat-card class="card-with-icon overview-card">
         <mat-card-header>
           <mat-icon class="card-icon bg-red">bug_report</mat-icon>
@@ -137,7 +137,7 @@
             <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
           </table>
           @if (!rents_loaded) {
-            <mat-spinner class="list-loading-spinner"></mat-spinner>
+            <mat-spinner class="list-loading-spinner mt-3"></mat-spinner>
           }
         </mat-card-content>
       </mat-card>

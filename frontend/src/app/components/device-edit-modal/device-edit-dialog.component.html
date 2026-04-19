@@ -1,122 +1,188 @@
 <h2 mat-dialog-title>Eszköz hozzáadása</h2>
 
 <mat-dialog-content class="mt-3">
-  <form class="container-fluid">
-    <div class="row" style="align-items: center">
-      <div class="col-md-7 col-sm-12">
-        <mat-form-field class="full-width">
-          <mat-label>Eszköz neve</mat-label>
-          <input matInput>
-        </mat-form-field>
-      </div>
-      <div class="col-md-5 col-sm-12">
-        <mat-checkbox class="full-width">
-          Bárki által kölcsönözhető
-        </mat-checkbox>
-      </div>
-    </div>
+    <form class="container-fluid">
+        <div class="row" style="align-items: center">
+            <div class="col-md-7 col-sm-12">
+                <mat-form-field class="full-width">
+                    <mat-label>Eszköz neve</mat-label>
+                    <input matInput>
+                </mat-form-field>
+            </div>
+            <div class="col-md-5 col-sm-12">
+                <mat-checkbox class="full-width">
+                    Bárki által kölcsönözhető
+                </mat-checkbox>
+            </div>
+        </div>
 
-    <div class="row">
-      <div class="col-md-7 col-sm-12">
-        <mat-form-field class="full-width">
-          <mat-label>Azonosító</mat-label>
-          <input matInput
-                 placeholder="B-CAM-01">
-        </mat-form-field>
-      </div>
-      <div class="col-md-5 col-sm-12">
-        <mat-form-field class="full-width">
-          <mat-label>Vonalkód tartalma</mat-label>
-          <input matInput
-                 placeholder="0000001">
-        </mat-form-field>
-      </div>
-    </div>
+        <div class="row">
+            <div class="col-md-7 col-sm-12">
+                <mat-form-field class="full-width">
+                    <mat-label>Azonosító</mat-label>
+                    <input matInput
+                           placeholder="B-CAM-01">
+                </mat-form-field>
+            </div>
+            <div class="col-md-5 col-sm-12">
+                <mat-form-field class="full-width">
+                    <mat-label>Vonalkód tartalma</mat-label>
+                    <input matInput
+                           placeholder="0000001">
+                </mat-form-field>
+            </div>
+        </div>
 
-    <div class="row">
-      <div class="col-md-3 col-sm-12">
-        <mat-form-field class="full-width">
-          <mat-label>Gyártó</mat-label>
-          <input matInput>
-        </mat-form-field>
-      </div>
-      <div class="col-md-5 col-sm-12">
-        <mat-form-field class="full-width">
-          <mat-label>Típus</mat-label>
-          <input matInput>
-        </mat-form-field>
-      </div>
-      <div class="col-md-4 col-sm-12">
-        <mat-form-field class="full-width">
-          <mat-label>Sorozatszám</mat-label>
-          <input matInput>
-        </mat-form-field>
-      </div>
-    </div>
+        <div class="row">
+            <div class="col-md-3 col-sm-12">
+                <mat-form-field class="full-width">
+                    <mat-label>Gyártó</mat-label>
+                    <input matInput>
+                </mat-form-field>
+            </div>
+            <div class="col-md-5 col-sm-12">
+                <mat-form-field class="full-width">
+                    <mat-label>Típus</mat-label>
+                    <input matInput>
+                </mat-form-field>
+            </div>
+            <div class="col-md-4 col-sm-12">
+                <mat-form-field class="full-width">
+                    <mat-label>Sorozatszám</mat-label>
+                    <input matInput>
+                </mat-form-field>
+            </div>
+        </div>
 
-    <div class="row">
-      <div class="col-md-6 col-sm-12">
-        <mat-form-field class="full-width">
-          <mat-label>Kategória</mat-label>
-          <input type="text"
-                 aria-label="Category"
-                 matInput
-                 [formControl]="categoryControl"
-                 [matAutocomplete]="category">
-          <mat-autocomplete autoActiveFirstOption #category="matAutocomplete">
-            @for (category of filteredCategories | async; track category) {
-              <mat-option [value]="category.name">{{ category.name }}</mat-option>
-            }
-          </mat-autocomplete>
-        </mat-form-field>
-      </div>
-      <div class="col-md-6 col-sm-12">
-        <mat-form-field class="full-width">
-          <mat-label>Tárolási hely</mat-label>
-          <input type="text"
-                 aria-label="Location"
-                 matInput
-                 [formControl]="locationControl"
-                 [matAutocomplete]="location">
-          <mat-autocomplete autoActiveFirstOption #location="matAutocomplete">
-            @for (location of filteredLocations | async; track location) {
-              <mat-option [value]="location.name">{{ location.name }}</mat-option>
-            }
-          </mat-autocomplete>
-        </mat-form-field>
-      </div>
-    </div>
+        <div class="row">
+            <div class="col-md-6 col-sm-12">
+                <mat-form-field class="full-width">
+                    <mat-label>Kategória</mat-label>
+                    <input type="text"
+                           aria-label="Category"
+                           matInput
+                           [formControl]="categoryControl"
+                           [matAutocomplete]="category">
+                    <mat-autocomplete autoActiveFirstOption #category="matAutocomplete">
+                        @for (category of filteredCategories | async; track category) {
+                            <mat-option [value]="category.name">{{ category.name }}</mat-option>
+                        }
+                    </mat-autocomplete>
+                </mat-form-field>
+            </div>
+            <div class="col-md-6 col-sm-12">
+                <mat-form-field class="full-width">
+                    <mat-label>Tárolási hely</mat-label>
+                    <input type="text"
+                           aria-label="Location"
+                           matInput
+                           [formControl]="locationControl"
+                           [matAutocomplete]="location">
+                    <mat-autocomplete autoActiveFirstOption #location="matAutocomplete">
+                        @for (location of filteredLocations | async; track location) {
+                            <mat-option [value]="location.name">{{ location.name }}</mat-option>
+                        }
+                    </mat-autocomplete>
+                </mat-form-field>
+            </div>
+        </div>
 
-    <div class="row">
-      <div class="col-md-4 col-sm-12">
-        <mat-form-field class="full-width">
-          <mat-label>Beszerzés forrása</mat-label>
-          <input matInput
-          placeholder="FKPR 2020">
-        </mat-form-field>
-      </div>
-      <div class="col-md-4 col-sm-12">
-        <mat-form-field class="full-width">
-          <mat-label>Beszerzés ideje</mat-label>
-          <input matInput [matDatepicker]="purchaseDatePicker">
-          <mat-datepicker-toggle matIconSuffix [for]="purchaseDatePicker"></mat-datepicker-toggle>
-          <mat-datepicker #purchaseDatePicker></mat-datepicker>
-        </mat-form-field>
-      </div>
-      <div class="col-md-4 col-sm-12">
-        <mat-form-field class="full-width">
-          <mat-label>Garancia vége</mat-label>
-          <input matInput [matDatepicker]="warrantyEndPicker">
-          <mat-datepicker-toggle matIconSuffix [for]="warrantyEndPicker"></mat-datepicker-toggle>
-          <mat-datepicker #warrantyEndPicker></mat-datepicker>
-        </mat-form-field>
-      </div>
-    </div>
+        <div class="row">
+            <div class="col-md-4 col-sm-12">
+                <mat-form-field class="full-width">
+                    <mat-label>Beszerzés forrása</mat-label>
+                    <input matInput
+                           placeholder="FKPR 2020">
+                </mat-form-field>
+            </div>
+            <div class="col-md-4 col-sm-12">
+                <mat-form-field class="full-width">
+                    <mat-label>Beszerzés ideje</mat-label>
+                    <input matInput [matDatepicker]="purchaseDatePicker">
+                    <mat-datepicker-toggle matIconSuffix [for]="purchaseDatePicker"></mat-datepicker-toggle>
+                    <mat-datepicker #purchaseDatePicker></mat-datepicker>
+                </mat-form-field>
+            </div>
+            <div class="col-md-4 col-sm-12">
+                <mat-form-field class="full-width">
+                    <mat-label>Garancia vége</mat-label>
+                    <input matInput [matDatepicker]="warrantyEndPicker">
+                    <mat-datepicker-toggle matIconSuffix [for]="warrantyEndPicker"></mat-datepicker-toggle>
+                    <mat-datepicker #warrantyEndPicker></mat-datepicker>
+                </mat-form-field>
+            </div>
+        </div>
 
-  </form>
+        <div class="row">
+            <div class="col-md-4 col-sm-12">
+                <mat-form-field class="full-width">
+                    <mat-label>Tömeg</mat-label>
+                    <input matInput
+                           type="number"
+                           min="0">
+                    <span matSuffix style="padding-right: 4px;">g&nbsp;</span>
+                </mat-form-field>
+            </div>
+            <div class="col-md-4 col-sm-12">
+                <mat-form-field class="full-width">
+                    <mat-label>Érték</mat-label>
+                    <input matInput
+                           type="number">
+                    <span matSuffix style="padding-right: 4px;">Ft&nbsp;</span>
+                </mat-form-field>
+            </div>
+            <div class="col-md-4 col-sm-12">
+                <mat-form-field class="full-width">
+                    <mat-label>Mennyiség egy vonalkód alatt</mat-label>
+                    <input matInput
+                           type="number"
+                           value="1">
+                    <span matSuffix style="padding-right: 4px;">db&nbsp;</span>
+                </mat-form-field>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 col-sm-12">
+                <mat-form-field class="full-width">
+                    <mat-label>Tulajdonos</mat-label>
+                    <input type="text"
+                           aria-label="Owner"
+                           matInput
+                           [formControl]="ownerControl"
+                           [matAutocomplete]="owner">
+                    <mat-autocomplete autoActiveFirstOption #owner="matAutocomplete">
+                        @for (owner of filteredOwners | async; track owner) {
+                            <mat-option [value]="owner.id">{{ owner.name }}</mat-option>
+                        }
+                    </mat-autocomplete>
+                </mat-form-field>
+            </div>
+            <div class="col-md-6 col-sm-12" style="align-self: anchor-center">
+                <label id="status-label">Eszköz állapota: </label>
+                <mat-radio-group
+                        aria-labelledby="status-label"
+                        class="example-radio-group">
+                        <mat-radio-button class="" [value]="1" checked>Jó</mat-radio-button>
+                        <mat-radio-button class="" [value]="2">Javítást igényel</mat-radio-button>
+                        <mat-radio-button class="" [value]="3">Selejt</mat-radio-button>
+                </mat-radio-group>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <mat-form-field class="full-width">
+                    <mat-label>Megjegyzés</mat-label>
+                    <textarea matInput></textarea>
+                </mat-form-field>
+            </div>
+        </div>
+
+    </form>
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
-  <button mat-button [mat-dialog-close]="false">Vissza</button>
-  <button mat-raised-button color="primary" [mat-dialog-close]="true">Mentés</button>
+    <button mat-button [mat-dialog-close]="false">Vissza</button>
+    <button mat-raised-button color="primary" [mat-dialog-close]="true">Mentés</button>
 </mat-dialog-actions>

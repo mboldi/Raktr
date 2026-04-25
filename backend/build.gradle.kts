@@ -2,10 +2,10 @@ plugins {
     java
     jacoco
     id("com.diffplug.spotless") version "8.4.0"
-    id("io.freefair.lombok") version "9.2.0"
-    id("io.sentry.jvm.gradle") version "6.4.0"
+    id("io.freefair.lombok") version "9.4.0"
+    id("io.sentry.jvm.gradle") version "6.5.0"
     id("io.spring.dependency-management") version "1.1.7"
-    id("org.springframework.boot") version "4.0.5"
+    id("org.springframework.boot") version "4.0.6"
     id("org.unbroken-dome.test-sets") version "4.1.0"
 }
 
@@ -52,8 +52,8 @@ dependencies {
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")
-    testImplementation("org.testcontainers:testcontainers:2.0.4")
-    testImplementation("org.testcontainers:testcontainers-postgresql:2.0.4")
+    testImplementation("org.testcontainers:testcontainers:2.0.5")
+    testImplementation("org.testcontainers:testcontainers-postgresql:2.0.5")
     testImplementation("io.rest-assured:rest-assured:6.0.0")
     testImplementation("org.wiremock:wiremock-standalone:3.13.2")
     testImplementation("com.nimbusds:nimbus-jose-jwt:10.9")

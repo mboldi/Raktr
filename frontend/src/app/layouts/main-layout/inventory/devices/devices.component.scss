@@ -1,3 +1,41 @@
 .table-wrapper {
   padding-right: 16px;
 }
+
+.list-header-card {
+  padding: 16px 16px 0  16px;
+  margin: 16px 16px 8px 0;
+  background: light-dark(#1860a4, #00315c);
+
+  .list-header-actions-row {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+
+    margin-top: 8px;
+  }
+
+  h2 {
+    color: light-dark(#f8f9ff, #f8f9ff);
+
+    margin: 0;
+    padding: 0;
+  }
+
+  .filter-button {
+    margin-left: 16px;
+  }
+
+  .add-button {
+  }
+
+  .search-box {
+    width: 300px;
+    justify-self: flex-end;
+
+  }
+
+
+}

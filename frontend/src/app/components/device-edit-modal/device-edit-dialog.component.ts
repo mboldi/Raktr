@@ -1,5 +1,11 @@
-import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
-import {MatDialogActions, MatDialogClose, MatDialogContent, MatDialogTitle} from '@angular/material/dialog';
+import {ChangeDetectionStrategy, Component, Inject, OnInit} from '@angular/core';
+import {
+  MAT_DIALOG_DATA,
+  MatDialogActions,
+  MatDialogClose,
+  MatDialogContent,
+  MatDialogTitle
+} from '@angular/material/dialog';
 import {MatButton} from '@angular/material/button';
 import {OwnerService} from '../../services/owner.service';
 import {MatFormField, MatInput, MatInputModule, MatLabel} from '@angular/material/input';
@@ -7,7 +13,7 @@ import {MatCheckbox} from '@angular/material/checkbox';
 import {CategoryDetails} from '../../model/category/categoryDetails';
 import {CategoryService} from '../../services/category.service';
 import {MatAutocomplete, MatAutocompleteTrigger, MatOption} from '@angular/material/autocomplete';
-import {FormControl, ReactiveFormsModule} from '@angular/forms';
+import {FormBuilder, FormControl, ReactiveFormsModule, UntypedFormGroup, Validators} from '@angular/forms';
 import {map, Observable, startWith} from 'rxjs';
 import {AsyncPipe} from '@angular/common';
 import {LocationDetails} from '../../model/location/LocationDetails';
@@ -17,6 +23,7 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
 import {OwnerDetailsDto} from "../../model/owner/ownerDetailsDto";
 import {MatRadioButton, MatRadioGroup} from "@angular/material/radio";
+import {DeviceDetails} from '../../model/scannable/device/DeviceDetails';
 
 @Component({
   selector: 'app-device-edit-modal',
@@ -60,26 +67,57 @@ export class DeviceEditDialogComponent implements OnInit {
   protected locationControl = new FormControl();
   protected ownerControl = new FormControl();
 
-  constructor(private ownerService: OwnerService,
+  protected deviceForm: UntypedFormGroup;
+
+  constructor(@Inject(MAT_DIALOG_DATA) private deviceData: DeviceDetails,
+              private fb: FormBuilder,
+              private ownerService: OwnerService,
               private categoryService: CategoryService,
               private locationService: LocationService,) {
-    this.filteredCategories = this.categoryControl.valueChanges.pipe(
+    this.deviceForm = this.fb.group({
+      name: ['', Validators.required],
+      isPublicRentable: [''],
+      manufacturer: [''],
+      model: [''],
+      serialNumber: [''],
+      category: ['', Validators.required],
+      location: ['', Validators.required],
+      barcode: ['', Validators.required],
+      assetTag: ['', Validators.required],
+      weight: ['1'],
+      estimatedValue: ['1'],
+      quantity: ['1'],
+      acquisitionSource: [''],
+      acquisitionDate: [new Date()],
+      warrantyEndDate: [null],
+      owner: [''],
+      notes: [''],
+      status: [''],
+    });
+
+    this.deviceForm.valueChanges.subscribe()
+
+    this.filteredCategories = this.deviceForm.get('category')!.valueChanges.pipe(
       startWith(''),
       map(value => this.filterCategories(value || ''))
     );
 
-    this.filteredLocations = this.locationControl.valueChanges.pipe(
+    this.filteredLocations = this.deviceForm.get('location')!.valueChanges.pipe(
       startWith(''),
       map(value => this.filterLocations(value || ''))
     );
 
-    this.filteredOwners = this.ownerControl.valueChanges.pipe(
-        startWith(''),
-        map(value => this.filterOwners(value || ''))
+    this.filteredOwners = this.deviceForm.get('owner')!.valueChanges.pipe(
+      startWith(''),
+      map(value => this.filterOwners(value || ''))
     );
   }
 
   ngOnInit() {
+    if(this.deviceData !== null) {
+      this.deviceForm.patchValue(this.deviceData);
+    }
+
     this.ownerService.getOwners().subscribe(owners => {
       this.owners = owners;
     });

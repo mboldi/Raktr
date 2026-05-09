@@ -21,6 +21,8 @@ import {FormControl, FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatIcon} from "@angular/material/icon";
 import {MatFabButton, MatIconButton} from "@angular/material/button";
 import {MatCard} from '@angular/material/card';
+import {DeviceEditDialogComponent} from '../../../../components/device-edit-modal/device-edit-dialog.component';
+import {MatDialog} from '@angular/material/dialog';
 
 const ALL_COLUMNS: string[] = ['name', 'assetTag', 'maker', 'model', 'quantity', 'category', 'location', 'weight'];
 const REDUCED_COLUMNS: string[] = ['name', 'assetTag', 'maker', 'model', 'quantity'];
@@ -63,8 +65,8 @@ export class DevicesComponent implements OnInit {
 
   protected devices: DeviceDetails[] = [];
 
-  constructor(
-    private deviceService: DeviceService,) {
+  constructor(private deviceService: DeviceService,
+              private dialog: MatDialog,) {
   }
 
   ngOnInit() {
@@ -79,4 +81,20 @@ export class DevicesComponent implements OnInit {
   protected announceSortChange($event: Sort) {
     console.log($event);
   }
+
+  protected openDevice(row: any) {
+    const editDeviceDialog = this.dialog.open(DeviceEditDialogComponent, {
+      width: '60vw',
+      maxWidth: '100vw',
+      data: row
+    });
+
+    editDeviceDialog.afterClosed().subscribe(result => {
+      if(result) {
+        console.log("Yay, edited Device!")
+      }
+    })
+  }
+
+  protected readonly console = console;
 }

@@ -1,5 +1,9 @@
 .table-wrapper {
   padding-right: 16px;
+
+  .clickable-row {
+    cursor: pointer;
+  }
 }
 
 .list-header-card {
@@ -36,6 +40,5 @@
     justify-self: flex-end;
 
   }
-
 
 }

@@ -3,7 +3,7 @@ import {RentType} from './rentType';
 import {RentItemDetailsDto} from './rentItem/rentItemDetails';
 import {CommentDetailsDto} from '../comment/commentDetailsDto';
 
-export class RentDetailsDto {
+export class RentDetails {
   id: number;
   type: RentType;
   destination: string;
@@ -67,8 +67,8 @@ export class RentDetailsDto {
     return sumWeight;
   }
 
-  static fromJson(json: Record<string, unknown>): RentDetailsDto {
-    return new RentDetailsDto(
+  static fromJson(json: Record<string, unknown>): RentDetails {
+    return new RentDetails(
       json['id'] as number,
       json['type'] as RentType,
       json['destination'] as string,

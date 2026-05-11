@@ -35,6 +35,7 @@ export abstract class Scannable {
   }
 
   toJson(): Record<string, unknown> {
+    console.log(this)
     return {
       id: this.id,
       assetTag: this.assetTag,
@@ -45,8 +46,8 @@ export abstract class Scannable {
       },
       manufacturer: this.manufacturer,
       acquisitionSource: this.acquisitionSource,
-      acquisitionDate: this.acquisitionDate.toISOString(),
-      warrantyEndDate: this.warrantyEndDate.toISOString()
+      acquisitionDate: this.acquisitionDate ? (this.acquisitionDate as Date).toISOString().split('T')[0] : "",
+      warrantyEndDate: this.warrantyEndDate ? (this.warrantyEndDate as Date).toISOString().split('T')[0] : "",
     };
   }
 }

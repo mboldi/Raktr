@@ -13,7 +13,7 @@ import {
 } from "@angular/material/table";
 import {MatFormField, MatInput, MatLabel, MatSuffix} from "@angular/material/input";
 import {DeviceService} from "../../../../services/device.service";
-import {DeviceDetails} from "../../../../model/scannable/device/DeviceDetails";
+import {DeviceDetails} from "../../../../model/scannable/device/deviceDetails";
 import {MatPaginator} from "@angular/material/paginator";
 import {DecimalPipe} from "@angular/common";
 import {MatSortModule, Sort} from "@angular/material/sort";
@@ -91,8 +91,8 @@ export class DevicesComponent implements OnInit {
 
     editDeviceDialog.afterClosed().subscribe(result => {
       if(result) {
-        console.log(result);
-        console.log("Yay, edited Device!")
+        // console.log(result);
+        console.log("Yay, edited Device!")    // TODO: refresh device list
       }
     })
   }

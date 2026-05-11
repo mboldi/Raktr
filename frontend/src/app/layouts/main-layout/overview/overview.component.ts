@@ -7,7 +7,7 @@ import {FormControl, ReactiveFormsModule} from '@angular/forms';
 import {ScannableService} from '../../../services/scannable.service';
 import {RentService} from '../../../services/rent.service';
 import {TicketService} from '../../../services/ticket.service';
-import {RentDetailsDto} from '../../../model/rent/rentDetailsDto';
+import {RentDetails} from '../../../model/rent/rentDetails';
 import {
   MatCell,
   MatCellDef,
@@ -22,6 +22,8 @@ import {WindowWidthService} from '../../../services/windowWidth.service';
 import {MatProgressSpinner} from '@angular/material/progress-spinner';
 import {MatDialog} from '@angular/material/dialog';
 import {DeviceEditDialogComponent} from '../../../components/device-edit-modal/device-edit-dialog.component';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {catchError, EMPTY} from 'rxjs';
 
 const ALL_COLUMNS: string[] = ['destination', 'issuer', 'renter', 'outDate', 'expectedReturnDate', 'itemCount', 'sumWeight'];
 const REDUCED_COLUMNS: string[] = ['destination', 'issuer', 'renter', 'outDate', 'expectedReturnDate'];
@@ -64,7 +66,7 @@ export class OverviewComponent {
   protected scannableCount: number = 0;
   protected ticketCount: number = 0;
 
-  protected activeRents: RentDetailsDto[] = [];
+  protected activeRents: RentDetails[] = [];
   protected displayedColumns: string[] = ALL_COLUMNS;
   protected rents_loaded: boolean = false;
 
@@ -73,7 +75,8 @@ export class OverviewComponent {
     private scannableService: ScannableService,
     private rentService: RentService,
     private ticketService: TicketService,
-    private dialog: MatDialog,) {
+    private dialog: MatDialog,
+    private snackBar: MatSnackBar,) {
 
     effect(() => {
       const width = this.windowService.windowWidth();
@@ -82,8 +85,7 @@ export class OverviewComponent {
   }
 
   ngOnInit() {
-    this.scannableService.getScannablesCount().subscribe(
-      count => this.scannableCount = count);
+    this.getScannables();
 
     this.rentService.getRents().subscribe(rents => {
       this.activeRents = rents.filter(rent => !rent.closed)
@@ -96,6 +98,23 @@ export class OverviewComponent {
   }
 
   protected searchDevice() {
+    this.scannableService.getByBarcode(this.deviceSearchFormControl.value)
+      .pipe(
+        catchError(() => {
+          this.snackBar.open('Nem találtam eszközt ilyen vonalkóddal!', 'So sad :(', {
+            duration: 3000,
+            horizontalPosition: 'right',
+            verticalPosition: 'top',
+          });
+          return EMPTY;
+        })
+      )
+      .subscribe({
+        next: (device) => {
+          console.log(device);    // TODO open device edit dialog
+        }
+      });
+
     this.deviceSearchFormControl.setValue("");
   }
 
@@ -110,8 +129,14 @@ export class OverviewComponent {
     });
 
     addDeviceDialog.afterClosed().subscribe(result => {
-      if(result) {
-        console.log("Yay, added Device!")
+      if (result) {
+        this.snackBar.open(`Eszköz hozzáadva: ${result.name}`, "Oh yeah!", {
+          duration: 3000,
+          horizontalPosition: 'right',
+          verticalPosition: 'top',
+        });
+
+        this.getScannables();
       }
     })
   }
@@ -122,5 +147,10 @@ export class OverviewComponent {
 
   protected beforeNow(date: Date): boolean {
     return date.getDate() < new Date().getDate();
+  }
+
+  private getScannables() {
+    this.scannableService.getScannablesCount().subscribe(
+      count => this.scannableCount = count);
   }
 }

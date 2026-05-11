@@ -3,7 +3,7 @@ import {HttpClient} from '@angular/common/http';
 import {catchError, map, Observable, of} from 'rxjs';
 import {environment} from '../../environments/environment';
 import {ScannableDetailsDto} from '../model/scannable/scannableDetailsDto';
-import {DeviceDetails} from '../model/scannable/device/DeviceDetails';
+import {DeviceDetails} from '../model/scannable/device/deviceDetails';
 
 @Injectable({
   providedIn: 'root'

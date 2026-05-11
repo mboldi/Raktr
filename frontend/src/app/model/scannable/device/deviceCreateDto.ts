@@ -77,9 +77,32 @@ export class DeviceCreateDto {
       status: this.status,
       quantity: this.quantity,
       acquisitionSource: this.acquisitionSource,
-      acquisitionDate: this.acquisitionDate.toISOString().split('T')[0],
-      warrantyEndDate: this.warrantyEndDate.toISOString().split('T')[0],
+      acquisitionDate: this.acquisitionDate ? this.acquisitionDate.toISOString().split('T')[0] : "",
+      warrantyEndDate: this.warrantyEndDate ? this.warrantyEndDate.toISOString().split('T')[0] : "",
       notes: this.notes
     };
+  }
+
+  static fromFormControl(formValue: any): DeviceCreateDto {
+    return new DeviceCreateDto(
+      formValue.assetTag,
+      formValue.barcode,
+      formValue.name,
+      formValue.weight,
+      formValue.isPublicRentable,
+      formValue.category,
+      formValue.location,
+      formValue.owner.id,
+      formValue.manufacturer,
+      formValue.model,
+      formValue.serialNumber,
+      formValue.estimatedValue,
+      formValue.status,
+      formValue.quantity,
+      formValue.acquisitionSource,
+      formValue.acquisitionDate,
+      formValue.warrantyEndDate,
+      formValue.notes
+    )
   }
 }

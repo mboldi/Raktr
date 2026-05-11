@@ -20,8 +20,7 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
 import {OwnerDetailsDto} from '../../model/owner/ownerDetailsDto';
 import {OwnerService} from '../../services/owner.service';
-import {MatRadioButton, MatRadioGroup} from '@angular/material/radio';
-import {DeviceDetails} from '../../model/scannable/device/DeviceDetails';
+import {DeviceDetails} from '../../model/scannable/device/deviceDetails';
 import {MatSelect} from '@angular/material/select';
 import {DeviceStatus} from '../../model/scannable/device/deviceStatus';
 
@@ -114,7 +113,6 @@ export class DeviceFormComponent implements OnInit {
   ngOnInit(): void {
     const data = this.deviceData();
     if (data !== null) {
-      console.log(data);
       this.deviceForm.patchValue(data);
     }
 

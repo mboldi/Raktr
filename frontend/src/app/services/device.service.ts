@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {catchError, map, Observable, of} from 'rxjs';
 import {environment} from '../../environments/environment';
-import {DeviceDetails} from "../model/scannable/device/DeviceDetails";
+import {DeviceDetails} from "../model/scannable/device/deviceDetails";
 import {DeviceUpdateDto} from '../model/scannable/device/deviceUpdateDto';
 import {DeviceCreateDto} from '../model/scannable/device/deviceCreateDto';
 import {TicketDetails} from '../model/ticket/ticketDetails';
@@ -38,10 +38,10 @@ export class DeviceService {
       )
   }
 
-  updateDevice(deviceIdToUpdate: number, deviceUpdate: DeviceUpdateDto): Observable<DeviceDetails> {
+  updateDevice(deviceId: number, deviceUpdate: DeviceUpdateDto): Observable<DeviceDetails> {
     const headers = new HttpHeaders().set('Content-Type', 'application/json');
 
-    return this.http.put<Record<string, unknown>>(`${environment.apiUrl}/v1/devices/${deviceIdToUpdate}`, deviceUpdate.toJson(), {headers: headers})
+    return this.http.put<Record<string, unknown>>(`${environment.apiUrl}/v1/devices/${deviceId}`, deviceUpdate.toJson(), {headers: headers})
       .pipe(
         map(updatedDevice => DeviceDetails.fromJson(updatedDevice))
       );
@@ -64,7 +64,9 @@ export class DeviceService {
   createDevice(deviceToCreate: DeviceCreateDto): Observable<DeviceDetails> {
     const headers = new HttpHeaders().set('Content-Type', 'application/json');
 
-    return this.http.post<Record<string, unknown>>(`${environment.apiUrl}/v1/devices/${deviceToCreate}`, deviceToCreate.toJson(), {headers: headers})
+    console.log(deviceToCreate.toJson());
+
+    return this.http.post<Record<string, unknown>>(`${environment.apiUrl}/v1/devices`, deviceToCreate.toJson(), {headers: headers})
       .pipe(
         map(createdDevice => DeviceDetails.fromJson(createdDevice))
       );

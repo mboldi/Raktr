@@ -91,10 +91,22 @@ export class DevicesComponent implements OnInit {
 
     editDeviceDialog.afterClosed().subscribe(result => {
       if(result) {
+        console.log(result);
         console.log("Yay, edited Device!")
       }
     })
   }
 
-  protected readonly console = console;
+  protected newDevice() {
+    const editDeviceDialog = this.dialog.open(DeviceEditDialogComponent, {
+      width: '60vw',
+      maxWidth: '100vw'
+    });
+
+    editDeviceDialog.afterClosed().subscribe(result => {
+      if(result) {
+        console.log("Yay, created Device!")
+      }
+    })
+  }
 }

@@ -1,7 +1,9 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {map, Observable} from 'rxjs';
+import {catchError, map, Observable, of} from 'rxjs';
 import {environment} from '../../environments/environment';
+import {ScannableDetailsDto} from '../model/scannable/scannableDetailsDto';
+import {DeviceDetails} from '../model/scannable/device/DeviceDetails';
 
 @Injectable({
   providedIn: 'root'
@@ -16,6 +18,42 @@ export class ScannableService {
       .pipe(
         map(count => {
           return count;
+        })
+      )
+  }
+
+  isBarcodeTaken(barcodeToCheck: string): Observable<boolean> {
+    return this.http.head(`${environment.apiUrl}/v1/scannables/barcode/${barcodeToCheck}`, { observe: 'response' })
+      .pipe(
+        map(response => response.status === 200),
+        catchError(error => {
+          if (error.status === 404) {
+            return of(false);
+          }
+          throw error;
+        })
+      );
+  }
+
+  isAssetTagTaken(assetTagToCheck: string): Observable<boolean> {
+    return this.http.head(`${environment.apiUrl}/v1/scannables/assetTag/${assetTagToCheck}`, { observe: 'response' })
+      .pipe(
+        map(response => response.status === 200),
+        catchError(error => {
+          if (error.status === 404) {
+            return of(false);
+          }
+          throw error;
+        })
+      );
+  }
+
+  getByBarcode(barcode: string): Observable<ScannableDetailsDto> {
+    return this.http.get<Record<string, unknown>>(`${environment.apiUrl}/v1/scannables/barcode/${barcode}`)
+      .pipe(
+        map(device => {
+          console.log(device)
+          return DeviceDetails.fromJson(device);
         })
       )
   }

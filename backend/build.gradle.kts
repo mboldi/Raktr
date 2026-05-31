@@ -56,7 +56,7 @@ dependencies {
     testImplementation("org.testcontainers:testcontainers-postgresql:2.0.5")
     testImplementation("io.rest-assured:rest-assured:6.0.0")
     testImplementation("org.wiremock:wiremock-standalone:3.13.2")
-    testImplementation("com.nimbusds:nimbus-jose-jwt:10.9")
+    testImplementation("com.nimbusds:nimbus-jose-jwt:10.9.1")
 
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }

@@ -14,7 +14,7 @@ import {
 import {MatFormField, MatInput, MatLabel, MatSuffix} from "@angular/material/input";
 import {DeviceService} from "../../../../services/device.service";
 import {DeviceDetails} from "../../../../model/scannable/device/deviceDetails";
-import {MatPaginator} from "@angular/material/paginator";
+import {MatPaginator, PageEvent} from "@angular/material/paginator";
 import {DecimalPipe} from "@angular/common";
 import {MatSortModule, Sort} from "@angular/material/sort";
 import {FormControl, FormsModule, ReactiveFormsModule} from "@angular/forms";
@@ -23,6 +23,8 @@ import {MatFabButton, MatIconButton} from "@angular/material/button";
 import {MatCard} from '@angular/material/card';
 import {DeviceEditDialogComponent} from '../../../../components/device-edit-modal/device-edit-dialog.component';
 import {MatDialog} from '@angular/material/dialog';
+import {LocalStorageService} from '../../../../services/localStorage.service';
+import {environment} from '../../../../../environments/environment';
 
 const ALL_COLUMNS: string[] = ['name', 'assetTag', 'maker', 'model', 'quantity', 'category', 'location', 'weight'];
 const REDUCED_COLUMNS: string[] = ['name', 'assetTag', 'maker', 'model', 'quantity'];
@@ -64,14 +66,25 @@ export class DevicesComponent implements OnInit {
   protected displayedColumns = ALL_COLUMNS;
 
   protected devices: DeviceDetails[] = [];
+  protected pagedDevices: DeviceDetails[] = [];
+
+  private lastPageSetting: PageEvent | undefined;
+  protected pageSize = 5;
 
   constructor(private deviceService: DeviceService,
-              private dialog: MatDialog,) {
+              private dialog: MatDialog,
+              private localStorageService: LocalStorageService,) {
   }
 
   ngOnInit() {
+    const readPageSize = this.localStorageService.read(`${environment.defaultPageSizeKey}`);
+    if(readPageSize) {
+      this.pageSize = parseInt(readPageSize);
+    }
+
     this.deviceService.getDevices().subscribe(devices => {
       this.devices = devices;
+      this.pagedDevices = devices.slice(0, this.pageSize);
     });
   }
 
@@ -106,7 +119,22 @@ export class DevicesComponent implements OnInit {
     editDeviceDialog.afterClosed().subscribe(result => {
       if(result) {
         console.log("Yay, created Device!")
+        this.devices.push(result);
       }
     })
+  }
+
+  protected filterSortDevices() {
+
+  }
+
+  protected pageDevices(pageEvent : PageEvent) {
+    this.lastPageSetting = pageEvent;
+    this.localStorageService.write(`${environment.defaultPageSizeKey}`, pageEvent.pageSize.toString())
+
+    const startId = (pageEvent.pageIndex)*pageEvent.pageSize;
+    const endId = startId + pageEvent.pageSize;
+
+    this.pagedDevices = this.devices.slice(startId, endId);
   }
 }

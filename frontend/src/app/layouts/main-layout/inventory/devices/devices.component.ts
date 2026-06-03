@@ -25,6 +25,7 @@ import {DeviceEditDialogComponent} from '../../../../components/device-edit-moda
 import {MatDialog} from '@angular/material/dialog';
 import {LocalStorageService} from '../../../../services/localStorage.service';
 import {environment} from '../../../../../environments/environment';
+import {MatProgressSpinner} from '@angular/material/progress-spinner';
 
 const ALL_COLUMNS: string[] = ['name', 'assetTag', 'maker', 'model', 'quantity', 'category', 'location', 'weight'];
 const REDUCED_COLUMNS: string[] = ['name', 'assetTag', 'maker', 'model', 'quantity'];
@@ -54,12 +55,15 @@ const REDUCED_COLUMNS: string[] = ['name', 'assetTag', 'maker', 'model', 'quanti
     MatSuffix,
     ReactiveFormsModule,
     MatCard,
-    MatFabButton
+    MatFabButton,
+    MatProgressSpinner
   ],
   templateUrl: './devices.component.html',
   styleUrl: './devices.component.scss',
 })
 export class DevicesComponent implements OnInit {
+
+  protected loading: boolean = true;
 
   protected deviceSearchFormControl = new FormControl();
 
@@ -85,6 +89,8 @@ export class DevicesComponent implements OnInit {
     this.deviceService.getDevices().subscribe(devices => {
       this.devices = devices;
       this.pagedDevices = devices.slice(0, this.pageSize);
+
+      this.loading = false;
     });
   }
 

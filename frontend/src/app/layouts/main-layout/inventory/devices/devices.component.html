@@ -37,6 +37,9 @@
                  showFirstLastButtons
                  aria-label="Oldalváltás">
   </mat-paginator>
+  @if (loading) {
+    <mat-spinner class="list-loading-spinner mt-3"></mat-spinner>
+  }
 
   <table mat-table matSort (matSortChange)="announceSortChange($event)" [dataSource]="pagedDevices"
          class="mat-elevation-z8">

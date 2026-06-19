@@ -28,6 +28,12 @@ export const ROUTES: RouteInfo[] = [
   {path: '/rents', title: 'Kivitelek kezelése', icon: 'local_shipping', class: '', inMenuBar: true, children: []},
   {path: '/tickets', title: 'Hibajegyek', icon: 'bug_report', class: '', inMenuBar: true, children: []},
   {path: '/settings', title: 'Beállítások', icon: 'person', class: '', inMenuBar: true, children: []},
+  {path: '/admin', title: 'Admin', icon: 'inventory', class: '', inMenuBar: true, children: [
+      {path: '/admin/categories', title: "Kategóriák", icon: 'shelves', class: '', inMenuBar: true, children: []},
+      {path: '/admin/locations', title: "Tárolási helyek", icon: 'forklift', class: '', inMenuBar: true, children: []},
+      {path: '/admin/signers', title: "Aláírók", icon: 'draw', class: '', inMenuBar: true, children: []},
+      {path: '/admin/owners', title: "Tulajdonosok", icon: 'assured_workload', class: '', inMenuBar: true, children: []},
+    ]},
 ];
 
 @Component({

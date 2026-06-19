@@ -4,6 +4,7 @@ import {InventoryComponent} from './inventory/inventory.component';
 import {TicketsComponent} from './tickets/tickets.component';
 import {SettingsComponent} from './settings/settings.component';
 import { RentsComponent } from "./rents/rents.component";
+import {AdminComponent} from "./admin/admin.component";
 
 export const MAIN_LAYOUT_ROUTES: Routes = [
   {path: '', redirectTo: 'overview', pathMatch: 'full'},
@@ -16,4 +17,9 @@ export const MAIN_LAYOUT_ROUTES: Routes = [
   {path: 'rents', component: RentsComponent},
   {path: 'tickets', component: TicketsComponent},
   {path: 'settings', component: SettingsComponent},
+  {
+    path: 'admin',
+    component: AdminComponent,
+    loadChildren: () => import('./admin/admin.routes').then(m => m.ADMIN_ROUTES)
+  },
 ];

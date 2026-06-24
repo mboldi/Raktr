@@ -1,1 +1,73 @@
-<p>categories works!</p>
+<div class="container-fluid">
+  <div class="row">
+
+    <mat-card class="list-header-card col-xl-7 col-lg-10 col-md-12">
+      <h2>Eszközkategóriák kezelése</h2>
+
+      <div class="list-header-actions-row">
+        <div>
+          <mat-form-field class="search-box">
+            <mat-label>Keresés</mat-label>
+            <input matInput (keyup)="applyFilter($event)" placeholder="Kamera"
+                   [formControl]="categorySearchFormControl">
+            @if (categorySearchFormControl.value) {
+              <button mat-icon-button matSuffix
+                      (click)="categorySearchFormControl.setValue('')">
+                <mat-icon matSuffix>close</mat-icon>
+              </button>
+            }
+          </mat-form-field>
+        </div>
+
+        <button matFab extended class="add-button" (click)="newCategory()">
+          <mat-icon>add</mat-icon>
+          Új hozzáadása
+        </button>
+      </div>
+    </mat-card>
+
+  </div>
+
+  <div class="row">
+
+    <div class="table-wrapper col-xl-7 col-lg-10 col-md-12">
+
+      <table mat-table matSort [dataSource]="categories"
+             class="mat-elevation-z8">
+
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef>Név</th>
+          <td mat-cell *matCellDef="let category"> {{ category.name }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="assignedScannables">
+          <th mat-header-cell *matHeaderCellDef>Tárolt eszközök száma</th>
+          <td mat-cell *matCellDef="let category"><i>sok</i> db</td>
+        </ng-container>
+
+        <ng-container matColumnDef="createdAt">
+          <th mat-header-cell *matHeaderCellDef>Létrehozva</th>
+          <td mat-cell *matCellDef="let category"> {{category.createdAt | date:'yyyy. MM. dd.' }} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="createdBy">
+          <th mat-header-cell *matHeaderCellDef>Létrehozta</th>
+          <td mat-cell *matCellDef="let category">{{category.createdBy.nickname}}</td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="columns"></tr>
+        <tr mat-row
+            (click)="openCategory(row)"
+            class="clickable-row"
+            *matRowDef="let row; columns: columns;"></tr>
+      </table>
+
+      @if (loading) {
+        <mat-spinner class="list-loading-spinner mt-3"></mat-spinner>
+      }
+    </div>
+
+  </div>
+</div>
+
+

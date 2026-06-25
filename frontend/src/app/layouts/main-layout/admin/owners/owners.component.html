@@ -1,1 +1,87 @@
-<p>owners works!</p>
+<div class="container-fluid" style="padding-right: 24px">
+  <div class="row">
+
+    <mat-card class="list-header-card bg-orange col-xxl-8 col-xl-10 col-lg-12">
+      <h2>Tulajdonosok kezelése</h2>
+
+      <div class="list-header-actions-row">
+        <div>
+          <mat-form-field class="search-box">
+            <mat-label>Keresés</mat-label>
+            <input matInput (keyup)="applyFilter()" placeholder="SVIE"
+                   [formControl]="searchFormControl">
+            @if (searchFormControl.value) {
+              <button mat-icon-button matSuffix
+                      (click)="searchFormControl.setValue(''); applyFilter();">
+                <mat-icon matSuffix>close</mat-icon>
+              </button>
+            }
+          </mat-form-field>
+        </div>
+
+        <button matFab extended class="add-button" (click)="newOwner()">
+          <mat-icon>add</mat-icon>
+          Új hozzáadása
+        </button>
+      </div>
+    </mat-card>
+
+  </div>
+
+  <div class="row">
+
+    <div class="table-wrapper col-xxl-8 col-xl-10 col-lg-12">
+
+      <table mat-table #ownerTable [dataSource]="filteredOwners"
+             class="mat-elevation-z8">
+
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef>Név</th>
+          <td mat-cell (click)="editOwner(owner)" *matCellDef="let owner"> {{ owner.name }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="inSchInventory">
+          <th mat-header-cell *matHeaderCellDef>SCH leltárban?</th>
+          <td mat-cell (click)="editOwner(owner)" *matCellDef="let owner"> {{ owner.name }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="assignedScannables">
+          <th mat-header-cell *matHeaderCellDef>Birtokolt eszközök száma</th>
+          <td mat-cell (click)="editOwner(owner)" *matCellDef="let owner"><i>sok</i> db</td>
+        </ng-container>
+
+        <ng-container matColumnDef="updatedAt">
+          <th mat-header-cell *matHeaderCellDef>Frissítve</th>
+          <td mat-cell (click)="editOwner(owner)" *matCellDef="let owner"> {{owner.createdAt | date:'yyyy. MM. dd.' }} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="updatedBy">
+          <th mat-header-cell *matHeaderCellDef>Frissítve</th>
+          <td mat-cell (click)="editOwner(owner)" *matCellDef="let owner">{{owner.createdBy.familyName}} {{owner.createdBy.givenName}}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="delete">
+          <th mat-header-cell *matHeaderCellDef>Törlés</th>
+          <td mat-cell *matCellDef="let owner">
+            <button matMiniFab aria-label="Delete owner"
+                    class="alert-button"
+                    (click)="deleteOwner(owner)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="columns"></tr>
+        <tr mat-row class="clickable-row"
+            *matRowDef="let row; columns: columns;"></tr>
+      </table>
+
+      @if (loading) {
+        <mat-spinner class="list-loading-spinner mt-3"></mat-spinner>
+      }
+    </div>
+
+  </div>
+</div>
+
+

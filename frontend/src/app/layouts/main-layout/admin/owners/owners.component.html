@@ -42,7 +42,13 @@
 
         <ng-container matColumnDef="inSchInventory">
           <th mat-header-cell *matHeaderCellDef>SCH leltárban?</th>
-          <td mat-cell (click)="editOwner(owner)" *matCellDef="let owner"> {{ owner.name }}</td>
+          <td mat-cell (click)="editOwner(owner)" *matCellDef="let owner">
+            @if (owner.inSchInventory) {
+              <mat-icon aria-hidden="false" fontIcon="check"></mat-icon>
+            } @else {
+              <mat-icon aria-hidden="false" fontIcon="close"></mat-icon>
+            }
+          </td>
         </ng-container>
 
         <ng-container matColumnDef="assignedScannables">
@@ -52,12 +58,16 @@
 
         <ng-container matColumnDef="updatedAt">
           <th mat-header-cell *matHeaderCellDef>Frissítve</th>
-          <td mat-cell (click)="editOwner(owner)" *matCellDef="let owner"> {{owner.createdAt | date:'yyyy. MM. dd.' }} </td>
+          <td mat-cell (click)="editOwner(owner)"
+              *matCellDef="let owner"> {{ owner.createdAt | date:'yyyy. MM. dd.' }}
+          </td>
         </ng-container>
 
         <ng-container matColumnDef="updatedBy">
           <th mat-header-cell *matHeaderCellDef>Frissítve</th>
-          <td mat-cell (click)="editOwner(owner)" *matCellDef="let owner">{{owner.createdBy.familyName}} {{owner.createdBy.givenName}}</td>
+          <td mat-cell (click)="editOwner(owner)"
+              *matCellDef="let owner">{{ owner.createdBy.familyName }} {{ owner.createdBy.givenName }}
+          </td>
         </ng-container>
 
         <ng-container matColumnDef="delete">

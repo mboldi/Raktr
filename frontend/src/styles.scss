@@ -45,25 +45,29 @@ body {
 }
 
 .bg-blue {
-  background: var(--mat-sys-primary );
+  background: light-dark(#1860a4, #00315c) !important;
 }
 
 .bg-green {
-  background: light-dark(#689F38, #33691E);
+  background: light-dark(#689F38, #33691E) !important;
 }
 
 .bg-orange {
-  background: light-dark(#ff8f06, #ff8f06);
+  background: light-dark(#ff8f06, #e17d03) !important;
 }
 
 .bg-red {
-  background: light-dark(#D50000, #C62828);
+  background: light-dark(#D50000, #C62828) !important;
 }
 
 .text-alert {
-  color: light-dark(#ff2c14, #ff2410);
+  color: light-dark(#ff2c14, #ff2410) !important;
 }
 
+.alert-button {
+  background: light-dark(#D50000, #C62828) !important;
+  color: #e1e2e8 !important;
+}
 
 .mat-mdc-row:hover .mat-mdc-cell {
   background: light-dark(#e1e2e8, #393b40);
@@ -92,7 +96,7 @@ body {
 .list-header-card {
   padding: 16px 16px 0  16px;
   margin: 16px 16px 8px 0;
-  background: light-dark(#1860a4, #00315c) !important;
+
 
   .list-header-actions-row {
     display: flex;

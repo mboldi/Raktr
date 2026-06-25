@@ -6,40 +6,40 @@ import {environment} from '../../environments/environment';
 import {CategoryCreateDto} from '../model/category/categoryCreateDto';
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root'
 })
 export class CategoryService {
 
-  constructor(private http: HttpClient) {
-  }
+    constructor(private http: HttpClient) {
+    }
 
-  getCategories(): Observable<CategoryDetails[]> {
-    return this.http.get<Record<string, unknown>[]>(`${environment.apiUrl}/v1/categories`)
-      .pipe(
-        map(categories => {
-          const categories_typed: CategoryDetails[] = [];
+    getCategories(): Observable<CategoryDetails[]> {
+        return this.http.get<Record<string, unknown>[]>(`${environment.apiUrl}/v1/categories`)
+            .pipe(
+                map(categories => {
+                    const categories_typed: CategoryDetails[] = [];
 
-          categories.forEach(category => categories_typed.push(CategoryDetails.fromJson(category)));
+                    categories.forEach(category => categories_typed.push(CategoryDetails.fromJson(category)));
 
-          return categories_typed;
-        })
-      )
-  }
+                    return categories_typed;
+                })
+            )
+    }
 
-  addCategory(name: string): Observable<CategoryDetails> {
-    const newCategory = new CategoryCreateDto(name);
+    addCategory(name: string): Observable<CategoryDetails> {
+        const newCategory = new CategoryCreateDto(name);
 
-    return this.http.post<Record<string, unknown>>(
-      `${environment.apiUrl}/v1/categories`,
-      newCategory
-    ).pipe(
-      map(json => CategoryDetails.fromJson(json))
-    );
-  }
+        return this.http.post<Record<string, unknown>>(
+            `${environment.apiUrl}/v1/categories`,
+            newCategory
+        ).pipe(
+            map(json => CategoryDetails.fromJson(json))
+        );
+    }
 
-  deleteCategory(name: string) {
-    return this.http.delete(`${environment.apiUrl}/v1/categories/${name}`);
-  }
+    deleteCategory(name: string) {
+        return this.http.delete(`${environment.apiUrl}/v1/categories/${name}`);
+    }
 
 
 }

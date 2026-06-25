@@ -1,0 +1,13 @@
+<h2 mat-dialog-title>{{title}}</h2>
+
+<mat-dialog-content class="mt-3" style="max-height: 100vh">
+    <mat-form-field class="full-width">
+        <mat-label>Név</mat-label>
+        <input matInput [formControl]="editNameFormControl">
+    </mat-form-field>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button mat-button [mat-dialog-close]="false">Vissza</button>
+    <button mat-raised-button color="primary" (click)="save()">Mentés</button>
+</mat-dialog-actions>

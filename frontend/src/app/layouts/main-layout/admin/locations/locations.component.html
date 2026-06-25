@@ -1,1 +1,82 @@
-<p>locations works!</p>
+<div class="container-fluid" style="padding-right: 24px">
+    <div class="row">
+
+        <mat-card class="list-header-card bg-orange col-xxl-7 col-xl-10 col-lg-12">
+            <h2>Tárolási helyek kezelése</h2>
+
+            <div class="list-header-actions-row">
+                <div>
+                    <mat-form-field class="search-box">
+                        <mat-label>Keresés</mat-label>
+                        <input matInput (keyup)="applyFilter()" placeholder="Stúdiótér"
+                               [formControl]="locationSearchFormControl">
+                        @if (locationSearchFormControl.value) {
+                            <button mat-icon-button matSuffix
+                                    (click)="locationSearchFormControl.setValue(''); applyFilter();">
+                                <mat-icon matSuffix>close</mat-icon>
+                            </button>
+                        }
+                    </mat-form-field>
+                </div>
+
+                <button matFab extended class="add-button" (click)="newLocation()">
+                    <mat-icon>add</mat-icon>
+                    Új hozzáadása
+                </button>
+            </div>
+        </mat-card>
+
+    </div>
+
+    <div class="row">
+
+        <div class="table-wrapper col-xxl-7 col-xl-10 col-lg-12">
+
+            <table mat-table #locationTable [dataSource]="filteredLocations"
+                   class="mat-elevation-z8">
+
+                <ng-container matColumnDef="name">
+                    <th mat-header-cell *matHeaderCellDef>Név</th>
+                    <td mat-cell *matCellDef="let location"> {{ location.name }}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="assignedScannables">
+                    <th mat-header-cell *matHeaderCellDef>Tárolt eszközök száma</th>
+                    <td mat-cell *matCellDef="let location"><i>sok</i> db</td>
+                </ng-container>
+
+                <ng-container matColumnDef="createdAt">
+                    <th mat-header-cell *matHeaderCellDef>Létrehozva</th>
+                    <td mat-cell *matCellDef="let location"> {{location.createdAt | date:'yyyy. MM. dd.' }} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="createdBy">
+                    <th mat-header-cell *matHeaderCellDef>Létrehozta</th>
+                    <td mat-cell *matCellDef="let location">{{location.createdBy.familyName}} {{location.createdBy.givenName}}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="delete">
+                    <th mat-header-cell *matHeaderCellDef>Törlés</th>
+                    <td mat-cell *matCellDef="let location">
+                        <button matMiniFab aria-label="Delete location"
+                                class="alert-button"
+                                (click)="deleteLocation(location.name)">
+                            <mat-icon>delete</mat-icon>
+                        </button>
+                    </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="columns"></tr>
+                <tr mat-row
+                    *matRowDef="let row; columns: columns;"></tr>
+            </table>
+
+            @if (loading) {
+                <mat-spinner class="list-loading-spinner mt-3"></mat-spinner>
+            }
+        </div>
+
+    </div>
+</div>
+
+

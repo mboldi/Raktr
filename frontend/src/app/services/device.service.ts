@@ -64,8 +64,6 @@ export class DeviceService {
   createDevice(deviceToCreate: DeviceCreateDto): Observable<DeviceDetails> {
     const headers = new HttpHeaders().set('Content-Type', 'application/json');
 
-    console.log(deviceToCreate.toJson());
-
     return this.http.post<Record<string, unknown>>(`${environment.apiUrl}/v1/devices`, deviceToCreate.toJson(), {headers: headers})
       .pipe(
         map(createdDevice => DeviceDetails.fromJson(createdDevice))

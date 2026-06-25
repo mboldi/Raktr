@@ -1,7 +1,7 @@
 <div class="container-fluid" style="padding-right: 24px">
   <div class="row">
 
-    <mat-card class="list-header-card bg-orange col-xxl-6 col-xl-10 col-lg-12">
+    <mat-card class="list-header-card bg-orange col-xxl-7 col-xl-10 col-lg-12">
       <h2>Eszközkategóriák kezelése</h2>
 
       <div class="list-header-actions-row">
@@ -12,7 +12,7 @@
                    [formControl]="categorySearchFormControl">
             @if (categorySearchFormControl.value) {
               <button mat-icon-button matSuffix
-                      (click)="categorySearchFormControl.setValue('')">
+                      (click)="categorySearchFormControl.setValue(''); applyFilter();">
                 <mat-icon matSuffix>close</mat-icon>
               </button>
             }
@@ -30,9 +30,9 @@
 
   <div class="row">
 
-    <div class="table-wrapper col-xxl-6 col-xl-10 col-lg-12">
+    <div class="table-wrapper col-xxl-7 col-xl-10 col-lg-12">
 
-      <table mat-table matSort [dataSource]="filteredCategories"
+      <table mat-table #categoryTable [dataSource]="filteredCategories"
              class="mat-elevation-z8">
 
         <ng-container matColumnDef="name">

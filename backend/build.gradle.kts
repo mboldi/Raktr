@@ -30,7 +30,7 @@ repositories {
 
 dependencies {
     implementation("com.github.ben-manes.caffeine:caffeine:3.2.4")
-    implementation("com.itextpdf:itext-core:9.6.0")
+    implementation("com.itextpdf:itext-core:9.7.0")
     implementation("org.mapstruct:mapstruct:1.6.3")
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:3.0.3")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
@@ -44,8 +44,8 @@ dependencies {
 
     developmentOnly("org.springframework.boot:spring-boot-devtools")
 
-    runtimeOnly("org.flywaydb:flyway-database-postgresql:12.10.0")
-    runtimeOnly("org.postgresql:postgresql:42.7.12")
+    runtimeOnly("org.flywaydb:flyway-database-postgresql:12.11.0")
+    runtimeOnly("org.postgresql:postgresql:42.7.13")
 
     annotationProcessor("org.mapstruct:mapstruct-processor:1.6.3")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
@@ -54,7 +54,7 @@ dependencies {
     testImplementation("org.springframework.security:spring-security-test")
     testImplementation("org.testcontainers:testcontainers:2.0.5")
     testImplementation("org.testcontainers:testcontainers-postgresql:2.0.5")
-    testImplementation("io.rest-assured:rest-assured:6.0.0")
+    testImplementation("io.rest-assured:rest-assured:6.0.1")
     testImplementation("org.wiremock:wiremock-standalone:3.13.2")
     testImplementation("com.nimbusds:nimbus-jose-jwt:10.9.1")
 

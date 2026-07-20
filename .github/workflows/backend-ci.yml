@@ -27,12 +27,12 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v7.0.0
+        uses: actions/checkout@v7.0.1
         with:
           fetch-tags: true
 
       - name: Set up JDK 25
-        uses: actions/setup-java@v5.5.0
+        uses: actions/setup-java@v5.6.0
         with:
           distribution: temurin
           java-version: 25

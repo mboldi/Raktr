@@ -44,7 +44,7 @@ dependencies {
 
     developmentOnly("org.springframework.boot:spring-boot-devtools")
 
-    runtimeOnly("org.flywaydb:flyway-database-postgresql:12.11.0")
+    runtimeOnly("org.flywaydb:flyway-database-postgresql:13.0.0")
     runtimeOnly("org.postgresql:postgresql:42.7.13")
 
     annotationProcessor("org.mapstruct:mapstruct-processor:1.6.3")

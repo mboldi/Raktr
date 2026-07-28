@@ -31,8 +31,8 @@ export const ROUTES: RouteInfo[] = [
   {path: '/admin', title: 'Admin', icon: 'inventory', class: '', inMenuBar: true, children: [
       {path: '/admin/categories', title: "Kategóriák", icon: 'shelves', class: '', inMenuBar: true, children: []},
       {path: '/admin/locations', title: "Tárolási helyek", icon: 'forklift', class: '', inMenuBar: true, children: []},
-      {path: '/admin/signers', title: "Aláírók", icon: 'draw', class: '', inMenuBar: true, children: []},
       {path: '/admin/owners', title: "Tulajdonosok", icon: 'assured_workload', class: '', inMenuBar: true, children: []},
+      {path: '/admin/signers', title: "Aláírók", icon: 'draw', class: '', inMenuBar: true, children: []},
     ]},
 ];
 

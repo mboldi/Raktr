@@ -89,7 +89,7 @@ export class DeviceFormComponent implements OnInit {
       acquisitionSource: [''],
       acquisitionDate: [new Date()],
       warrantyEndDate: [null],
-      owner: [''],
+      owner: ['', Validators.required],
       notes: [''],
       status: [DeviceStatus.GOOD],
     });

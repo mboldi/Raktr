@@ -31,6 +31,7 @@ import {DeviceUpdateDto} from '../../model/scannable/device/deviceUpdateDto';
 export class DeviceEditDialogComponent {
   @ViewChild(DeviceFormComponent) deviceFormComponent!: DeviceFormComponent;
 
+  protected title = 'Új eszköz hozzáadása';
   protected isNew: boolean = true;
 
   constructor(@Inject(MAT_DIALOG_DATA) protected deviceData: DeviceDetails,
@@ -39,6 +40,7 @@ export class DeviceEditDialogComponent {
               private deviceService: DeviceService) {
     if(deviceData) {
       this.isNew = false;
+      this.title = 'Eszköz szerkesztése';
     }
   }
 
@@ -71,6 +73,7 @@ export class DeviceEditDialogComponent {
         duration: 3000,
         horizontalPosition: 'right',
         verticalPosition: 'top',
+        panelClass: ['error-snackbar'],
       });
     }
 

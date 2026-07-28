@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {
   MatCell,
   MatCellDef,
@@ -16,7 +16,7 @@ import {DeviceService} from "../../../../services/device.service";
 import {DeviceDetails} from "../../../../model/scannable/device/deviceDetails";
 import {MatPaginator, PageEvent} from "@angular/material/paginator";
 import {DecimalPipe} from "@angular/common";
-import {MatSortModule, Sort} from "@angular/material/sort";
+import {MatSortModule, Sort, SortDirection} from "@angular/material/sort";
 import {FormControl, FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatIcon} from "@angular/material/icon";
 import {MatFabButton, MatIconButton} from "@angular/material/button";
@@ -26,6 +26,7 @@ import {MatDialog} from '@angular/material/dialog';
 import {LocalStorageService} from '../../../../services/localStorage.service';
 import {environment} from '../../../../../environments/environment';
 import {MatProgressSpinner} from '@angular/material/progress-spinner';
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 const ALL_COLUMNS: string[] = ['name', 'assetTag', 'maker', 'model', 'quantity', 'category', 'location', 'weight'];
 const REDUCED_COLUMNS: string[] = ['name', 'assetTag', 'maker', 'model', 'quantity'];
@@ -64,6 +65,7 @@ const REDUCED_COLUMNS: string[] = ['name', 'assetTag', 'maker', 'model', 'quanti
 export class DevicesComponent implements OnInit {
 
   protected loading: boolean = true;
+  @ViewChild(MatTable) table!: MatTable<DeviceDetails>;
 
   protected deviceSearchFormControl = new FormControl();
 
@@ -75,14 +77,17 @@ export class DevicesComponent implements OnInit {
   private lastPageSetting: PageEvent | undefined;
   protected pageSize = 5;
 
+  private lastSort: Sort = {active: 'name', direction: 'asc'};
+
   constructor(private deviceService: DeviceService,
               private dialog: MatDialog,
-              private localStorageService: LocalStorageService,) {
+              private localStorageService: LocalStorageService,
+              private snackBar: MatSnackBar,) {
   }
 
   ngOnInit() {
     const readPageSize = this.localStorageService.read(`${environment.defaultPageSizeKey}`);
-    if(readPageSize) {
+    if (readPageSize) {
       this.pageSize = parseInt(readPageSize);
     }
 
@@ -94,13 +99,6 @@ export class DevicesComponent implements OnInit {
     });
   }
 
-  protected applyFilter($event: KeyboardEvent) {
-  }
-
-  protected announceSortChange($event: Sort) {
-    console.log($event);
-  }
-
   protected openDevice(row: any) {
     const editDeviceDialog = this.dialog.open(DeviceEditDialogComponent, {
       width: '60vw',
@@ -109,9 +107,16 @@ export class DevicesComponent implements OnInit {
     });
 
     editDeviceDialog.afterClosed().subscribe(result => {
-      if(result) {
-        // console.log(result);
-        console.log("Yay, edited Device!")    // TODO: refresh device list
+      if (result) {
+        this.replaceById(this.pagedDevices, result);
+        this.table.renderRows();
+
+        this.snackBar.open(`${result.name} frissítve!`, "Remek!", {
+          duration: 3000,
+          horizontalPosition: 'right',
+          verticalPosition: 'top',
+          panelClass: ['success-snackbar'],
+        });
       }
     })
   }
@@ -123,24 +128,53 @@ export class DevicesComponent implements OnInit {
     });
 
     editDeviceDialog.afterClosed().subscribe(result => {
-      if(result) {
-        console.log("Yay, created Device!")
+      if (result) {
         this.devices.push(result);
+        this.filterSortDevices();
+
+        this.snackBar.open(`${result.name} létrehozva!`, "Kitűnő!", {
+          duration: 3000,
+          horizontalPosition: 'right',
+          verticalPosition: 'top',
+          panelClass: ['success-snackbar'],
+        });
       }
     })
   }
 
-  protected filterSortDevices() {
-
+  protected applyFilter($event: KeyboardEvent) {
+    console.log(this.deviceSearchFormControl.value);
   }
 
-  protected pageDevices(pageEvent : PageEvent) {
+  protected announceSortChange($event: Sort) {
+    console.log($event);
+  }
+
+  protected filterSortDevices() {
+
+
+    if (this.lastPageSetting !== undefined) {
+      this.pageDevices(this.lastPageSetting);
+    } else {
+      this.pagedDevices = this.devices.slice(0, this.pageSize);
+    }
+  }
+
+  protected pageDevices(pageEvent: PageEvent) {
     this.lastPageSetting = pageEvent;
+    this.pageSize = pageEvent.pageSize;
     this.localStorageService.write(`${environment.defaultPageSizeKey}`, pageEvent.pageSize.toString())
 
-    const startId = (pageEvent.pageIndex)*pageEvent.pageSize;
+    const startId = (pageEvent.pageIndex) * pageEvent.pageSize;
     const endId = startId + pageEvent.pageSize;
 
     this.pagedDevices = this.devices.slice(startId, endId);
+  }
+
+  protected replaceById<T extends { id: string | number }>(array: T[], newObject: T): void {
+    const index = array.findIndex(item => item.id === newObject.id);
+    if (index !== -1) {
+      array[index] = newObject;
+    }
   }
 }

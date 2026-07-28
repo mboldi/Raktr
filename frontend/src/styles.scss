@@ -10,12 +10,12 @@ html {
   margin: 0;
 
   @include mat.theme((
-    color:  (
-      primary: my-theme.$primary-palette,
-      tertiary: my-theme.$tertiary-palette,
-    ),
-    typography: Roboto,
-    density: 0,
+          color: (
+                  primary: my-theme.$primary-palette,
+                  tertiary: my-theme.$tertiary-palette,
+          ),
+          typography: Roboto,
+          density: 0,
   ));
 
 }
@@ -83,6 +83,39 @@ body {
   transition-duration: 200ms;
 }
 
+.success-snackbar {
+  &.mat-mdc-snack-bar-container .mat-mdc-snackbar-surface {
+    background: light-dark(#689F38, #33691E) !important;
+    color: white !important;
+  }
+
+  .mat-mdc-snack-bar-action {
+    color: #e1e2e8 !important;
+  }
+}
+
+.alert-snackbar {
+  &.mat-mdc-snack-bar-container .mat-mdc-snackbar-surface {
+    background: light-dark(#ff8f06, #e17d03) !important;
+    color: white !important;
+  }
+
+  .mat-mdc-snack-bar-action {
+    color: #e1e2e8 !important;
+  }
+}
+
+.error-snackbar {
+  &.mat-mdc-snack-bar-container .mat-mdc-snackbar-surface {
+    background: light-dark(#D50000, #C62828) !important;
+    color: #e1e2e8 !important;
+  }
+
+  .mat-mdc-snack-bar-action {
+    color: #e1e2e8 !important;
+  }
+}
+
 .full-width {
   width: 100%;
 }
@@ -103,7 +136,7 @@ body {
 }
 
 .list-header-card {
-  padding: 16px 16px 0  16px;
+  padding: 16px 16px 0 16px;
   margin: 16px 16px 8px 0;
 
 

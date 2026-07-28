@@ -9,7 +9,7 @@
                [formControl]="deviceSearchFormControl">
         @if (deviceSearchFormControl.value) {
           <button mat-icon-button matSuffix
-                  (click)="deviceSearchFormControl.setValue('')">
+                  (click)="resetFilter()">
             <mat-icon matSuffix>close</mat-icon>
           </button>
         }

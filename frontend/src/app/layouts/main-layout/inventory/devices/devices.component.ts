@@ -68,10 +68,12 @@ export class DevicesComponent implements OnInit {
   @ViewChild(MatTable) table!: MatTable<DeviceDetails>;
 
   protected deviceSearchFormControl = new FormControl();
+  private searchFilter = "";
 
   protected displayedColumns = ALL_COLUMNS;
 
   protected devices: DeviceDetails[] = [];
+  protected filteredDevices: DeviceDetails[] = [];
   protected pagedDevices: DeviceDetails[] = [];
 
   private lastPageSetting: PageEvent | undefined;
@@ -93,6 +95,7 @@ export class DevicesComponent implements OnInit {
 
     this.deviceService.getDevices().subscribe(devices => {
       this.devices = devices;
+      this.filteredDevices = devices;
       this.pagedDevices = devices.slice(0, this.pageSize);
 
       this.loading = false;
@@ -143,7 +146,9 @@ export class DevicesComponent implements OnInit {
   }
 
   protected applyFilter($event: KeyboardEvent) {
-    console.log(this.deviceSearchFormControl.value);
+    this.searchFilter = this.deviceSearchFormControl.value;
+
+    this.filterSortDevices();
   }
 
   protected announceSortChange($event: Sort) {
@@ -151,12 +156,16 @@ export class DevicesComponent implements OnInit {
   }
 
   protected filterSortDevices() {
-
+    this.filteredDevices = this.devices.filter(device =>
+      device.name.toLowerCase().includes(this.searchFilter.toLowerCase()) ||
+      device.assetTag.toLowerCase().includes(this.searchFilter.toLowerCase()) ||
+      device.model.toLowerCase().includes(this.searchFilter.toLowerCase())
+    )
 
     if (this.lastPageSetting !== undefined) {
       this.pageDevices(this.lastPageSetting);
     } else {
-      this.pagedDevices = this.devices.slice(0, this.pageSize);
+      this.pagedDevices = this.filteredDevices.slice(0, this.pageSize);
     }
   }
 
@@ -168,7 +177,7 @@ export class DevicesComponent implements OnInit {
     const startId = (pageEvent.pageIndex) * pageEvent.pageSize;
     const endId = startId + pageEvent.pageSize;
 
-    this.pagedDevices = this.devices.slice(startId, endId);
+    this.pagedDevices = this.filteredDevices.slice(startId, endId);
   }
 
   protected replaceById<T extends { id: string | number }>(array: T[], newObject: T): void {
@@ -176,5 +185,11 @@ export class DevicesComponent implements OnInit {
     if (index !== -1) {
       array[index] = newObject;
     }
+  }
+
+  protected resetFilter() {
+    this.deviceSearchFormControl.reset();
+    this.searchFilter = "";
+    this.filterSortDevices();
   }
 }

@@ -1,9 +1,9 @@
 plugins {
     java
     jacoco
-    id("com.diffplug.spotless") version "8.10.0"
+    id("com.diffplug.spotless") version "8.10.1"
     id("io.freefair.lombok") version "9.5.0"
-    id("io.sentry.jvm.gradle") version "6.19.0"
+    id("io.sentry.jvm.gradle") version "6.20.0"
     id("io.spring.dependency-management") version "1.1.7"
     id("org.springframework.boot") version "4.1.1"
     id("org.unbroken-dome.test-sets") version "4.1.0"
@@ -44,7 +44,7 @@ dependencies {
 
     developmentOnly("org.springframework.boot:spring-boot-devtools")
 
-    runtimeOnly("org.flywaydb:flyway-database-postgresql:13.3.0")
+    runtimeOnly("org.flywaydb:flyway-database-postgresql:13.4.0")
     runtimeOnly("org.postgresql:postgresql:42.7.13")
 
     annotationProcessor("org.mapstruct:mapstruct-processor:1.6.3")

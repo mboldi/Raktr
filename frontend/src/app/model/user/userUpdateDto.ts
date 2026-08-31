@@ -1,9 +1,9 @@
 export class UserUpdateDto {
-  nickName: string;
+  nickname: string;
   personalId: string;
 
   constructor(nickName: string, personalId: string) {
-    this.nickName = nickName;
+    this.nickname = nickName;
     this.personalId = personalId;
   }
 

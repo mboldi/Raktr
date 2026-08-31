@@ -12,4 +12,6 @@ export const environment = {
   rentSecondSignerTitleKey: 'RENT_SECOND_SIGNER_TITLE',
 
   forceEan8Key: 'FORCE_EAN8',
+
+  adminGroupName: 'Admin',
 };

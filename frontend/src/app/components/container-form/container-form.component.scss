@@ -1,0 +1,15 @@
+.basic-properties-panel {
+  margin-bottom: 8px;
+  box-shadow: none !important;
+}
+
+.no-items-text {
+  text-align: center;
+  color: var(--mat-sys-on-surface-variant);
+  padding: 16px 0;
+}
+
+.table-wrapper {
+  max-height: 250px;
+  overflow-y: auto;
+}

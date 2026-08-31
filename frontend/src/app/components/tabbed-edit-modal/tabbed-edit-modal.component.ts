@@ -14,12 +14,14 @@ import {ScannableDetailsDto} from '../../model/scannable/scannableDetailsDto';
 import {MatIcon} from '@angular/material/icon';
 import {DeviceViewPageComponent} from '../device-view-page/device-view-page.component';
 import {ScannableViewPageComponent} from '../scannable-view-page/scannable-view-page.component';
+import {ContainerViewPageComponent} from '../container-view-page/container-view-page.component';
+import {ContainerDetails} from '../../model/scannable/container/containerDetails';
 
-export type TabbedEditModalKind = 'device' | 'scannable';
+export type TabbedEditModalKind = 'device' | 'scannable' | 'container';
 
 export interface TabbedEditModalData {
   kind: TabbedEditModalKind;
-  item: DeviceDetails | ScannableDetailsDto;
+  item: DeviceDetails | ScannableDetailsDto | ContainerDetails;
 }
 
 interface TabbedEditModalViewDefinition {
@@ -28,7 +30,7 @@ interface TabbedEditModalViewDefinition {
   tabLabel: string;
   title: string;
   editable: boolean;
-  toInputs: (item: DeviceDetails | ScannableDetailsDto) => Record<string, unknown>;
+  toInputs: (item: DeviceDetails | ScannableDetailsDto | ContainerDetails) => Record<string, unknown>;
 }
 
 // Add an entry here to support opening a new *-view-page type in this modal - no template changes needed.
@@ -48,6 +50,14 @@ const VIEW_DEFINITIONS: Record<TabbedEditModalKind, TabbedEditModalViewDefinitio
     title: 'Elem adatai',
     editable: false,
     toInputs: item => ({scannable: item}),
+  },
+  container: {
+    component: ContainerViewPageComponent,
+    icon: 'edit_note',
+    tabLabel: 'Szállítóláda adatok',
+    title: 'Szállítóláda adatai',
+    editable: true,
+    toInputs: item => ({container: item}),
   },
 };
 

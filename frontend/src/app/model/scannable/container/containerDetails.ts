@@ -30,6 +30,10 @@ export class ContainerDetails extends ScannableDetailsDto {
     this.items = items;
   }
 
+  public getItemCount(): number {
+    return this.items.reduce((sum, item) => sum + item.quantity, 0);
+  }
+
   static override fromJson(json: Record<string, unknown>): ContainerDetails {
     return new ContainerDetails(
       json['id'] as number,

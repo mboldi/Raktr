@@ -1,0 +1,92 @@
+<mat-card class="container-card" appearance="outlined">
+
+  <div class="container-card__header">
+    <div class="container-card__heading">
+      <h2 class="container-card__title">{{ container.name }}</h2>
+      <p class="container-card__subtitle">{{ container.assetTag }}</p>
+    </div>
+    <div class="container-card__badges">
+      @if (container.publicRentable) {
+        <mat-chip class="rentable-chip">
+          <mat-icon>public</mat-icon>
+          Bárki által kölcsönözhető
+        </mat-chip>
+      }
+      @if (container.deleted) {
+        <mat-chip class="deleted-chip">
+          Törölve
+        </mat-chip>
+      }
+    </div>
+  </div>
+
+  <mat-card-content>
+
+    <section class="container-section">
+      <h3 class="container-section__title">Azonosítás</h3>
+      <div class="field-grid">
+        <div class="field">
+          <span class="field__label">Azonosító</span>
+          <span class="field__value">{{ container.assetTag }}</span>
+        </div>
+        <div class="field">
+          <span class="field__label">Vonalkód tartalma</span>
+          <span class="field__value">{{ container.barcode }}</span>
+        </div>
+        <div class="field">
+          <span class="field__label">Kategória</span>
+          <span class="field__value">{{ container.category }}</span>
+        </div>
+        <div class="field">
+          <span class="field__label">Tárolási hely</span>
+          <span class="field__value">{{ container.location }}</span>
+        </div>
+        <div class="field">
+          <span class="field__label">Tulajdonos</span>
+          <span class="field__value">{{ container.owner?.name }}</span>
+        </div>
+      </div>
+    </section>
+
+    <mat-divider></mat-divider>
+
+    <section class="container-section">
+      <h3 class="container-section__title">Fizikai adatok</h3>
+      <div class="field-grid">
+        <div class="field">
+          <span class="field__label">Saját tömeg</span>
+          <span class="field__value">{{ (container.weight / 1000) | number: '1.0-2' }}&nbsp;kg</span>
+        </div>
+        <div class="field">
+          <span class="field__label">Össztömeg</span>
+          <span class="field__value">{{ (container.totalWeight / 1000) | number: '1.0-2' }}&nbsp;kg</span>
+        </div>
+        <div class="field">
+          <span class="field__label">Tartalmazott eszközök száma</span>
+          <span class="field__value">{{ container.getItemCount() }}&nbsp;db</span>
+        </div>
+      </div>
+    </section>
+
+    <mat-divider></mat-divider>
+
+    <section class="container-section">
+      <h3 class="container-section__title">Tartalmazott eszközök</h3>
+      @if (container.items.length > 0) {
+        <div class="item-list">
+          @for (item of container.items; track item.device.id) {
+            <div class="item-row">
+              <span class="item-row__name">{{ item.device.name }}</span>
+              <span class="item-row__model">{{ item.device.manufacturer }} {{ item.device.model }}</span>
+              <span class="item-row__asset-tag">{{ item.device.assetTag }}</span>
+              <span class="item-row__quantity">{{ item.quantity }}&nbsp;db</span>
+            </div>
+          }
+        </div>
+      } @else {
+        <p class="container-no-items">Nincs hozzáadva eszköz.</p>
+      }
+    </section>
+
+  </mat-card-content>
+</mat-card>

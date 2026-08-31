@@ -24,6 +24,7 @@ import {
 import {MatDialog} from "@angular/material/dialog";
 import {YesnoModalComponent} from "../../../../components/yesno-modal/yesno-modal.component";
 import {MatSnackBar} from "@angular/material/snack-bar";
+import {HttpErrorResponse} from '@angular/common/http';
 
 
 const COLUMNS: string[] = ['name', 'assignedScannables', 'createdAt', 'createdBy', 'delete'];
@@ -111,15 +112,26 @@ export class CategoriesComponent {
 
         editCategoryDialog.afterClosed().subscribe(result => {
             if (result) {
-                this.categoryService.addCategory(result).subscribe((data) => {
-                    this.categories.push(data);
-                    this.applyFilter();
+                this.categoryService.addCategory(result).subscribe({
+                    next: (data) => {
+                        this.categories.push(data);
+                        this.applyFilter();
 
-                    this.snackBar.open(`${data.name} kategória létrehozva!`, "Remek!", {
-                        duration: 3000,
-                        horizontalPosition: 'right',
-                        verticalPosition: 'top',
-                    });
+                        this.snackBar.open(`${data.name} kategória létrehozva!`, "Remek!", {
+                            duration: 3000,
+                            horizontalPosition: 'right',
+                            verticalPosition: 'top',
+                            panelClass: ['success-snackbar'],
+                        });
+                    },
+                    error: () => {
+                        this.snackBar.open(`Nem sikerült létrehozni a(z) ${result} kategóriát! :(`, "Értem", {
+                            duration: 4000,
+                            horizontalPosition: 'right',
+                            verticalPosition: 'top',
+                            panelClass: ['error-snackbar'],
+                        });
+                    }
                 })
             }
         })
@@ -134,14 +146,34 @@ export class CategoriesComponent {
 
         yesnoDialog.afterClosed().subscribe(result => {
             if (result) {
-                this.categoryService.deleteCategory(name).subscribe((data) => {
-                    this.getCategories();
+                this.categoryService.deleteCategory(name).subscribe({
+                    next: () => {
+                        this.getCategories();
 
-                    this.snackBar.open(`${name} kategória törölve!`, "Remek!", {
-                        duration: 3000,
-                        horizontalPosition: 'right',
-                        verticalPosition: 'top',
-                    });
+                        this.snackBar.open(`${name} kategória törölve!`, "Remek!", {
+                            duration: 3000,
+                            horizontalPosition: 'right',
+                            verticalPosition: 'top',
+                            panelClass: ['success-snackbar'],
+                        });
+                    },
+                    error: (error: HttpErrorResponse) => {
+                        if (error.status === 409) {
+                            this.snackBar.open(`A(z) ${name} kategória használatban van, nem törölhető!`, "Hoppá!", {
+                                duration: 4000,
+                                horizontalPosition: 'right',
+                                verticalPosition: 'top',
+                                panelClass: ['error-snackbar'],
+                            });
+                        } else {
+                            this.snackBar.open(`Nem sikerült törölni a(z) ${name} kategóriát!`, "Borzalom", {
+                                duration: 4000,
+                                horizontalPosition: 'right',
+                                verticalPosition: 'top',
+                                panelClass: ['error-snackbar'],
+                            });
+                        }
+                    }
                 })
             }
         })

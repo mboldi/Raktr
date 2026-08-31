@@ -3,10 +3,12 @@ import {FormControl, FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatCard, MatCardContent, MatCardHeader} from "@angular/material/card";
 import {MatFormField, MatInput, MatLabel} from "@angular/material/input";
 import {MatButton} from '@angular/material/button';
+import {MatSnackBar} from '@angular/material/snack-bar';
 import {ConfigService} from '../../../../services/config.service';
 import {ConfigDetailsDto} from '../../../../model/config/configDetailsDto';
 import {environment} from '../../../../../environments/environment';
 import {ConfigUpdateDto} from '../../../../model/config/configUpdateDto';
+import {forkJoin} from 'rxjs';
 
 @Component({
   selector: 'app-signers',
@@ -32,7 +34,10 @@ export class SignersComponent implements OnInit {
   protected secondSignerNameFormControl: FormControl = new FormControl();
   protected secondSignerTitleFormControl: FormControl = new FormControl();
 
-  constructor(private configService: ConfigService) {
+  constructor(
+    private configService: ConfigService,
+    private snackBar: MatSnackBar,
+  ) {
   }
 
   ngOnInit() {
@@ -59,48 +64,78 @@ export class SignersComponent implements OnInit {
   }
 
   protected saveGroupData() {
-    this.configService.updateConfig(
-      environment.rentTeamNameKey,
-      new ConfigUpdateDto(this.groupNameFormControl.value)
-    ).subscribe( config => {
-      this.groupNameFormControl.setValue(config.value);
-    });
+    forkJoin([
+      this.configService.updateConfig(
+        environment.rentTeamNameKey,
+        new ConfigUpdateDto(this.groupNameFormControl.value)
+      ),
+      this.configService.updateConfig(
+        environment.rentTeamLeaderKey,
+        new ConfigUpdateDto(this.groupLeaderNameFormControl.value)
+      ),
+    ]).subscribe({
+      next: ([groupName, groupLeaderName]) => {
+        this.groupNameFormControl.setValue(groupName.value);
+        this.groupLeaderNameFormControl.setValue(groupLeaderName.value);
 
-    this.configService.updateConfig(
-      environment.rentTeamLeaderKey,
-      new ConfigUpdateDto(this.groupLeaderNameFormControl.value)
-    ).subscribe( config => {
-      this.groupLeaderNameFormControl.setValue(config.value);
+        this.snackBar.open(`Körös adatok frissítve!`, "Remek!", {
+          duration: 3000,
+          horizontalPosition: 'right',
+          verticalPosition: 'top',
+          panelClass: ['success-snackbar'],
+        });
+      },
+      error: () => {
+        this.snackBar.open(`Nem sikerült menteni a körös adatokat!`, "Értem", {
+          duration: 4000,
+          horizontalPosition: 'right',
+          verticalPosition: 'top',
+          panelClass: ['error-snackbar'],
+        });
+      }
     });
   }
 
   protected saveGlobalData() {
-    this.configService.updateConfig(
-      environment.rentFirstSignerNameKey,
-      new ConfigUpdateDto(this.firstSignerNameFormControl.value)
-    ).subscribe( config => {
-      this.firstSignerNameFormControl.setValue(config.value);
-    });
+    forkJoin([
+      this.configService.updateConfig(
+        environment.rentFirstSignerNameKey,
+        new ConfigUpdateDto(this.firstSignerNameFormControl.value)
+      ),
+      this.configService.updateConfig(
+        environment.rentFirstSignerTitleKey,
+        new ConfigUpdateDto(this.firstSignerTitleFormControl.value)
+      ),
+      this.configService.updateConfig(
+        environment.rentSecondSignerNameKey,
+        new ConfigUpdateDto(this.secondSignerNameFormControl.value)
+      ),
+      this.configService.updateConfig(
+        environment.rentSecondSignerTitleKey,
+        new ConfigUpdateDto(this.secondSignerTitleFormControl.value)
+      ),
+    ]).subscribe({
+      next: ([firstSignerName, firstSignerTitle, secondSignerName, secondSignerTitle]) => {
+        this.firstSignerNameFormControl.setValue(firstSignerName.value);
+        this.firstSignerTitleFormControl.setValue(firstSignerTitle.value);
+        this.secondSignerNameFormControl.setValue(secondSignerName.value);
+        this.secondSignerTitleFormControl.setValue(secondSignerTitle.value);
 
-    this.configService.updateConfig(
-      environment.rentFirstSignerTitleKey,
-      new ConfigUpdateDto(this.firstSignerTitleFormControl.value)
-    ).subscribe( config => {
-      this.firstSignerTitleFormControl.setValue(config.value);
-    });
-
-    this.configService.updateConfig(
-      environment.rentSecondSignerNameKey,
-      new ConfigUpdateDto(this.secondSignerNameFormControl.value)
-    ).subscribe( config => {
-      this.secondSignerNameFormControl.setValue(config.value);
-    });
-
-    this.configService.updateConfig(
-      environment.rentSecondSignerTitleKey,
-      new ConfigUpdateDto(this.secondSignerTitleFormControl.value)
-    ).subscribe( config => {
-      this.secondSignerTitleFormControl.setValue(config.value);
+        this.snackBar.open(`Aláírói adatok frissítve!`, "Remek!", {
+          duration: 3000,
+          horizontalPosition: 'right',
+          verticalPosition: 'top',
+          panelClass: ['success-snackbar'],
+        });
+      },
+      error: () => {
+        this.snackBar.open(`Nem sikerült menteni az aláírói adatokat!`, "Értem", {
+          duration: 4000,
+          horizontalPosition: 'right',
+          verticalPosition: 'top',
+          panelClass: ['error-snackbar'],
+        });
+      }
     });
   }
 }

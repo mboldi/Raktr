@@ -111,15 +111,26 @@ export class OwnersComponent {
 
     editOwnerDialog.afterClosed().subscribe(result => {
       if (result !== false) {
-        this.ownerService.addOwner(result).subscribe((data) => {
-          this.owners.push(data);
-          this.applyFilter();
+        this.ownerService.addOwner(result).subscribe({
+          next: (data) => {
+            this.owners.push(data);
+            this.applyFilter();
 
-          this.snackBar.open(`${data.name} tulajdonos létrehozva!`, "Remek!", {
-            duration: 3000,
-            horizontalPosition: 'right',
-            verticalPosition: 'top',
-          });
+            this.snackBar.open(`${data.name} tulajdonos létrehozva!`, "Remek!", {
+              duration: 3000,
+              horizontalPosition: 'right',
+              verticalPosition: 'top',
+              panelClass: ['success-snackbar'],
+            });
+          },
+          error: () => {
+            this.snackBar.open(`Nem sikerült létrehozni a(z) ${result.name} tulajdonost!`, "Értem", {
+              duration: 4000,
+              horizontalPosition: 'right',
+              verticalPosition: 'top',
+              panelClass: ['error-snackbar'],
+            });
+          }
         })
       }
     })
@@ -134,15 +145,26 @@ export class OwnersComponent {
 
     editOwnerDialog.afterClosed().subscribe(result => {
       if (result !== false && result !== undefined) {
-        this.ownerService.updateOwner(ownerToUpdate.id, result).subscribe((data) => {
-          this.getCategories();
-          this.applyFilter();
+        this.ownerService.updateOwner(ownerToUpdate.id, result).subscribe({
+          next: (data) => {
+            this.getCategories();
+            this.applyFilter();
 
-          this.snackBar.open(`${data.name} tulajdonos szerkesztve!`, "Remek!", {
-            duration: 3000,
-            horizontalPosition: 'right',
-            verticalPosition: 'top',
-          });
+            this.snackBar.open(`${data.name} tulajdonos szerkesztve!`, "Remek!", {
+              duration: 3000,
+              horizontalPosition: 'right',
+              verticalPosition: 'top',
+              panelClass: ['success-snackbar'],
+            });
+          },
+          error: () => {
+            this.snackBar.open(`Nem sikerült menteni a(z) ${ownerToUpdate.name} tulajdonost!`, "Értem", {
+              duration: 4000,
+              horizontalPosition: 'right',
+              verticalPosition: 'top',
+              panelClass: ['error-snackbar'],
+            });
+          }
         })
       }
     })
@@ -157,20 +179,32 @@ export class OwnersComponent {
 
     yesnoDialog.afterClosed().subscribe(result => {
       if (result) {
-        this.ownerService.deleteOwner(ownerToDelete.id).subscribe((deleted) => {
-          this.getCategories();
+        this.ownerService.deleteOwner(ownerToDelete.id).subscribe({
+          next: (deleted) => {
+            this.getCategories();
 
-          if (deleted) {
-            this.snackBar.open(`${ownerToDelete.name} törölve!`, "Bye!", {
-              duration: 3000,
+            if (deleted) {
+              this.snackBar.open(`${ownerToDelete.name} törölve!`, "Remek!", {
+                duration: 3000,
+                horizontalPosition: 'right',
+                verticalPosition: 'top',
+                panelClass: ['success-snackbar'],
+              });
+            } else {
+              this.snackBar.open(`A(z) ${ownerToDelete.name} tulajdonos használatban van, nem törölhető!`, "Értem", {
+                duration: 4000,
+                horizontalPosition: 'right',
+                verticalPosition: 'top',
+                panelClass: ['error-snackbar'],
+              });
+            }
+          },
+          error: () => {
+            this.snackBar.open(`Nem sikerült törölni a(z) ${ownerToDelete.name} tulajdonost!`, "Értem", {
+              duration: 4000,
               horizontalPosition: 'right',
               verticalPosition: 'top',
-            });
-          } else {
-            this.snackBar.open(`Nem sikerült törölni ${ownerToDelete.name}-t!`, ":(", {
-              duration: 3000,
-              horizontalPosition: 'right',
-              verticalPosition: 'top',
+              panelClass: ['error-snackbar'],
             });
           }
         })

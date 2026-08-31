@@ -18,6 +18,7 @@ import {FormControl, ReactiveFormsModule} from "@angular/forms";
 import {LocationService} from "../../../../services/location.service";
 import {MatDialog} from "@angular/material/dialog";
 import {MatSnackBar} from "@angular/material/snack-bar";
+import {HttpErrorResponse} from '@angular/common/http';
 import {
     OnlyNameDialogData,
     OnlynameEditModalComponent
@@ -108,15 +109,26 @@ export class LocationsComponent {
 
         editCategoryDialog.afterClosed().subscribe(result => {
             if (result) {
-                this.locationService.addLocation(result).subscribe((data) => {
-                    this.locations.push(data);
-                    this.applyFilter();
+                this.locationService.addLocation(result).subscribe({
+                    next: (data) => {
+                        this.locations.push(data);
+                        this.applyFilter();
 
-                    this.snackBar.open(`${data.name} tárolási hely létrehozva!`, "Remek!", {
-                        duration: 3000,
-                        horizontalPosition: 'right',
-                        verticalPosition: 'top',
-                    });
+                        this.snackBar.open(`${data.name} tárolási hely létrehozva!`, "Remek!", {
+                            duration: 3000,
+                            horizontalPosition: 'right',
+                            verticalPosition: 'top',
+                            panelClass: ['success-snackbar'],
+                        });
+                    },
+                    error: () => {
+                        this.snackBar.open(`Nem sikerült létrehozni a(z) ${result} tárolási helyet!`, "Értem", {
+                            duration: 4000,
+                            horizontalPosition: 'right',
+                            verticalPosition: 'top',
+                            panelClass: ['error-snackbar'],
+                        });
+                    }
                 })
             }
         })
@@ -131,14 +143,34 @@ export class LocationsComponent {
 
         yesnoDialog.afterClosed().subscribe(result => {
             if (result) {
-                this.locationService.deleteLocation(name).subscribe((data) => {
-                    this.getCategories();
+                this.locationService.deleteLocation(name).subscribe({
+                    next: () => {
+                        this.getCategories();
 
-                    this.snackBar.open(`${name} kategória törölve!`, ":(", {
-                        duration: 3000,
-                        horizontalPosition: 'right',
-                        verticalPosition: 'top',
-                    });
+                        this.snackBar.open(`${name} tárolási hely törölve!`, "Remek!", {
+                            duration: 3000,
+                            horizontalPosition: 'right',
+                            verticalPosition: 'top',
+                            panelClass: ['success-snackbar'],
+                        });
+                    },
+                    error: (error: HttpErrorResponse) => {
+                        if (error.status === 409) {
+                            this.snackBar.open(`A(z) ${name} tárolási hely használatban van, nem törölhető!`, "Értem", {
+                                duration: 4000,
+                                horizontalPosition: 'right',
+                                verticalPosition: 'top',
+                                panelClass: ['error-snackbar'],
+                            });
+                        } else {
+                            this.snackBar.open(`Nem sikerült törölni a(z) ${name} tárolási helyet!`, "Értem", {
+                                duration: 4000,
+                                horizontalPosition: 'right',
+                                verticalPosition: 'top',
+                                panelClass: ['error-snackbar'],
+                            });
+                        }
+                    }
                 })
             }
         })

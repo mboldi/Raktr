@@ -14,4 +14,5 @@ export const environment = {
   forceEan8Key: 'FORCE_EAN8',
 
   adminGroupName: 'Admin',
+  fullAccessGroupNames: ['Stúdiós', 'Öregstúdiós']
 };

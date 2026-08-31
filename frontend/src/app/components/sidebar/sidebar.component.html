@@ -6,7 +6,7 @@
 
     <mat-nav-list>
       @for (menuItem of menuItems; track menuItem.path) {
-        @if (menuItem.inMenuBar) {
+        @if (menuItem.inMenuBar && (menuItem.path !== '/admin' || admin)) {
 
           @if (menuItem.children?.length) {
             <!-- Parent item with dropdown -->

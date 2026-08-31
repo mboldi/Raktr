@@ -5,6 +5,8 @@ import {TicketsComponent} from './tickets/tickets.component';
 import {SettingsComponent} from './settings/settings.component';
 import { RentsComponent } from "./rents/rents.component";
 import {AdminComponent} from "./admin/admin.component";
+import {UnauthorizedPageComponent} from './unauthorized-page/unauthorized-page.component';
+import {adminGuard} from '../../guards/admin.guard';
 
 export const MAIN_LAYOUT_ROUTES: Routes = [
   {path: '', redirectTo: 'overview', pathMatch: 'full'},
@@ -20,6 +22,8 @@ export const MAIN_LAYOUT_ROUTES: Routes = [
   {
     path: 'admin',
     component: AdminComponent,
-    loadChildren: () => import('./admin/admin.routes').then(m => m.ADMIN_ROUTES)
+    loadChildren: () => import('./admin/admin.routes').then(m => m.ADMIN_ROUTES),
+    canActivate: [adminGuard],
   },
+  {path: 'unauthorized', component: UnauthorizedPageComponent},
 ];

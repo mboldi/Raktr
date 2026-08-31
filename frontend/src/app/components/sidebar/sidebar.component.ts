@@ -5,6 +5,7 @@ import {MatDivider, MatListItem, MatNavList} from '@angular/material/list';
 import {MatIcon} from '@angular/material/icon';
 import {MatSlideToggle, MatSlideToggleChange} from '@angular/material/slide-toggle';
 import {ThemeService} from '../../services/theme.service';
+import {AdminAccessService} from '../../services/adminAccess.service';
 import {MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle} from '@angular/material/expansion';
 
 declare interface RouteInfo {
@@ -56,15 +57,19 @@ export class SidebarComponent implements OnInit {
   menuItems: any[] = [];
 
   isDark: boolean = false;
+  protected admin = false;
 
   constructor(private oidcSecurityService: OidcSecurityService,
               private router: Router,
-              private themeService: ThemeService) {
+              private themeService: ThemeService,
+              private adminAccessService: AdminAccessService) {
     this.isDark = this.themeService.isDark()
   }
 
   ngOnInit() {
     this.menuItems = ROUTES.filter(menuItem => menuItem);
+
+    this.adminAccessService.isAdmin().subscribe(admin => this.admin = admin);
   }
 
   isActiveParent(menuItem: RouteInfo): boolean {

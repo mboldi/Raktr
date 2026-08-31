@@ -52,7 +52,6 @@ export class ScannableService {
     return this.http.get<Record<string, unknown>>(`${environment.apiUrl}/v1/scannables/barcode/${barcode}`)
       .pipe(
         map(device => {
-          console.log(device)
           return ScannableDetailsDto.fromJson(device);
         })
       )

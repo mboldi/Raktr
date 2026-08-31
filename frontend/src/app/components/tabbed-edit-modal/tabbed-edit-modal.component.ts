@@ -44,8 +44,8 @@ const VIEW_DEFINITIONS: Record<TabbedEditModalKind, TabbedEditModalViewDefinitio
   scannable: {
     component: ScannableViewPageComponent,
     icon: 'edit_note',
-    tabLabel: 'Adatok',
-    title: 'Adatai',
+    tabLabel: 'Tulajdonságok',
+    title: 'Elem adatai',
     editable: false,
     toInputs: item => ({scannable: item}),
   },

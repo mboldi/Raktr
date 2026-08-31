@@ -1,0 +1,44 @@
+<h2 mat-dialog-title>{{ title }}</h2>
+
+<mat-tab-group>
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <mat-icon class="tab-icon">edit_note</mat-icon>
+      <span style="margin-left: 4px">
+        Eszköz adatok
+      </span>
+    </ng-template>
+    <div class="m-3 mb-0">
+      <app-device-view-page [device]="deviceData"/>
+    </div>
+  </mat-tab>
+
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <mat-icon class="tab-icon">local_shipping</mat-icon>
+      <span style="margin-left: 4px">
+        Szállítólevelek
+      </span>
+    </ng-template>
+    Szállítók
+  </mat-tab>
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <mat-icon class="tab-icon">bug_report</mat-icon>
+      <span style="margin-left: 4px">
+        Hibajegyek
+      </span>
+    </ng-template>
+    Hibajegyek
+  </mat-tab>
+</mat-tab-group>
+
+<mat-dialog-actions align="end">
+  <div style="display: flex; flex-direction: row; align-items: center">
+    <button matFab color="primary" style="margin-right: 8px"
+            (click)="editDevice()">
+      <mat-icon>edit</mat-icon>
+    </button>
+    <button mat-button [mat-dialog-close]="false">Vissza</button>
+  </div>
+</mat-dialog-actions>

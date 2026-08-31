@@ -53,7 +53,7 @@ export class ScannableService {
       .pipe(
         map(device => {
           console.log(device)
-          return DeviceDetails.fromJson(device);
+          return ScannableDetailsDto.fromJson(device);
         })
       )
   }

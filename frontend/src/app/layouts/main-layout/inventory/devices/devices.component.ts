@@ -16,7 +16,7 @@ import {DeviceService} from "../../../../services/device.service";
 import {DeviceDetails} from "../../../../model/scannable/device/deviceDetails";
 import {MatPaginator, PageEvent} from "@angular/material/paginator";
 import {DecimalPipe} from "@angular/common";
-import {MatSortModule, Sort, SortDirection} from "@angular/material/sort";
+import {MatSortModule, Sort} from "@angular/material/sort";
 import {FormControl, FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatIcon} from "@angular/material/icon";
 import {MatFabButton, MatIconButton} from "@angular/material/button";
@@ -27,6 +27,7 @@ import {LocalStorageService} from '../../../../services/localStorage.service';
 import {environment} from '../../../../../environments/environment';
 import {MatProgressSpinner} from '@angular/material/progress-spinner';
 import {MatSnackBar} from "@angular/material/snack-bar";
+import {TabbedEditModalComponent} from '../../../../components/tabbed-edit-modal/tabbed-edit-modal.component';
 
 const ALL_COLUMNS: string[] = ['name', 'assetTag', 'maker', 'model', 'quantity', 'category', 'location', 'weight'];
 const REDUCED_COLUMNS: string[] = ['name', 'assetTag', 'maker', 'model', 'quantity'];
@@ -103,25 +104,37 @@ export class DevicesComponent implements OnInit {
   }
 
   protected openDevice(row: any) {
-    const editDeviceDialog = this.dialog.open(DeviceEditDialogComponent, {
+    const viewDeviceDialog = this.dialog.open(TabbedEditModalComponent, {
       width: '60vw',
       maxWidth: '100vw',
+      position: {top: '40px'},
       data: row
     });
 
-    editDeviceDialog.afterClosed().subscribe(result => {
-      if (result) {
-        this.replaceById(this.pagedDevices, result);
-        this.table.renderRows();
+    viewDeviceDialog.afterClosed().subscribe(result => {
+      if (result === 'edit') {
+        const editDeviceDialog = this.dialog.open(DeviceEditDialogComponent, {
+          width: '60vw',
+          maxWidth: '100vw',
+          position: {top: '40px'},
+          data: row
+        });
 
-        this.snackBar.open(`${result.name} frissítve!`, "Remek!", {
-          duration: 3000,
-          horizontalPosition: 'right',
-          verticalPosition: 'top',
-          panelClass: ['success-snackbar'],
+        editDeviceDialog.afterClosed().subscribe(result => {
+          if (result) {
+            this.replaceById(this.pagedDevices, result);
+            this.table.renderRows();
+
+            this.snackBar.open(`${result.name} frissítve!`, "Remek!", {
+              duration: 3000,
+              horizontalPosition: 'right',
+              verticalPosition: 'top',
+              panelClass: ['success-snackbar'],
+            });
+          }
         });
       }
-    })
+    });
   }
 
   protected newDevice() {

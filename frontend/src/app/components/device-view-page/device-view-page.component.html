@@ -1,0 +1,103 @@
+<mat-card class="device-card" appearance="outlined">
+
+  <div class="device-card__header">
+    <div class="device-card__heading">
+      <h2 class="device-card__title">{{ device.name }}</h2>
+      <p class="device-card__subtitle">{{ device.manufacturer }} · {{ device.model }}</p>
+    </div>
+    <div class="device-card__badges">
+      <mat-chip class="status-chip" [ngClass]="'status-' + device.status.toLowerCase()">
+        {{ getStatusLabel(device.status) }}
+      </mat-chip>
+      @if (device.publicRentable) {
+        <mat-chip class="rentable-chip">
+          <mat-icon>public</mat-icon>
+          Bárki által kölcsönözhető
+        </mat-chip>
+      }
+    </div>
+  </div>
+
+  <mat-card-content>
+
+    <section class="device-section">
+      <h3 class="device-section__title">Azonosítás</h3>
+      <div class="field-grid">
+        <div class="field">
+          <span class="field__label">Azonosító</span>
+          <span class="field__value">{{ device.assetTag }}</span>
+        </div>
+        <div class="field">
+          <span class="field__label">Vonalkód tartalma</span>
+          <span class="field__value">{{ device.barcode }}</span>
+        </div>
+        <div class="field">
+          <span class="field__label">Sorozatszám</span>
+          <span class="field__value">{{ device.serialNumber === '' ? '-' : device.serialNumber}}</span>
+        </div>
+        <div class="field">
+          <span class="field__label">Kategória</span>
+          <span class="field__value">{{ device.category }}</span>
+        </div>
+        <div class="field">
+          <span class="field__label">Tárolási hely</span>
+          <span class="field__value">{{ device.location }}</span>
+        </div>
+        <div class="field">
+          <span class="field__label">Tulajdonos</span>
+          <span class="field__value">{{ device.owner?.name }}</span>
+        </div>
+      </div>
+    </section>
+
+    <mat-divider></mat-divider>
+
+    <section class="device-section">
+      <h3 class="device-section__title">Beszerzés</h3>
+      <div class="field-grid">
+        <div class="field">
+          <span class="field__label">Forrás</span>
+          <span class="field__value">{{ device.acquisitionSource === '' ? '-' : device.acquisitionSource }}</span>
+        </div>
+        <div class="field">
+          <span class="field__label">Ideje</span>
+          <span class="field__value">{{ device.acquisitionDate | date: 'yyyy.MM.dd.' }}</span>
+        </div>
+        <div class="field">
+          <span class="field__label">Garancia vége</span>
+          <span class="field__value">{{ device.warrantyEndDate | date: 'yyyy.MM.dd.' }}</span>
+        </div>
+      </div>
+    </section>
+
+    <mat-divider></mat-divider>
+
+    <section class="device-section">
+      <h3 class="device-section__title">Fizikai adatok</h3>
+      <div class="field-grid">
+        <div class="field">
+          <span class="field__label">Tömeg</span>
+          <span class="field__value">{{ device.weight }}&nbsp;g</span>
+        </div>
+        <div class="field">
+          <span class="field__label">Érték</span>
+          <span class="field__value">{{ device.estimatedValue }}&nbsp;Ft</span>
+        </div>
+        <div class="field">
+          <span class="field__label">Mennyiség egy vonalkód alatt</span>
+          <span class="field__value">{{ device.quantity }}&nbsp;db</span>
+        </div>
+      </div>
+    </section>
+
+    @if (device.notes) {
+      <mat-divider></mat-divider>
+
+      <section class="device-section">
+        <h3 class="device-section__title">Megjegyzés</h3>
+        <p class="device-notes">{{ device.notes }}</p>
+      </section>
+    }
+
+  </mat-card-content>
+</mat-card>

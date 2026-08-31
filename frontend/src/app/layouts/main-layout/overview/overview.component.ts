@@ -105,6 +105,7 @@ export class OverviewComponent {
             duration: 3000,
             horizontalPosition: 'right',
             verticalPosition: 'top',
+            panelClass: ['error-snackbar'],
           });
           return EMPTY;
         })

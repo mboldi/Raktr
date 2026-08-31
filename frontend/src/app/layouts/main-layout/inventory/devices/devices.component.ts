@@ -27,7 +27,10 @@ import {LocalStorageService} from '../../../../services/localStorage.service';
 import {environment} from '../../../../../environments/environment';
 import {MatProgressSpinner} from '@angular/material/progress-spinner';
 import {MatSnackBar} from "@angular/material/snack-bar";
-import {TabbedEditModalComponent} from '../../../../components/tabbed-edit-modal/tabbed-edit-modal.component';
+import {
+  TabbedEditModalComponent,
+  TabbedEditModalData
+} from '../../../../components/tabbed-edit-modal/tabbed-edit-modal.component';
 import {WindowWidthService} from '../../../../services/windowWidth.service';
 import {CategoryService} from '../../../../services/category.service';
 import {LocationService} from '../../../../services/location.service';
@@ -167,7 +170,7 @@ export class DevicesComponent implements OnInit {
       width: '60vw',
       maxWidth: '100vw',
       position: {top: '40px'},
-      data: row
+      data: {kind: 'device', item: row} as TabbedEditModalData
     });
 
     viewDeviceDialog.afterClosed().subscribe(result => {

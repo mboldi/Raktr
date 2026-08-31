@@ -22,6 +22,10 @@ import {WindowWidthService} from '../../../services/windowWidth.service';
 import {MatProgressSpinner} from '@angular/material/progress-spinner';
 import {MatDialog} from '@angular/material/dialog';
 import {DeviceEditDialogComponent} from '../../../components/device-edit-modal/device-edit-dialog.component';
+import {
+  TabbedEditModalComponent,
+  TabbedEditModalData
+} from '../../../components/tabbed-edit-modal/tabbed-edit-modal.component';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {catchError, EMPTY} from 'rxjs';
 
@@ -111,8 +115,13 @@ export class OverviewComponent {
         })
       )
       .subscribe({
-        next: (device) => {
-          console.log(device);    // TODO open device edit dialog
+        next: (scannable) => {
+          this.dialog.open(TabbedEditModalComponent, {
+            width: '60vw',
+            maxWidth: '100vw',
+            position: {top: '40px'},
+            data: {kind: 'scannable', item: scannable} as TabbedEditModalData
+          });
         }
       });
 

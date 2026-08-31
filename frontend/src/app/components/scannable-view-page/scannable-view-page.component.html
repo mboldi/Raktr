@@ -1,0 +1,64 @@
+<mat-card class="scannable-card" appearance="outlined">
+
+  <div class="scannable-card__header">
+    <div class="scannable-card__heading">
+      <h2 class="scannable-card__title">{{ scannable.name }}</h2>
+      <p class="scannable-card__subtitle">{{ scannable.assetTag }}</p>
+    </div>
+    <div class="scannable-card__badges">
+      @if (scannable.publicRentable) {
+        <mat-chip class="rentable-chip">
+          <mat-icon>public</mat-icon>
+          Bárki által kölcsönözhető
+        </mat-chip>
+      }
+      @if (scannable.deleted) {
+        <mat-chip class="deleted-chip">
+          Törölve
+        </mat-chip>
+      }
+    </div>
+  </div>
+
+  <mat-card-content>
+
+    <section class="scannable-section">
+      <h3 class="scannable-section__title">Azonosítás</h3>
+      <div class="field-grid">
+        <div class="field">
+          <span class="field__label">Azonosító</span>
+          <span class="field__value">{{ scannable.assetTag }}</span>
+        </div>
+        <div class="field">
+          <span class="field__label">Vonalkód tartalma</span>
+          <span class="field__value">{{ scannable.barcode }}</span>
+        </div>
+        <div class="field">
+          <span class="field__label">Kategória</span>
+          <span class="field__value">{{ scannable.category }}</span>
+        </div>
+        <div class="field">
+          <span class="field__label">Tárolási hely</span>
+          <span class="field__value">{{ scannable.location }}</span>
+        </div>
+        <div class="field">
+          <span class="field__label">Tulajdonos</span>
+          <span class="field__value">{{ scannable.owner?.name }}</span>
+        </div>
+      </div>
+    </section>
+
+    <mat-divider></mat-divider>
+
+    <section class="scannable-section">
+      <h3 class="scannable-section__title">Fizikai adatok</h3>
+      <div class="field-grid">
+        <div class="field">
+          <span class="field__label">Tömeg</span>
+          <span class="field__value">{{ scannable.weight }}&nbsp;g</span>
+        </div>
+      </div>
+    </section>
+
+  </mat-card-content>
+</mat-card>

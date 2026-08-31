@@ -3,13 +3,13 @@
 <mat-tab-group>
   <mat-tab>
     <ng-template mat-tab-label>
-      <mat-icon class="tab-icon">edit_note</mat-icon>
+      <mat-icon class="tab-icon">{{ view.icon }}</mat-icon>
       <span style="margin-left: 4px">
-        Eszköz adatok
+        {{ view.tabLabel }}
       </span>
     </ng-template>
     <div class="m-3 mb-0">
-      <app-device-view-page [device]="deviceData"/>
+      <ng-container *ngComponentOutlet="view.component; inputs: viewInputs"></ng-container>
     </div>
   </mat-tab>
 
@@ -35,10 +35,12 @@
 
 <mat-dialog-actions align="end">
   <div style="display: flex; flex-direction: row; align-items: center">
-    <button matFab color="primary" style="margin-right: 8px"
-            (click)="editDevice()">
-      <mat-icon>edit</mat-icon>
-    </button>
+    @if (view.editable) {
+      <button matFab color="primary" style="margin-right: 8px"
+              (click)="edit()">
+        <mat-icon>edit</mat-icon>
+      </button>
+    }
     <button mat-button [mat-dialog-close]="false">Vissza</button>
   </div>
 </mat-dialog-actions>

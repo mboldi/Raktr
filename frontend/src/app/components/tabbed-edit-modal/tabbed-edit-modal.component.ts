@@ -1,5 +1,5 @@
 import {Component, Inject} from '@angular/core';
-import {MatButton, MatFabButton, MatIconButton, MatMiniFabButton} from "@angular/material/button";
+import {MatButton, MatFabButton} from "@angular/material/button";
 import {
   MAT_DIALOG_DATA,
   MatDialogActions,
@@ -8,7 +8,6 @@ import {
   MatDialogTitle
 } from "@angular/material/dialog";
 import {MatTab, MatTabGroup, MatTabLabel} from '@angular/material/tabs';
-import {DeviceFormComponent} from '../device-form/device-form.component';
 import {DeviceDetails} from '../../model/scannable/device/deviceDetails';
 import {MatIcon} from '@angular/material/icon';
 import {DeviceViewPageComponent} from '../device-view-page/device-view-page.component';
@@ -32,7 +31,7 @@ import {DeviceViewPageComponent} from '../device-view-page/device-view-page.comp
 })
 export class TabbedEditModalComponent {
   protected isNew = false;
-  protected title = 'Eszköz szerkesztése';
+  protected title = 'Eszköz adatai';
 
   constructor(
     @Inject(MAT_DIALOG_DATA) protected deviceData: DeviceDetails,
@@ -40,7 +39,7 @@ export class TabbedEditModalComponent {
   ) {
     if (deviceData) {
       this.isNew = false;
-      this.title = 'Eszköz szerkesztése';
+      this.title = 'Eszköz adatai';
     }
   }
 

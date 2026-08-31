@@ -7,8 +7,6 @@ import {MatSlideToggle, MatSlideToggleChange} from '@angular/material/slide-togg
 import {ThemeService} from '../../services/theme.service';
 import {MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle} from '@angular/material/expansion';
 
-declare const $: any;
-
 declare interface RouteInfo {
   path: string;
   title: string;
@@ -68,10 +66,6 @@ export class SidebarComponent implements OnInit {
   ngOnInit() {
     this.menuItems = ROUTES.filter(menuItem => menuItem);
   }
-
-  isMobileMenu() {
-    return $(window).width() <= 991;
-  };
 
   isActiveParent(menuItem: RouteInfo): boolean {
     return menuItem.children?.some(child =>

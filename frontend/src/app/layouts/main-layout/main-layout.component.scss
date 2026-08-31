@@ -15,4 +15,26 @@
   height: 100%;
   padding: 16px 0 0 24px;
   overflow-y: auto;
+
+  &.mobile {
+    padding-top: 64px;
+  }
+}
+
+.menu-toggle-button {
+  position: fixed;
+  top: 8px;
+  left: 8px;
+  z-index: 300;
+
+  background: var(--mat-sys-surface);
+  box-shadow: var(--mat-sys-level2);
+}
+
+.sidebar-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 199;
+
+  background: rgba(0, 0, 0, 0.4);
 }

@@ -1,4 +1,18 @@
 :host {
   display: block;
   height: 100vh !important;
+  overflow: hidden;
+}
+
+.layout-row {
+  display: flex;
+  height: 100%;
+}
+
+.content-outlet {
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  padding: 16px 0 0 24px;
+  overflow-y: auto;
 }

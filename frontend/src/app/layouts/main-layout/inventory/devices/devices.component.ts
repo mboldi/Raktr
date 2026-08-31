@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, effect, OnInit, ViewChild} from '@angular/core';
 import {
   MatCell,
   MatCellDef,
@@ -28,9 +28,10 @@ import {environment} from '../../../../../environments/environment';
 import {MatProgressSpinner} from '@angular/material/progress-spinner';
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {TabbedEditModalComponent} from '../../../../components/tabbed-edit-modal/tabbed-edit-modal.component';
+import {WindowWidthService} from '../../../../services/windowWidth.service';
 
 const ALL_COLUMNS: string[] = ['name', 'assetTag', 'maker', 'model', 'quantity', 'category', 'location', 'weight'];
-const REDUCED_COLUMNS: string[] = ['name', 'assetTag', 'maker', 'model', 'quantity'];
+const REDUCED_COLUMNS: string[] = ['name', 'assetTag', 'maker', 'model'];
 
 @Component({
   selector: 'app-devices',
@@ -82,10 +83,17 @@ export class DevicesComponent implements OnInit {
 
   private lastSort: Sort = {active: 'name', direction: 'asc'};
 
-  constructor(private deviceService: DeviceService,
-              private dialog: MatDialog,
-              private localStorageService: LocalStorageService,
-              private snackBar: MatSnackBar,) {
+  constructor(
+    private windowService: WindowWidthService,
+    private deviceService: DeviceService,
+    private dialog: MatDialog,
+    private localStorageService: LocalStorageService,
+    private snackBar: MatSnackBar,) {
+
+    effect(() => {
+      const width = this.windowService.windowWidth();
+      this.displayedColumns = width >= 1200 ? ALL_COLUMNS : REDUCED_COLUMNS;
+    });
   }
 
   ngOnInit() {

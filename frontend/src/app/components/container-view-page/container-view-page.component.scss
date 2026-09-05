@@ -1,5 +1,5 @@
 .container-card {
-  max-width: 900px;
+  //max-width: 900px;
   margin: 0 auto;
   border-color: rgba(0,0,0,0.0);
 }
@@ -95,17 +95,17 @@
   flex-direction: column;
   gap: 2px;
   min-width: 0;
-}
 
-.field__label {
-  font-size: 0.75rem;
-  color: light-dark(rgba(0, 0, 0, 0.6), rgba(255, 255, 255, 0.7));
-}
+  .label {
+    font-size: 0.75rem;
+    color: light-dark(rgba(0, 0, 0, 0.6), rgba(255, 255, 255, 0.7));
+  }
 
-.field__value {
-  font-size: 0.95rem;
-  color: light-dark(rgba(0, 0, 0, 0.87), rgba(255, 255, 255, 0.87));
-  word-break: break-word;
+  .value {
+    font-size: 0.95rem;
+    color: light-dark(rgba(0, 0, 0, 0.87), rgba(255, 255, 255, 0.87));
+    word-break: break-word;
+  }
 }
 
 .item-list {

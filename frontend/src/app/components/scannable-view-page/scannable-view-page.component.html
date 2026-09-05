@@ -1,11 +1,11 @@
 <mat-card class="scannable-card" appearance="outlined">
 
-  <div class="scannable-card__header">
-    <div class="scannable-card__heading">
-      <h2 class="scannable-card__title">{{ scannable.name }}</h2>
-      <p class="scannable-card__subtitle">{{ scannable.assetTag }}</p>
+  <div class="header">
+    <div class="heading">
+      <h2 class="title">{{ scannable.name }}</h2>
+      <p class="subtitle">{{ scannable.assetTag }}</p>
     </div>
-    <div class="scannable-card__badges">
+    <div class="badges">
       @if (scannable.publicRentable) {
         <mat-chip class="rentable-chip">
           <mat-icon>public</mat-icon>
@@ -23,27 +23,27 @@
   <mat-card-content>
 
     <section class="scannable-section">
-      <h3 class="scannable-section__title">Azonosítás</h3>
+      <h3 class="title">Azonosítás</h3>
       <div class="field-grid">
         <div class="field">
-          <span class="field__label">Azonosító</span>
-          <span class="field__value">{{ scannable.assetTag }}</span>
+          <span class="label">Azonosító</span>
+          <span class="value">{{ scannable.assetTag }}</span>
         </div>
         <div class="field">
-          <span class="field__label">Vonalkód tartalma</span>
-          <span class="field__value">{{ scannable.barcode }}</span>
+          <span class="label">Vonalkód tartalma</span>
+          <span class="value">{{ scannable.barcode }}</span>
         </div>
         <div class="field">
-          <span class="field__label">Kategória</span>
-          <span class="field__value">{{ scannable.category }}</span>
+          <span class="label">Kategória</span>
+          <span class="value">{{ scannable.category }}</span>
         </div>
         <div class="field">
-          <span class="field__label">Tárolási hely</span>
-          <span class="field__value">{{ scannable.location }}</span>
+          <span class="label">Tárolási hely</span>
+          <span class="value">{{ scannable.location }}</span>
         </div>
         <div class="field">
-          <span class="field__label">Tulajdonos</span>
-          <span class="field__value">{{ scannable.owner?.name }}</span>
+          <span class="label">Tulajdonos</span>
+          <span class="value">{{ scannable.owner?.name }}</span>
         </div>
       </div>
     </section>
@@ -51,11 +51,11 @@
     <mat-divider></mat-divider>
 
     <section class="scannable-section">
-      <h3 class="scannable-section__title">Fizikai adatok</h3>
+      <h3 class="title">Fizikai adatok</h3>
       <div class="field-grid">
         <div class="field">
-          <span class="field__label">Tömeg</span>
-          <span class="field__value">{{ scannable.weight }}&nbsp;g</span>
+          <span class="label">Tömeg</span>
+          <span class="value">{{ scannable.weight }}&nbsp;g</span>
         </div>
       </div>
     </section>

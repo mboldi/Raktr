@@ -1,11 +1,11 @@
 <mat-card class="device-card" appearance="outlined">
 
-  <div class="device-card__header">
-    <div class="device-card__heading">
-      <h2 class="device-card__title">{{ device.name }}</h2>
-      <p class="device-card__subtitle">{{ device.manufacturer }} · {{ device.model }}</p>
+  <div class="header">
+    <div class="heading">
+      <h2 class="title">{{ device.name }}</h2>
+      <p class="subtitle">{{ device.manufacturer }} · {{ device.model }}</p>
     </div>
-    <div class="device-card__badges">
+    <div class="badges">
       <mat-chip class="status-chip" [ngClass]="'status-' + device.status.toLowerCase()">
         {{ getStatusLabel(device.status) }}
       </mat-chip>

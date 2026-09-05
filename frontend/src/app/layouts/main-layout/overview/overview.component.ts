@@ -144,6 +144,7 @@ export class OverviewComponent {
           duration: 3000,
           horizontalPosition: 'right',
           verticalPosition: 'top',
+          panelClass: ['success-snackbar'],
         });
 
         this.getScannables();

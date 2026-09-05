@@ -152,10 +152,25 @@ export class ContainerFormComponent implements OnInit {
       this.containerForm.patchValue(data);
     }
 
-    this.ownerService.getOwners().subscribe(owners => (this.owners = owners));
-    this.categoryService.getCategories().subscribe(categories => (this.categories = categories));
-    this.locationService.getLocations().subscribe(locations => (this.locations = locations));
-    this.deviceService.getDevices().subscribe(devices => (this.devices = devices));
+    // Each filtered stream below is seeded via startWith('') at construction time, before
+    // this data has loaded - re-running validity once it arrives forces a fresh filter pass
+    // instead of leaving the panel showing the empty result cached from that initial seed.
+    this.ownerService.getOwners().subscribe(owners => {
+      this.owners = owners;
+      this.containerForm.get('owner')!.updateValueAndValidity();
+    });
+    this.categoryService.getCategories().subscribe(categories => {
+      this.categories = categories;
+      this.containerForm.get('category')!.updateValueAndValidity();
+    });
+    this.locationService.getLocations().subscribe(locations => {
+      this.locations = locations;
+      this.containerForm.get('location')!.updateValueAndValidity();
+    });
+    this.deviceService.getDevices().subscribe(devices => {
+      this.devices = devices;
+      this.addDeviceFormControl.updateValueAndValidity();
+    });
   }
 
   private filterCategories(value: string): CategoryDetails[] {

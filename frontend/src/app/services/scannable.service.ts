@@ -3,7 +3,6 @@ import {HttpClient} from '@angular/common/http';
 import {catchError, map, Observable, of} from 'rxjs';
 import {environment} from '../../environments/environment';
 import {ScannableDetailsDto} from '../model/scannable/scannableDetailsDto';
-import {DeviceDetails} from '../model/scannable/device/deviceDetails';
 
 @Injectable({
   providedIn: 'root'
@@ -36,7 +35,7 @@ export class ScannableService {
   }
 
   isAssetTagTaken(assetTagToCheck: string): Observable<boolean> {
-    return this.http.head(`${environment.apiUrl}/v1/scannables/assetTag/${assetTagToCheck}`, { observe: 'response' })
+    return this.http.head(`${environment.apiUrl}/v1/scannables/asset-tag/${assetTagToCheck}`, { observe: 'response' })
       .pipe(
         map(response => response.status === 200),
         catchError(error => {

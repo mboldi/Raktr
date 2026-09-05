@@ -69,6 +69,8 @@ export class DeviceEditDialogComponent {
       }
 
     } else {
+      this.deviceFormComponent?.markAllFieldsAsTouched();
+
       this.snackBar.open('Tölts ki minden kötelező mezőt!', "Let's do it!", {
         duration: 3000,
         horizontalPosition: 'right',

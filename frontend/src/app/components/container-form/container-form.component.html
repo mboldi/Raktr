@@ -38,7 +38,9 @@
         <mat-form-field class="full-width">
           <mat-label>Kategória</mat-label>
           <input type="text" aria-label="Category" matInput formControlName="category"
-                 [matAutocomplete]="category">
+                 [matAutocomplete]="category"
+                 #categoryTrigger="matAutocompleteTrigger"
+                 (focus)="categoryTrigger.openPanel()">
           <mat-autocomplete autoActiveFirstOption #category="matAutocomplete">
             @for (category of filteredCategories | async; track category) {
               <mat-option [value]="category.name">{{ category.name }}</mat-option>
@@ -50,7 +52,9 @@
         <mat-form-field class="full-width">
           <mat-label>Tárolási hely</mat-label>
           <input type="text" aria-label="Location" matInput formControlName="location"
-                 [matAutocomplete]="location">
+                 [matAutocomplete]="location"
+                 #locationTrigger="matAutocompleteTrigger"
+                 (focus)="locationTrigger.openPanel()">
           <mat-autocomplete autoActiveFirstOption #location="matAutocomplete">
             @for (location of filteredLocations | async; track location) {
               <mat-option [value]="location.name">{{ location.name }}</mat-option>

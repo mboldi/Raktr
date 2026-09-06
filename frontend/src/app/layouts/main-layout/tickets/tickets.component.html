@@ -1,1 +1,186 @@
-<p>tickets works!</p>
+<mat-card class="list-header-card bg-blue">
+  <h2>Hibajegyek kezelése</h2>
+
+  <div class="list-header-actions-row">
+    <div style="display: flex; flex-direction: row; align-items: start">
+      <mat-form-field class="search-box">
+        <mat-label>Keresés</mat-label>
+        <input matInput (keyup)="applyFilter($event)" placeholder="Törött kamera"
+               [formControl]="ticketSearchFormControl">
+        @if (ticketSearchFormControl.value) {
+          <button mat-icon-button matSuffix
+                  (click)="resetFilter()">
+            <mat-icon matSuffix>close</mat-icon>
+          </button>
+        }
+      </mat-form-field>
+
+      <div style="display: flex; align-items: center">
+        <div class="filter-anchor">
+          <button matFab class="filter-button" [class.filter-button-active]="hasActiveFilters()"
+                  (click)="toggleFilterPanel()">
+            <mat-icon>filter_alt</mat-icon>
+          </button>
+
+          @if (filterPanelOpen) {
+            <div class="filter-backdrop" (click)="closeFilterPanel()"></div>
+
+            <mat-card class="filter-panel">
+              <div class="filter-panel-header">
+                <h3>Szűrők</h3>
+                <button mat-icon-button (click)="closeFilterPanel()">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </div>
+
+              <div class="filter-panel-content">
+                <div class="filter-group">
+                  <h4>Állapot</h4>
+                  <div class="filter-options">
+                    @for (status of visibleStatuses; track status) {
+                      <mat-checkbox [checked]="selectedStatuses.has(status)"
+                                    (change)="toggleFilterValue(selectedStatuses, status)">
+                        {{ statusLabels[status] }}
+                      </mat-checkbox>
+                    } @empty {
+                      <span class="filter-empty">Nincs elérhető állapot</span>
+                    }
+                  </div>
+                </div>
+
+                <div class="filter-group">
+                  <h4>Súlyosság</h4>
+                  <div class="filter-options">
+                    @for (severity of visibleSeverities; track severity) {
+                      <mat-checkbox [checked]="selectedSeverities.has(severity)"
+                                    (change)="toggleFilterValue(selectedSeverities, severity)">
+                        {{ severityLabels[severity] }}
+                      </mat-checkbox>
+                    } @empty {
+                      <span class="filter-empty">Nincs elérhető súlyosság</span>
+                    }
+                  </div>
+                </div>
+
+                <div class="filter-group">
+                  <h4>Létrehozó</h4>
+                  <div class="filter-options">
+                    @for (creator of visibleCreators; track creator) {
+                      <mat-checkbox [checked]="selectedCreators.has(creator)"
+                                    (change)="toggleFilterValue(selectedCreators, creator)">
+                        {{ creator }}
+                      </mat-checkbox>
+                    } @empty {
+                      <span class="filter-empty">Nincs elérhető létrehozó</span>
+                    }
+                  </div>
+                </div>
+              </div>
+
+              <div class="filter-panel-footer">
+                <button mat-button [disabled]="!hasActiveFilters()" (click)="clearFilters()">Szűrők törlése</button>
+                <button mat-flat-button color="primary" (click)="closeFilterPanel()">Bezárás</button>
+              </div>
+            </mat-card>
+          }
+        </div>
+
+        @if (hasActiveFilters()) {
+          <button mat-button class="clear-filters-button" (click)="clearFilters()">
+            <mat-icon>filter_alt_off</mat-icon>
+            Szűrők törlése
+          </button>
+        }
+      </div>
+    </div>
+
+    <button matFab extended class="add-button">
+      <mat-icon>add</mat-icon>
+      Új hozzáadása
+    </button>
+  </div>
+</mat-card>
+
+<div class="table-wrapper">
+
+  <mat-paginator [pageSizeOptions]="[10, 25, 50]"
+                 [length]="filteredTickets.length"
+                 (page)="pageTickets($event)"
+                 [pageSize]="pageSize"
+                 showFirstLastButtons
+                 aria-label="Oldalváltás">
+  </mat-paginator>
+
+  <table mat-table matSort matSortActive="createdAt" matSortDirection="desc"
+         (matSortChange)="announceSortChange($event)" [dataSource]="pagedTickets"
+         class="mat-elevation-z8">
+
+    <ng-container matColumnDef="severity">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header></th>
+      <td mat-cell *matCellDef="let ticket" class="icon-column" [matTooltip]="severityLabel(ticket.severity)">
+        @switch (ticket.severity) {
+          @case ('CRITICAL') {
+            <mat-icon style="color: #c62828">report</mat-icon>
+          }
+          @case ('MAJOR') {
+            <mat-icon style="color: #ffbe3b">warning</mat-icon>
+          }
+          @case ('MINOR') {
+            <mat-icon style="color: #8bc34a">announcement</mat-icon>
+          }
+        }
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="status">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header></th>
+      <td mat-cell *matCellDef="let ticket" class="icon-column" [matTooltip]="statusLabel(ticket.status)">
+        @switch (ticket.status) {
+          @case ('OPEN') {
+            <mat-icon style="color: #c62828">help_outline</mat-icon>
+          }
+          @case ('IN_PROGRESS') {
+            <mat-icon style="color: #ffbe3b">construction</mat-icon>
+          }
+          @case ('CLOSED') {
+            <mat-icon style="color: #8bc34a">done</mat-icon>
+          }
+        }
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="createdAt">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Dátum</th>
+      <td mat-cell *matCellDef="let ticket"> {{ ticket.createdAt | date:'yyyy. MM. dd.' }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="device">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Eszköz neve</th>
+      <td mat-cell *matCellDef="let ticket"> {{ ticket.scannable?.name }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="description">
+      <th mat-header-cell *matHeaderCellDef>Leírás</th>
+      <td mat-cell *matCellDef="let ticket">
+        {{ ticket.description.slice(0, 50) }}@if (ticket.description.length > 50) {<span>...</span>}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="createdBy">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Létrehozó</th>
+      <td mat-cell *matCellDef="let ticket"> {{ ticket.createdBy?.nickname }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="comments">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Megjegyzések száma</th>
+      <td mat-cell *matCellDef="let ticket"> {{ ticket.comments.length }}</td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+
+  @if (loading) {
+    <mat-spinner class="list-loading-spinner mt-3"></mat-spinner>
+  }
+</div>

@@ -1,6 +1,6 @@
 import {TicketSeverity} from './ticketSeverity';
 import {TicketStatus} from './ticketStatus';
-import {ScannableDetailsDto} from '../scannable/scannableDetailsDto';
+import {Scannable} from '../scannable/scannable';
 import {CommentDetailsDto} from '../comment/commentDetailsDto';
 import {UserDetails} from '../user/userDetails';
 
@@ -9,7 +9,7 @@ export class TicketDetails {
   description: string;
   status: TicketStatus;
   severity: TicketSeverity;
-  scannable: ScannableDetailsDto;
+  scannable: Scannable;
   comments: CommentDetailsDto[];
   createdAt: Date;
   createdBy: UserDetails;
@@ -21,7 +21,7 @@ export class TicketDetails {
     description: string,
     status: TicketStatus,
     severity: TicketSeverity,
-    scannable: ScannableDetailsDto,
+    scannable: Scannable,
     comments: CommentDetailsDto[],
     createdAt: Date,
     createdBy: UserDetails,
@@ -46,7 +46,7 @@ export class TicketDetails {
       json['description'] as string,
       json['status'] as TicketStatus,
       json['severity'] as TicketSeverity,
-      ScannableDetailsDto.fromJson(json['scannable'] as Record<string, unknown>),
+      Scannable.fromJson(json['scannable'] as Record<string, unknown>),
       (json['comments'] as Record<string, unknown>[]).map(CommentDetailsDto.fromJson),
       new Date(json['createdAt'] as string),
       UserDetails.fromJson(json['createdBy'] as Record<string, unknown>),

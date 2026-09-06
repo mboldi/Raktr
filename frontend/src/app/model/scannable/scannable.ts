@@ -1,6 +1,6 @@
 import {Owner} from '../owner/owner';
 
-export abstract class Scannable {
+export class Scannable {
   id: number;
   assetTag: string;
   name: string;
@@ -31,7 +31,16 @@ export abstract class Scannable {
   }
 
   static fromJson(json: Record<string, unknown>): Scannable {
-    throw new Error('fromJson() must be implemented by subclass');
+    return new Scannable(
+      json['id'] as number,
+      json['assetTag'] as string,
+      json['name'] as string,
+      json['owner'] as Owner,
+      json['manufacturer'] as string,
+      json['acquisitionSource'] as string,
+      new Date(json['acquisitionDate'] as string),
+      new Date(json['warrantyEndDate'] as string)
+    );
   }
 
   toJson(): Record<string, unknown> {

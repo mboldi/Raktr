@@ -1,0 +1,144 @@
+<form [formGroup]="ticketForm" class="container-fluid">
+
+  @if (isNew) {
+    <div class="row">
+      <div class="col-12">
+        @if (!selectedDevice) {
+          <mat-form-field class="full-width">
+            <mat-label>Eszköz keresése</mat-label>
+            <input matInput placeholder="Vonalkód, vagy keresés név, típus, gyártó alapján"
+                   autocomplete="off"
+                   [formControl]="addDeviceFormControl"
+                   [matAutocomplete]="autoTicketDevice"
+                   (keyup.escape)="addDeviceFormControl.reset()"
+                   (keyup.enter)="onSearchEnterKey()">
+
+            <mat-autocomplete #autoTicketDevice="matAutocomplete" (optionSelected)="onDeviceOptionSelected()">
+              @for (option of filteredDeviceOptions | async; track option.id) {
+                <mat-option [value]="option.barcode">
+                  {{ option.name }} - {{ option.manufacturer }} {{ option.model }}
+                </mat-option>
+              }
+            </mat-autocomplete>
+
+            @if (addDeviceFormControl.value) {
+              <button mat-icon-button matSuffix type="button" (click)="resolveSelectedDevice()">
+                <mat-icon>search</mat-icon>
+              </button>
+            }
+          </mat-form-field>
+        } @else {
+          <mat-card class="scannable-card" appearance="outlined">
+            <div class="header">
+              <div class="heading">
+                <h3 class="title">{{ selectedDevice.name }}</h3>
+                <p class="subtitle">{{ selectedDevice.assetTag }}</p>
+              </div>
+              <button mat-button type="button" (click)="clearSelectedDevice()">Módosítás</button>
+            </div>
+            <mat-card-content>
+              <div class="field-grid">
+                @if (selectedDevice.model) {
+                  <div class="field">
+                    <span class="label">Típus</span>
+                    <span class="value">{{ selectedDevice.model }}</span>
+                  </div>
+                }
+                @if (selectedDevice.serialNumber) {
+                  <div class="field">
+                    <span class="label">Sorozatszám</span>
+                    <span class="value">{{ selectedDevice.serialNumber }}</span>
+                  </div>
+                }
+                <div class="field">
+                  <span class="label">Kategória</span>
+                  <span class="value">{{ selectedDevice.category }}</span>
+                </div>
+                <div class="field">
+                  <span class="label">Tárolási hely</span>
+                  <span class="value">{{ selectedDevice.location }}</span>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        }
+      </div>
+    </div>
+  } @else if (existingScannable) {
+    <div class="row">
+      <div class="col-12">
+        <mat-card class="scannable-card" appearance="outlined">
+          <div class="header">
+            <div class="heading">
+              <h3 class="title">{{ existingScannable.name }}</h3>
+              <p class="subtitle">{{ existingScannable.assetTag }}</p>
+            </div>
+          </div>
+          <mat-card-content>
+            <div class="field-grid">
+              @if (existingScannable.manufacturer) {
+                <div class="field">
+                  <span class="label">Gyártó</span>
+                  <span class="value">{{ existingScannable.manufacturer }}</span>
+                </div>
+              }
+              @if (deviceModel) {
+                <div class="field">
+                  <span class="label">Típus</span>
+                  <span class="value">{{ deviceModel }}</span>
+                </div>
+              }
+              @if (deviceSerialNumber) {
+                <div class="field">
+                  <span class="label">Sorozatszám</span>
+                  <span class="value">{{ deviceSerialNumber }}</span>
+                </div>
+              }
+              @if (existingScannable.owner) {
+                <div class="field">
+                  <span class="label">Tulajdonos</span>
+                  <span class="value">{{ existingScannable.owner.name }}</span>
+                </div>
+              }
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+  }
+
+  <div class="row">
+    <div class="col-md-6 col-sm-12">
+      <mat-form-field class="full-width">
+        <mat-label>Súlyosság</mat-label>
+        <mat-select formControlName="severity">
+          <mat-option [value]="TicketSeverity.CRITICAL">Súlyos</mat-option>
+          <mat-option [value]="TicketSeverity.MAJOR">Közepes</mat-option>
+          <mat-option [value]="TicketSeverity.MINOR">Enyhe</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    @if (!isNew) {
+      <div class="col-md-6 col-sm-12">
+        <mat-form-field class="full-width">
+          <mat-label>Állapot</mat-label>
+          <mat-select formControlName="status">
+            <mat-option [value]="TicketStatus.OPEN">Nyitva</mat-option>
+            <mat-option [value]="TicketStatus.IN_PROGRESS">Folyamatban</mat-option>
+            <mat-option [value]="TicketStatus.CLOSED">Lezárva</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    }
+  </div>
+
+  <div class="row">
+    <div class="col-12">
+      <mat-form-field class="full-width">
+        <mat-label>Hiba leírása</mat-label>
+        <textarea matInput formControlName="description" rows="6"></textarea>
+      </mat-form-field>
+    </div>
+  </div>
+</form>

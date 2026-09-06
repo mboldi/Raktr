@@ -1,4 +1,4 @@
-import {Component, effect, OnInit, ViewChild} from '@angular/core';
+import {Component, effect, OnInit} from '@angular/core';
 import {
   MatCell,
   MatCellDef,
@@ -16,6 +16,7 @@ import {TicketService} from '../../../services/ticket.service';
 import {TicketDetails} from '../../../model/ticket/ticketDetails';
 import {TicketStatus} from '../../../model/ticket/ticketStatus';
 import {TicketSeverity} from '../../../model/ticket/ticketSeverity';
+import {TICKET_SEVERITY_LABELS, TICKET_SEVERITY_ORDER, TICKET_STATUS_LABELS, TICKET_STATUS_ORDER} from '../../../model/ticket/ticketLabels';
 import {MatPaginator, PageEvent} from '@angular/material/paginator';
 import {DatePipe} from '@angular/common';
 import {MatSortModule, Sort} from '@angular/material/sort';
@@ -28,34 +29,14 @@ import {environment} from '../../../../environments/environment';
 import {MatProgressSpinner} from '@angular/material/progress-spinner';
 import {WindowWidthService} from '../../../services/windowWidth.service';
 import {MatCheckbox} from '@angular/material/checkbox';
+import {MatSlideToggle} from '@angular/material/slide-toggle';
 import {MatTooltip} from '@angular/material/tooltip';
+import {MatDialog} from '@angular/material/dialog';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {TicketDialogResult, TicketEditDialogComponent} from '../../../components/ticket-edit-modal/ticket-edit-dialog.component';
 
-const ALL_COLUMNS: string[] = ['severity', 'status', 'createdAt', 'device', 'description', 'createdBy', 'comments'];
-const REDUCED_COLUMNS: string[] = ['severity', 'status', 'createdAt', 'device'];
-
-const STATUS_ORDER: Record<TicketStatus, number> = {
-  [TicketStatus.OPEN]: 0,
-  [TicketStatus.IN_PROGRESS]: 1,
-  [TicketStatus.CLOSED]: 2,
-};
-
-const SEVERITY_ORDER: Record<TicketSeverity, number> = {
-  [TicketSeverity.MINOR]: 0,
-  [TicketSeverity.MAJOR]: 1,
-  [TicketSeverity.CRITICAL]: 2,
-};
-
-const STATUS_LABELS: Record<TicketStatus, string> = {
-  [TicketStatus.OPEN]: 'Nyitva',
-  [TicketStatus.IN_PROGRESS]: 'Folyamatban',
-  [TicketStatus.CLOSED]: 'Lezárva',
-};
-
-const SEVERITY_LABELS: Record<TicketSeverity, string> = {
-  [TicketSeverity.MINOR]: 'Enyhe',
-  [TicketSeverity.MAJOR]: 'Közepes',
-  [TicketSeverity.CRITICAL]: 'Súlyos',
-};
+const ALL_COLUMNS: string[] = ['severity', 'status', 'id', 'createdAt', 'device', 'description', 'createdBy', 'comments'];
+const REDUCED_COLUMNS: string[] = ['severity', 'id', 'status', 'createdAt', 'device'];
 
 @Component({
   selector: 'app-tickets',
@@ -86,6 +67,7 @@ const SEVERITY_LABELS: Record<TicketSeverity, string> = {
     MatFabButton,
     MatButton,
     MatCheckbox,
+    MatSlideToggle,
     MatTooltip,
   ],
   templateUrl: './tickets.component.html',
@@ -94,7 +76,6 @@ const SEVERITY_LABELS: Record<TicketSeverity, string> = {
 export class TicketsComponent implements OnInit {
 
   protected loading: boolean = true;
-  @ViewChild(MatTable) table!: MatTable<TicketDetails>;
 
   protected ticketSearchFormControl = new FormControl();
   private searchFilter = '';
@@ -124,21 +105,25 @@ export class TicketsComponent implements OnInit {
   protected selectedSeverities = new Set<TicketSeverity>();
   protected selectedCreators = new Set<string>();
 
-  protected readonly statusLabels = STATUS_LABELS;
-  protected readonly severityLabels = SEVERITY_LABELS;
+  protected showClosedTickets = false;
+
+  protected readonly statusLabels = TICKET_STATUS_LABELS;
+  protected readonly severityLabels = TICKET_SEVERITY_LABELS;
 
   protected statusLabel(status: TicketStatus): string {
-    return STATUS_LABELS[status];
+    return TICKET_STATUS_LABELS[status];
   }
 
   protected severityLabel(severity: TicketSeverity): string {
-    return SEVERITY_LABELS[severity];
+    return TICKET_SEVERITY_LABELS[severity];
   }
 
   constructor(
     private windowService: WindowWidthService,
     private localStorageService: LocalStorageService,
     private ticketService: TicketService,
+    private dialog: MatDialog,
+    private snackBar: MatSnackBar,
   ) {
     effect(() => {
       const width = this.windowService.windowWidth();
@@ -178,9 +163,15 @@ export class TicketsComponent implements OnInit {
     this.filterSortTickets();
   }
 
+  protected toggleShowClosedTickets(show: boolean) {
+    this.showClosedTickets = show;
+    this.filterSortTickets();
+  }
+
   protected filterSortTickets() {
     this.filteredTickets = this.tickets.filter(ticket =>
       this.matchesSearch(ticket) &&
+      (this.showClosedTickets || ticket.status !== TicketStatus.CLOSED) &&
       (this.selectedStatuses.size === 0 || this.selectedStatuses.has(ticket.status)) &&
       (this.selectedSeverities.size === 0 || this.selectedSeverities.has(ticket.severity)) &&
       (this.selectedCreators.size === 0 || this.selectedCreators.has(ticket.createdBy?.nickname ?? ''))
@@ -209,10 +200,12 @@ export class TicketsComponent implements OnInit {
 
   private getSortComparator(active: string): ((a: TicketDetails, b: TicketDetails) => number) | null {
     switch (active) {
+      case 'id':
+        return (a, b) => a.id - b.id;
       case 'severity':
-        return (a, b) => SEVERITY_ORDER[a.severity] - SEVERITY_ORDER[b.severity];
+        return (a, b) => TICKET_SEVERITY_ORDER[a.severity] - TICKET_SEVERITY_ORDER[b.severity];
       case 'status':
-        return (a, b) => STATUS_ORDER[a.status] - STATUS_ORDER[b.status];
+        return (a, b) => TICKET_STATUS_ORDER[a.status] - TICKET_STATUS_ORDER[b.status];
       case 'createdAt':
         return (a, b) => this.compareDates(a.createdAt, b.createdAt);
       case 'device':
@@ -243,6 +236,7 @@ export class TicketsComponent implements OnInit {
   private ticketsMatchingExcept(excludedFacet: 'status' | 'severity' | 'creator'): TicketDetails[] {
     return this.tickets.filter(ticket =>
       this.matchesSearch(ticket) &&
+      (this.showClosedTickets || ticket.status !== TicketStatus.CLOSED) &&
       (excludedFacet === 'status' || this.selectedStatuses.size === 0 || this.selectedStatuses.has(ticket.status)) &&
       (excludedFacet === 'severity' || this.selectedSeverities.size === 0 || this.selectedSeverities.has(ticket.severity)) &&
       (excludedFacet === 'creator' || this.selectedCreators.size === 0 || this.selectedCreators.has(ticket.createdBy?.nickname ?? ''))
@@ -308,5 +302,62 @@ export class TicketsComponent implements OnInit {
     this.selectedCreators.clear();
 
     this.filterSortTickets();
+  }
+
+  protected newTicket() {
+    const dialogRef = this.dialog.open(TicketEditDialogComponent, {
+      width: '60vw',
+      maxWidth: '100vw',
+      position: {top: '40px'},
+    });
+
+    dialogRef.afterClosed().subscribe((response?: TicketDialogResult) => {
+      if (response) {
+        this.tickets.push(response.ticket);
+        this.updateCreators();
+        this.filterSortTickets();
+
+        if (response.saved) {
+          this.snackBar.open('Hibajegy létrehozva!', 'Remek!', {
+            duration: 3000,
+            horizontalPosition: 'right',
+            verticalPosition: 'top',
+            panelClass: ['success-snackbar'],
+          });
+        }
+      }
+    });
+  }
+
+  protected openTicket(ticket: TicketDetails) {
+    const dialogRef = this.dialog.open(TicketEditDialogComponent, {
+      width: '60vw',
+      maxWidth: '100vw',
+      position: {top: '40px'},
+      data: ticket,
+    });
+
+    dialogRef.afterClosed().subscribe((response?: TicketDialogResult) => {
+      if (response) {
+        this.replaceById(this.tickets, response.ticket);
+        this.filterSortTickets();
+
+        if (response.saved) {
+          this.snackBar.open('Hibajegy frissítve!', 'Remek!', {
+            duration: 3000,
+            horizontalPosition: 'right',
+            verticalPosition: 'top',
+            panelClass: ['success-snackbar'],
+          });
+        }
+      }
+    });
+  }
+
+  private replaceById<T extends { id: number }>(array: T[], newObject: T): void {
+    const index = array.findIndex(item => item.id === newObject.id);
+    if (index !== -1) {
+      array[index] = newObject;
+    }
   }
 }

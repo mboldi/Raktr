@@ -1,0 +1,55 @@
+<div class="dialog-title-row">
+  <h2 mat-dialog-title>{{ title }}</h2>
+  @if (isClosed) {
+    <mat-chip class="status-chip">Lezárva</mat-chip>
+  }
+</div>
+
+<mat-dialog-content class="pt-0">
+  <app-ticket-form [ticketData]="ticket" [disabled]="isReadOnly" (deviceNotFound)="onDeviceNotFound()" />
+
+  @if (!isNew && ticket) {
+    <mat-divider class="section-divider"></mat-divider>
+
+    <div class="comments-section">
+      <h3>Hozzászólások</h3>
+
+      @if (ticket.status !== TicketStatus.CLOSED) {
+        <div class="new-comment-row">
+          <mat-form-field class="full-width">
+            <mat-label>Új hozzászólás</mat-label>
+            <input matInput [formControl]="newCommentControl" autocomplete="off" (keyup.enter)="sendComment()">
+          </mat-form-field>
+          <button mat-raised-button color="primary" type="button"
+                  [disabled]="!newCommentControl.value"
+                  (click)="sendComment()">
+            Küldés
+          </button>
+        </div>
+        <mat-slide-toggle [checked]="closingComment" (change)="closingComment = $event.checked" color="warn">
+          Lezáró megjegyzés
+        </mat-slide-toggle>
+      }
+
+      <div class="comment-list">
+        @for (comment of sortedComments; track comment.id) {
+          <div class="comment">
+            <div class="comment-header">
+              <span class="comment-author">{{ comment.createdBy.nickname }}</span>
+              <span class="comment-date">{{ comment.createdAt | date:'medium' }}</span>
+            </div>
+            <mat-divider></mat-divider>
+            <p class="comment-body">{{ comment.body }}</p>
+          </div>
+        } @empty {
+          <p class="no-comments">Még nincs hozzászólás.</p>
+        }
+      </div>
+    </div>
+  }
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="close()">Vissza</button>
+  <button mat-raised-button color="primary" [disabled]="isReadOnly" (click)="save()">Mentés</button>
+</mat-dialog-actions>

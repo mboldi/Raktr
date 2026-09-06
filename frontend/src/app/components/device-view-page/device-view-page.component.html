@@ -24,28 +24,28 @@
       <h3 class="device-section__title">Azonosítás</h3>
       <div class="field-grid">
         <div class="field">
-          <span class="field__label">Azonosító</span>
-          <span class="field__value">{{ device.assetTag }}</span>
+          <span class="label">Azonosító</span>
+          <span class="value">{{ device.assetTag }}</span>
         </div>
         <div class="field">
-          <span class="field__label">Vonalkód tartalma</span>
-          <span class="field__value">{{ device.barcode }}</span>
+          <span class="label">Vonalkód tartalma</span>
+          <span class="value">{{ device.barcode }}</span>
         </div>
         <div class="field">
-          <span class="field__label">Sorozatszám</span>
-          <span class="field__value">{{ device.serialNumber === '' ? '-' : device.serialNumber}}</span>
+          <span class="label">Sorozatszám</span>
+          <span class="value">{{ device.serialNumber === '' ? '-' : device.serialNumber}}</span>
         </div>
         <div class="field">
-          <span class="field__label">Kategória</span>
-          <span class="field__value">{{ device.category }}</span>
+          <span class="label">Kategória</span>
+          <span class="value">{{ device.category }}</span>
         </div>
         <div class="field">
-          <span class="field__label">Tárolási hely</span>
-          <span class="field__value">{{ device.location }}</span>
+          <span class="label">Tárolási hely</span>
+          <span class="value">{{ device.location }}</span>
         </div>
         <div class="field">
-          <span class="field__label">Tulajdonos</span>
-          <span class="field__value">{{ device.owner.name }}</span>
+          <span class="label">Tulajdonos</span>
+          <span class="value">{{ device.owner.name }}</span>
         </div>
       </div>
     </section>
@@ -56,16 +56,16 @@
       <h3 class="device-section__title">Beszerzés</h3>
       <div class="field-grid">
         <div class="field">
-          <span class="field__label">Forrás</span>
-          <span class="field__value">{{ device.acquisitionSource === '' ? '-' : device.acquisitionSource }}</span>
+          <span class="label">Forrás</span>
+          <span class="value">{{ device.acquisitionSource === '' ? '-' : device.acquisitionSource }}</span>
         </div>
         <div class="field">
-          <span class="field__label">Ideje</span>
-          <span class="field__value">{{ device.acquisitionDate | date: 'yyyy.MM.dd.' }}</span>
+          <span class="label">Ideje</span>
+          <span class="value">{{ device.acquisitionDate | date: 'yyyy.MM.dd.' }}</span>
         </div>
         <div class="field">
-          <span class="field__label">Garancia vége</span>
-          <span class="field__value">{{ device.warrantyEndDate | date: 'yyyy.MM.dd.' }}</span>
+          <span class="label">Garancia vége</span>
+          <span class="value">{{ device.warrantyEndDate | date: 'yyyy.MM.dd.' }}</span>
         </div>
       </div>
     </section>
@@ -76,16 +76,16 @@
       <h3 class="device-section__title">Fizikai adatok</h3>
       <div class="field-grid">
         <div class="field">
-          <span class="field__label">Tömeg</span>
-          <span class="field__value">{{ device.weight }}&nbsp;g</span>
+          <span class="label">Tömeg</span>
+          <span class="value">{{ device.weight }}&nbsp;g</span>
         </div>
         <div class="field">
-          <span class="field__label">Érték</span>
-          <span class="field__value">{{ device.estimatedValue }}&nbsp;Ft</span>
+          <span class="label">Érték</span>
+          <span class="value">{{ device.estimatedValue }}&nbsp;Ft</span>
         </div>
         <div class="field">
-          <span class="field__label">Mennyiség egy vonalkód alatt</span>
-          <span class="field__value">{{ device.quantity }}&nbsp;db</span>
+          <span class="label">Mennyiség egy vonalkód alatt</span>
+          <span class="value">{{ device.quantity }}&nbsp;db</span>
         </div>
       </div>
     </section>

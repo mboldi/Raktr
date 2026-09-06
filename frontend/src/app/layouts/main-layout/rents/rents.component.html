@@ -1,1 +1,168 @@
-<p>rents works!</p>
+<mat-card class="list-header-card bg-blue">
+  <h2>Kivitelek kezelése</h2>
+
+  <div class="list-header-actions-row">
+    <div style="display: flex; flex-direction: row; align-items: start">
+      <mat-form-field class="search-box">
+        <mat-label>Keresés</mat-label>
+        <input matInput (keyup)="applyFilter($event)" placeholder="Tanévnyitó"
+               [formControl]="rentSearchFormControl">
+        @if (rentSearchFormControl.value) {
+          <button mat-icon-button matSuffix
+                  (click)="resetFilter()">
+            <mat-icon matSuffix>close</mat-icon>
+          </button>
+        }
+      </mat-form-field>
+
+      <div style="display: flex; align-items: center">
+        <div class="filter-anchor">
+          <button matFab class="filter-button" [class.filter-button-active]="hasActiveFilters()"
+                  (click)="toggleFilterPanel()">
+            <mat-icon>filter_alt</mat-icon>
+          </button>
+
+          @if (filterPanelOpen) {
+            <div class="filter-backdrop" (click)="closeFilterPanel()"></div>
+
+            <mat-card class="filter-panel">
+              <div class="filter-panel-header">
+                <h3>Szűrők</h3>
+                <button mat-icon-button (click)="closeFilterPanel()">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </div>
+
+              <div class="filter-panel-content">
+                <div class="filter-group">
+                  <h4>Kiadó</h4>
+                  <div class="filter-options">
+                    @for (issuer of visibleIssuers; track issuer) {
+                      <mat-checkbox [checked]="selectedIssuers.has(issuer)"
+                                    (change)="toggleFilterValue(selectedIssuers, issuer)">
+                        {{ issuer }}
+                      </mat-checkbox>
+                    } @empty {
+                      <span class="filter-empty">Nincs elérhető kiadó</span>
+                    }
+                  </div>
+                </div>
+
+                <div class="filter-group">
+                  <h4>Felelősségvállaló</h4>
+                  <div class="filter-options">
+                    @for (renter of visibleRenters; track renter) {
+                      <mat-checkbox [checked]="selectedRenters.has(renter)"
+                                    (change)="toggleFilterValue(selectedRenters, renter)">
+                        {{ renter }}
+                      </mat-checkbox>
+                    } @empty {
+                      <span class="filter-empty">Nincs elérhető felelősségvállaló</span>
+                    }
+                  </div>
+                </div>
+              </div>
+
+              <div class="filter-panel-footer">
+                <button mat-button [disabled]="!hasActiveFilters()" (click)="clearFilters()">Szűrők törlése</button>
+                <button mat-flat-button color="primary" (click)="closeFilterPanel()">Bezárás</button>
+              </div>
+            </mat-card>
+          }
+        </div>
+
+        @if (hasActiveFilters()) {
+          <button mat-button class="clear-filters-button" (click)="clearFilters()">
+            <mat-icon>filter_alt_off</mat-icon>
+            Szűrők törlése
+          </button>
+        }
+      </div>
+    </div>
+
+    <button matFab extended class="add-button">
+      <mat-icon>add</mat-icon>
+      Új hozzáadása
+    </button>
+  </div>
+</mat-card>
+
+<div class="table-wrapper">
+
+  <mat-paginator [pageSizeOptions]="[10, 25, 50]"
+                 [length]="filteredRents.length"
+                 (page)="pageRents($event)"
+                 [pageSize]="pageSize"
+                 showFirstLastButtons
+                 aria-label="Oldalváltás">
+  </mat-paginator>
+
+  <table mat-table matSort matSortActive="outDate" matSortDirection="desc"
+         (matSortChange)="announceSortChange($event)" [dataSource]="pagedRents"
+         class="mat-elevation-z8">
+
+    <ng-container matColumnDef="status">
+      <th mat-header-cell *matHeaderCellDef></th>
+      <td mat-cell *matCellDef="let rent" class="icon-column">
+        @if (rent.closed) {
+          <mat-icon style="color: #8bc34a">done_all</mat-icon>
+        } @else {
+          <mat-icon style="color: #c62828">camera_outdoor</mat-icon>
+        }
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="issuer">
+      <th mat-header-cell *matHeaderCellDef>Kiadó</th>
+      <td mat-cell *matCellDef="let rent"> {{ rent.issuer?.nickname }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="renter">
+      <th mat-header-cell *matHeaderCellDef>Felelősségvállaló</th>
+      <td mat-cell *matCellDef="let rent"> {{ rent.renterName }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="destination">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Kivitel célja</th>
+      <td mat-cell *matCellDef="let rent"> {{ rent.destination }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="outDate">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Kivitel ideje</th>
+      <td mat-cell *matCellDef="let rent"> {{ rent.outDate | date:'yyyy. MM. dd.' }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="expectedReturnDate">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Várható visszaérkezés</th>
+      <td mat-cell *matCellDef="let rent"> {{ rent.expectedReturnDate | date:'yyyy. MM. dd.' }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="actualReturnDate">
+      <th mat-header-cell *matHeaderCellDef>Tényleges visszaérkezés</th>
+      <td mat-cell *matCellDef="let rent">
+        @if (!rent.closed) {
+          Nem jött még vissza
+        } @else {
+          {{ rent.actualReturnDate | date:'yyyy. MM. dd.' }}
+        }
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="itemCount">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Eszközök száma</th>
+      <td mat-cell *matCellDef="let rent"> {{ rent.rentItems.length }} db</td>
+    </ng-container>
+
+    <ng-container matColumnDef="totalWeight">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Össztömeg</th>
+      <td mat-cell *matCellDef="let rent">{{ (rent.getSumWeight() / 1000) | number: '1.0-2' }} kg</td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+
+  @if (loading) {
+    <mat-spinner class="list-loading-spinner mt-3"></mat-spinner>
+  }
+</div>

@@ -61,6 +61,10 @@ export class DeviceFormComponent implements OnInit {
   /** Pass an existing device to pre-populate the form, or leave undefined for a blank create form. */
   deviceData = input<DeviceDetails | null>(null);
 
+  /** For a new device created from a barcode the user already searched for - locks that
+   * barcode in instead of auto-generating a fresh one. */
+  presetBarcode = input<string | null>(null);
+
   /** Emits the latest raw form value whenever the user makes a change. */
   formChanged = output<Partial<DeviceDetails>>();
 
@@ -136,6 +140,8 @@ export class DeviceFormComponent implements OnInit {
     const data = this.deviceData();
     if (data !== null) {
       this.deviceForm.patchValue(data);
+    } else if (this.presetBarcode()) {
+      this.deviceForm.get('barcode')!.setValue(this.presetBarcode());
     } else {
       this.generateBarcode();
     }

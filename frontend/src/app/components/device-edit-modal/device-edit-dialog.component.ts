@@ -14,6 +14,14 @@ import {MatSnackBar} from '@angular/material/snack-bar';
 import {DeviceService} from '../../services/device.service';
 import {DeviceUpdateDto} from '../../model/scannable/device/deviceUpdateDto';
 
+export interface DeviceDialogData {
+  /** Pass to open the dialog in edit mode for an existing device. */
+  device?: DeviceDetails;
+  /** Pass when creating a new device from a barcode the user already searched for, so it's
+   * locked in instead of auto-generating a fresh one. */
+  presetBarcode?: string;
+}
+
 @Component({
   selector: 'app-device-edit-modal',
   imports: [
@@ -33,12 +41,15 @@ export class DeviceEditDialogComponent {
 
   protected title = 'Új eszköz hozzáadása';
   protected isNew: boolean = true;
+  protected deviceData: DeviceDetails | null;
 
-  constructor(@Inject(MAT_DIALOG_DATA) protected deviceData: DeviceDetails,
+  constructor(@Inject(MAT_DIALOG_DATA) protected dialogData: DeviceDialogData | undefined,
               private dialogRef: MatDialogRef<DeviceEditDialogComponent>,
               private snackBar: MatSnackBar,
               private deviceService: DeviceService) {
-    if(deviceData) {
+    this.deviceData = dialogData?.device ?? null;
+
+    if (this.deviceData) {
       this.isNew = false;
       this.title = 'Eszköz szerkesztése';
     }
@@ -63,7 +74,7 @@ export class DeviceEditDialogComponent {
       } else {                  // Device exists, only update
         const updateDevice = DeviceUpdateDto.fromFormControl(this.deviceFormComponent?.deviceForm?.value);
 
-        this.deviceService.updateDevice(this.deviceData.id, updateDevice).subscribe(updatedDevice => {
+        this.deviceService.updateDevice(this.deviceData!.id, updateDevice).subscribe(updatedDevice => {
           this.dialogRef.close(updatedDevice);
         })
       }

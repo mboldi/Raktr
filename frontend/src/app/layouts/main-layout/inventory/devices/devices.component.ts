@@ -179,7 +179,7 @@ export class DevicesComponent implements OnInit {
           width: '60vw',
           maxWidth: '100vw',
           position: {top: '40px'},
-          data: row
+          data: {device: row}
         });
 
         editDeviceDialog.afterClosed().subscribe(result => {

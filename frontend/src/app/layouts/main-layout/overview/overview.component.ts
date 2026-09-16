@@ -14,19 +14,29 @@ import {
   MatColumnDef,
   MatHeaderCell,
   MatHeaderCellDef,
-  MatHeaderRow, MatHeaderRowDef, MatRow, MatRowDef,
+  MatHeaderRow,
+  MatHeaderRowDef,
+  MatRow,
+  MatRowDef,
   MatTable
 } from '@angular/material/table';
 import {DatePipe, DecimalPipe} from '@angular/common';
 import {WindowWidthService} from '../../../services/windowWidth.service';
 import {MatProgressSpinner} from '@angular/material/progress-spinner';
 import {MatDialog} from '@angular/material/dialog';
-import {DeviceEditDialogComponent} from '../../../components/device-edit-modal/device-edit-dialog.component';
-import {TicketDialogResult, TicketEditDialogComponent} from '../../../components/ticket-edit-modal/ticket-edit-dialog.component';
+import {
+  DeviceDialogData,
+  DeviceEditDialogComponent
+} from '../../../components/device-edit-modal/device-edit-dialog.component';
+import {
+  TicketDialogResult,
+  TicketEditDialogComponent
+} from '../../../components/ticket-edit-modal/ticket-edit-dialog.component';
 import {
   TabbedEditModalComponent,
   TabbedEditModalData
 } from '../../../components/tabbed-edit-modal/tabbed-edit-modal.component';
+import {YesnoModalComponent} from '../../../components/yesno-modal/yesno-modal.component';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {catchError, EMPTY} from 'rxjs';
 
@@ -103,15 +113,12 @@ export class OverviewComponent {
   }
 
   protected searchDevice() {
-    this.scannableService.getByBarcode(this.deviceSearchFormControl.value)
+    const barcode = this.deviceSearchFormControl.value;
+
+    this.scannableService.getByBarcode(barcode)
       .pipe(
         catchError(() => {
-          this.snackBar.open('Nem találtam eszközt ilyen vonalkóddal!', 'So sad :(', {
-            duration: 3000,
-            horizontalPosition: 'right',
-            verticalPosition: 'top',
-            panelClass: ['error-snackbar'],
-          });
+          this.offerCreateDevice(barcode);
           return EMPTY;
         })
       )
@@ -129,14 +136,29 @@ export class OverviewComponent {
     this.deviceSearchFormControl.setValue("");
   }
 
+  private offerCreateDevice(barcode: string) {
+    const confirmDialog = this.dialog.open(YesnoModalComponent, {
+      width: '20vw',
+      minWidth: '350px',
+      data: `Nem található eszköz "${barcode}" vonalkóddal. Szeretnél létrehozni egy újat?`
+    });
+
+    confirmDialog.afterClosed().subscribe(confirmed => {
+      if (confirmed) {
+        this.addDevice(barcode);
+      }
+    });
+  }
+
   protected addRent() {
 
   }
 
-  protected addDevice() {
+  protected addDevice(presetBarcode?: string) {
     const addDeviceDialog = this.dialog.open(DeviceEditDialogComponent, {
       width: '60vw',
       maxWidth: '100vw',
+      data: {presetBarcode} as DeviceDialogData,
     });
 
     addDeviceDialog.afterClosed().subscribe(result => {

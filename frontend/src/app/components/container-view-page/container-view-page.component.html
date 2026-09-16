@@ -1,11 +1,11 @@
-<mat-card class="container-card" appearance="outlined">
+<mat-card class="container-card" appearance="outlined" style="max-height: 70vh; display: flex; flex-direction: column">
 
-  <div class="container-card__header">
-    <div class="container-card__heading">
-      <h2 class="container-card__title">{{ container.name }}</h2>
-      <p class="container-card__subtitle">{{ container.assetTag }}</p>
+  <div class="header">
+    <div class="heading">
+      <h2 class="title">{{ container.name }}</h2>
+      <p class="subtitle">{{ container.assetTag }}</p>
     </div>
-    <div class="container-card__badges">
+    <div class="badges">
       @if (container.publicRentable) {
         <mat-chip class="rentable-chip">
           <mat-icon>public</mat-icon>
@@ -20,66 +20,68 @@
     </div>
   </div>
 
-  <mat-card-content>
+  <mat-card-content style="display: flex; flex-direction: column">
 
-    <section class="container-section">
-      <h3 class="container-section__title">Azonosítás</h3>
-      <div class="field-grid">
-        <div class="field">
-          <span class="label">Azonosító</span>
-          <span class="value">{{ container.assetTag }}</span>
+    <div>
+      <section class="container-section">
+        <h3 class="title">Azonosítás</h3>
+        <div class="field-grid">
+          <div class="field">
+            <span class="label">Azonosító</span>
+            <span class="value">{{ container.assetTag }}</span>
+          </div>
+          <div class="field">
+            <span class="label">Vonalkód tartalma</span>
+            <span class="value">{{ container.barcode }}</span>
+          </div>
+          <div class="field">
+            <span class="label">Kategória</span>
+            <span class="value">{{ container.category }}</span>
+          </div>
+          <div class="field">
+            <span class="label">Tárolási hely</span>
+            <span class="value">{{ container.location }}</span>
+          </div>
+          <div class="field">
+            <span class="label">Tulajdonos</span>
+            <span class="value">{{ container.owner.name }}</span>
+          </div>
         </div>
-        <div class="field">
-          <span class="label">Vonalkód tartalma</span>
-          <span class="value">{{ container.barcode }}</span>
-        </div>
-        <div class="field">
-          <span class="label">Kategória</span>
-          <span class="value">{{ container.category }}</span>
-        </div>
-        <div class="field">
-          <span class="label">Tárolási hely</span>
-          <span class="value">{{ container.location }}</span>
-        </div>
-        <div class="field">
-          <span class="label">Tulajdonos</span>
-          <span class="value">{{ container.owner.name }}</span>
-        </div>
-      </div>
-    </section>
+      </section>
 
-    <mat-divider></mat-divider>
+      <mat-divider></mat-divider>
 
-    <section class="container-section">
-      <h3 class="container-section__title">Fizikai adatok</h3>
-      <div class="field-grid">
-        <div class="field">
-          <span class="label">Saját tömeg</span>
-          <span class="value">{{ (container.weight / 1000) | number: '1.0-2' }}&nbsp;kg</span>
+      <section class="container-section">
+        <h3 class="title">Fizikai adatok</h3>
+        <div class="field-grid">
+          <div class="field">
+            <span class="label">Saját tömeg</span>
+            <span class="value">{{ (container.weight / 1000) | number: '1.0-2' }}&nbsp;kg</span>
+          </div>
+          <div class="field">
+            <span class="label">Össztömeg</span>
+            <span class="value">{{ (container.totalWeight / 1000) | number: '1.0-2' }}&nbsp;kg</span>
+          </div>
+          <div class="field">
+            <span class="label">Tartalmazott eszközök száma</span>
+            <span class="value">{{ container.getItemCount() }}&nbsp;db</span>
+          </div>
         </div>
-        <div class="field">
-          <span class="label">Össztömeg</span>
-          <span class="value">{{ (container.totalWeight / 1000) | number: '1.0-2' }}&nbsp;kg</span>
-        </div>
-        <div class="field">
-          <span class="label">Tartalmazott eszközök száma</span>
-          <span class="value">{{ container.getItemCount() }}&nbsp;db</span>
-        </div>
-      </div>
-    </section>
+      </section>
 
-    <mat-divider></mat-divider>
+      <mat-divider></mat-divider>
+    </div>
 
-    <section class="container-section">
-      <h3 class="container-section__title">Tartalmazott eszközök</h3>
+    <section class="container-section mt-2" style="flex:1; display: flex; flex-direction: column">
+      <h3 class="title">Tartalmazott eszközök</h3>
       @if (container.items.length > 0) {
-        <div class="item-list">
+        <div class="item-list" style="flex: 1">
           @for (item of container.items; track item.device.id) {
             <div class="item-row">
-              <span class="item-row__name">{{ item.device.name }}</span>
-              <span class="item-row__model">{{ item.device.manufacturer }} {{ item.device.model }}</span>
-              <span class="item-row__asset-tag">{{ item.device.assetTag }}</span>
-              <span class="item-row__quantity">{{ item.quantity }}&nbsp;db</span>
+              <span class="name">{{ item.device.name }}</span>
+              <span class="model">{{ item.device.manufacturer }} {{ item.device.model }}</span>
+              <span class="asset-tag">{{ item.device.assetTag }}</span>
+              <span class="quantity">{{ item.quantity }}&nbsp;db</span>
             </div>
           }
         </div>

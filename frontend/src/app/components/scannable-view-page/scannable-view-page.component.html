@@ -55,7 +55,7 @@
       <div class="field-grid">
         <div class="field">
           <span class="label">Tömeg</span>
-          <span class="value">{{ scannable.weight }}&nbsp;g</span>
+          <span class="value">{{ (scannable.weight / 1000) | number : '1.0-2' }}&nbsp;kg</span>
         </div>
       </div>
     </section>

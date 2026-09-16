@@ -157,6 +157,7 @@ export class ContainersComponent implements OnInit {
     const viewModal = this.dialog.open(TabbedEditModalComponent, {
       width: '50vw',
       maxWidth: '100vw',
+      maxHeight: '95vh',
       position: {top: '10px'},
       data: {kind: 'container', item: row} as TabbedEditModalData
     });

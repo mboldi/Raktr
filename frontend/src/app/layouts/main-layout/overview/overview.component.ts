@@ -22,6 +22,7 @@ import {WindowWidthService} from '../../../services/windowWidth.service';
 import {MatProgressSpinner} from '@angular/material/progress-spinner';
 import {MatDialog} from '@angular/material/dialog';
 import {DeviceEditDialogComponent} from '../../../components/device-edit-modal/device-edit-dialog.component';
+import {TicketDialogResult, TicketEditDialogComponent} from '../../../components/ticket-edit-modal/ticket-edit-dialog.component';
 import {
   TabbedEditModalComponent,
   TabbedEditModalData
@@ -153,7 +154,24 @@ export class OverviewComponent {
   }
 
   protected addTicket() {
+    const addTicketDialog = this.dialog.open(TicketEditDialogComponent, {
+      width: '60vw',
+      maxWidth: '100vw',
+      position: {top: '40px'},
+    });
 
+    addTicketDialog.afterClosed().subscribe((response?: TicketDialogResult) => {
+      if (response?.saved) {
+        this.snackBar.open('Hibajegy létrehozva!', 'Remek!', {
+          duration: 3000,
+          horizontalPosition: 'right',
+          verticalPosition: 'top',
+          panelClass: ['success-snackbar'],
+        });
+
+        this.ticketService.getTicketCount().subscribe(ticketCount => this.ticketCount = ticketCount);
+      }
+    });
   }
 
   protected beforeNow(date: Date): boolean {

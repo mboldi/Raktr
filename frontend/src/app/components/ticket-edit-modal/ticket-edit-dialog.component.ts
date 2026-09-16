@@ -24,6 +24,15 @@ import {CommentDetailsDto} from '../../model/comment/commentDetailsDto';
 import {TicketService} from '../../services/ticket.service';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {AdminAccessService} from '../../services/adminAccess.service';
+import {ScannableDetailsDto} from '../../model/scannable/scannableDetailsDto';
+
+export interface TicketDialogData {
+  /** Pass to open the dialog in edit mode for an existing ticket. */
+  ticket?: TicketDetails;
+  /** Pass when creating a new ticket from a device/container/scannable's own page, so its
+   * scannable is locked in instead of the user having to search for it again. */
+  presetScannable?: ScannableDetailsDto;
+}
 
 export interface TicketDialogResult {
   ticket: TicketDetails;
@@ -66,17 +75,17 @@ export class TicketEditDialogComponent {
 
   protected readonly TicketStatus = TicketStatus;
 
-  constructor(@Inject(MAT_DIALOG_DATA) protected ticketData: TicketDetails,
+  constructor(@Inject(MAT_DIALOG_DATA) protected dialogData: TicketDialogData | undefined,
               private dialogRef: MatDialogRef<TicketEditDialogComponent>,
               private snackBar: MatSnackBar,
               private ticketService: TicketService,
               private adminAccessService: AdminAccessService,
               private cdr: ChangeDetectorRef) {
-    this.ticket = ticketData ?? null;
+    this.ticket = dialogData?.ticket ?? null;
 
-    if (ticketData) {
+    if (this.ticket) {
       this.isNew = false;
-      this.title = `Hibajegy szerkesztése - ${ticketData.id}`;
+      this.title = `Hibajegy szerkesztése - ${this.ticket.id}`;
     }
 
     this.adminAccessService.isAdmin().subscribe(isAdmin => {

@@ -3,7 +3,28 @@
   @if (isNew) {
     <div class="row">
       <div class="col-12">
-        @if (!selectedDevice) {
+        @if (presetScannable(); as preset) {
+          <mat-card class="scannable-card" appearance="outlined">
+            <div class="header">
+              <div class="heading">
+                <h3 class="title">{{ preset.name }}</h3>
+                <p class="subtitle">{{ preset.assetTag }}</p>
+              </div>
+            </div>
+            <mat-card-content>
+              <div class="field-grid">
+                <div class="field">
+                  <span class="label">Kategória</span>
+                  <span class="value">{{ preset.category }}</span>
+                </div>
+                <div class="field">
+                  <span class="label">Tárolási hely</span>
+                  <span class="value">{{ preset.location }}</span>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        } @else if (!selectedDevice) {
           <mat-form-field class="full-width">
             <mat-label>Eszköz keresése</mat-label>
             <input matInput placeholder="Vonalkód, vagy keresés név, típus, gyártó alapján"

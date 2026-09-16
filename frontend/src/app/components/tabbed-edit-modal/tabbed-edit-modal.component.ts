@@ -3,6 +3,7 @@ import {NgComponentOutlet} from '@angular/common';
 import {MatButton, MatFabButton} from "@angular/material/button";
 import {
   MAT_DIALOG_DATA,
+  MatDialog,
   MatDialogActions,
   MatDialogClose,
   MatDialogRef,
@@ -21,6 +22,7 @@ import {TicketMiniListComponent} from '../ticket-mini-list/ticket-mini-list.comp
 import {TicketDetails} from '../../model/ticket/ticketDetails';
 import {DeviceService} from '../../services/device.service';
 import {ContainerService} from '../../services/container.service';
+import {TicketDialogData, TicketDialogResult, TicketEditDialogComponent} from '../ticket-edit-modal/ticket-edit-dialog.component';
 
 export type TabbedEditModalKind = 'device' | 'scannable' | 'container';
 
@@ -98,6 +100,7 @@ export class TabbedEditModalComponent {
     private dialogRef: MatDialogRef<TabbedEditModalComponent>,
     private deviceService: DeviceService,
     private containerService: ContainerService,
+    private dialog: MatDialog,
   ) {
     this.view = VIEW_DEFINITIONS[data.kind];
     this.viewInputs = this.view.toInputs(data.item);
@@ -125,5 +128,20 @@ export class TabbedEditModalComponent {
 
   protected edit() {
     this.dialogRef.close('edit');
+  }
+
+  protected addTicket() {
+    const addTicketDialog = this.dialog.open(TicketEditDialogComponent, {
+      width: '60vw',
+      maxWidth: '100vw',
+      position: {top: '40px'},
+      data: {presetScannable: this.data.item} as TicketDialogData,
+    });
+
+    addTicketDialog.afterClosed().subscribe((response?: TicketDialogResult) => {
+      if (response?.saved) {
+        this.tickets = [response.ticket, ...this.tickets];
+      }
+    });
   }
 }

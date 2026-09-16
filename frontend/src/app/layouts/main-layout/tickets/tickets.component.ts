@@ -334,7 +334,7 @@ export class TicketsComponent implements OnInit {
       width: '60vw',
       maxWidth: '100vw',
       position: {top: '40px'},
-      data: ticket,
+      data: {ticket},
     });
 
     dialogRef.afterClosed().subscribe((response?: TicketDialogResult) => {

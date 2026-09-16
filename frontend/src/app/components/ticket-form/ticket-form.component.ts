@@ -12,6 +12,7 @@ import {TicketDetails} from '../../model/ticket/ticketDetails';
 import {TicketSeverity} from '../../model/ticket/ticketSeverity';
 import {TicketStatus} from '../../model/ticket/ticketStatus';
 import {Scannable} from '../../model/scannable/scannable';
+import {ScannableDetailsDto} from '../../model/scannable/scannableDetailsDto';
 import {DeviceDetails} from '../../model/scannable/device/deviceDetails';
 import {DeviceService} from '../../services/device.service';
 
@@ -44,6 +45,10 @@ export class TicketFormComponent implements OnInit {
 
   /** Disables every field, e.g. because the ticket is closed. */
   disabled = input<boolean>(false);
+
+  /** For a new ticket opened from a device/container/scannable's own page - locks the
+   * scannable in instead of showing the search box, skipping the need to look it up again. */
+  presetScannable = input<ScannableDetailsDto | null>(null);
 
   /** Emits the latest raw form value whenever the user makes a change. */
   formChanged = output<Partial<TicketDetails>>();
@@ -111,7 +116,7 @@ export class TicketFormComponent implements OnInit {
       this.ticketForm.patchValue(data);
       this.existingScannable = data.scannable;
       this.loadDeviceExtras(data.scannable.id);
-    } else {
+    } else if (this.presetScannable() === null) {
       this.deviceService.getDevices().subscribe(devices => {
         this.devices = devices;
         this.addDeviceFormControl.updateValueAndValidity();
@@ -191,7 +196,7 @@ export class TicketFormComponent implements OnInit {
   }
 
   public getSelectedScannableId(): number | null {
-    return this.selectedDevice?.id ?? null;
+    return this.presetScannable()?.id ?? this.selectedDevice?.id ?? null;
   }
 
   /** Marks every field as touched so Material shows the invalid ones highlighted, as if the user had visited them. */

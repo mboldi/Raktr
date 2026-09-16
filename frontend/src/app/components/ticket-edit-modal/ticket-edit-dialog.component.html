@@ -6,7 +6,9 @@
 </div>
 
 <mat-dialog-content class="pt-0">
-  <app-ticket-form [ticketData]="ticket" [disabled]="isReadOnly" (deviceNotFound)="onDeviceNotFound()" />
+  <app-ticket-form [ticketData]="ticket" [disabled]="isReadOnly"
+                   [presetScannable]="dialogData?.presetScannable ?? null"
+                   (deviceNotFound)="onDeviceNotFound()" />
 
   @if (!isNew && ticket) {
     <mat-divider class="section-divider"></mat-divider>

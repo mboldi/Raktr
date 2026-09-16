@@ -25,12 +25,15 @@
     </mat-tab>
     <mat-tab>
       <ng-template mat-tab-label>
-        <mat-icon class="tab-icon">bug_report</mat-icon>
+        <mat-icon class="tab-icon" [matBadge]="tickets.length" [matBadgeHidden]="tickets.length === 0"
+                  matBadgeSize="medium" matBadgeColor="warn">bug_report</mat-icon>
         <span style="margin-left: 4px">
         Hibajegyek
       </span>
       </ng-template>
-      Hibajegyek
+      <div class="m-3 mt-0 mb-0">
+        <app-ticket-mini-list [tickets]="tickets" [loading]="ticketsLoading" />
+      </div>
     </mat-tab>
   </mat-tab-group>
 

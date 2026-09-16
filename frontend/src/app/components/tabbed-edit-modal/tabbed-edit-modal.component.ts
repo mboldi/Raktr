@@ -9,6 +9,7 @@ import {
   MatDialogTitle
 } from "@angular/material/dialog";
 import {MatTab, MatTabGroup, MatTabLabel} from '@angular/material/tabs';
+import {MatBadge} from '@angular/material/badge';
 import {DeviceDetails} from '../../model/scannable/device/deviceDetails';
 import {ScannableDetailsDto} from '../../model/scannable/scannableDetailsDto';
 import {MatIcon} from '@angular/material/icon';
@@ -16,6 +17,10 @@ import {DeviceViewPageComponent} from '../device-view-page/device-view-page.comp
 import {ScannableViewPageComponent} from '../scannable-view-page/scannable-view-page.component';
 import {ContainerViewPageComponent} from '../container-view-page/container-view-page.component';
 import {ContainerDetails} from '../../model/scannable/container/containerDetails';
+import {TicketMiniListComponent} from '../ticket-mini-list/ticket-mini-list.component';
+import {TicketDetails} from '../../model/ticket/ticketDetails';
+import {DeviceService} from '../../services/device.service';
+import {ContainerService} from '../../services/container.service';
 
 export type TabbedEditModalKind = 'device' | 'scannable' | 'container';
 
@@ -73,7 +78,9 @@ const VIEW_DEFINITIONS: Record<TabbedEditModalKind, TabbedEditModalViewDefinitio
     MatTabLabel,
     MatIcon,
     MatFabButton,
-    NgComponentOutlet
+    NgComponentOutlet,
+    TicketMiniListComponent,
+    MatBadge,
   ],
   templateUrl: './tabbed-edit-modal.component.html',
   styleUrl: './tabbed-edit-modal.component.scss',
@@ -83,13 +90,37 @@ export class TabbedEditModalComponent {
   protected readonly viewInputs: Record<string, unknown>;
   protected readonly title: string;
 
+  protected tickets: TicketDetails[] = [];
+  protected ticketsLoading = true;
+
   constructor(
     @Inject(MAT_DIALOG_DATA) protected data: TabbedEditModalData,
     private dialogRef: MatDialogRef<TabbedEditModalComponent>,
+    private deviceService: DeviceService,
+    private containerService: ContainerService,
   ) {
     this.view = VIEW_DEFINITIONS[data.kind];
     this.viewInputs = this.view.toInputs(data.item);
     this.title = this.view.title;
+
+    // Fetched here rather than inside the tickets tab itself, since mat-tab-group only
+    // instantiates a tab's content once it's actually selected - fetching eagerly is what
+    // lets the ticket-count badge show up before the user ever opens that tab.
+    switch (data.kind) {
+      case 'device':
+        this.deviceService.getTicketsOfDevice(data.item.id).subscribe(tickets => this.onTicketsLoaded(tickets));
+        break;
+      case 'container':
+        this.containerService.getTicketsOfContainer(data.item.id).subscribe(tickets => this.onTicketsLoaded(tickets));
+        break;
+      default:
+        this.ticketsLoading = false;
+    }
+  }
+
+  private onTicketsLoaded(tickets: TicketDetails[]) {
+    this.tickets = tickets.slice().sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+    this.ticketsLoading = false;
   }
 
   protected edit() {

@@ -180,7 +180,7 @@ export class ContainersComponent implements OnInit {
       width: '50vw',
       maxWidth: '100vw',
       maxHeight: '95vh',
-      position: {top: '10px'},
+      position: {top: '20px'},
       data: {kind: 'container', item: row} as TabbedEditModalData
     });
 
@@ -191,6 +191,8 @@ export class ContainersComponent implements OnInit {
         const editContainerDialog = this.dialog.open(ContainerEditDialogComponent, {
           width: '50vw',
           maxWidth: '100vw',
+          maxHeight: '95vh',
+          position: {top: '20px'},
           data: row
         });
 

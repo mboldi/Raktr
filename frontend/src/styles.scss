@@ -82,6 +82,11 @@ h1, h2, h3, h4, h5, h6, mat-card-title, .mat-mdc-card-title {
   color: #e1e2e8 !important;
 }
 
+.warning-button {
+  background: light-dark(#ff8f06, #e17d03) !important;
+  color: #e1e2e8 !important;
+}
+
 .mat-mdc-row:hover .mat-mdc-cell {
   background: light-dark(#e1e2e8, #393b40);
   transition-duration: 200ms;

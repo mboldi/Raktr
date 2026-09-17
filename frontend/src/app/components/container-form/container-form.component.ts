@@ -1,11 +1,20 @@
-import {ChangeDetectionStrategy, Component, input, OnInit, output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, effect, input, OnInit, output, ViewChild} from '@angular/core';
 import {MatFormField, MatInput, MatInputModule, MatLabel, MatSuffix} from '@angular/material/input';
 import {MatCheckbox} from '@angular/material/checkbox';
 import {CategoryDetails} from '../../model/category/categoryDetails';
 import {CategoryService} from '../../services/category.service';
 import {MatAutocomplete, MatAutocompleteTrigger, MatOption} from '@angular/material/autocomplete';
-import {FormBuilder, FormControl, ReactiveFormsModule, UntypedFormGroup, Validators} from '@angular/forms';
-import {map, Observable, startWith} from 'rxjs';
+import {
+  AbstractControl,
+  AsyncValidatorFn,
+  FormBuilder,
+  FormControl,
+  ReactiveFormsModule,
+  UntypedFormGroup,
+  ValidationErrors,
+  Validators
+} from '@angular/forms';
+import {catchError, map, Observable, of, startWith, switchMap, timer} from 'rxjs';
 import {AsyncPipe} from '@angular/common';
 import {LocationDetails} from '../../model/location/LocationDetails';
 import {LocationService} from '../../services/location.service';
@@ -16,6 +25,7 @@ import {OwnerService} from '../../services/owner.service';
 import {ContainerDetails} from '../../model/scannable/container/containerDetails';
 import {DeviceDetails} from '../../model/scannable/device/deviceDetails';
 import {DeviceService} from '../../services/device.service';
+import {ScannableService} from '../../services/scannable.service';
 import {MatIconButton} from '@angular/material/button';
 import {MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle} from '@angular/material/expansion';
 import {MatDialog} from '@angular/material/dialog';
@@ -79,8 +89,13 @@ export interface AddDeviceEvent {
   styleUrl: './container-form.component.scss',
 })
 export class ContainerFormComponent implements OnInit {
+  @ViewChild(MatTable) itemsTable?: MatTable<unknown>;
+
   /** Pass an existing container to pre-populate the form, or leave undefined for a blank create form. */
   containerData = input<ContainerDetails | null>(null);
+
+  /** Emits the latest raw form value whenever the user makes a change. */
+  formChanged = output<Partial<ContainerDetails>>();
 
   /** Emits the resolved device (and chosen quantity) to add once a barcode is matched or an autocomplete option is picked. */
   addDevice = output<AddDeviceEvent>();
@@ -112,6 +127,7 @@ export class ContainerFormComponent implements OnInit {
     private categoryService: CategoryService,
     private locationService: LocationService,
     private deviceService: DeviceService,
+    private scannableService: ScannableService,
     private dialog: MatDialog,
   ) {
     this.containerForm = this.fb.group({
@@ -119,8 +135,8 @@ export class ContainerFormComponent implements OnInit {
       publicRentable: [false],
       category: ['', Validators.required],
       location: ['', Validators.required],
-      barcode: ['', Validators.required],
-      assetTag: ['', Validators.required],
+      barcode: ['', Validators.required, this.barcodeTakenValidator()],
+      assetTag: ['', Validators.required, this.assetTagTakenValidator()],
       weight: ['1'],
       owner: ['', Validators.required],
     });
@@ -144,19 +160,40 @@ export class ContainerFormComponent implements OnInit {
       startWith(''),
       map(value => this.filterDevices(value || ''))
     );
+
+    // The items table binds [dataSource] to containerData().items, which is a plain array -
+    // when the host dialog swaps in a fresh container after add/remove, CdkTable doesn't
+    // always notice on its own, so force it to redraw whenever the input actually changes.
+    effect(() => {
+      this.containerData();
+      this.itemsTable?.renderRows();
+    });
   }
 
   ngOnInit(): void {
     const data = this.containerData();
     if (data !== null) {
       this.containerForm.patchValue(data);
+    } else {
+      this.generateBarcode();
     }
+
+    this.containerForm.valueChanges.subscribe(value => this.formChanged.emit(value));
 
     // Each filtered stream below is seeded via startWith('') at construction time, before
     // this data has loaded - re-running validity once it arrives forces a fresh filter pass
     // instead of leaving the panel showing the empty result cached from that initial seed.
     this.ownerService.getOwners().subscribe(owners => {
       this.owners = owners;
+
+      if (data === null) {
+        const defaultOwner = owners.find(owner => owner.name === 'SVIE');
+        if (defaultOwner) {
+          this.containerForm.get('owner')!.setValue(defaultOwner);
+          return;
+        }
+      }
+
       this.containerForm.get('owner')!.updateValueAndValidity();
     });
     this.categoryService.getCategories().subscribe(categories => {
@@ -171,6 +208,54 @@ export class ContainerFormComponent implements OnInit {
       this.devices = devices;
       this.addDeviceFormControl.updateValueAndValidity();
     });
+  }
+
+  private generateBarcode() {
+    this.scannableService.getScannablesCount().subscribe(count => {
+      this.findAvailableBarcode(count + 1);
+    });
+  }
+
+  private findAvailableBarcode(candidate: number) {
+    const candidateBarcode = candidate.toString().padStart(7, '0');
+
+    this.scannableService.isBarcodeTaken(candidateBarcode).subscribe(taken => {
+      if (taken) {
+        this.findAvailableBarcode(candidate + 1);
+      } else {
+        this.containerForm.get('barcode')!.setValue(candidateBarcode);
+      }
+    });
+  }
+
+  private assetTagTakenValidator(): AsyncValidatorFn {
+    return (control: AbstractControl): Observable<ValidationErrors | null> => {
+      const value = control.value;
+      if (!value || value === this.containerData()?.assetTag) {
+        return of(null);
+      }
+
+      return timer(400).pipe(
+        switchMap(() => this.scannableService.isAssetTagTaken(value)),
+        map(taken => (taken ? {assetTagTaken: true} : null)),
+        catchError(() => of(null))
+      );
+    };
+  }
+
+  private barcodeTakenValidator(): AsyncValidatorFn {
+    return (control: AbstractControl): Observable<ValidationErrors | null> => {
+      const value = control.value;
+      if (!value || value === this.containerData()?.barcode) {
+        return of(null);
+      }
+
+      return timer(400).pipe(
+        switchMap(() => this.scannableService.isBarcodeTaken(value)),
+        map(taken => (taken ? {barcodeTaken: true} : null)),
+        catchError(() => of(null))
+      );
+    };
   }
 
   private filterCategories(value: string): CategoryDetails[] {

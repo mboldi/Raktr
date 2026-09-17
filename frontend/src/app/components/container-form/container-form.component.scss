@@ -10,6 +10,9 @@
 }
 
 .table-wrapper {
-  max-height: 250px;
   overflow-y: auto;
+}
+
+.delete-button {
+  color: light-dark(#D50000, #C62828)
 }

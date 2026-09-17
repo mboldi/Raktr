@@ -1,8 +1,9 @@
 <h2 mat-dialog-title>{{ title }}</h2>
 
-<mat-dialog-content class="mt-3" style="max-height: 95vh">
+<mat-dialog-content class="mt-3" style="height: 100%; max-height: 80vh">
   <app-container-form
     [containerData]="containerData"
+    (formChanged)="onFormChanged($event)"
     (addDevice)="onAddDevice($event)"
     (deviceNotFound)="onDeviceNotFound()"
     (removeDevice)="onRemoveDevice($event)" />

@@ -35,9 +35,9 @@ import {filter} from 'rxjs';
 export class ContainerEditDialogComponent {
   @ViewChild(ContainerFormComponent) containerFormComponent!: ContainerFormComponent;
 
-  protected title = 'Új szállítóláda hozzáadása';
   protected isNew: boolean = true;
   protected containerData: ContainerDetails | null;
+  protected containerName: string | null = null;
 
   constructor(@Inject(MAT_DIALOG_DATA) containerData: ContainerDetails,
               private dialogRef: MatDialogRef<ContainerEditDialogComponent>,
@@ -48,7 +48,7 @@ export class ContainerEditDialogComponent {
 
     if (containerData) {
       this.isNew = false;
-      this.title = 'Szállítóláda szerkesztése';
+      this.containerName = containerData.name;
     }
 
     // Report the latest item state (already saved via its own API calls) even when the
@@ -60,8 +60,22 @@ export class ContainerEditDialogComponent {
     ).subscribe(() => this.close());
   }
 
+  protected get title(): string {
+    if (this.isNew) {
+      return 'Új szállítóláda hozzáadása';
+    }
+
+    return this.containerName ? `Szállítóláda szerkesztése - ${this.containerName}` : 'Szállítóláda szerkesztése';
+  }
+
   protected get isFormValid(): boolean {
     return this.containerFormComponent?.containerForm?.valid ?? false;
+  }
+
+  protected onFormChanged(value: Partial<ContainerDetails>) {
+    if (!this.isNew) {
+      this.containerName = value.name ?? this.containerName;
+    }
   }
 
   protected close() {

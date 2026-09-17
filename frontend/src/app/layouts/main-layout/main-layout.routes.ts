@@ -18,6 +18,7 @@ export const MAIN_LAYOUT_ROUTES: Routes = [
   },
   {path: 'rents', component: RentsComponent},
   {path: 'tickets', component: TicketsComponent},
+  {path: 'tickets/:id', component: TicketsComponent},
   {path: 'settings', component: SettingsComponent},
   {
     path: 'admin',

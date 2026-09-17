@@ -7,6 +7,8 @@ import {ContainersComponent} from './containers/containers.component';
 export const INVENTORY_ROUTES: Routes = [
   {path: '', redirectTo: 'devices', pathMatch: 'full'},
   {path: 'devices', component: DevicesComponent},
+  {path: 'devices/:id', component: DevicesComponent},
   {path: 'compositeitems', component: CompositeItemsComponent},
   {path: 'containers', component: ContainersComponent},
+  {path: 'containers/:id', component: ContainersComponent},
 ];

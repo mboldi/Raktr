@@ -39,6 +39,8 @@ import {CategoryDetails} from '../../../../model/category/categoryDetails';
 import {LocationDetails} from '../../../../model/location/LocationDetails';
 import {OwnerDetailsDto} from '../../../../model/owner/ownerDetailsDto';
 import {MatCheckbox} from '@angular/material/checkbox';
+import {Location} from '@angular/common';
+import {ActivatedRoute} from '@angular/router';
 
 const ALL_COLUMNS: string[] = ['name', 'assetTag', 'category', 'location', 'itemCount', 'totalWeight'];
 const REDUCED_COLUMNS: string[] = ['name', 'assetTag', 'location', 'itemCount'];
@@ -118,6 +120,8 @@ export class ContainersComponent implements OnInit {
     private locationService: LocationService,
     private ownerService: OwnerService,
     private snackBar: MatSnackBar,
+    private route: ActivatedRoute,
+    private location: Location,
   ) {
 
     effect(() => {
@@ -137,6 +141,22 @@ export class ContainersComponent implements OnInit {
       this.filterSortContainers();
 
       this.loading = false;
+
+      const containerId = this.route.snapshot.paramMap.get('id');
+      if (containerId) {
+        const container = this.containers.find(c => c.id === +containerId);
+        if (container) {
+          this.openContainer(container);
+        } else {
+          this.location.go('/inventory/containers');
+          this.snackBar.open(`Nincs szállítóláda ${containerId} azonosítóval!`, 'Értem', {
+            duration: 4000,
+            horizontalPosition: 'right',
+            verticalPosition: 'top',
+            panelClass: ['error-snackbar'],
+          });
+        }
+      }
     });
 
     this.categoryService.getCategories().subscribe(categories => {
@@ -154,6 +174,8 @@ export class ContainersComponent implements OnInit {
   }
 
   protected openContainer(row: any) {
+    this.location.go(`/inventory/containers/${row.id}`);
+
     const viewModal = this.dialog.open(TabbedEditModalComponent, {
       width: '50vw',
       maxWidth: '100vw',
@@ -163,6 +185,8 @@ export class ContainersComponent implements OnInit {
     });
 
     viewModal.afterClosed().subscribe(result => {
+      this.location.go('/inventory/containers');
+
       if (result === 'edit') {
         const editContainerDialog = this.dialog.open(ContainerEditDialogComponent, {
           width: '50vw',
@@ -195,12 +219,14 @@ export class ContainersComponent implements OnInit {
         this.containers.push(result);
         this.filterSortContainers();
 
-        this.snackBar.open(`${result.name} létrehozva!`, "Kitűnő!", {
+        const snackBarRef = this.snackBar.open(`${result.name} létrehozva!`, "Megnyitás", {
           duration: 3000,
           horizontalPosition: 'right',
           verticalPosition: 'top',
           panelClass: ['success-snackbar'],
         });
+
+        snackBarRef.onAction().subscribe(() => this.openContainer(result));
       }
     })
   }

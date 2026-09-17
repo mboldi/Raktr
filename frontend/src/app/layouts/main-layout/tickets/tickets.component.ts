@@ -34,6 +34,8 @@ import {MatTooltip} from '@angular/material/tooltip';
 import {MatDialog} from '@angular/material/dialog';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {TicketDialogResult, TicketEditDialogComponent} from '../../../components/ticket-edit-modal/ticket-edit-dialog.component';
+import {Location} from '@angular/common';
+import {ActivatedRoute} from '@angular/router';
 
 const ALL_COLUMNS: string[] = ['severity', 'status', 'id', 'createdAt', 'device', 'description', 'createdBy', 'comments'];
 const REDUCED_COLUMNS: string[] = ['severity', 'id', 'status', 'createdAt', 'device'];
@@ -124,6 +126,8 @@ export class TicketsComponent implements OnInit {
     private ticketService: TicketService,
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
+    private route: ActivatedRoute,
+    private location: Location,
   ) {
     effect(() => {
       const width = this.windowService.windowWidth();
@@ -143,6 +147,22 @@ export class TicketsComponent implements OnInit {
       this.filterSortTickets();
 
       this.loading = false;
+
+      const ticketId = this.route.snapshot.paramMap.get('id');
+      if (ticketId) {
+        const ticket = this.tickets.find(t => t.id === +ticketId);
+        if (ticket) {
+          this.openTicket(ticket);
+        } else {
+          this.location.go('/tickets');
+          this.snackBar.open(`Nincs hibajegy ${ticketId} azonosítóval!`, 'Értem', {
+            duration: 4000,
+            horizontalPosition: 'right',
+            verticalPosition: 'top',
+            panelClass: ['error-snackbar'],
+          });
+        }
+      }
     });
   }
 
@@ -318,18 +338,22 @@ export class TicketsComponent implements OnInit {
         this.filterSortTickets();
 
         if (response.saved) {
-          this.snackBar.open('Hibajegy létrehozva!', 'Remek!', {
+          const snackBarRef = this.snackBar.open('Hibajegy létrehozva!', 'Megnyitás', {
             duration: 3000,
             horizontalPosition: 'right',
             verticalPosition: 'top',
             panelClass: ['success-snackbar'],
           });
+
+          snackBarRef.onAction().subscribe(() => this.openTicket(response.ticket));
         }
       }
     });
   }
 
   protected openTicket(ticket: TicketDetails) {
+    this.location.go(`/tickets/${ticket.id}`);
+
     const dialogRef = this.dialog.open(TicketEditDialogComponent, {
       width: '60vw',
       maxWidth: '100vw',
@@ -338,6 +362,8 @@ export class TicketsComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe((response?: TicketDialogResult) => {
+      this.location.go('/tickets');
+
       if (response) {
         this.replaceById(this.tickets, response.ticket);
         this.filterSortTickets();

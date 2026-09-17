@@ -39,6 +39,8 @@ import {CategoryDetails} from '../../../../model/category/categoryDetails';
 import {LocationDetails} from '../../../../model/location/LocationDetails';
 import {OwnerDetailsDto} from '../../../../model/owner/ownerDetailsDto';
 import {MatCheckbox} from '@angular/material/checkbox';
+import {Location} from '@angular/common';
+import {ActivatedRoute} from '@angular/router';
 
 const ALL_COLUMNS: string[] = ['name', 'assetTag', 'maker', 'model', 'quantity', 'category', 'location', 'weight'];
 const REDUCED_COLUMNS: string[] = ['name', 'assetTag', 'maker', 'model'];
@@ -121,6 +123,8 @@ export class DevicesComponent implements OnInit {
     private categoryService: CategoryService,
     private locationService: LocationService,
     private ownerService: OwnerService,
+    private route: ActivatedRoute,
+    private location: Location,
     ) {
 
     effect(() => {
@@ -141,6 +145,22 @@ export class DevicesComponent implements OnInit {
       this.filterSortDevices();
 
       this.loading = false;
+
+      const deviceId = this.route.snapshot.paramMap.get('id');
+      if (deviceId) {
+        const device = this.devices.find(d => d.id === +deviceId);
+        if (device) {
+          this.openDevice(device);
+        } else {
+          this.location.go('/inventory/devices');
+          this.snackBar.open(`Nincs eszköz ${deviceId} azonosítóval!`, 'Kár :(', {
+            duration: 4000,
+            horizontalPosition: 'right',
+            verticalPosition: 'top',
+            panelClass: ['error-snackbar'],
+          });
+        }
+      }
     });
 
     this.categoryService.getCategories().subscribe(categories => {
@@ -166,6 +186,8 @@ export class DevicesComponent implements OnInit {
   }
 
   protected openDevice(row: any) {
+    this.location.go(`/inventory/devices/${row.id}`);
+
     const viewDeviceDialog = this.dialog.open(TabbedEditModalComponent, {
       width: '60vw',
       maxWidth: '100vw',
@@ -174,6 +196,8 @@ export class DevicesComponent implements OnInit {
     });
 
     viewDeviceDialog.afterClosed().subscribe(result => {
+      this.location.go('/inventory/devices');
+
       if (result === 'edit') {
         const editDeviceDialog = this.dialog.open(DeviceEditDialogComponent, {
           width: '60vw',
@@ -211,12 +235,14 @@ export class DevicesComponent implements OnInit {
         this.updateMakers();
         this.filterSortDevices();
 
-        this.snackBar.open(`${result.name} létrehozva!`, "Kitűnő!", {
+        const snackBarRef = this.snackBar.open(`${result.name} létrehozva!`, "Megnyitás", {
           duration: 3000,
           horizontalPosition: 'right',
           verticalPosition: 'top',
           panelClass: ['success-snackbar'],
         });
+
+        snackBarRef.onAction().subscribe(() => this.openDevice(result));
       }
     })
   }

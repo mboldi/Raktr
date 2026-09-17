@@ -11,7 +11,7 @@ export class RentDetails {
   renterName: string;
   outDate: Date;
   expectedReturnDate: Date;
-  actualReturnDate: Date;
+  actualReturnDate: Date | null;
   closed: boolean;
   deleted: boolean;
   rentItems: RentItemDetailsDto[];
@@ -29,7 +29,7 @@ export class RentDetails {
     renterName: string,
     outDate: Date,
     expectedReturnDate: Date,
-    actualReturnDate: Date,
+    actualReturnDate: Date | null,
     closed: boolean,
     deleted: boolean,
     rentItems: RentItemDetailsDto[],
@@ -57,11 +57,15 @@ export class RentDetails {
     this.updatedBy = updatedBy;
   }
 
+  public getItemCount(): number {
+    return this.rentItems.reduce((sum, item) => sum + item.quantity, 0);
+  }
+
   public getSumWeight(): number {
     let sumWeight = 0;
 
     this.rentItems.forEach(rentItem => {
-      sumWeight += rentItem.scannable.weight;
+      sumWeight += rentItem.scannable.weight * rentItem.quantity;
     });
 
     return sumWeight;
@@ -76,7 +80,7 @@ export class RentDetails {
       json['renterName'] as string,
       new Date(json['outDate'] as string),
       new Date(json['expectedReturnDate'] as string),
-      new Date(json['actualReturnDate'] as string),
+      json['actualReturnDate'] ? new Date(json['actualReturnDate'] as string) : null,
       json['closed'] as boolean,
       json['deleted'] as boolean,
       (json['rentItems'] as Record<string, unknown>[]).map(RentItemDetailsDto.fromJson),

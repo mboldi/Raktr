@@ -4,7 +4,7 @@ export class RentUpdateDto {
   renterName: string;
   outDate: Date;
   expectedReturnDate: Date;
-  actualReturnDate: Date;
+  actualReturnDate: Date | null;
 
   constructor(
     destination: string,
@@ -12,7 +12,7 @@ export class RentUpdateDto {
     renterName: string,
     outDate: Date,
     expectedReturnDate: Date,
-    actualReturnDate: Date
+    actualReturnDate: Date | null
   ) {
     this.destination = destination;
     this.issuerId = issuerId;
@@ -29,7 +29,7 @@ export class RentUpdateDto {
       json['renterName'] as string,
       new Date(json['outDate'] as string),
       new Date(json['expectedReturnDate'] as string),
-      new Date(json['actualReturnDate'] as string)
+      json['actualReturnDate'] ? new Date(json['actualReturnDate'] as string) : null
     );
   }
 
@@ -38,9 +38,9 @@ export class RentUpdateDto {
       destination: this.destination,
       issuerId: this.issuerId,
       renterName: this.renterName,
-      outDate: this.outDate.toISOString(),
-      expectedReturnDate: this.expectedReturnDate.toISOString(),
-      actualReturnDate: this.actualReturnDate.toISOString()
+      outDate: this.outDate.toISOString().split('T')[0],
+      expectedReturnDate: this.expectedReturnDate.toISOString().split('T')[0],
+      actualReturnDate: this.actualReturnDate ? this.actualReturnDate.toISOString().split('T')[0] : null
     };
   }
 }

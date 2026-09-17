@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import {map, Observable} from 'rxjs';
 import {UserDetails} from '../model/user/userDetails';
 import {environment} from '../../environments/environment';
@@ -13,8 +13,10 @@ export class UserService {
   constructor(private http: HttpClient) {
   }
 
-  getUsers(): Observable<UserDetails[]> {
-    return this.http.get<Record<string, unknown>[]>(`${environment.apiUrl}/v1/users`)
+  getUsers(canIssueRent?: boolean): Observable<UserDetails[]> {
+    const params = canIssueRent !== undefined ? new HttpParams().set('canIssueRent', canIssueRent) : undefined;
+
+    return this.http.get<Record<string, unknown>[]>(`${environment.apiUrl}/v1/users`, {params})
       .pipe(
         map(users => {
           let typedUsers: UserDetails[] = [];

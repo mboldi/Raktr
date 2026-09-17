@@ -26,6 +26,7 @@ import {environment} from '../../../../environments/environment';
 import {MatProgressSpinner} from '@angular/material/progress-spinner';
 import {WindowWidthService} from '../../../services/windowWidth.service';
 import {MatCheckbox} from '@angular/material/checkbox';
+import {Router} from '@angular/router';
 
 const ALL_COLUMNS: string[] = ['status', 'issuer', 'renter', 'destination', 'outDate', 'expectedReturnDate', 'actualReturnDate', 'itemCount', 'totalWeight'];
 const REDUCED_COLUMNS: string[] = ['status', 'issuer', 'renter', 'destination', 'outDate'];
@@ -98,6 +99,7 @@ export class RentsComponent implements OnInit {
     private windowService: WindowWidthService,
     private localStorageService: LocalStorageService,
     private rentService: RentService,
+    private router: Router,
   ) {
     effect(() => {
       const width = this.windowService.windowWidth();
@@ -263,5 +265,13 @@ export class RentsComponent implements OnInit {
     this.rentSearchFormControl.reset();
     this.searchFilter = '';
     this.filterSortRents();
+  }
+
+  protected newRent() {
+    this.router.navigate(['/rents', 'new']);
+  }
+
+  protected openRent(rent: RentDetails) {
+    this.router.navigate(['/rents', rent.id]);
   }
 }

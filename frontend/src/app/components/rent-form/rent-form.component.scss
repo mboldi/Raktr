@@ -1,0 +1,62 @@
+.basic-properties-panel {
+  margin-bottom: 8px;
+  box-shadow: none !important;
+}
+
+.action-row {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 8px;
+}
+
+.stats-panel {
+  margin-bottom: 16px;
+  box-shadow: none !important;
+}
+
+.field-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 16px 24px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+
+  .label {
+    font-size: 0.75rem;
+    color: var(--mat-sys-on-surface-variant);
+  }
+
+  .value {
+    font-size: 0.95rem;
+  }
+}
+
+.no-items-text {
+  text-align: center;
+  color: var(--mat-sys-on-surface-variant);
+  padding: 16px 0;
+}
+
+.table-wrapper {
+  overflow-y: auto;
+  padding-right: 0;
+}
+
+.delete-button {
+  color: light-dark(#D50000, #C62828)
+}
+
+.quantity-input {
+  width: 60px;
+  text-align: right;
+  display: inline-block;
+}
+
+.items-header-row{
+
+}

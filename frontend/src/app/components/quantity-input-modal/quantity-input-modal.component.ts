@@ -14,10 +14,12 @@ import {FormControl, ReactiveFormsModule, Validators} from '@angular/forms';
 export class QuantityInputDialogData {
   deviceName: string;
   maxQuantity: number;
+  initialQuantity: number;
 
-  constructor(deviceName: string, maxQuantity: number) {
+  constructor(deviceName: string, maxQuantity: number, initialQuantity: number = 1) {
     this.deviceName = deviceName;
     this.maxQuantity = maxQuantity;
+    this.initialQuantity = initialQuantity;
   }
 }
 
@@ -49,7 +51,7 @@ export class QuantityInputModalComponent {
     this.deviceName = data.deviceName;
     this.maxQuantity = data.maxQuantity;
 
-    this.quantityFormControl = new FormControl(1, [
+    this.quantityFormControl = new FormControl(data.initialQuantity, [
       Validators.required,
       Validators.min(1),
       Validators.max(data.maxQuantity),

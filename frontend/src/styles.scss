@@ -14,7 +14,7 @@ html {
                   primary: my-theme.$primary-palette,
                   tertiary: my-theme.$tertiary-palette,
           ),
-          typography: Roboto,
+          typography: "IBM Plex Sans",
           density: 0,
   ));
 
@@ -22,9 +22,13 @@ html {
 
 body {
   margin: 0;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
+  font-family: "IBM Plex Sans", Roboto, "Helvetica Neue", sans-serif;
   background-color: var(--mat-sys-background);
   color: var(--mat-sys-on-background);
+}
+
+h1, h2, h3, h4, h5, h6, mat-card-title, .mat-mdc-card-title {
+  font-family: "IBM Plex Mono", "IBM Plex Sans", Roboto, "Helvetica Neue", sans-serif;
 }
 
 

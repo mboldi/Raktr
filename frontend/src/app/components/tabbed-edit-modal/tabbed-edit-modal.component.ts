@@ -127,11 +127,15 @@ export class TabbedEditModalComponent {
         this.ticketsLoading = false;
     }
 
-    // Only devices have a /rents endpoint - containers and plain scannables just show empty.
-    if (data.kind === 'device') {
-      this.deviceService.getRentsOfDevice(data.item.id).subscribe(rents => this.onRentsLoaded(rents));
-    } else {
-      this.rentsLoading = false;
+    switch (data.kind) {
+      case 'device':
+        this.deviceService.getRentsOfDevice(data.item.id).subscribe(rents => this.onRentsLoaded(rents));
+        break;
+      case 'container':
+        this.containerService.getRentsOfContainer(data.item.id).subscribe(rents => this.onRentsLoaded(rents));
+        break;
+      default:
+        this.rentsLoading = false;
     }
   }
 

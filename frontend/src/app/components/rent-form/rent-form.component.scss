@@ -57,6 +57,31 @@
   display: inline-block;
 }
 
+.status-mode-header {
+  cursor: pointer;
+  user-select: none;
+  border-radius: 4px;
+
+  &:hover {
+    background: light-dark(rgba(0, 0, 0, 0.04), rgba(255, 255, 255, 0.08));
+  }
+}
+
+.status-mode-active {
+  background: light-dark(#e6f4ea, #1b3324) !important;
+  color: light-dark(#1e7e34, #81c995) !important;
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+.status-mode-field {
+  --mat-form-field-focus-active-indicator-color: #1e7e34;
+
+  ::ng-deep .mat-mdc-text-field-wrapper {
+    background: light-dark(#e6f4ea, #1b3324);
+  }
+}
+
 .items-header-row{
 
 }

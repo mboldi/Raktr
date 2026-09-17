@@ -128,13 +128,15 @@
                 flex-wrap: wrap;
                 justify-content: space-between">
       @if (!itemsLocked) {
-        <mat-form-field style="width: 350px">
-          <mat-label>Eszköz hozzáadása</mat-label>
+        <mat-form-field style="width: 350px" [class.status-mode-field]="selectedStatusMode">
+          <mat-label>{{ selectedStatusMode ? 'Eszköz keresése státusz módosításához' : 'Eszköz hozzáadása' }}</mat-label>
           <input matInput placeholder="Vonalkód, vagy keresés név/azonosító alapján"
                  autocomplete="off"
                  [formControl]="addScannableFormControl"
                  [matAutocomplete]="autoNewScannable"
-                 matTooltip="Kattints bele ebbe a mezőbe és használd a vonalkódolvasót automatikus hozzáadáshoz, vagy kezdd el keresni az eszköz nevét, majd válaszd ki a listából!"
+                 [matTooltip]="selectedStatusMode ?
+                   'Kattints bele és használd a vonalkódolvasót, vagy keress rá a listán már szereplő eszközre, hogy a kijelölt állapotot rákapcsold!' :
+                   'Kattints bele ebbe a mezőbe és használd a vonalkódolvasót automatikus hozzáadáshoz, vagy kezdd el keresni az eszköz nevét, majd válaszd ki a listából!'"
                  matTooltipPosition="right"
                  (keyup.escape)="addScannableFormControl.reset()"
                  (keyup.enter)="onAddScannableEnterKey()">
@@ -194,7 +196,14 @@
       </ng-container>
 
       <ng-container matColumnDef="packed">
-        <th mat-header-cell *matHeaderCellDef>Elpakolva</th>
+        <th mat-header-cell *matHeaderCellDef
+            class="status-mode-header"
+            [class.status-mode-active]="selectedStatusMode === 'packed'"
+            matTooltip="Kattints ide, majd keress rá vagy szkennelj be egy eszközt a listán, hogy elpakoltnak jelöld"
+            matTooltipPosition="above"
+            (click)="toggleStatusMode('packed')">
+          Elpakolva
+        </th>
         <td mat-cell *matCellDef="let item">
           <mat-checkbox color="primary"
                         [disabled]="itemsLocked"
@@ -205,7 +214,14 @@
       </ng-container>
 
       <ng-container matColumnDef="returned">
-        <th mat-header-cell *matHeaderCellDef>Visszaérkezett</th>
+        <th mat-header-cell *matHeaderCellDef
+            class="status-mode-header"
+            [class.status-mode-active]="selectedStatusMode === 'returned'"
+            matTooltip="Kattints ide, majd keress rá vagy szkennelj be egy eszközt a listán, hogy visszaérkezettnek jelöld"
+            matTooltipPosition="above"
+            (click)="toggleStatusMode('returned')">
+          Visszaérkezett
+        </th>
         <td mat-cell *matCellDef="let item">
           <mat-checkbox color="primary"
                         [disabled]="itemsLocked"

@@ -219,6 +219,10 @@ export class EditRentComponent implements OnInit {
     this.notify('Nem található eszköz ezzel a vonalkóddal!', 'error-snackbar');
   }
 
+  protected onScannableNotOnRent() {
+    this.notify('Ez az eszköz még nincs hozzáadva a kivitelhez!', 'error-snackbar');
+  }
+
   protected onRemoveItem(item: RentItemDetailsDto) {
     if (!this.rent) {
       return;

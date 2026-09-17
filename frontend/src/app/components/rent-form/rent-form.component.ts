@@ -61,6 +61,9 @@ export interface ItemStatusChangedEvent {
   status: RentItemStatus;
 }
 
+/** Which checkbox column the search/scan box currently targets - null means it adds new items instead. */
+export type StatusMode = 'packed' | 'returned';
+
 @Component({
   selector: 'app-rent-form',
   imports: [
@@ -126,6 +129,8 @@ export class RentFormComponent implements OnInit {
   addScannable = output<AddScannableEvent>();
   /** Emitted when the entered value doesn't match any known device's or container's barcode. */
   scannableNotFound = output<void>();
+  /** Emitted when a status mode is active (see `selectedStatusMode`) but the resolved scannable isn't on this rent yet. */
+  scannableNotOnRent = output<void>();
   /** Emits the item to remove from the rent. */
   removeItem = output<RentItemDetailsDto>();
   /** Emits when a device item's taken-out quantity is edited. */
@@ -147,6 +152,9 @@ export class RentFormComponent implements OnInit {
   protected filteredIssuers: Observable<UserDetails[]>;
 
   protected addScannableFormControl = new FormControl('');
+  /** When set by clicking a checkbox column's header, the search/scan box no longer adds new
+   * items - it looks up an item already on the rent and flips that column's status on it instead. */
+  protected selectedStatusMode: StatusMode | null = null;
   protected devices: DeviceDetails[] = [];
   protected containers: ContainerDetails[] = [];
   protected devicesById = new Map<number, DeviceDetails>();
@@ -312,6 +320,16 @@ export class RentFormComponent implements OnInit {
       return [];
     }
 
+    // In a status mode, the box helps find an item already on the rent to flip a checkbox on -
+    // searching the addable scannables wouldn't make sense there.
+    if (this.selectedStatusMode) {
+      return (this.rentData()?.rentItems ?? [])
+        .map(item => item.scannable)
+        .filter(scannable =>
+          scannable.name.toLowerCase().includes(filter) || scannable.assetTag.toLowerCase().includes(filter)
+        ).slice(0, 5);
+    }
+
     const addedIds = new Set((this.rentData()?.rentItems ?? []).map(item => item.scannable.id));
 
     return this.scannables.filter(scannable =>
@@ -321,6 +339,15 @@ export class RentFormComponent implements OnInit {
       !scannable.deleted &&
       (scannable.name.toLowerCase().includes(filter) || scannable.assetTag.toLowerCase().includes(filter))
     ).slice(0, 5);
+  }
+
+  protected toggleStatusMode(mode: StatusMode) {
+    if (this.itemsLocked) {
+      return;
+    }
+
+    this.selectedStatusMode = this.selectedStatusMode === mode ? null : mode;
+    this.addScannableFormControl.reset();
   }
 
   private isStackable(scannableId: number): boolean {
@@ -363,6 +390,11 @@ export class RentFormComponent implements OnInit {
       return;
     }
 
+    if (this.selectedStatusMode) {
+      this.applyStatusModeToScannable(matched);
+      return;
+    }
+
     const device = this.devicesById.get(matched.id);
     const existingItem = this.findExistingItem(matched.id);
 
@@ -387,6 +419,24 @@ export class RentFormComponent implements OnInit {
       this.addScannable.emit({scannable: matched, quantity: 1});
       this.addScannableFormControl.reset();
     }
+  }
+
+  private applyStatusModeToScannable(scannable: ScannableDetailsDto) {
+    const item = this.findExistingItem(scannable.id);
+
+    if (!item) {
+      this.scannableNotOnRent.emit();
+      this.addScannableFormControl.reset();
+      return;
+    }
+
+    if (this.selectedStatusMode === 'packed') {
+      this.togglePacked(item);
+    } else {
+      this.toggleReturned(item);
+    }
+
+    this.addScannableFormControl.reset();
   }
 
   private refilterItems() {
@@ -421,29 +471,43 @@ export class RentFormComponent implements OnInit {
   }
 
   protected onPackedChanged(checkboxChange: MatCheckboxChange, item: RentItemDetailsDto) {
-    if (item.status === RentItemStatus.RETURNED) {
+    if (!this.togglePacked(item)) {
       checkboxChange.source.checked = true;
-      return;
+    }
+  }
+
+  protected onReturnedChanged(checkboxChange: MatCheckboxChange, item: RentItemDetailsDto) {
+    if (!this.toggleReturned(item)) {
+      checkboxChange.source.checked = false;
+    }
+  }
+
+  /** Returns false (and leaves the item untouched) when it's already returned - packing can't be undone at that point. */
+  private togglePacked(item: RentItemDetailsDto): boolean {
+    if (item.status === RentItemStatus.RETURNED) {
+      return false;
     }
 
     const newStatus = item.status === RentItemStatus.PENDING ? RentItemStatus.OUT : RentItemStatus.PENDING;
     this.itemStatusChanged.emit({item, status: newStatus});
+    return true;
   }
 
-  protected onReturnedChanged(checkboxChange: MatCheckboxChange, item: RentItemDetailsDto) {
+  /** Returns false (and leaves the item untouched) when a COMPLEX rent's item hasn't been packed yet. */
+  private toggleReturned(item: RentItemDetailsDto): boolean {
     const rent = this.rentData();
 
     if (item.status === RentItemStatus.RETURNED) {
       this.itemStatusChanged.emit({item, status: RentItemStatus.OUT});
-      return;
+      return true;
     }
 
     if (rent?.type === RentType.COMPLEX && item.status !== RentItemStatus.OUT) {
-      checkboxChange.source.checked = false;
-      return;
+      return false;
     }
 
     this.itemStatusChanged.emit({item, status: RentItemStatus.RETURNED});
+    return true;
   }
 
   protected canRemove(item: RentItemDetailsDto): boolean {

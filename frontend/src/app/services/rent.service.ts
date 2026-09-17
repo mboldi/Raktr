@@ -10,6 +10,7 @@ import {RentItemCreateDto} from '../model/rent/rentItem/rentItemCreateDto';
 import {RentItemUpdateDto} from '../model/rent/rentItem/rentItemUpdateDto';
 import {CommentCreateDto} from '../model/comment/commentCreateDto';
 import {CommentDetailsDto} from '../model/comment/commentDetailsDto';
+import {RentPdfCreateDto} from '../model/rent/rentPdfCreateDto';
 
 @Injectable({
   providedIn: 'root'
@@ -99,6 +100,12 @@ export class RentService {
       .pipe(
         map(createdComment => CommentDetailsDto.fromJson(createdComment))
       );
+  }
+
+  getRentPdf(rentId: number, pdfRequest: RentPdfCreateDto): Observable<Blob> {
+    const headers = new HttpHeaders().set('Content-Type', 'application/json');
+
+    return this.http.post(`${environment.apiUrl}/v1/rents/${rentId}/pdf`, pdfRequest, {headers: headers, responseType: 'blob'});
   }
 
 }

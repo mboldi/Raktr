@@ -1,7 +1,7 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router, RouterLink} from '@angular/router';
 import {MatCard, MatCardContent, MatCardHeader} from '@angular/material/card';
-import {MatButton} from '@angular/material/button';
+import {MatButton, MatFabButton} from '@angular/material/button';
 import {MatIcon} from '@angular/material/icon';
 import {MatFormField, MatInput, MatLabel} from '@angular/material/input';
 import {MatDivider} from '@angular/material/list';
@@ -22,6 +22,7 @@ import {RentItemDetailsDto} from '../../../model/rent/rentItem/rentItemDetails';
 import {RentItemStatus} from '../../../model/rent/rentItem/rentItemStatus';
 import {CommentCreateDto} from '../../../model/comment/commentCreateDto';
 import {CommentDetailsDto} from '../../../model/comment/commentDetailsDto';
+import {RentPdfCreateDto} from '../../../model/rent/rentPdfCreateDto';
 import {UserDetails} from '../../../model/user/userDetails';
 import {RentService} from '../../../services/rent.service';
 import {AdminAccessService} from '../../../services/adminAccess.service';
@@ -46,6 +47,7 @@ import {YesnoModalComponent} from '../../../components/yesno-modal/yesno-modal.c
     DatePipe,
     ReactiveFormsModule,
     RentFormComponent,
+    MatFabButton,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './edit-rent.component.html',
@@ -63,6 +65,8 @@ export class EditRentComponent implements OnInit {
   protected isFullAccessMember = false;
 
   protected newCommentControl = new FormControl('');
+
+  protected exportingPdf = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -290,6 +294,39 @@ export class EditRentComponent implements OnInit {
       this.rent!.comments = [...this.rent!.comments, comment];
       this.newCommentControl.reset('');
       this.cdr.markForCheck();
+    });
+  }
+
+  protected downloadPdf() {
+    if (!this.rent) {
+      return;
+    }
+
+    const renterId = this.currentUser?.personalId;
+    if (!renterId) {
+      this.notify('Nincs beállítva személyi igazolvány szám a fiókodban - add meg a Beállítások oldalon!', 'error-snackbar');
+      return;
+    }
+
+    this.exportingPdf = true;
+
+    this.rentService.getRentPdf(this.rent.id, new RentPdfCreateDto(renterId)).subscribe({
+      next: pdf => {
+        this.exportingPdf = false;
+        this.cdr.markForCheck();
+
+        const url = URL.createObjectURL(pdf);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `kivitel-${this.rent!.id}.pdf`;
+        link.click();
+        URL.revokeObjectURL(url);
+      },
+      error: () => {
+        this.exportingPdf = false;
+        this.cdr.markForCheck();
+        this.notify('Nem sikerült létrehozni a PDF-et!', 'error-snackbar');
+      }
     });
   }
 }

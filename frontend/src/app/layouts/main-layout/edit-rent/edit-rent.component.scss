@@ -29,6 +29,19 @@
   color: #eaf1ff !important;
 }
 
+.pdf-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  margin-top: -80px;
+
+  mat-spinner {
+    display: inline-block;
+    margin-right: 4px;
+  }
+}
+
 .new-comment-row {
   display: flex;
   flex-direction: row;

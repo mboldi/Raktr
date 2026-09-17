@@ -27,7 +27,17 @@
                     <p class="subtitle">{{ rent.destination }} &ndash; {{ rent.outDate | date:'yyyy. MM. dd.' }}</p>
                   }
                 </div>
-                <div class="col-auto">
+                <div class="col-auto pdf-actions">
+                  @if (!isNew && rent) {
+                    <button matFab extended type="button" [disabled]="exportingPdf" (click)="downloadPdf()">
+                      @if (exportingPdf) {
+                        <mat-spinner diameter="20"></mat-spinner>
+                      } @else {
+                        <mat-icon>picture_as_pdf</mat-icon>
+                      }
+                      Kiviteli letöltése
+                    </button>
+                  }
                   @if (rent?.closed) {
                     <mat-chip class="status-chip">Lezárva</mat-chip>
                   }

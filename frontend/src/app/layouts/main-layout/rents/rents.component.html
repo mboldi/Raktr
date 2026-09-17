@@ -78,6 +78,12 @@
           </button>
         }
       </div>
+
+
+      <mat-slide-toggle class="show-closed-toggle" [checked]="showClosedRents"
+                        (change)="toggleShowClosedRents($event.checked)">
+        Lezárt kivitelek mutatása
+      </mat-slide-toggle>
     </div>
 
     <button matFab extended class="add-button" (click)="newRent()">

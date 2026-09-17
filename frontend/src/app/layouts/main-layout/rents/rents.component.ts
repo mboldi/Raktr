@@ -26,6 +26,7 @@ import {environment} from '../../../../environments/environment';
 import {MatProgressSpinner} from '@angular/material/progress-spinner';
 import {WindowWidthService} from '../../../services/windowWidth.service';
 import {MatCheckbox} from '@angular/material/checkbox';
+import {MatSlideToggle} from '@angular/material/slide-toggle';
 import {Router} from '@angular/router';
 
 const ALL_COLUMNS: string[] = ['status', 'issuer', 'renter', 'destination', 'outDate', 'expectedReturnDate', 'actualReturnDate', 'itemCount', 'totalWeight'];
@@ -61,6 +62,7 @@ const REDUCED_COLUMNS: string[] = ['status', 'issuer', 'renter', 'destination', 
     MatFabButton,
     MatButton,
     MatCheckbox,
+    MatSlideToggle,
   ],
   templateUrl: './rents.component.html',
   styleUrl: './rents.component.scss',
@@ -94,6 +96,8 @@ export class RentsComponent implements OnInit {
 
   protected selectedIssuers = new Set<string>();
   protected selectedRenters = new Set<string>();
+
+  protected showClosedRents = false;
 
   constructor(
     private windowService: WindowWidthService,
@@ -143,9 +147,15 @@ export class RentsComponent implements OnInit {
     this.filterSortRents();
   }
 
+  protected toggleShowClosedRents(show: boolean) {
+    this.showClosedRents = show;
+    this.filterSortRents();
+  }
+
   protected filterSortRents() {
     this.filteredRents = this.rents.filter(rent =>
       this.matchesSearch(rent) &&
+      (this.showClosedRents || !rent.closed) &&
       (this.selectedIssuers.size === 0 || this.selectedIssuers.has(rent.issuer?.nickname ?? '')) &&
       (this.selectedRenters.size === 0 || this.selectedRenters.has(rent.renterName ?? ''))
     );
@@ -206,6 +216,7 @@ export class RentsComponent implements OnInit {
   private rentsMatchingExcept(excludedFacet: 'issuer' | 'renter'): RentDetails[] {
     return this.rents.filter(rent =>
       this.matchesSearch(rent) &&
+      (this.showClosedRents || !rent.closed) &&
       (excludedFacet === 'issuer' || this.selectedIssuers.size === 0 || this.selectedIssuers.has(rent.issuer?.nickname ?? '')) &&
       (excludedFacet === 'renter' || this.selectedRenters.size === 0 || this.selectedRenters.has(rent.renterName ?? ''))
     );

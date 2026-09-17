@@ -39,6 +39,7 @@ import {
 import {YesnoModalComponent} from '../../../components/yesno-modal/yesno-modal.component';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {catchError, EMPTY} from 'rxjs';
+import {Router} from '@angular/router';
 
 const ALL_COLUMNS: string[] = ['destination', 'issuer', 'renter', 'outDate', 'expectedReturnDate', 'itemCount', 'sumWeight'];
 const REDUCED_COLUMNS: string[] = ['destination', 'issuer', 'renter', 'outDate', 'expectedReturnDate'];
@@ -91,7 +92,8 @@ export class OverviewComponent {
     private rentService: RentService,
     private ticketService: TicketService,
     private dialog: MatDialog,
-    private snackBar: MatSnackBar,) {
+    private snackBar: MatSnackBar,
+    private router: Router,) {
 
     effect(() => {
       const width = this.windowService.windowWidth();
@@ -151,7 +153,11 @@ export class OverviewComponent {
   }
 
   protected addRent() {
+    this.router.navigate(['/rents', 'new']);
+  }
 
+  protected openRent(rent: RentDetails) {
+    this.router.navigate(['/rents', rent.id]);
   }
 
   protected addDevice(presetBarcode?: string) {

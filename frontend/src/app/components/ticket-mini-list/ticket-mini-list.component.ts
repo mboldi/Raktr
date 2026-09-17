@@ -1,4 +1,6 @@
 import {Component, input} from '@angular/core';
+import {Router} from '@angular/router';
+import {MatDialog} from '@angular/material/dialog';
 import {
   MatCell,
   MatCellDef,
@@ -51,6 +53,19 @@ export class TicketMiniListComponent {
   loading = input<boolean>(false);
 
   protected readonly displayedColumns = DISPLAYED_COLUMNS;
+
+  constructor(
+    private router: Router,
+    private dialog: MatDialog,
+  ) {
+  }
+
+  protected openTicket(ticket: TicketDetails) {
+    // Navigating away to the ticket editing route would otherwise leave this dialog (and any
+    // dialog it's nested in) stacked on top of the tickets page - close them all first.
+    this.dialog.closeAll();
+    this.router.navigate(['/tickets', ticket.id]);
+  }
 
   protected statusLabel(status: TicketStatus): string {
     return TICKET_STATUS_LABELS[status];

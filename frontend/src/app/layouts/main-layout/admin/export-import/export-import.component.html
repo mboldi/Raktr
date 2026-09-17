@@ -1,0 +1,29 @@
+<div class="container-fluid" style="padding-right: 24px">
+  <div class="row">
+    <div class="col-xl-7 col-lg-10 col-md-12">
+      <mat-card class="card-with-icon">
+        <mat-card-header style="padding-bottom: 16px">
+          <h4 class="card-header-text bg-blue">Export / Import</h4>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="export-row">
+            <div class="export-info">
+              <h5>Eszközök exportálása</h5>
+              <p>Az összes eszköz letöltése Excel (.xlsx) fájlként, minden mezővel.</p>
+            </div>
+            <button mat-raised-button color="primary" type="button"
+                    [disabled]="exportingDevices"
+                    (click)="exportDevices()">
+              @if (exportingDevices) {
+                <mat-spinner diameter="20"></mat-spinner>
+              } @else {
+                <mat-icon>download</mat-icon>
+              }
+              Letöltés
+            </button>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>

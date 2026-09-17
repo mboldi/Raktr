@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import {catchError, map, Observable, of} from 'rxjs';
 import {environment} from '../../environments/environment';
 import {DeviceDetails} from "../model/scannable/device/deviceDetails";
@@ -16,8 +16,10 @@ export class DeviceService {
   constructor(private http: HttpClient) {
   }
 
-  getDevices(): Observable<DeviceDetails[]> {
-    return this.http.get<Record<string, unknown>[]>(`${environment.apiUrl}/v1/devices`)
+  getDevices(includeDeleted: boolean = false): Observable<DeviceDetails[]> {
+    const params = new HttpParams().set('deleted', includeDeleted);
+
+    return this.http.get<Record<string, unknown>[]>(`${environment.apiUrl}/v1/devices`, {params})
       .pipe(
         map(devices => {
           const devices_typed: DeviceDetails[] = [];

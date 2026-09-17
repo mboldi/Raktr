@@ -32,6 +32,7 @@ export const ROUTES: RouteInfo[] = [
       {path: '/admin/locations', title: "Tárolási helyek", icon: 'forklift', class: '', inMenuBar: true, children: []},
       {path: '/admin/owners', title: "Tulajdonosok", icon: 'assured_workload', class: '', inMenuBar: true, children: []},
       {path: '/admin/signers', title: "Aláírók", icon: 'draw', class: '', inMenuBar: true, children: []},
+      {path: '/admin/export-import', title: "Export/Import", icon: 'import_export', class: '', inMenuBar: true, children: []},
     ]},
 ];
 

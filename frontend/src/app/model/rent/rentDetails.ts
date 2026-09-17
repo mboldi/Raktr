@@ -1,0 +1,94 @@
+import {UserDetails} from '../user/userDetails';
+import {RentType} from './rentType';
+import {RentItemDetailsDto} from './rentItem/rentItemDetails';
+import {CommentDetailsDto} from '../comment/commentDetailsDto';
+
+export class RentDetails {
+  id: number;
+  type: RentType;
+  destination: string;
+  issuer: UserDetails;
+  renterName: string;
+  outDate: Date;
+  expectedReturnDate: Date;
+  actualReturnDate: Date | null;
+  closed: boolean;
+  deleted: boolean;
+  rentItems: RentItemDetailsDto[];
+  comments: CommentDetailsDto[];
+  createdAt: Date;
+  createdBy: UserDetails;
+  updatedAt: Date;
+  updatedBy: UserDetails;
+
+  constructor(
+    id: number,
+    type: RentType,
+    destination: string,
+    issuer: UserDetails,
+    renterName: string,
+    outDate: Date,
+    expectedReturnDate: Date,
+    actualReturnDate: Date | null,
+    closed: boolean,
+    deleted: boolean,
+    rentItems: RentItemDetailsDto[],
+    comments: CommentDetailsDto[],
+    createdAt: Date,
+    createdBy: UserDetails,
+    updatedAt: Date,
+    updatedBy: UserDetails
+  ) {
+    this.id = id;
+    this.type = type;
+    this.destination = destination;
+    this.issuer = issuer;
+    this.renterName = renterName;
+    this.outDate = outDate;
+    this.expectedReturnDate = expectedReturnDate;
+    this.actualReturnDate = actualReturnDate;
+    this.closed = closed;
+    this.deleted = deleted;
+    this.rentItems = rentItems;
+    this.comments = comments;
+    this.createdAt = createdAt;
+    this.createdBy = createdBy;
+    this.updatedAt = updatedAt;
+    this.updatedBy = updatedBy;
+  }
+
+  public getItemCount(): number {
+    return this.rentItems.reduce((sum, item) => sum + item.quantity, 0);
+  }
+
+  public getSumWeight(): number {
+    let sumWeight = 0;
+
+    this.rentItems.forEach(rentItem => {
+      sumWeight += rentItem.scannable.weight * rentItem.quantity;
+    });
+
+    return sumWeight;
+  }
+
+  static fromJson(json: Record<string, unknown>): RentDetails {
+    return new RentDetails(
+      json['id'] as number,
+      json['type'] as RentType,
+      json['destination'] as string,
+      UserDetails.fromJson(json['issuer'] as Record<string, unknown>),
+      json['renterName'] as string,
+      new Date(json['outDate'] as string),
+      new Date(json['expectedReturnDate'] as string),
+      json['actualReturnDate'] ? new Date(json['actualReturnDate'] as string) : null,
+      json['closed'] as boolean,
+      json['deleted'] as boolean,
+      (json['rentItems'] as Record<string, unknown>[]).map(RentItemDetailsDto.fromJson),
+      (json['comments'] as Record<string, unknown>[]).map(CommentDetailsDto.fromJson),
+      new Date(json['createdAt'] as string),
+      UserDetails.fromJson(json['createdBy'] as Record<string, unknown>),
+      new Date(json['updatedAt'] as string),
+      UserDetails.fromJson(json['updatedBy'] as Record<string, unknown>)
+    );
+  }
+}

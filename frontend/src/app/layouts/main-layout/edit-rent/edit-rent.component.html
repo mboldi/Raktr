@@ -1,0 +1,104 @@
+<div class="container-fluid" style="padding-right: 24px">
+  <div class="row">
+    <div class="col-12">
+      <button mat-button type="button" routerLink="/rents" class="back-button">
+        <mat-icon>keyboard_backspace</mat-icon>
+        Vissza a kivitelekhez
+      </button>
+    </div>
+  </div>
+
+  @if (loading) {
+    <mat-spinner class="list-loading-spinner mt-5"></mat-spinner>
+  } @else {
+    <div class="row pt-2">
+      <div class="col-xxl-10 col-xl-12">
+
+        <mat-card class="card-with-icon">
+          <mat-card-header style="padding-bottom: 16px">
+            <h4 class="card-header-text bg-blue">Kivitel szerkesztése</h4>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="container-fluid">
+
+              <div class="row title-row mb-3">
+                <div class="col">
+                  @if (!isNew && rent) {
+                    <p class="subtitle">{{ rent.destination }} &ndash; {{ rent.outDate | date:'yyyy. MM. dd.' }}</p>
+                  }
+                </div>
+                <div class="col-auto pdf-actions">
+                  @if (!isNew && rent) {
+                    <button matFab extended type="button" [disabled]="exportingPdf" (click)="downloadPdf()">
+                      @if (exportingPdf) {
+                        <mat-spinner diameter="20"></mat-spinner>
+                      } @else {
+                        <mat-icon>picture_as_pdf</mat-icon>
+                      }
+                      Kiviteli letöltése
+                    </button>
+                  }
+                  @if (rent?.closed) {
+                    <mat-chip class="status-chip">Lezárva</mat-chip>
+                  }
+                </div>
+              </div>
+
+              <app-rent-form
+                [rentData]="rent"
+                [disabled]="isReadOnly"
+                [defaultIssuer]="currentUser"
+                [canDelete]="!isNew && isAdmin"
+                (save)="save()"
+                (deleteRent)="deleteRent()"
+                (addScannable)="onAddScannable($event)"
+                (scannableNotFound)="onScannableNotFound()"
+                (scannableNotOnRent)="onScannableNotOnRent()"
+                (removeItem)="onRemoveItem($event)"
+                (itemQuantityChanged)="onItemQuantityChanged($event)"
+                (itemStatusChanged)="onItemStatusChanged($event)" />
+
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        @if (!isNew && rent) {
+          <mat-card class="card-with-icon mt-5 mb-4">
+            <mat-card-header style="padding-bottom: 16px">
+              <h4 class="card-header-text bg-blue">Megjegyzések</h4>
+            </mat-card-header>
+            <mat-card-content>
+              <div class="new-comment-row">
+                <mat-form-field class="full-width">
+                  <mat-label>Új megjegyzés</mat-label>
+                  <input matInput [formControl]="newCommentControl" autocomplete="off" (keyup.enter)="sendComment()">
+                </mat-form-field>
+                <button mat-raised-button color="primary" type="button"
+                        [disabled]="!newCommentControl.value"
+                        (click)="sendComment()">
+                  Küldés
+                </button>
+              </div>
+
+              <div class="comment-list">
+                @for (comment of sortedComments; track comment.id) {
+                  <div class="comment">
+                    <div class="comment-header">
+                      <span class="comment-author">{{ comment.createdBy.nickname }}</span>
+                      <span class="comment-date">{{ comment.createdAt | date:'medium' }}</span>
+                    </div>
+                    <mat-divider></mat-divider>
+                    <p class="comment-body">{{ comment.body }}</p>
+                  </div>
+                } @empty {
+                  <p class="no-comments">Még nincs megjegyzés.</p>
+                }
+              </div>
+            </mat-card-content>
+          </mat-card>
+        }
+
+      </div>
+    </div>
+  }
+</div>

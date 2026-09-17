@@ -1,0 +1,61 @@
+.scannable-card {
+  margin-bottom: 16px;
+  border-color: rgba(0, 0, 0, 0);
+
+  .header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 8px 16px 12px;
+  }
+
+  .heading {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  .title {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 500;
+    line-height: 1.3;
+    text-align: left;
+    color: light-dark(rgba(0, 0, 0, 0.87), rgba(255, 255, 255, 0.87));
+  }
+
+  .subtitle {
+    margin: 4px 0 0;
+    font-size: 0.875rem;
+    text-align: left;
+    color: light-dark(rgba(0, 0, 0, 0.6), rgba(255, 255, 255, 0.7));
+  }
+}
+
+.field-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 16px 24px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+
+  .label {
+    font-size: 0.75rem;
+    color: light-dark(rgba(0, 0, 0, 0.6), rgba(255, 255, 255, 0.7));
+  }
+
+  .value {
+    font-size: 0.95rem;
+    color: light-dark(rgba(0, 0, 0, 0.87), rgba(255, 255, 255, 0.87));
+    word-break: break-word;
+  }
+}
+

@@ -1,23 +1,32 @@
-import { Component, inject, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { Title } from '@angular/platform-browser';
-import { OidcSecurityService } from 'angular-auth-oidc-client';
+import {Component} from '@angular/core';
+import {Title} from '@angular/platform-browser';
+import {OidcSecurityService} from "angular-auth-oidc-client";
+import {Router} from '@angular/router';
+import {MatButton} from '@angular/material/button';
+import {MatCard, MatCardContent, MatCardHeader} from '@angular/material/card';
 
 @Component({
   selector: 'app-login',
+  imports: [
+    MatButton,
+    MatCard,
+    MatCardHeader,
+    MatCardContent
+  ],
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css'],
+  styleUrl: './login.component.scss'
 })
-export class LoginComponent implements OnInit {
-  private readonly oidcSecurityService = inject(OidcSecurityService);
+export class LoginComponent {
 
-  constructor(private router: Router, private title: Title) {
-    title.setTitle('Raktr - bejelentkezés');
+  constructor(private router: Router,
+              private titleService: Title,
+              private oidcSecurityService: OidcSecurityService,) {
+    this.titleService.setTitle('Raktr - Bejelentkezés');
   }
 
   ngOnInit(): void {
     this.oidcSecurityService.isAuthenticated$.subscribe(
-      ({ isAuthenticated }) => {
+      ({isAuthenticated}) => {
         if (isAuthenticated) {
           this.router.navigateByUrl('/overview');
         }
@@ -25,7 +34,7 @@ export class LoginComponent implements OnInit {
     );
   }
 
-  login() {
+  login(): void {
     this.oidcSecurityService.authorize();
   }
 }

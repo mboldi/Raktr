@@ -1,0 +1,28 @@
+:host {
+  display: block;
+  height: 100%;
+}
+
+.unauthorized-page {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  text-align: center;
+}
+
+.unauthorized-page__icon {
+  font-size: 72px;
+  width: 72px;
+  height: 72px;
+  color: light-dark(#D50000, #C62828);
+}
+
+.unauthorized-page__message {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: light-dark(#D50000, #C62828);
+}

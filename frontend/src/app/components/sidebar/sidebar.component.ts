@@ -1,48 +1,90 @@
-import { Component, inject, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { OidcSecurityService } from 'angular-auth-oidc-client';
-
-declare const $: any;
+import {Component, OnInit} from '@angular/core';
+import {OidcSecurityService} from 'angular-auth-oidc-client';
+import {Router, RouterLink, RouterLinkActive} from '@angular/router';
+import {MatDivider, MatListItem, MatNavList} from '@angular/material/list';
+import {MatIcon} from '@angular/material/icon';
+import {MatSlideToggle, MatSlideToggleChange} from '@angular/material/slide-toggle';
+import {ThemeService} from '../../services/theme.service';
+import {AdminAccessService} from '../../services/adminAccess.service';
+import {MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle} from '@angular/material/expansion';
 
 declare interface RouteInfo {
-    path: string;
-    title: string;
-    icon: string;
-    class: string;
-    inMenuBar: boolean;
+  path: string;
+  title: string;
+  icon: string;
+  class: string;
+  inMenuBar: boolean;
+  children?: RouteInfo[];
 }
 
 export const ROUTES: RouteInfo[] = [
-    {path: '/overview', title: 'Áttekintés', icon: 'dashboard', class: '', inMenuBar: true},
-    {path: '/devices', title: 'Eszközök kezelése', icon: 'sd_storage', class: '', inMenuBar: true},
-    {path: '/compositeItems', title: 'Összetett eszközök kezelése', icon: 'sd_storage', class: '', inMenuBar: false},
-    {path: '/rents', title: 'Kivitelek kezelése', icon: 'local_shipping', class: '', inMenuBar: true},
-    {path: '/tickets', title: 'Hibajegyek', icon: 'bug_report', class: '', inMenuBar: true},
-    {path: '/settings', title: 'Beállítások', icon: 'person', class: '', inMenuBar: true},
+  {path: '/overview', title: 'Áttekintés', icon: 'dashboard', class: '', inMenuBar: true, children: []},
+  {path: '/inventory', title: 'Eszközök kezelése', icon: 'sd_storage', class: '', inMenuBar: true, children: [
+      {path: '/inventory/devices', title: "Eszközök", icon: 'sd_storage', class: '', inMenuBar: true, children: []},
+      // {path: '/inventory/compositeitems', title: "Összetett eszközök", icon: 'inventory_2', class: '', inMenuBar: true, children: []},
+      {path: '/inventory/containers', title: "Szállítóládák", icon: 'pallet', class: '', inMenuBar: true, children: []},
+    ]},
+  {path: '/rents', title: 'Kivitelek kezelése', icon: 'local_shipping', class: '', inMenuBar: true, children: []},
+  {path: '/tickets', title: 'Hibajegyek', icon: 'bug_report', class: '', inMenuBar: true, children: []},
+  {path: '/settings', title: 'Beállítások', icon: 'person', class: '', inMenuBar: true, children: []},
+  {path: '/admin', title: 'Admin', icon: 'inventory', class: '', inMenuBar: true, children: [
+      {path: '/admin/categories', title: "Kategóriák", icon: 'shelves', class: '', inMenuBar: true, children: []},
+      {path: '/admin/locations', title: "Tárolási helyek", icon: 'forklift', class: '', inMenuBar: true, children: []},
+      {path: '/admin/owners', title: "Tulajdonosok", icon: 'assured_workload', class: '', inMenuBar: true, children: []},
+      {path: '/admin/signers', title: "Aláírók", icon: 'draw', class: '', inMenuBar: true, children: []},
+      {path: '/admin/export-import', title: "Export/Import", icon: 'import_export', class: '', inMenuBar: true, children: []},
+    ]},
 ];
 
 @Component({
   selector: 'app-sidebar',
+  imports: [
+    RouterLink,
+    RouterLinkActive,
+    MatDivider,
+    MatIcon,
+    MatNavList,
+    MatListItem,
+    MatSlideToggle,
+    MatExpansionPanel,
+    MatExpansionPanelHeader,
+    MatExpansionPanelTitle
+  ],
   templateUrl: './sidebar.component.html',
-  styleUrls: ['./sidebar.component.css']
+  styleUrl: './sidebar.component.scss',
 })
 export class SidebarComponent implements OnInit {
-  private readonly oidcSecurityService = inject(OidcSecurityService);
 
-  menuItems: any[];
+  menuItems: any[] = [];
 
-  constructor(private router: Router) {}
+  isDark: boolean = false;
+  protected admin = false;
 
-  ngOnInit() {
-      this.menuItems = ROUTES.filter(menuItem => menuItem);
+  constructor(private oidcSecurityService: OidcSecurityService,
+              private router: Router,
+              private themeService: ThemeService,
+              private adminAccessService: AdminAccessService) {
+    this.isDark = this.themeService.isDark()
   }
 
-  isMobileMenu() {
-    return $(window).width() <= 991;
-  };
+  ngOnInit() {
+    this.menuItems = ROUTES.filter(menuItem => menuItem);
 
-  logout() {
-    this.oidcSecurityService.logoff();
+    this.adminAccessService.isAdmin().subscribe(admin => this.admin = admin);
+  }
+
+  isActiveParent(menuItem: RouteInfo): boolean {
+    return menuItem.children?.some(child =>
+      this.router.isActive(child.path, false)
+    ) ?? false;
+  }
+
+  protected logout() {
+    this.oidcSecurityService.logoff().subscribe();
     this.router.navigateByUrl('/login');
+  }
+
+  protected toggleDarkMode($event: MatSlideToggleChange) {
+    this.themeService.setDark($event.checked)
   }
 }

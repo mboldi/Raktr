@@ -1,0 +1,182 @@
+/* You can add global styles to this file, and also import other style files */
+@use "resources/_theme-colors" as my-theme;
+@use '@angular/material' as mat;
+
+@include mat.core();
+
+html {
+  color-scheme: light dark; // enables automatic light/dark support
+  height: 100%;
+  margin: 0;
+
+  @include mat.theme((
+          color: (
+                  primary: my-theme.$primary-palette,
+                  tertiary: my-theme.$tertiary-palette,
+          ),
+          typography: "IBM Plex Sans",
+          density: 0,
+  ));
+
+}
+
+body {
+  margin: 0;
+  font-family: "IBM Plex Sans", Roboto, "Helvetica Neue", sans-serif;
+  background-color: var(--mat-sys-background);
+  color: var(--mat-sys-on-background);
+}
+
+h1, h2, h3, h4, h5, h6, mat-card-title, .mat-mdc-card-title {
+  font-family: "IBM Plex Mono", "IBM Plex Sans", Roboto, "Helvetica Neue", sans-serif;
+}
+
+
+.card-icon {
+  margin-top: -30px;
+  font-size: 42px;
+  text-align: center;
+  width: 64px !important;
+  height: 64px !important;
+  line-height: 64px;
+
+  border-radius: 4px;
+  color: #eaf1ff;
+}
+
+.card-header-text {
+  margin-top: -30px;
+  font-size: 32px;
+  padding: 12px 24px 12px 24px;
+
+  border-radius: 8px;
+  color: #eaf1ff;
+}
+
+.card-with-icon {
+  margin-top: 30px
+}
+
+.bg-blue {
+  background: light-dark(#1860a4, #00315c) !important;
+}
+
+.bg-green {
+  background: light-dark(#689F38, #33691E) !important;
+}
+
+.bg-orange {
+  background: light-dark(#ff8f06, #e17d03) !important;
+}
+
+.bg-red {
+  background: light-dark(#D50000, #C62828) !important;
+}
+
+.text-alert {
+  color: light-dark(#ff2c14, #ff2410) !important;
+}
+
+.alert-button {
+  background: light-dark(#D50000, #C62828) !important;
+  color: #e1e2e8 !important;
+}
+
+.warning-button {
+  background: light-dark(#ff8f06, #e17d03) !important;
+  color: #e1e2e8 !important;
+}
+
+.mat-mdc-row:hover .mat-mdc-cell {
+  background: light-dark(#e1e2e8, #393b40);
+  transition-duration: 200ms;
+}
+
+.success-snackbar {
+  &.mat-mdc-snack-bar-container .mat-mdc-snackbar-surface {
+    background: light-dark(#689F38, #33691E) !important;
+    color: white !important;
+  }
+
+  .mat-mdc-snack-bar-action {
+    color: #e1e2e8 !important;
+  }
+}
+
+.alert-snackbar {
+  &.mat-mdc-snack-bar-container .mat-mdc-snackbar-surface {
+    background: light-dark(#ff8f06, #e17d03) !important;
+    color: white !important;
+  }
+
+  .mat-mdc-snack-bar-action {
+    color: #e1e2e8 !important;
+  }
+}
+
+.error-snackbar {
+  &.mat-mdc-snack-bar-container .mat-mdc-snackbar-surface {
+    background: light-dark(#D50000, #C62828) !important;
+    color: #e1e2e8 !important;
+  }
+
+  .mat-mdc-snack-bar-action {
+    color: #e1e2e8 !important;
+  }
+}
+
+.full-width {
+  width: 100%;
+}
+
+.list-loading-spinner {
+  justify-self: center;
+  width: 50px !important;
+  height: 50px !important;
+}
+
+
+.table-wrapper {
+  padding-right: 16px;
+
+  .clickable-row {
+    cursor: pointer;
+  }
+}
+
+.list-header-card {
+  padding: 16px 16px 0 16px;
+  margin: 16px 16px 8px 0;
+
+
+  .list-header-actions-row {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+
+    margin-top: 8px;
+  }
+
+  h2 {
+    color: light-dark(#f8f9ff, #f8f9ff);
+
+    margin: 0;
+    padding: 0;
+  }
+
+  .filter-button {
+    margin-left: 16px;
+  }
+
+  .add-button {
+  }
+
+  .search-box {
+    width: 300px;
+    justify-self: flex-end;
+
+  }
+
+}

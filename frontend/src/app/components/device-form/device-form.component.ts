@@ -34,6 +34,7 @@ import {DeviceDetails} from '../../model/scannable/device/deviceDetails';
 import {DeviceService} from '../../services/device.service';
 import {MatSelect} from '@angular/material/select';
 import {DeviceStatus} from '../../model/scannable/device/deviceStatus';
+import {environment} from '../../../environments/environment';
 
 @Component({
   selector: 'app-device-form',
@@ -106,13 +107,13 @@ export class DeviceFormComponent implements OnInit {
       assetTag: ['', Validators.required, this.assetTagTakenValidator()],
       weight: ['1'],
       estimatedValue: ['1'],
-      quantity: ['1'],
+      quantity: [environment.defaultDeviceQuantity],
       acquisitionSource: [''],
       acquisitionDate: [new Date()],
       warrantyEndDate: [null],
       owner: ['', Validators.required],
       notes: [''],
-      status: [DeviceStatus.GOOD],
+      status: [environment.defaultDeviceStatus as DeviceStatus],
     });
 
     this.filteredCategories = this.deviceForm.get('category')!.valueChanges.pipe(
@@ -152,7 +153,7 @@ export class DeviceFormComponent implements OnInit {
       this.owners = owners;
 
       if (data === null) {
-        const defaultOwner = owners.find(owner => owner.name === 'SVIE');
+        const defaultOwner = owners.find(owner => owner.name === environment.defaultOwnerName);
         if (defaultOwner) {
           this.deviceForm.get('owner')!.setValue(defaultOwner);
           return;

@@ -24,6 +24,54 @@
           </div>
         </mat-card-content>
       </mat-card>
+
+      <mat-card class="card-with-icon mt-5">
+        <mat-card-header style="padding-bottom: 16px">
+          <h4 class="card-header-text bg-blue">Eszközök importálása</h4>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="export-row">
+            <div class="export-info">
+              <h5>Import Excelből</h5>
+              <p>Az exportált fájlhoz hasonló oszlopnevekkel rendelkező .xlsx fájl feltöltése. A createdAt,
+                createdBy, updatedAt, updatedBy és deleted oszlopok elhagyhatók, azok nem szükségesek az eszközök
+                létrehozásához. Hiányzó vonalkód/azonosító, beszerzés dátuma, állapot és mennyiség esetén automatikus
+                érték kerül kitöltésre.</p>
+            </div>
+
+            <input #fileInput type="file" accept=".xlsx" hidden (change)="onFileSelected($event)">
+            <button mat-raised-button color="primary" type="button"
+                    [disabled]="importing"
+                    (click)="fileInput.click()">
+              @if (importing) {
+                <mat-spinner diameter="20"></mat-spinner>
+              } @else {
+                <mat-icon>upload</mat-icon>
+              }
+              Fájl kiválasztása
+            </button>
+          </div>
+
+          @if (importProgress) {
+            <div class="import-progress">
+              <mat-progress-bar mode="determinate"
+                                 [value]="(importProgress.current / importProgress.total) * 100"></mat-progress-bar>
+              <span>{{ importProgress.current }} / {{ importProgress.total }} eszköz feldolgozva</span>
+            </div>
+          }
+
+          @if (!importing && importFailures.length > 0) {
+            <div class="import-failures">
+              <h5>Sikertelen sorok ({{ importFailures.length }})</h5>
+              <ul>
+                @for (failure of importFailures; track failure.row) {
+                  <li>{{ failure.row }}. sor &ndash; <b>{{ failure.name }}</b>: {{ failure.message }}</li>
+                }
+              </ul>
+            </div>
+          }
+        </mat-card-content>
+      </mat-card>
     </div>
   </div>
 </div>

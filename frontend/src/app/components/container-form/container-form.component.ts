@@ -46,6 +46,7 @@ import {
   MatRowDef,
   MatTable
 } from '@angular/material/table';
+import {environment} from '../../../environments/environment';
 
 export interface AddDeviceEvent {
   device: DeviceDetails;
@@ -187,7 +188,7 @@ export class ContainerFormComponent implements OnInit {
       this.owners = owners;
 
       if (data === null) {
-        const defaultOwner = owners.find(owner => owner.name === 'SVIE');
+        const defaultOwner = owners.find(owner => owner.name === environment.defaultOwnerName);
         if (defaultOwner) {
           this.containerForm.get('owner')!.setValue(defaultOwner);
           return;

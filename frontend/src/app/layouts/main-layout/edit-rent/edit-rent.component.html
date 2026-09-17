@@ -57,19 +57,17 @@
               <h4 class="card-header-text bg-blue">Megjegyzések</h4>
             </mat-card-header>
             <mat-card-content>
-              @if (!rent.closed) {
-                <div class="new-comment-row">
-                  <mat-form-field class="full-width">
-                    <mat-label>Új megjegyzés</mat-label>
-                    <input matInput [formControl]="newCommentControl" autocomplete="off" (keyup.enter)="sendComment()">
-                  </mat-form-field>
-                  <button mat-raised-button color="primary" type="button"
-                          [disabled]="!newCommentControl.value"
-                          (click)="sendComment()">
-                    Küldés
-                  </button>
-                </div>
-              }
+              <div class="new-comment-row">
+                <mat-form-field class="full-width">
+                  <mat-label>Új megjegyzés</mat-label>
+                  <input matInput [formControl]="newCommentControl" autocomplete="off" (keyup.enter)="sendComment()">
+                </mat-form-field>
+                <button mat-raised-button color="primary" type="button"
+                        [disabled]="!newCommentControl.value"
+                        (click)="sendComment()">
+                  Küldés
+                </button>
+              </div>
 
               <div class="comment-list">
                 @for (comment of sortedComments; track comment.id) {

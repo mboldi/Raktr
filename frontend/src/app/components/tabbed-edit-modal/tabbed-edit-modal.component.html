@@ -16,17 +16,20 @@
 
     <mat-tab>
       <ng-template mat-tab-label>
-        <mat-icon class="tab-icon">local_shipping</mat-icon>
+        <mat-icon class="tab-icon active-rents-badge" [matBadge]="activeRentsCount" [matBadgeHidden]="activeRentsCount === 0"
+                  matBadgeSize="medium" matBadgePosition="above before" aria-hidden="false">local_shipping</mat-icon>
         <span style="margin-left: 4px">
         Szállítólevelek
       </span>
       </ng-template>
-      Szállítók
+      <div class="m-3 mt-0 mb-0">
+        <app-rent-mini-list [rents]="rents" [loading]="rentsLoading" />
+      </div>
     </mat-tab>
     <mat-tab>
       <ng-template mat-tab-label>
         <mat-icon class="tab-icon" [matBadge]="tickets.length" [matBadgeHidden]="tickets.length === 0"
-                  matBadgeSize="medium" matBadgeColor="warn" aria-hidden="false">bug_report</mat-icon>
+                  matBadgeSize="medium" matBadgeColor="warn" matBadgePosition="above before" aria-hidden="false">bug_report</mat-icon>
         <span style="margin-left: 4px">
         Hibajegyek
       </span>

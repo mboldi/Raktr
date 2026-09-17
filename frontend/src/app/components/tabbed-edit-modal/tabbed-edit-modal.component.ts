@@ -19,7 +19,9 @@ import {ScannableViewPageComponent} from '../scannable-view-page/scannable-view-
 import {ContainerViewPageComponent} from '../container-view-page/container-view-page.component';
 import {ContainerDetails} from '../../model/scannable/container/containerDetails';
 import {TicketMiniListComponent} from '../ticket-mini-list/ticket-mini-list.component';
+import {RentMiniListComponent} from '../rent-mini-list/rent-mini-list.component';
 import {TicketDetails} from '../../model/ticket/ticketDetails';
+import {RentDetails} from '../../model/rent/rentDetails';
 import {DeviceService} from '../../services/device.service';
 import {ContainerService} from '../../services/container.service';
 import {TicketDialogData, TicketDialogResult, TicketEditDialogComponent} from '../ticket-edit-modal/ticket-edit-dialog.component';
@@ -82,6 +84,7 @@ const VIEW_DEFINITIONS: Record<TabbedEditModalKind, TabbedEditModalViewDefinitio
     MatFabButton,
     NgComponentOutlet,
     TicketMiniListComponent,
+    RentMiniListComponent,
     MatBadge,
   ],
   templateUrl: './tabbed-edit-modal.component.html',
@@ -94,6 +97,10 @@ export class TabbedEditModalComponent {
 
   protected tickets: TicketDetails[] = [];
   protected ticketsLoading = true;
+
+  protected rents: RentDetails[] = [];
+  protected rentsLoading = true;
+  protected activeRentsCount = 0;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) protected data: TabbedEditModalData,
@@ -119,11 +126,24 @@ export class TabbedEditModalComponent {
       default:
         this.ticketsLoading = false;
     }
+
+    // Only devices have a /rents endpoint - containers and plain scannables just show empty.
+    if (data.kind === 'device') {
+      this.deviceService.getRentsOfDevice(data.item.id).subscribe(rents => this.onRentsLoaded(rents));
+    } else {
+      this.rentsLoading = false;
+    }
   }
 
   private onTicketsLoaded(tickets: TicketDetails[]) {
     this.tickets = tickets.slice().sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
     this.ticketsLoading = false;
+  }
+
+  private onRentsLoaded(rents: RentDetails[]) {
+    this.activeRentsCount = rents.filter(rent => !rent.closed).length;
+    this.rents = rents.slice().sort((a, b) => b.outDate.getTime() - a.outDate.getTime()).slice(0, 10);
+    this.rentsLoading = false;
   }
 
   protected edit() {

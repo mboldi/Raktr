@@ -40,14 +40,12 @@
 
     <ng-container matColumnDef="createdAt">
       <th mat-header-cell *matHeaderCellDef>Létrehozva</th>
-      <td mat-cell *matCellDef="let ticket"
-          style="cursor: pointer"> {{ ticket.createdAt | date:'yyyy. MM. dd.' }}</td>
+      <td mat-cell *matCellDef="let ticket"> {{ ticket.createdAt | date:'yyyy. MM. dd.' }}</td>
     </ng-container>
 
     <ng-container matColumnDef="description">
       <th mat-header-cell *matHeaderCellDef>Leírás</th>
-      <td mat-cell *matCellDef="let ticket"
-          style="cursor: pointer">
+      <td mat-cell *matCellDef="let ticket">
         {{ ticket.description.slice(0, 60) }}@if (ticket.description.length > 60) {<span>...</span>}
       </td>
     </ng-container>

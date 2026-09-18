@@ -1,7 +1,59 @@
-# Frontend
+# Raktr frontend
 
+Inventory and rental management frontend application for Budavári Schönherz Stúdió (BSS).
 
-This is the frontend for the **Raktr** equipment-inventory management system.
+This is the frontend: an Angular single-page app that talks to the [backend](../backend) API.
 
+## Getting Started
 
-_This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.23._
+### Prerequisites
+
+- Node.js 24+
+- The backend running (see [`../backend/README.md`](../backend/README.md))
+
+### Run
+
+```bash
+npm install
+npm start
+```
+
+The app will be available at `http://localhost:4200` and proxies API calls to the backend at `http://localhost:8080`.
+
+### Docker Compose
+
+To run the full stack (frontend, backend, and database):
+
+```bash
+docker compose up --build
+```
+
+## Build
+
+```bash
+npm run build              # production build, output in dist/frontend
+npm run watch               # development build, rebuilds on change
+```
+
+## Testing
+
+Currently, there are no automated tests in this part of the project.
+
+## Configuration
+
+Environment-specific settings live in [`src/environments/environment.ts`](src/environments/environment.ts):
+
+| Property               | Default                 | Description                                    |
+|-------------------------|--------------------------|------------------------------------------------|
+| `apiUrl`                | `http://localhost:8080` | Base URL of the backend API                     |
+| `adminGroupName`        | `Admin`                 | OIDC group name that grants admin access        |
+| `fullAccessGroupNames`  | `['Stúdiós', 'Öregstúdiós']` | OIDC groups with full access            |
+| `defaultOwnerName`      | `SVIE`                  | Pre-selected owner when creating a device       |
+| `defaultDeviceStatus`   | `GOOD`                  | Pre-selected status when creating a device      |
+| `defaultDeviceQuantity` | `1`                     | Pre-filled quantity when creating a device      |
+
+Authentication is handled via OIDC (Authentik) using `angular-auth-oidc-client`.
+
+### Production
+
+The Docker image builds the app with the `production` configuration and serves the static files with nginx on port `8080` (see [`Dockerfile`](Dockerfile) and [`nginx/default.conf`](nginx/default.conf)).

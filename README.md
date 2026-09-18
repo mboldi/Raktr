@@ -1,6 +1,6 @@
 # Raktr
 
-Inventory and rental management REST API for Budavári Schönherz Stúdió (BSS).
+Inventory and rental management system for Budavári Schönherz Stúdió (BSS).
 
 This repository contains both halves of the application:
 

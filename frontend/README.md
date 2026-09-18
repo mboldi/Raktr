@@ -1,6 +1,6 @@
-# Raktr
+# Raktr frontend
 
-Inventory and rental management REST API for Budavári Schönherz Stúdió (BSS).
+Inventory and rental management frontend application for Budavári Schönherz Stúdió (BSS).
 
 This is the frontend: an Angular single-page app that talks to the [backend](../backend) API.
 

@@ -44,7 +44,7 @@ dependencies {
 
     developmentOnly("org.springframework.boot:spring-boot-devtools")
 
-    runtimeOnly("org.flywaydb:flyway-database-postgresql:13.6.0")
+    runtimeOnly("org.flywaydb:flyway-database-postgresql:13.7.0")
     runtimeOnly("org.postgresql:postgresql:42.7.13")
 
     annotationProcessor("org.mapstruct:mapstruct-processor:1.6.3")
@@ -56,7 +56,7 @@ dependencies {
     testImplementation("org.testcontainers:testcontainers-postgresql:2.0.5")
     testImplementation("io.rest-assured:rest-assured:6.0.1")
     testImplementation("org.wiremock:wiremock-standalone:3.13.2")
-    testImplementation("com.nimbusds:nimbus-jose-jwt:10.9.1")
+    testImplementation("com.nimbusds:nimbus-jose-jwt:10.10")
 
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }

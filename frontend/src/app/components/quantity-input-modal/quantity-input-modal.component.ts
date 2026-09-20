@@ -1,4 +1,4 @@
-import {Component, Inject, ChangeDetectionStrategy} from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
 import {MatButton} from '@angular/material/button';
 import {
   MAT_DIALOG_DATA,
@@ -16,7 +16,7 @@ export class QuantityInputDialogData {
   maxQuantity: number;
   initialQuantity: number;
 
-  constructor(deviceName: string, maxQuantity: number, initialQuantity: number = 1) {
+  constructor(deviceName: string, maxQuantity: number, initialQuantity = 1) {
     this.deviceName = deviceName;
     this.maxQuantity = maxQuantity;
     this.initialQuantity = initialQuantity;
@@ -42,13 +42,17 @@ export class QuantityInputDialogData {
   styleUrl: './quantity-input-modal.component.scss',
 })
 export class QuantityInputModalComponent {
+  protected data = inject<QuantityInputDialogData>(MAT_DIALOG_DATA);
+  private dialogRef = inject<MatDialogRef<QuantityInputModalComponent>>(MatDialogRef);
+
   protected quantityFormControl: FormControl;
 
   protected deviceName: string;
   protected maxQuantity: number;
 
-  constructor(@Inject(MAT_DIALOG_DATA) protected data: QuantityInputDialogData,
-              private dialogRef: MatDialogRef<QuantityInputModalComponent>) {
+  constructor() {
+    const data = this.data;
+
     this.deviceName = data.deviceName;
     this.maxQuantity = data.maxQuantity;
 

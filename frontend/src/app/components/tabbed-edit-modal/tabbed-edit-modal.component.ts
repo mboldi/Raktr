@@ -1,4 +1,4 @@
-import {Component, Inject, Type, ChangeDetectionStrategy} from '@angular/core';
+import { Component, Type, ChangeDetectionStrategy, inject } from '@angular/core';
 import {NgComponentOutlet} from '@angular/common';
 import {MatButton, MatFabButton} from "@angular/material/button";
 import {
@@ -92,6 +92,12 @@ const VIEW_DEFINITIONS: Record<TabbedEditModalKind, TabbedEditModalViewDefinitio
   styleUrl: './tabbed-edit-modal.component.scss',
 })
 export class TabbedEditModalComponent {
+  protected data = inject<TabbedEditModalData>(MAT_DIALOG_DATA);
+  private dialogRef = inject<MatDialogRef<TabbedEditModalComponent>>(MatDialogRef);
+  private deviceService = inject(DeviceService);
+  private containerService = inject(ContainerService);
+  private dialog = inject(MatDialog);
+
   protected readonly view: TabbedEditModalViewDefinition;
   protected readonly viewInputs: Record<string, unknown>;
   protected readonly title: string;
@@ -103,13 +109,9 @@ export class TabbedEditModalComponent {
   protected rentsLoading = true;
   protected activeRentsCount = 0;
 
-  constructor(
-    @Inject(MAT_DIALOG_DATA) protected data: TabbedEditModalData,
-    private dialogRef: MatDialogRef<TabbedEditModalComponent>,
-    private deviceService: DeviceService,
-    private containerService: ContainerService,
-    private dialog: MatDialog,
-  ) {
+  constructor() {
+    const data = this.data;
+
     this.view = VIEW_DEFINITIONS[data.kind];
     this.viewInputs = this.view.toInputs(data.item);
     this.title = this.view.title;

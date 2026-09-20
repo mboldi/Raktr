@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {map, Observable} from 'rxjs';
 import {environment} from '../../environments/environment';
@@ -16,9 +16,8 @@ import {RentPdfCreateDto} from '../model/rent/rentPdfCreateDto';
   providedIn: 'root'
 })
 export class RentService {
+  private http = inject(HttpClient);
 
-  constructor(private http: HttpClient) {
-  }
 
   getRentCount(): Observable<number> {
     return this.http.get<Record<string, unknown>[]>(`${environment.apiUrl}/v1/rents`)

@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, computed, effect, input, OnInit, output, ViewChild} from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, input, OnInit, output, ViewChild, inject } from '@angular/core';
 import {MatFormField, MatInput, MatInputModule, MatLabel, MatSuffix} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatAutocomplete, MatAutocompleteTrigger, MatOption} from '@angular/material/autocomplete';
@@ -108,6 +108,13 @@ export type StatusMode = 'packed' | 'returned';
   styleUrl: './rent-form.component.scss',
 })
 export class RentFormComponent implements OnInit {
+  private fb = inject(FormBuilder);
+  private userService = inject(UserService);
+  private deviceService = inject(DeviceService);
+  private containerService = inject(ContainerService);
+  private dialog = inject(MatDialog);
+  private windowService = inject(WindowWidthService);
+
   @ViewChild(MatTable) itemsTable?: MatTable<unknown>;
 
   /** Pass an existing rent to pre-populate the form, or leave null for a blank create form. */
@@ -166,14 +173,7 @@ export class RentFormComponent implements OnInit {
   /** Recomputed reactively off both the rent (type/closed) and the viewport width. */
   protected readonly itemColumns = computed(() => this.computeItemColumns(this.rentData()));
 
-  constructor(
-    private fb: FormBuilder,
-    private userService: UserService,
-    private deviceService: DeviceService,
-    private containerService: ContainerService,
-    private dialog: MatDialog,
-    private windowService: WindowWidthService,
-  ) {
+  constructor() {
     this.rentForm = this.fb.group({
       destination: ['', Validators.required],
       type: [RentType.SIMPLE, Validators.required],

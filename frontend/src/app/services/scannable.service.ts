@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {catchError, map, Observable, of} from 'rxjs';
 import {environment} from '../../environments/environment';
@@ -8,9 +8,8 @@ import {ScannableDetailsDto} from '../model/scannable/scannableDetailsDto';
   providedIn: 'root'
 })
 export class ScannableService {
+  private http = inject(HttpClient);
 
-  constructor(private http: HttpClient) {
-  }
 
   getScannablesCount(): Observable<number> {
     return this.http.get<number>(`${environment.apiUrl}/v1/scannables/count`)

@@ -5,7 +5,7 @@
     <div style="display: flex; flex-direction: row; align-items: start">
       <mat-form-field class="search-box">
         <mat-label>Keresés</mat-label>
-        <input matInput (keyup)="applyFilter($event)" placeholder="Tanévnyitó"
+        <input matInput (keyup)="applyFilter()" placeholder="Tanévnyitó"
                [formControl]="rentSearchFormControl">
         @if (rentSearchFormControl.value) {
           <button mat-icon-button matSuffix
@@ -23,7 +23,9 @@
           </button>
 
           @if (filterPanelOpen) {
-            <div class="filter-backdrop" (click)="closeFilterPanel()"></div>
+            <!-- Decorative click-to-dismiss overlay: the panel it closes has its own
+                 close button, so it stays hidden from assistive tech. -->
+            <div class="filter-backdrop" aria-hidden="true" (click)="closeFilterPanel()"></div>
 
             <mat-card class="filter-panel">
               <div class="filter-panel-header">

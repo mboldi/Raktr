@@ -1,4 +1,4 @@
-import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, inject } from '@angular/core';
 import {OidcSecurityService} from 'angular-auth-oidc-client';
 import {Router, RouterLink, RouterLinkActive} from '@angular/router';
 import {MatDivider, MatListItem, MatNavList} from '@angular/material/list';
@@ -55,16 +55,18 @@ export const ROUTES: RouteInfo[] = [
   styleUrl: './sidebar.component.scss',
 })
 export class SidebarComponent implements OnInit {
+  private oidcSecurityService = inject(OidcSecurityService);
+  private router = inject(Router);
+  private themeService = inject(ThemeService);
+  private adminAccessService = inject(AdminAccessService);
 
-  menuItems: any[] = [];
 
-  isDark: boolean = false;
+  menuItems: RouteInfo[] = [];
+
+  isDark = false;
   protected admin = false;
 
-  constructor(private oidcSecurityService: OidcSecurityService,
-              private router: Router,
-              private themeService: ThemeService,
-              private adminAccessService: AdminAccessService) {
+  constructor() {
     this.isDark = this.themeService.isDark()
   }
 

@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {map, Observable} from 'rxjs';
 import {environment} from '../../environments/environment';
@@ -9,9 +9,8 @@ import {ConfigUpdateDto} from '../model/config/configUpdateDto';
   providedIn: 'root'
 })
 export class ConfigService {
+  private http = inject(HttpClient);
 
-  constructor(private http: HttpClient) {
-  }
 
   getConfigs(): Observable<ConfigDetailsDto[]> {
     return this.http.get<Record<string, unknown>[]>(`${environment.apiUrl}/v1/configs`)

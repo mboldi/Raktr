@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {catchError, map, Observable, of} from 'rxjs';
 import {environment} from '../../environments/environment';
@@ -10,9 +10,8 @@ import {OwnerUpdateDto} from "../model/owner/ownerUpdateDto";
   providedIn: 'root'
 })
 export class OwnerService {
+  private http = inject(HttpClient);
 
-  constructor(private http: HttpClient) {
-  }
 
   getOwners(): Observable<OwnerDetailsDto[]> {
     return this.http.get<Record<string, unknown>[]>(`${environment.apiUrl}/v1/owners`)

@@ -6,7 +6,9 @@
 
 <div class="layout-row">
   @if (isMobile() && sidebarOpen) {
-    <div class="sidebar-backdrop" (click)="closeSidebar()"></div>
+    <!-- Decorative click-to-dismiss overlay: the panel it closes has its own
+         close button, so it stays hidden from assistive tech. -->
+    <div class="sidebar-backdrop" aria-hidden="true" (click)="closeSidebar()"></div>
   }
 
   <app-sidebar [class.mobile]="isMobile()" [class.open]="sidebarOpen"></app-sidebar>

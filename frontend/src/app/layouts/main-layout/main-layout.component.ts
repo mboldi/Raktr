@@ -1,4 +1,4 @@
-import {Component, computed, effect, ChangeDetectionStrategy} from '@angular/core';
+import { Component, computed, effect, ChangeDetectionStrategy, inject } from '@angular/core';
 import {SidebarComponent} from '../../components/sidebar/sidebar.component';
 import {NavigationEnd, Router, RouterOutlet} from '@angular/router';
 import {filter} from 'rxjs';
@@ -21,14 +21,14 @@ const MOBILE_WIDTH_BREAKPOINT = 992;
   styleUrl: './main-layout.component.scss'
 })
 export class MainLayoutComponent {
+  private windowService = inject(WindowWidthService);
+  private router = inject(Router);
+
 
   protected sidebarOpen = false;
   protected isMobile = computed(() => this.windowService.windowWidth() < MOBILE_WIDTH_BREAKPOINT);
 
-  constructor(
-    private windowService: WindowWidthService,
-    private router: Router,
-  ) {
+  constructor() {
     effect(() => {
       if (!this.isMobile()) {
         this.sidebarOpen = false;

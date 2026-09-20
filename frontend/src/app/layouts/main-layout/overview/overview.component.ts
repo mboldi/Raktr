@@ -1,4 +1,4 @@
-import {Component, effect, ChangeDetectionStrategy} from '@angular/core';
+import { Component, effect, ChangeDetectionStrategy, inject, OnInit } from '@angular/core';
 import {MatCard, MatCardContent, MatCardHeader, MatCardTitle} from '@angular/material/card';
 import {MatIcon} from '@angular/material/icon';
 import {MatFormField, MatInput, MatLabel, MatSuffix} from '@angular/material/input';
@@ -87,30 +87,31 @@ const REDUCED_COLUMNS: string[] = ['destination', 'issuer', 'renter', 'outDate',
   changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './overview.component.scss',
 })
-export class OverviewComponent {
+export class OverviewComponent implements OnInit {
+  private windowService = inject(WindowWidthService);
+  private scannableService = inject(ScannableService);
+  private rentService = inject(RentService);
+  private ticketService = inject(TicketService);
+  private deviceService = inject(DeviceService);
+  private containerService = inject(ContainerService);
+  private dialog = inject(MatDialog);
+  private snackBar = inject(MatSnackBar);
+  private router = inject(Router);
+
   protected deviceSearchFormControl: FormControl = new FormControl();
   protected filteredSearchOptions: Observable<ScannableDetailsDto[]>;
 
-  protected scannableCount: number = 0;
-  protected ticketCount: number = 0;
+  protected scannableCount = 0;
+  protected ticketCount = 0;
 
   protected activeRents: RentDetails[] = [];
   protected displayedColumns: string[] = ALL_COLUMNS;
-  protected rents_loaded: boolean = false;
+  protected rents_loaded = false;
 
   private devices: DeviceDetails[] = [];
   private containers: ContainerDetails[] = [];
 
-  constructor(
-    private windowService: WindowWidthService,
-    private scannableService: ScannableService,
-    private rentService: RentService,
-    private ticketService: TicketService,
-    private deviceService: DeviceService,
-    private containerService: ContainerService,
-    private dialog: MatDialog,
-    private snackBar: MatSnackBar,
-    private router: Router,) {
+  constructor() {
 
     effect(() => {
       const width = this.windowService.windowWidth();

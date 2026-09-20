@@ -1,4 +1,4 @@
-import {Component, effect, OnInit, ViewChild, ChangeDetectionStrategy} from '@angular/core';
+import { Component, effect, OnInit, ViewChild, ChangeDetectionStrategy, inject } from '@angular/core';
 import {
   MatCell,
   MatCellDef,
@@ -69,8 +69,13 @@ const REDUCED_COLUMNS: string[] = ['status', 'issuer', 'renter', 'destination', 
   styleUrl: './rents.component.scss',
 })
 export class RentsComponent implements OnInit {
+  private windowService = inject(WindowWidthService);
+  private localStorageService = inject(LocalStorageService);
+  private rentService = inject(RentService);
+  private router = inject(Router);
 
-  protected loading: boolean = true;
+
+  protected loading = true;
   @ViewChild(MatTable) table!: MatTable<RentDetails>;
 
   protected rentSearchFormControl = new FormControl();
@@ -100,12 +105,7 @@ export class RentsComponent implements OnInit {
 
   protected showClosedRents = false;
 
-  constructor(
-    private windowService: WindowWidthService,
-    private localStorageService: LocalStorageService,
-    private rentService: RentService,
-    private router: Router,
-  ) {
+  constructor() {
     effect(() => {
       const width = this.windowService.windowWidth();
       this.displayedColumns = width >= 1200 ? ALL_COLUMNS : REDUCED_COLUMNS;
@@ -137,7 +137,7 @@ export class RentsComponent implements OnInit {
     )).sort((a, b) => a.localeCompare(b));
   }
 
-  protected applyFilter($event: KeyboardEvent) {
+  protected applyFilter() {
     this.searchFilter = this.rentSearchFormControl.value;
 
     this.filterSortRents();

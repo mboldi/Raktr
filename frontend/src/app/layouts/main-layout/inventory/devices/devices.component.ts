@@ -1,4 +1,4 @@
-import {Component, effect, OnInit, ViewChild, ChangeDetectionStrategy} from '@angular/core';
+import { Component, effect, OnInit, ViewChild, ChangeDetectionStrategy, inject } from '@angular/core';
 import {
   MatCell,
   MatCellDef,
@@ -80,8 +80,19 @@ const REDUCED_COLUMNS: string[] = ['name', 'assetTag', 'maker', 'model'];
   styleUrl: './devices.component.scss',
 })
 export class DevicesComponent implements OnInit {
+  private windowService = inject(WindowWidthService);
+  private dialog = inject(MatDialog);
+  private localStorageService = inject(LocalStorageService);
+  private snackBar = inject(MatSnackBar);
+  private deviceService = inject(DeviceService);
+  private categoryService = inject(CategoryService);
+  private locationService = inject(LocationService);
+  private ownerService = inject(OwnerService);
+  private route = inject(ActivatedRoute);
+  private location = inject(Location);
 
-  protected loading: boolean = true;
+
+  protected loading = true;
   @ViewChild(MatTable) table!: MatTable<DeviceDetails>;
 
   protected deviceSearchFormControl = new FormControl();
@@ -115,18 +126,7 @@ export class DevicesComponent implements OnInit {
   protected selectedOwners = new Set<string>();
   protected selectedMakers = new Set<string>();
 
-  constructor(
-    private windowService: WindowWidthService,
-    private dialog: MatDialog,
-    private localStorageService: LocalStorageService,
-    private snackBar: MatSnackBar,
-    private deviceService: DeviceService,
-    private categoryService: CategoryService,
-    private locationService: LocationService,
-    private ownerService: OwnerService,
-    private route: ActivatedRoute,
-    private location: Location,
-    ) {
+  constructor() {
 
     effect(() => {
       const width = this.windowService.windowWidth();
@@ -186,7 +186,7 @@ export class DevicesComponent implements OnInit {
     )).sort((a, b) => a.localeCompare(b));
   }
 
-  protected openDevice(row: any) {
+  protected openDevice(row: DeviceDetails) {
     this.location.go(`/inventory/devices/${row.id}`);
 
     const viewDeviceDialog = this.dialog.open(TabbedEditModalComponent, {
@@ -248,7 +248,7 @@ export class DevicesComponent implements OnInit {
     })
   }
 
-  protected applyFilter($event: KeyboardEvent) {
+  protected applyFilter() {
     this.searchFilter = this.deviceSearchFormControl.value;
 
     this.filterSortDevices();

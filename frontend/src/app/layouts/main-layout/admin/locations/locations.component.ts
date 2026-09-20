@@ -1,4 +1,4 @@
-import {Component, ViewChild, ChangeDetectionStrategy} from '@angular/core';
+import { Component, ViewChild, ChangeDetectionStrategy, inject, OnInit } from '@angular/core';
 import {DatePipe} from "@angular/common";
 import {MatCard} from "@angular/material/card";
 import {
@@ -58,8 +58,12 @@ const COLUMNS: string[] = ['name', 'assignedScannables', 'createdAt', 'createdBy
     changeDetection: ChangeDetectionStrategy.Eager,
     styleUrl: './locations.component.scss',
 })
-export class LocationsComponent {
-    @ViewChild(MatTable) locationTable!: MatTable<any>;
+export class LocationsComponent implements OnInit {
+    private locationService = inject(LocationService);
+    private dialog = inject(MatDialog);
+    private snackBar = inject(MatSnackBar);
+
+    @ViewChild(MatTable) locationTable!: MatTable<LocationDetails>;
 
     protected locationSearchFormControl = new FormControl();
 
@@ -68,11 +72,6 @@ export class LocationsComponent {
 
     protected loading = true;
     protected columns = COLUMNS;
-
-    constructor(private locationService: LocationService,
-                private dialog: MatDialog,
-                private snackBar: MatSnackBar,) {
-    }
 
     ngOnInit(): void {
         this.getCategories();

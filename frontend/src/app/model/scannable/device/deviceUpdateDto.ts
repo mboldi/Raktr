@@ -1,4 +1,5 @@
 import {DeviceStatus} from './deviceStatus';
+import {DeviceFormValue} from './deviceFormValue';
 
 export class DeviceUpdateDto {
   assetTag: string;
@@ -83,7 +84,7 @@ export class DeviceUpdateDto {
     };
   }
 
-  static fromFormControl(formValue: any) {
+  static fromFormControl(formValue: DeviceFormValue) {
 
     return new DeviceUpdateDto(
       formValue.assetTag,

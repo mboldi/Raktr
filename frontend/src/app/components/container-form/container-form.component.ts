@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, effect, input, OnInit, output, ViewChild} from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, input, OnInit, output, ViewChild, inject } from '@angular/core';
 import {MatFormField, MatInput, MatInputModule, MatLabel, MatSuffix} from '@angular/material/input';
 import {MatCheckbox} from '@angular/material/checkbox';
 import {CategoryDetails} from '../../model/category/categoryDetails';
@@ -90,6 +90,14 @@ export interface AddDeviceEvent {
   styleUrl: './container-form.component.scss',
 })
 export class ContainerFormComponent implements OnInit {
+  private fb = inject(FormBuilder);
+  private ownerService = inject(OwnerService);
+  private categoryService = inject(CategoryService);
+  private locationService = inject(LocationService);
+  private deviceService = inject(DeviceService);
+  private scannableService = inject(ScannableService);
+  private dialog = inject(MatDialog);
+
   @ViewChild(MatTable) itemsTable?: MatTable<unknown>;
 
   /** Pass an existing container to pre-populate the form, or leave undefined for a blank create form. */
@@ -122,15 +130,7 @@ export class ContainerFormComponent implements OnInit {
 
   protected itemColumns = ['name', 'model', 'assetTag', 'remove'];
 
-  constructor(
-    private fb: FormBuilder,
-    private ownerService: OwnerService,
-    private categoryService: CategoryService,
-    private locationService: LocationService,
-    private deviceService: DeviceService,
-    private scannableService: ScannableService,
-    private dialog: MatDialog,
-  ) {
+  constructor() {
     this.containerForm = this.fb.group({
       name: ['', Validators.required],
       publicRentable: [false],

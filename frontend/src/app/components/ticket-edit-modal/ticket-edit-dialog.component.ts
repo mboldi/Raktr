@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, ViewChild} from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild, inject } from '@angular/core';
 import {
   MAT_DIALOG_DATA,
   MatDialogActions,
@@ -63,10 +63,17 @@ export interface TicketDialogResult {
   styleUrl: './ticket-edit-dialog.component.scss',
 })
 export class TicketEditDialogComponent {
+  protected dialogData = inject<TicketDialogData | undefined>(MAT_DIALOG_DATA);
+  private dialogRef = inject<MatDialogRef<TicketEditDialogComponent>>(MatDialogRef);
+  private snackBar = inject(MatSnackBar);
+  private ticketService = inject(TicketService);
+  private adminAccessService = inject(AdminAccessService);
+  private cdr = inject(ChangeDetectorRef);
+
   @ViewChild(TicketFormComponent) ticketFormComponent!: TicketFormComponent;
 
   protected title = 'Új hibajegy';
-  protected isNew: boolean = true;
+  protected isNew = true;
   protected ticket: TicketDetails | null;
 
   protected newCommentControl = new FormControl('');
@@ -75,12 +82,9 @@ export class TicketEditDialogComponent {
 
   protected readonly TicketStatus = TicketStatus;
 
-  constructor(@Inject(MAT_DIALOG_DATA) protected dialogData: TicketDialogData | undefined,
-              private dialogRef: MatDialogRef<TicketEditDialogComponent>,
-              private snackBar: MatSnackBar,
-              private ticketService: TicketService,
-              private adminAccessService: AdminAccessService,
-              private cdr: ChangeDetectorRef) {
+  constructor() {
+    const dialogData = this.dialogData;
+
     this.ticket = dialogData?.ticket ?? null;
 
     if (this.ticket) {

@@ -1,4 +1,4 @@
-import {Component, ViewChild, ChangeDetectionStrategy} from '@angular/core';
+import { Component, ViewChild, ChangeDetectionStrategy, inject, OnInit } from '@angular/core';
 import {FormControl, FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatCard} from "@angular/material/card";
 import {MatFabButton, MatIconButton, MatMiniFabButton} from "@angular/material/button";
@@ -60,8 +60,12 @@ const COLUMNS: string[] = ['name', 'assignedScannables', 'createdAt', 'createdBy
     changeDetection: ChangeDetectionStrategy.Eager,
     styleUrl: './categories.component.scss',
 })
-export class CategoriesComponent {
-    @ViewChild(MatTable) categoryTable!: MatTable<any>;
+export class CategoriesComponent implements OnInit {
+    private categoryService = inject(CategoryService);
+    private dialog = inject(MatDialog);
+    private snackBar = inject(MatSnackBar);
+
+    @ViewChild(MatTable) categoryTable!: MatTable<CategoryDetails>;
 
     protected categorySearchFormControl = new FormControl();
 
@@ -70,12 +74,6 @@ export class CategoriesComponent {
 
     protected loading = true;
     protected columns = COLUMNS;
-
-    constructor(private categoryService: CategoryService,
-                private dialog: MatDialog,
-                private snackBar: MatSnackBar,) {
-
-    }
 
     ngOnInit(): void {
         this.getCategories();

@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, ViewChild} from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, ViewChild, inject } from '@angular/core';
 import {ActivatedRoute, Router, RouterLink} from '@angular/router';
 import {MatCard, MatCardContent, MatCardHeader} from '@angular/material/card';
 import {MatButton, MatFabButton} from '@angular/material/button';
@@ -54,6 +54,14 @@ import {YesnoModalComponent} from '../../../components/yesno-modal/yesno-modal.c
   styleUrl: './edit-rent.component.scss',
 })
 export class EditRentComponent implements OnInit {
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
+  private rentService = inject(RentService);
+  private adminAccessService = inject(AdminAccessService);
+  private dialog = inject(MatDialog);
+  private snackBar = inject(MatSnackBar);
+  private cdr = inject(ChangeDetectorRef);
+
   @ViewChild(RentFormComponent) rentFormComponent!: RentFormComponent;
 
   protected loading = true;
@@ -67,17 +75,6 @@ export class EditRentComponent implements OnInit {
   protected newCommentControl = new FormControl('');
 
   protected exportingPdf = false;
-
-  constructor(
-    private route: ActivatedRoute,
-    private router: Router,
-    private rentService: RentService,
-    private adminAccessService: AdminAccessService,
-    private dialog: MatDialog,
-    private snackBar: MatSnackBar,
-    private cdr: ChangeDetectorRef,
-  ) {
-  }
 
   ngOnInit(): void {
     this.adminAccessService.getCurrentUser().subscribe(user => {

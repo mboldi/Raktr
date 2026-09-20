@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, ViewChild} from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild, inject } from '@angular/core';
 import {
   MAT_DIALOG_DATA,
   MatDialogActions,
@@ -33,17 +33,20 @@ import {filter} from 'rxjs';
   styleUrl: './container-edit-dialog.component.scss',
 })
 export class ContainerEditDialogComponent {
+  private dialogRef = inject<MatDialogRef<ContainerEditDialogComponent>>(MatDialogRef);
+  private snackBar = inject(MatSnackBar);
+  private containerService = inject(ContainerService);
+  private cdr = inject(ChangeDetectorRef);
+
   @ViewChild(ContainerFormComponent) containerFormComponent!: ContainerFormComponent;
 
-  protected isNew: boolean = true;
+  protected isNew = true;
   protected containerData: ContainerDetails | null;
   protected containerName: string | null = null;
 
-  constructor(@Inject(MAT_DIALOG_DATA) containerData: ContainerDetails,
-              private dialogRef: MatDialogRef<ContainerEditDialogComponent>,
-              private snackBar: MatSnackBar,
-              private containerService: ContainerService,
-              private cdr: ChangeDetectorRef) {
+  constructor() {
+    const containerData = inject<ContainerDetails>(MAT_DIALOG_DATA);
+
     this.containerData = containerData ?? null;
 
     if (containerData) {

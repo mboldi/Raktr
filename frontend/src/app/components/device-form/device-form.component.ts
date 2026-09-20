@@ -1,11 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  input,
-  OnInit,
-  output,
-} from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, input, OnInit, output, inject } from '@angular/core';
 import {MatFormField, MatInput, MatInputModule, MatLabel} from '@angular/material/input';
 import {MatCheckbox} from '@angular/material/checkbox';
 import {CategoryDetails} from '../../model/category/categoryDetails';
@@ -59,6 +52,14 @@ import {environment} from '../../../environments/environment';
   styleUrl: './device-form.component.scss',
 })
 export class DeviceFormComponent implements OnInit {
+  private fb = inject(FormBuilder);
+  private ownerService = inject(OwnerService);
+  private categoryService = inject(CategoryService);
+  private locationService = inject(LocationService);
+  private scannableService = inject(ScannableService);
+  private deviceService = inject(DeviceService);
+  private cdr = inject(ChangeDetectorRef);
+
   /** Pass an existing device to pre-populate the form, or leave undefined for a blank create form. */
   deviceData = input<DeviceDetails | null>(null);
 
@@ -86,15 +87,7 @@ export class DeviceFormComponent implements OnInit {
   protected manufacturers: string[] = [];
   protected filteredManufacturers: Observable<string[]>;
 
-  constructor(
-    private fb: FormBuilder,
-    private ownerService: OwnerService,
-    private categoryService: CategoryService,
-    private locationService: LocationService,
-    private scannableService: ScannableService,
-    private deviceService: DeviceService,
-    private cdr: ChangeDetectorRef,
-  ) {
+  constructor() {
     this.deviceForm = this.fb.group({
       name: ['', Validators.required],
       isPublicRentable: [false],

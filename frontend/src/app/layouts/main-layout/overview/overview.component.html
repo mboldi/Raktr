@@ -11,6 +11,9 @@
         <mat-card-content>
           <mat-form-field class="deviceSearchField" style="width: 100%">
             <mat-label>Vonalkód, vagy keresés név/gyártó alapján</mat-label>
+            <!-- autofocus is deliberate: a USB barcode scanner types into whatever
+                 field has focus, so this one has to be ready on page load. -->
+            <!-- eslint-disable-next-line @angular-eslint/template/no-autofocus -->
             <input matInput autofocus type="text"
                    autocomplete="off"
                    [formControl]="deviceSearchFormControl"

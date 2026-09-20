@@ -1,4 +1,4 @@
-import {Component, effect, OnInit, ViewChild, ChangeDetectionStrategy} from '@angular/core';
+import { Component, effect, OnInit, ViewChild, ChangeDetectionStrategy, inject } from '@angular/core';
 import {
   MatCell,
   MatCellDef,
@@ -80,8 +80,19 @@ const REDUCED_COLUMNS: string[] = ['name', 'assetTag', 'location', 'itemCount'];
   styleUrl: './containers.component.scss',
 })
 export class ContainersComponent implements OnInit {
+  private windowService = inject(WindowWidthService);
+  private dialog = inject(MatDialog);
+  private localStorageService = inject(LocalStorageService);
+  private containerService = inject(ContainerService);
+  private categoryService = inject(CategoryService);
+  private locationService = inject(LocationService);
+  private ownerService = inject(OwnerService);
+  private snackBar = inject(MatSnackBar);
+  private route = inject(ActivatedRoute);
+  private location = inject(Location);
 
-  protected loading: boolean = true;
+
+  protected loading = true;
   @ViewChild(MatTable) table!: MatTable<ContainerDetails>;
 
   protected containerSearchFormControl = new FormControl();
@@ -112,18 +123,7 @@ export class ContainersComponent implements OnInit {
   protected selectedLocations = new Set<string>();
   protected selectedOwners = new Set<string>();
 
-  constructor(
-    private windowService: WindowWidthService,
-    private dialog: MatDialog,
-    private localStorageService: LocalStorageService,
-    private containerService: ContainerService,
-    private categoryService: CategoryService,
-    private locationService: LocationService,
-    private ownerService: OwnerService,
-    private snackBar: MatSnackBar,
-    private route: ActivatedRoute,
-    private location: Location,
-  ) {
+  constructor() {
 
     effect(() => {
       const width = this.windowService.windowWidth();
@@ -174,7 +174,7 @@ export class ContainersComponent implements OnInit {
     });
   }
 
-  protected openContainer(row: any) {
+  protected openContainer(row: ContainerDetails) {
     this.location.go(`/inventory/containers/${row.id}`);
 
     const viewModal = this.dialog.open(TabbedEditModalComponent, {
@@ -234,7 +234,7 @@ export class ContainersComponent implements OnInit {
     })
   }
 
-  protected applyFilter($event: KeyboardEvent) {
+  protected applyFilter() {
     this.searchFilter = this.containerSearchFormControl.value;
 
     this.filterSortContainers();

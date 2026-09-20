@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import {catchError, map, Observable, of} from 'rxjs';
 import {environment} from '../../environments/environment';
@@ -12,11 +12,10 @@ import {RentDetails} from '../model/rent/rentDetails';
   providedIn: 'root'
 })
 export class DeviceService {
+  private http = inject(HttpClient);
 
-  constructor(private http: HttpClient) {
-  }
 
-  getDevices(includeDeleted: boolean = false): Observable<DeviceDetails[]> {
+  getDevices(includeDeleted = false): Observable<DeviceDetails[]> {
     const params = new HttpParams().set('deleted', includeDeleted);
 
     return this.http.get<Record<string, unknown>[]>(`${environment.apiUrl}/v1/devices`, {params})

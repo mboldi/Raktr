@@ -1,4 +1,4 @@
-import {Component, ChangeDetectionStrategy} from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject, OnInit } from '@angular/core';
 import {Title} from '@angular/platform-browser';
 import {OidcSecurityService} from "angular-auth-oidc-client";
 import {Router} from '@angular/router';
@@ -17,11 +17,13 @@ import {MatCard, MatCardContent, MatCardHeader} from '@angular/material/card';
   changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './login.component.scss'
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
+  private router = inject(Router);
+  private titleService = inject(Title);
+  private oidcSecurityService = inject(OidcSecurityService);
 
-  constructor(private router: Router,
-              private titleService: Title,
-              private oidcSecurityService: OidcSecurityService,) {
+
+  constructor() {
     this.titleService.setTitle('Raktr - Bejelentkezés');
   }
 

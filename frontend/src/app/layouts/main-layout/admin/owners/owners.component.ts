@@ -1,4 +1,4 @@
-import {Component, ViewChild, ChangeDetectionStrategy} from '@angular/core';
+import { Component, ViewChild, ChangeDetectionStrategy, inject, OnInit } from '@angular/core';
 import {DatePipe} from "@angular/common";
 import {MatCard} from "@angular/material/card";
 import {
@@ -23,7 +23,6 @@ import {OwnerService} from "../../../../services/owner.service";
 import {MatDialog} from "@angular/material/dialog";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {YesnoModalComponent} from "../../../../components/yesno-modal/yesno-modal.component";
-import {OwnerCreateDto} from "../../../../model/owner/ownerCreateDto";
 import {EditOwnerModalComponent} from "../../../../components/edit-owner-modal/edit-owner-modal.component";
 import {OwnerUpdateDto} from "../../../../model/owner/ownerUpdateDto";
 
@@ -59,8 +58,12 @@ const COLUMNS: string[] = ['name', 'inSchInventory', 'assignedScannables', 'upda
   changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './owners.component.scss',
 })
-export class OwnersComponent {
-  @ViewChild(MatTable) ownerTable!: MatTable<any>;
+export class OwnersComponent implements OnInit {
+  private ownerService = inject(OwnerService);
+  private dialog = inject(MatDialog);
+  private snackBar = inject(MatSnackBar);
+
+  @ViewChild(MatTable) ownerTable!: MatTable<OwnerDetailsDto>;
 
   protected searchFormControl = new FormControl();
 
@@ -69,11 +72,6 @@ export class OwnersComponent {
 
   protected owners: OwnerDetailsDto[] = []
   protected filteredOwners: OwnerDetailsDto[] = []
-
-  constructor(private ownerService: OwnerService,
-              private dialog: MatDialog,
-              private snackBar: MatSnackBar,) {
-  }
 
 
   ngOnInit(): void {

@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, effect, input, OnInit, output} from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, effect, input, OnInit, output, inject } from '@angular/core';
 import {MatFormField, MatInput, MatLabel, MatSuffix} from '@angular/material/input';
 import {FormBuilder, FormControl, ReactiveFormsModule, UntypedFormGroup, Validators} from '@angular/forms';
 import {MatSelect} from '@angular/material/select';
@@ -40,6 +40,10 @@ import {DeviceService} from '../../services/device.service';
   styleUrl: './ticket-form.component.scss',
 })
 export class TicketFormComponent implements OnInit {
+  private fb = inject(FormBuilder);
+  private deviceService = inject(DeviceService);
+  private cdr = inject(ChangeDetectorRef);
+
   /** Pass an existing ticket to pre-populate the form, or leave null for a blank create form. */
   ticketData = input<TicketDetails | null>(null);
 
@@ -69,11 +73,7 @@ export class TicketFormComponent implements OnInit {
   protected deviceModel: string | null = null;
   protected deviceSerialNumber: string | null = null;
 
-  constructor(
-    private fb: FormBuilder,
-    private deviceService: DeviceService,
-    private cdr: ChangeDetectorRef,
-  ) {
+  constructor() {
     this.ticketForm = this.fb.group({
       description: ['', Validators.required],
       severity: [TicketSeverity.MINOR, Validators.required],

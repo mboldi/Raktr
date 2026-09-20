@@ -1,4 +1,4 @@
-import {Component, Inject, ChangeDetectionStrategy} from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
 import {
   MAT_DIALOG_DATA,
   MatDialogActions,
@@ -21,9 +21,7 @@ import {MatButton} from "@angular/material/button";
   changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './yesno-modal.component.scss',
 })
-export class YesnoModalComponent {
+export class YesnoModalComponent {  protected title = inject(MAT_DIALOG_DATA);
 
-  constructor(@Inject(MAT_DIALOG_DATA) protected title: string) {
-  }
 
 }

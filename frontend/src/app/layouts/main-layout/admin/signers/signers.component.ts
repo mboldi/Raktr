@@ -1,4 +1,4 @@
-import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, inject } from '@angular/core';
 import {FormControl, FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatCard, MatCardContent, MatCardHeader} from "@angular/material/card";
 import {MatFormField, MatInput, MatLabel} from "@angular/material/input";
@@ -28,18 +28,15 @@ import {forkJoin} from 'rxjs';
   styleUrl: './signers.component.scss',
 })
 export class SignersComponent implements OnInit {
+  private configService = inject(ConfigService);
+  private snackBar = inject(MatSnackBar);
+
   protected groupLeaderNameFormControl: FormControl = new FormControl();
   protected groupNameFormControl: FormControl = new FormControl();
   protected firstSignerNameFormControl: FormControl = new FormControl();
   protected firstSignerTitleFormControl: FormControl = new FormControl();
   protected secondSignerNameFormControl: FormControl = new FormControl();
   protected secondSignerTitleFormControl: FormControl = new FormControl();
-
-  constructor(
-    private configService: ConfigService,
-    private snackBar: MatSnackBar,
-  ) {
-  }
 
   ngOnInit() {
     this.configService.getConfigs().subscribe( configs => {

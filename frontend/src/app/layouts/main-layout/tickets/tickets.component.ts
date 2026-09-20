@@ -1,4 +1,4 @@
-import {Component, effect, OnInit, ChangeDetectionStrategy} from '@angular/core';
+import { Component, effect, OnInit, ChangeDetectionStrategy, inject } from '@angular/core';
 import {
   MatCell,
   MatCellDef,
@@ -77,8 +77,16 @@ const REDUCED_COLUMNS: string[] = ['severity', 'id', 'status', 'createdAt', 'dev
   styleUrl: './tickets.component.scss',
 })
 export class TicketsComponent implements OnInit {
+  private windowService = inject(WindowWidthService);
+  private localStorageService = inject(LocalStorageService);
+  private ticketService = inject(TicketService);
+  private dialog = inject(MatDialog);
+  private snackBar = inject(MatSnackBar);
+  private route = inject(ActivatedRoute);
+  private location = inject(Location);
 
-  protected loading: boolean = true;
+
+  protected loading = true;
 
   protected ticketSearchFormControl = new FormControl();
   private searchFilter = '';
@@ -121,15 +129,7 @@ export class TicketsComponent implements OnInit {
     return TICKET_SEVERITY_LABELS[severity];
   }
 
-  constructor(
-    private windowService: WindowWidthService,
-    private localStorageService: LocalStorageService,
-    private ticketService: TicketService,
-    private dialog: MatDialog,
-    private snackBar: MatSnackBar,
-    private route: ActivatedRoute,
-    private location: Location,
-  ) {
+  constructor() {
     effect(() => {
       const width = this.windowService.windowWidth();
       this.displayedColumns = width >= 1200 ? ALL_COLUMNS : REDUCED_COLUMNS;
@@ -173,7 +173,7 @@ export class TicketsComponent implements OnInit {
     )).sort((a, b) => a.localeCompare(b));
   }
 
-  protected applyFilter($event: KeyboardEvent) {
+  protected applyFilter() {
     this.searchFilter = this.ticketSearchFormControl.value;
 
     this.filterSortTickets();

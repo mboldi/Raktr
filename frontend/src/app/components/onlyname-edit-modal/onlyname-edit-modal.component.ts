@@ -1,7 +1,7 @@
-import {Component, Inject, ChangeDetectionStrategy} from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
 import {MatButton} from "@angular/material/button";
 import {
-    MAT_DIALOG_DATA, MatDialog,
+    MAT_DIALOG_DATA,
     MatDialogActions,
     MatDialogClose,
     MatDialogContent, MatDialogRef,
@@ -38,13 +38,17 @@ export class OnlyNameDialogData {
     styleUrl: './onlyname-edit-modal.component.scss',
 })
 export class OnlynameEditModalComponent {
+    protected data = inject<OnlyNameDialogData>(MAT_DIALOG_DATA);
+    private dialogRef = inject<MatDialogRef<OnlynameEditModalComponent>>(MatDialogRef);
+
     protected editNameFormControl: FormControl = new FormControl();
 
     protected name = "";
     protected title = "";
 
-    constructor(@Inject(MAT_DIALOG_DATA) protected data: OnlyNameDialogData,
-                private dialogRef: MatDialogRef<OnlynameEditModalComponent>) {
+    constructor() {
+        const data = this.data;
+
         this.title = data.title;
         this.name = data.name;
     }

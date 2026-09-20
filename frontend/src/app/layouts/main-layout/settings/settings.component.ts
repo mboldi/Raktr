@@ -1,4 +1,4 @@
-import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, inject } from '@angular/core';
 import {FormControl, ReactiveFormsModule} from '@angular/forms';
 import {MatCard, MatCardContent, MatCardHeader} from '@angular/material/card';
 import {MatFormField, MatInput, MatLabel} from '@angular/material/input';
@@ -31,6 +31,11 @@ import {environment} from '../../../../environments/environment';
   styleUrl: './settings.component.scss',
 })
 export class SettingsComponent implements OnInit {
+  private userService = inject(UserService);
+  private configService = inject(ConfigService);
+  private localStorageService = inject(LocalStorageService);
+  private snackBar = inject(MatSnackBar);
+
   protected admin = false;
 
   protected usernameFormControl = new FormControl({value: '', disabled: true});
@@ -41,14 +46,6 @@ export class SettingsComponent implements OnInit {
   protected ean8Forced = false;
 
   private currentUsername = '';
-
-  constructor(
-    private userService: UserService,
-    private configService: ConfigService,
-    private localStorageService: LocalStorageService,
-    private snackBar: MatSnackBar,
-  ) {
-  }
 
   ngOnInit() {
     this.currentUsername = this.localStorageService.read('username') ?? '';

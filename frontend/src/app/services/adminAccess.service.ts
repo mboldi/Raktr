@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import {Observable} from 'rxjs';
 import {map, shareReplay} from 'rxjs/operators';
 import {UserService} from './user.service';
@@ -10,13 +10,10 @@ import {UserDetails} from '../model/user/userDetails';
   providedIn: 'root'
 })
 export class AdminAccessService {
-  private currentUser$: Observable<UserDetails> | undefined;
+  private userService = inject(UserService);
+  private localStorageService = inject(LocalStorageService);
 
-  constructor(
-    private userService: UserService,
-    private localStorageService: LocalStorageService,
-  ) {
-  }
+  private currentUser$: Observable<UserDetails> | undefined;
 
   getCurrentUser(): Observable<UserDetails> {
     if (!this.currentUser$) {

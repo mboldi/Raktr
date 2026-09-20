@@ -1,4 +1,4 @@
-import {Component, Inject, ChangeDetectionStrategy} from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject, OnInit } from '@angular/core';
 import {MatButton} from "@angular/material/button";
 import {
   MAT_DIALOG_DATA,
@@ -34,15 +34,19 @@ import {MatSnackBar} from "@angular/material/snack-bar";
   changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './edit-owner-modal.component.scss',
 })
-export class EditOwnerModalComponent {
+export class EditOwnerModalComponent implements OnInit {
+  data = inject<OwnerUpdateDto>(MAT_DIALOG_DATA);
+  private ownerService = inject(OwnerService);
+  private dialogRef = inject<MatDialogRef<EditOwnerModalComponent>>(MatDialogRef);
+  private snackBar = inject(MatSnackBar);
+  private fb = inject(FormBuilder);
+
   protected title = "Új tulajdonos létrehozása";
   protected ownerForm: UntypedFormGroup;
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data: OwnerUpdateDto,
-              private ownerService: OwnerService,
-              private dialogRef: MatDialogRef<EditOwnerModalComponent>,
-              private snackBar: MatSnackBar,
-              private fb: FormBuilder) {
+  constructor() {
+    const data = this.data;
+
 
     if (data.name !== "") {
       this.title = "Tulajdonos adatainak szerkesztése";

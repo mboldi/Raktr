@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import {map, Observable} from 'rxjs';
 import {UserDetails} from '../model/user/userDetails';
@@ -9,9 +9,8 @@ import {UserUpdateDto} from '../model/user/userUpdateDto';
   providedIn: 'root'
 })
 export class UserService {
+  private http = inject(HttpClient);
 
-  constructor(private http: HttpClient) {
-  }
 
   getUsers(canIssueRent?: boolean): Observable<UserDetails[]> {
     const params = canIssueRent !== undefined ? new HttpParams().set('canIssueRent', canIssueRent) : undefined;
@@ -19,7 +18,7 @@ export class UserService {
     return this.http.get<Record<string, unknown>[]>(`${environment.apiUrl}/v1/users`, {params})
       .pipe(
         map(users => {
-          let typedUsers: UserDetails[] = [];
+          const typedUsers: UserDetails[] = [];
 
           users.forEach(user => typedUsers.push(UserDetails.fromJson(user)))
 

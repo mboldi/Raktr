@@ -1,4 +1,5 @@
 import {DeviceStatus} from './deviceStatus';
+import {DeviceFormValue} from './deviceFormValue';
 
 export class DeviceCreateDto {
   assetTag: string;
@@ -83,7 +84,7 @@ export class DeviceCreateDto {
     };
   }
 
-  static fromFormControl(formValue: any): DeviceCreateDto {
+  static fromFormControl(formValue: DeviceFormValue): DeviceCreateDto {
     return new DeviceCreateDto(
       formValue.assetTag,
       formValue.barcode,

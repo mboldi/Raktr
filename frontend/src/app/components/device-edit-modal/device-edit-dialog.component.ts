@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, Inject, ViewChild} from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewChild, inject } from '@angular/core';
 import {
   MAT_DIALOG_DATA,
   MatDialogActions,
@@ -37,16 +37,20 @@ export interface DeviceDialogData {
   styleUrl: './device-edit-dialog.component.scss',
 })
 export class DeviceEditDialogComponent {
+  protected dialogData = inject<DeviceDialogData | undefined>(MAT_DIALOG_DATA);
+  private dialogRef = inject<MatDialogRef<DeviceEditDialogComponent>>(MatDialogRef);
+  private snackBar = inject(MatSnackBar);
+  private deviceService = inject(DeviceService);
+
   @ViewChild(DeviceFormComponent) deviceFormComponent!: DeviceFormComponent;
 
   protected title = 'Új eszköz hozzáadása';
-  protected isNew: boolean = true;
+  protected isNew = true;
   protected deviceData: DeviceDetails | null;
 
-  constructor(@Inject(MAT_DIALOG_DATA) protected dialogData: DeviceDialogData | undefined,
-              private dialogRef: MatDialogRef<DeviceEditDialogComponent>,
-              private snackBar: MatSnackBar,
-              private deviceService: DeviceService) {
+  constructor() {
+    const dialogData = this.dialogData;
+
     this.deviceData = dialogData?.device ?? null;
 
     if (this.deviceData) {

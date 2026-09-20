@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {map, Observable} from 'rxjs';
 import {CategoryDetails} from '../model/category/categoryDetails';
@@ -9,9 +9,8 @@ import {CategoryCreateDto} from '../model/category/categoryCreateDto';
     providedIn: 'root'
 })
 export class CategoryService {
+    private http = inject(HttpClient);
 
-    constructor(private http: HttpClient) {
-    }
 
     getCategories(): Observable<CategoryDetails[]> {
         return this.http.get<Record<string, unknown>[]>(`${environment.apiUrl}/v1/categories`)

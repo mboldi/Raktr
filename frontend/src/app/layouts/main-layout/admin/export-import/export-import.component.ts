@@ -1,4 +1,4 @@
-import {Component, ChangeDetectionStrategy} from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
 import {MatCard, MatCardContent, MatCardHeader} from '@angular/material/card';
 import {MatButton} from '@angular/material/button';
 import {MatIcon} from '@angular/material/icon';
@@ -46,6 +46,13 @@ interface ImportFailure {
   styleUrl: './export-import.component.scss',
 })
 export class ExportImportComponent {
+  private deviceService = inject(DeviceService);
+  private categoryService = inject(CategoryService);
+  private locationService = inject(LocationService);
+  private ownerService = inject(OwnerService);
+  private scannableService = inject(ScannableService);
+  private snackBar = inject(MatSnackBar);
+
   protected exportingDevices = false;
 
   protected importing = false;
@@ -53,16 +60,6 @@ export class ExportImportComponent {
   protected importFailures: ImportFailure[] = [];
 
   private nextBarcodeCounter = 0;
-
-  constructor(
-    private deviceService: DeviceService,
-    private categoryService: CategoryService,
-    private locationService: LocationService,
-    private ownerService: OwnerService,
-    private scannableService: ScannableService,
-    private snackBar: MatSnackBar,
-  ) {
-  }
 
   protected exportDevices() {
     this.exportingDevices = true;

@@ -8,7 +8,7 @@ This is the frontend: an Angular single-page app that talks to the [backend](../
 
 ### Prerequisites
 
-- Node.js 24.15+ (Angular 22 requires it)
+- Node.js 24.15+ (Angular 22 requires it) — the major is pinned in `.node-version`
 - pnpm — `corepack enable pnpm` picks up the version pinned in `package.json`
 - The backend running (see [`../backend/README.md`](../backend/README.md))
 

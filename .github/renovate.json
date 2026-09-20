@@ -68,11 +68,61 @@
       "automerge": true
     },
     {
-      "description": "Frontend (disabled during refactor)",
+      "description": "Frontend major updates",
+      "matchManagers": [
+        "npm"
+      ],
       "matchFileNames": [
         "frontend/**"
       ],
-      "enabled": false
+      "matchUpdateTypes": [
+        "major"
+      ],
+      "additionalBranchPrefix": "frontend/",
+      "addLabels": [
+        "frontend"
+      ],
+      "groupName": "frontend major"
+    },
+    {
+      "description": "Frontend minor and patch updates (automerge)",
+      "matchManagers": [
+        "npm"
+      ],
+      "matchFileNames": [
+        "frontend/**"
+      ],
+      "matchUpdateTypes": [
+        "minor",
+        "patch",
+        "digest"
+      ],
+      "additionalBranchPrefix": "frontend/",
+      "addLabels": [
+        "frontend"
+      ],
+      "groupName": "frontend non-major",
+      "automerge": true
+    },
+    {
+      "description": "TypeScript is capped by the Angular compiler peer range \">=6.0 <6.1\"",
+      "matchManagers": [
+        "npm"
+      ],
+      "matchPackageNames": [
+        "typescript"
+      ],
+      "allowedVersions": "<6.1"
+    },
+    {
+      "description": "jasmine-core 7 freezes the global describe/it bindings, which breaks zone.js test patching",
+      "matchManagers": [
+        "npm"
+      ],
+      "matchPackageNames": [
+        "jasmine-core"
+      ],
+      "allowedVersions": "<7"
     },
     {
       "description": "GitHub Actions",
@@ -85,9 +135,10 @@
       ]
     },
     {
-      "description": "Java version in setup-java (major upgrades only, never pin)",
+      "description": "Runtime versions in setup-java and setup-node (major upgrades only, never pin)",
       "matchDatasources": [
-        "java-version"
+        "java-version",
+        "node-version"
       ],
       "matchUpdateTypes": [
         "minor",

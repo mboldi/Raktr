@@ -9,13 +9,14 @@ This is the frontend: an Angular single-page app that talks to the [backend](../
 ### Prerequisites
 
 - Node.js 24.15+ (Angular 22 requires it)
+- pnpm — `corepack enable pnpm` picks up the version pinned in `package.json`
 - The backend running (see [`../backend/README.md`](../backend/README.md))
 
 ### Run
 
 ```bash
-npm install
-npm start
+pnpm install
+pnpm start
 ```
 
 The app will be available at `http://localhost:4200` and proxies API calls to the backend at `http://localhost:8080`.
@@ -31,8 +32,8 @@ docker compose up --build
 ## Build
 
 ```bash
-npm run build              # production build, output in dist/frontend
-npm run watch               # development build, rebuilds on change
+pnpm build    # production build, output in dist/frontend
+pnpm watch    # development build, rebuilds on change
 ```
 
 ## Testing

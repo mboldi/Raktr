@@ -85,6 +85,20 @@
       ]
     },
     {
+      "description": "Java version in setup-java (major upgrades only, never pin)",
+      "matchDatasources": [
+        "java-version"
+      ],
+      "matchUpdateTypes": [
+        "minor",
+        "patch",
+        "pin",
+        "pinDigest",
+        "digest"
+      ],
+      "enabled": false
+    },
+    {
       "description": "Docker base images (disable minor/patch)",
       "matchManagers": [
         "dockerfile",

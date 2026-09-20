@@ -3,16 +3,17 @@ import {
   MAT_DIALOG_DATA,
   MatDialogActions,
   MatDialogClose,
-  MatDialogContent, MatDialogRef,
+  MatDialogContent,
+  MatDialogRef,
   MatDialogTitle,
 } from '@angular/material/dialog';
-import {MatButton} from '@angular/material/button';
-import {DeviceDetails} from '../../model/scannable/device/deviceDetails';
-import {DeviceFormComponent} from '../device-form/device-form.component';
-import {DeviceCreateDto} from '../../model/scannable/device/deviceCreateDto';
-import {MatSnackBar} from '@angular/material/snack-bar';
-import {DeviceService} from '../../services/device.service';
-import {DeviceUpdateDto} from '../../model/scannable/device/deviceUpdateDto';
+import { MatButton } from '@angular/material/button';
+import { DeviceDetails } from '../../model/scannable/device/deviceDetails';
+import { DeviceFormComponent } from '../device-form/device-form.component';
+import { DeviceCreateDto } from '../../model/scannable/device/deviceCreateDto';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { DeviceService } from '../../services/device.service';
+import { DeviceUpdateDto } from '../../model/scannable/device/deviceUpdateDto';
 
 export interface DeviceDialogData {
   /** Pass to open the dialog in edit mode for an existing device. */
@@ -68,21 +69,28 @@ export class DeviceEditDialogComponent {
   }
 
   protected save() {
-    if (this.isFormValid) {     // New device, has to be created
-      if(this.isNew){
-        const newDevice = DeviceCreateDto.fromFormControl(this.deviceFormComponent?.deviceForm?.value);
+    if (this.isFormValid) {
+      // New device, has to be created
+      if (this.isNew) {
+        const newDevice = DeviceCreateDto.fromFormControl(
+          this.deviceFormComponent?.deviceForm?.value,
+        );
 
-        this.deviceService.createDevice(newDevice).subscribe(createdDevice => {
+        this.deviceService.createDevice(newDevice).subscribe((createdDevice) => {
           this.dialogRef.close(createdDevice);
         });
-      } else {                  // Device exists, only update
-        const updateDevice = DeviceUpdateDto.fromFormControl(this.deviceFormComponent?.deviceForm?.value);
+      } else {
+        // Device exists, only update
+        const updateDevice = DeviceUpdateDto.fromFormControl(
+          this.deviceFormComponent?.deviceForm?.value,
+        );
 
-        this.deviceService.updateDevice(this.deviceData!.id, updateDevice).subscribe(updatedDevice => {
-          this.dialogRef.close(updatedDevice);
-        })
+        this.deviceService
+          .updateDevice(this.deviceData!.id, updateDevice)
+          .subscribe((updatedDevice) => {
+            this.dialogRef.close(updatedDevice);
+          });
       }
-
     } else {
       this.deviceFormComponent?.markAllFieldsAsTouched();
 
@@ -93,6 +101,5 @@ export class DeviceEditDialogComponent {
         panelClass: ['error-snackbar'],
       });
     }
-
   }
 }

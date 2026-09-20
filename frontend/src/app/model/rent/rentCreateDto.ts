@@ -1,4 +1,4 @@
-import {RentType} from './rentType';
+import { RentType } from './rentType';
 
 export class RentCreateDto {
   type: RentType;
@@ -14,7 +14,7 @@ export class RentCreateDto {
     issuerId: string,
     renterName: string,
     outDate: Date,
-    expectedReturnDate: Date
+    expectedReturnDate: Date,
   ) {
     this.type = type;
     this.destination = destination;
@@ -31,7 +31,7 @@ export class RentCreateDto {
       issuerId: this.issuerId,
       renterName: this.renterName,
       outDate: this.outDate.toISOString().split('T')[0],
-      expectedReturnDate: this.expectedReturnDate.toISOString().split('T')[0]
+      expectedReturnDate: this.expectedReturnDate.toISOString().split('T')[0],
     };
   }
 }

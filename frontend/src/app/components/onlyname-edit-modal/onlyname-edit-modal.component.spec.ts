@@ -8,9 +8,8 @@ describe('OnlynameEditModalComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [OnlynameEditModalComponent]
-    })
-    .compileComponents();
+      imports: [OnlynameEditModalComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(OnlynameEditModalComponent);
     component = fixture.componentInstance;

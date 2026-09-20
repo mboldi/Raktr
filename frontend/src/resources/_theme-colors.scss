@@ -2,7 +2,7 @@
 // Proceed with caution if making changes to this file.
 
 @use 'sass:map';
-@use "@angular/material" as mat;
+@use '@angular/material' as mat;
 
 // Note: Color palettes are generated from primary: #01579B, error: #FB8C00
 $_palettes: (
@@ -17,7 +17,8 @@ $_palettes: (
     50: #3b79bf,
     60: #5893db,
     70: #74aef8,
-    80: #5893db, //#a3c9ff,    //primary - dark
+    80: #5893db,
+    //#a3c9ff,    //primary - dark
     90: #d3e4ff,
     95: #eaf1ff,
     98: #f8f9ff,
@@ -62,7 +63,8 @@ $_palettes: (
   ),
   neutral: (
     0: #000000,
-    10: #2e3035, //#191c20, //on-bg dark
+    10: #2e3035,
+    //#191c20, //on-bg dark
     20: #2e3035,
     25: #393b40,
     30: #44474c,
@@ -74,11 +76,13 @@ $_palettes: (
     80: #c5c6cc,
     90: #e1e2e8,
     95: #eff0f7,
-    98: #f8f9ff,      // light-bg
+    98: #f8f9ff,
+    // light-bg
     99: #fdfcff,
     100: #ffffff,
     4: #0c0e13,
-    6: #191c20,       // dark-bg, orig generated: #111318
+    6: #191c20,
+    // dark-bg, orig generated: #111318
     12: #1d2024,
     17: #272a2f,
     22: #32353a,
@@ -113,11 +117,13 @@ $_palettes: (
     25: #5c3000,
     30: #6d3a00,
     35: #7e4300,
-    40: #ff8f06,//#8f4e00,
+    40: #ff8f06,
+    //#8f4e00,
     50: #b36200,
     60: #d97800,
     70: #ff8f06,
-    80: #b36200,//#ffb77b,
+    80: #b36200,
+    //#ffb77b,
     90: #ffdcc2,
     95: #ffede2,
     98: #fff8f5,
@@ -129,10 +135,9 @@ $_palettes: (
 $_rest: (
   secondary: map.get($_palettes, secondary),
   neutral: map.get($_palettes, neutral),
-  neutral-variant: map.get($_palettes,  neutral-variant),
+  neutral-variant: map.get($_palettes, neutral-variant),
   error: map.get($_palettes, error),
 );
 
 $primary-palette: map.merge(map.get($_palettes, primary), $_rest);
 $tertiary-palette: map.merge(map.get($_palettes, tertiary), $_rest);
-

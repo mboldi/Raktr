@@ -1,8 +1,8 @@
 import { AbstractSecurityStorage } from 'angular-auth-oidc-client';
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class LocalStorageService implements AbstractSecurityStorage {
   read(key: string): string | null {

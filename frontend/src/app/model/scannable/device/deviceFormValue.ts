@@ -1,5 +1,5 @@
-import {DeviceStatus} from './deviceStatus';
-import {OwnerDetailsDto} from '../../owner/ownerDetailsDto';
+import { DeviceStatus } from './deviceStatus';
+import { OwnerDetailsDto } from '../../owner/ownerDetailsDto';
 
 /**
  * Raw value of the device form in DeviceFormComponent. The form itself is an

@@ -1,5 +1,4 @@
 <form [formGroup]="ticketForm" class="container-fluid">
-
   @if (isNew) {
     <div class="row">
       <div class="col-12">
@@ -27,14 +26,20 @@
         } @else if (!selectedDevice) {
           <mat-form-field class="full-width">
             <mat-label>Eszköz keresése</mat-label>
-            <input matInput placeholder="Vonalkód, vagy keresés név, típus, gyártó alapján"
-                   autocomplete="off"
-                   [formControl]="addDeviceFormControl"
-                   [matAutocomplete]="autoTicketDevice"
-                   (keyup.escape)="addDeviceFormControl.reset()"
-                   (keyup.enter)="onSearchEnterKey()">
+            <input
+              matInput
+              placeholder="Vonalkód, vagy keresés név, típus, gyártó alapján"
+              autocomplete="off"
+              [formControl]="addDeviceFormControl"
+              [matAutocomplete]="autoTicketDevice"
+              (keyup.escape)="addDeviceFormControl.reset()"
+              (keyup.enter)="onSearchEnterKey()"
+            />
 
-            <mat-autocomplete #autoTicketDevice="matAutocomplete" (optionSelected)="onDeviceOptionSelected()">
+            <mat-autocomplete
+              #autoTicketDevice="matAutocomplete"
+              (optionSelected)="onDeviceOptionSelected()"
+            >
               @for (option of filteredDeviceOptions | async; track option.id) {
                 <mat-option [value]="option.barcode">
                   {{ option.name }} - {{ option.manufacturer }} {{ option.model }}

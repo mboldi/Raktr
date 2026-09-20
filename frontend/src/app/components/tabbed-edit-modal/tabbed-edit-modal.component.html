@@ -6,8 +6,8 @@
       <ng-template mat-tab-label>
         <mat-icon class="tab-icon">{{ view.icon }}</mat-icon>
         <span style="margin-left: 4px">
-        {{ view.tabLabel }}
-      </span>
+          {{ view.tabLabel }}
+        </span>
       </ng-template>
       <div class="m-3 mb-0">
         <ng-container *ngComponentOutlet="view.component; inputs: viewInputs"></ng-container>
@@ -16,11 +16,16 @@
 
     <mat-tab>
       <ng-template mat-tab-label>
-        <mat-icon class="tab-icon active-rents-badge" [matBadge]="activeRentsCount" [matBadgeHidden]="activeRentsCount === 0"
-                  matBadgeSize="medium" matBadgePosition="above before" aria-hidden="false">local_shipping</mat-icon>
-        <span style="margin-left: 4px">
-        Szállítólevelek
-      </span>
+        <mat-icon
+          class="tab-icon active-rents-badge"
+          [matBadge]="activeRentsCount"
+          [matBadgeHidden]="activeRentsCount === 0"
+          matBadgeSize="medium"
+          matBadgePosition="above before"
+          aria-hidden="false"
+          >local_shipping</mat-icon
+        >
+        <span style="margin-left: 4px"> Szállítólevelek </span>
       </ng-template>
       <div class="m-3 mt-0 mb-0">
         <app-rent-mini-list [rents]="rents" [loading]="rentsLoading" />
@@ -28,11 +33,17 @@
     </mat-tab>
     <mat-tab>
       <ng-template mat-tab-label>
-        <mat-icon class="tab-icon" [matBadge]="tickets.length" [matBadgeHidden]="tickets.length === 0"
-                  matBadgeSize="medium" matBadgeColor="warn" matBadgePosition="above before" aria-hidden="false">bug_report</mat-icon>
-        <span style="margin-left: 4px">
-        Hibajegyek
-      </span>
+        <mat-icon
+          class="tab-icon"
+          [matBadge]="tickets.length"
+          [matBadgeHidden]="tickets.length === 0"
+          matBadgeSize="medium"
+          matBadgeColor="warn"
+          matBadgePosition="above before"
+          aria-hidden="false"
+          >bug_report</mat-icon
+        >
+        <span style="margin-left: 4px"> Hibajegyek </span>
       </ng-template>
       <div class="m-3 mt-0 mb-0">
         <app-ticket-mini-list [tickets]="tickets" [loading]="ticketsLoading" />
@@ -42,14 +53,17 @@
 
   <mat-dialog-actions align="end" class="mt-2 pt-0">
     <div style="display: flex; flex-direction: row; align-items: center">
-      <button matFab class="bg-orange" style="margin-right: 8px"
-              aria-label="add-ticket"
-              (click)="addTicket()">
+      <button
+        matFab
+        class="bg-orange"
+        style="margin-right: 8px"
+        aria-label="add-ticket"
+        (click)="addTicket()"
+      >
         <mat-icon>bug_report</mat-icon>
       </button>
       @if (view.editable) {
-        <button matFab color="primary" style="margin-right: 8px"
-                (click)="edit()">
+        <button matFab color="primary" style="margin-right: 8px" (click)="edit()">
           <mat-icon>edit</mat-icon>
         </button>
       }

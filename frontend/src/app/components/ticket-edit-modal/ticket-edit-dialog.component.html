@@ -6,9 +6,12 @@
 </div>
 
 <mat-dialog-content class="pt-0">
-  <app-ticket-form [ticketData]="ticket" [disabled]="isReadOnly"
-                   [presetScannable]="dialogData?.presetScannable ?? null"
-                   (deviceNotFound)="onDeviceNotFound()" />
+  <app-ticket-form
+    [ticketData]="ticket"
+    [disabled]="isReadOnly"
+    [presetScannable]="dialogData?.presetScannable ?? null"
+    (deviceNotFound)="onDeviceNotFound()"
+  />
 
   @if (!isNew && ticket) {
     <mat-divider class="section-divider"></mat-divider>
@@ -20,15 +23,28 @@
         <div class="new-comment-row">
           <mat-form-field class="full-width">
             <mat-label>Új hozzászólás</mat-label>
-            <input matInput [formControl]="newCommentControl" autocomplete="off" (keyup.enter)="sendComment()">
+            <input
+              matInput
+              [formControl]="newCommentControl"
+              autocomplete="off"
+              (keyup.enter)="sendComment()"
+            />
           </mat-form-field>
-          <button mat-raised-button color="primary" type="button"
-                  [disabled]="!newCommentControl.value"
-                  (click)="sendComment()">
+          <button
+            mat-raised-button
+            color="primary"
+            type="button"
+            [disabled]="!newCommentControl.value"
+            (click)="sendComment()"
+          >
             Küldés
           </button>
         </div>
-        <mat-slide-toggle [checked]="closingComment" (change)="closingComment = $event.checked" color="warn">
+        <mat-slide-toggle
+          [checked]="closingComment"
+          (change)="closingComment = $event.checked"
+          color="warn"
+        >
           Lezáró megjegyzés
         </mat-slide-toggle>
       }
@@ -38,7 +54,7 @@
           <div class="comment">
             <div class="comment-header">
               <span class="comment-author">{{ comment.createdBy.nickname }}</span>
-              <span class="comment-date">{{ comment.createdAt | date:'medium' }}</span>
+              <span class="comment-date">{{ comment.createdAt | date: 'medium' }}</span>
             </div>
             <mat-divider></mat-divider>
             <p class="comment-body">{{ comment.body }}</p>

@@ -1,5 +1,4 @@
 <mat-card class="scannable-card" appearance="outlined">
-
   <div class="header">
     <div class="heading">
       <h2 class="title">{{ scannable.name }}</h2>
@@ -13,15 +12,12 @@
         </mat-chip>
       }
       @if (scannable.deleted) {
-        <mat-chip class="deleted-chip">
-          Törölve
-        </mat-chip>
+        <mat-chip class="deleted-chip"> Törölve </mat-chip>
       }
     </div>
   </div>
 
   <mat-card-content>
-
     <section class="scannable-section">
       <h3 class="title">Azonosítás</h3>
       <div class="field-grid">
@@ -55,10 +51,9 @@
       <div class="field-grid">
         <div class="field">
           <span class="label">Tömeg</span>
-          <span class="value">{{ (scannable.weight / 1000) | number : '1.0-2' }}&nbsp;kg</span>
+          <span class="value">{{ scannable.weight / 1000 | number: '1.0-2' }}&nbsp;kg</span>
         </div>
       </div>
     </section>
-
   </mat-card-content>
 </mat-card>

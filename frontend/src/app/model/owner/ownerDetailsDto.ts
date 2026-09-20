@@ -1,4 +1,4 @@
-import {UserDetails} from '../user/userDetails';
+import { UserDetails } from '../user/userDetails';
 
 export class OwnerDetailsDto {
   id: number;
@@ -16,7 +16,7 @@ export class OwnerDetailsDto {
     createdAt: Date,
     createdBy: UserDetails,
     updatedAt: Date,
-    updatedBy: UserDetails
+    updatedBy: UserDetails,
   ) {
     this.id = id;
     this.name = name;
@@ -35,7 +35,7 @@ export class OwnerDetailsDto {
       new Date(json['createdAt'] as string),
       UserDetails.fromJson(json['createdBy'] as Record<string, unknown>),
       new Date(json['updatedAt'] as string),
-      UserDetails.fromJson(json['updatedBy'] as Record<string, unknown>)
+      UserDetails.fromJson(json['updatedBy'] as Record<string, unknown>),
     );
   }
 }

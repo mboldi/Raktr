@@ -1,7 +1,7 @@
-import {UserDetails} from '../user/userDetails';
-import {RentType} from './rentType';
-import {RentItemDetailsDto} from './rentItem/rentItemDetails';
-import {CommentDetailsDto} from '../comment/commentDetailsDto';
+import { UserDetails } from '../user/userDetails';
+import { RentType } from './rentType';
+import { RentItemDetailsDto } from './rentItem/rentItemDetails';
+import { CommentDetailsDto } from '../comment/commentDetailsDto';
 
 export class RentDetails {
   id: number;
@@ -37,7 +37,7 @@ export class RentDetails {
     createdAt: Date,
     createdBy: UserDetails,
     updatedAt: Date,
-    updatedBy: UserDetails
+    updatedBy: UserDetails,
   ) {
     this.id = id;
     this.type = type;
@@ -64,7 +64,7 @@ export class RentDetails {
   public getSumWeight(): number {
     let sumWeight = 0;
 
-    this.rentItems.forEach(rentItem => {
+    this.rentItems.forEach((rentItem) => {
       sumWeight += rentItem.scannable.weight * rentItem.quantity;
     });
 
@@ -88,7 +88,7 @@ export class RentDetails {
       new Date(json['createdAt'] as string),
       UserDetails.fromJson(json['createdBy'] as Record<string, unknown>),
       new Date(json['updatedAt'] as string),
-      UserDetails.fromJson(json['updatedBy'] as Record<string, unknown>)
+      UserDetails.fromJson(json['updatedBy'] as Record<string, unknown>),
     );
   }
 }

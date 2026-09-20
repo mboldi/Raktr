@@ -1,4 +1,4 @@
 export enum RentType {
-  SIMPLE = "SIMPLE",
-  COMPLEX = "COMPLEX",
+  SIMPLE = 'SIMPLE',
+  COMPLEX = 'COMPLEX',
 }

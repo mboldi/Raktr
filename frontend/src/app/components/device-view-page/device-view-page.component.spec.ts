@@ -8,9 +8,8 @@ describe('DeviceViewPageComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [DeviceViewPageComponent]
-    })
-    .compileComponents();
+      imports: [DeviceViewPageComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(DeviceViewPageComponent);
     component = fixture.componentInstance;

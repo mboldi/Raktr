@@ -1,4 +1,4 @@
-import {Owner} from '../owner/owner';
+import { Owner } from '../owner/owner';
 
 export class Scannable {
   id: number;
@@ -18,7 +18,7 @@ export class Scannable {
     manufacturer: string,
     acquisitionSource: string,
     acquisitionDate: Date,
-    warrantyEndDate: Date
+    warrantyEndDate: Date,
   ) {
     this.id = id;
     this.assetTag = assetTag;
@@ -39,24 +39,28 @@ export class Scannable {
       json['manufacturer'] as string,
       json['acquisitionSource'] as string,
       new Date(json['acquisitionDate'] as string),
-      new Date(json['warrantyEndDate'] as string)
+      new Date(json['warrantyEndDate'] as string),
     );
   }
 
   toJson(): Record<string, unknown> {
-    console.log(this)
+    console.log(this);
     return {
       id: this.id,
       assetTag: this.assetTag,
       name: this.name,
       owner: {
         id: this.owner.id,
-        name: this.owner.name
+        name: this.owner.name,
       },
       manufacturer: this.manufacturer,
       acquisitionSource: this.acquisitionSource,
-      acquisitionDate: this.acquisitionDate ? (this.acquisitionDate as Date).toISOString().split('T')[0] : "",
-      warrantyEndDate: this.warrantyEndDate ? (this.warrantyEndDate as Date).toISOString().split('T')[0] : "",
+      acquisitionDate: this.acquisitionDate
+        ? (this.acquisitionDate as Date).toISOString().split('T')[0]
+        : '',
+      warrantyEndDate: this.warrantyEndDate
+        ? (this.warrantyEndDate as Date).toISOString().split('T')[0]
+        : '',
     };
   }
 }

@@ -1,5 +1,5 @@
-import {RentType} from './rentType';
-import {RentItemStatus} from './rentItem/rentItemStatus';
+import { RentType } from './rentType';
+import { RentItemStatus } from './rentItem/rentItemStatus';
 
 export const RENT_TYPE_LABELS: Record<RentType, string> = {
   [RentType.SIMPLE]: 'Egyszerű',

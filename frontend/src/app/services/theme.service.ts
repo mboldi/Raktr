@@ -1,8 +1,8 @@
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 
 const THEME_KEY = 'app-theme';
 
-@Injectable({providedIn: 'root'})
+@Injectable({ providedIn: 'root' })
 export class ThemeService {
   private readonly dark = 'dark';
   private readonly light = 'light';

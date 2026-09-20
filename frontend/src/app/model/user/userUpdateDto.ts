@@ -8,9 +8,6 @@ export class UserUpdateDto {
   }
 
   static fromJson(json: Record<string, unknown>): UserUpdateDto {
-    return new UserUpdateDto(
-      json['userName'] as string,
-      json['personalId'] as string
-    );
+    return new UserUpdateDto(json['userName'] as string, json['personalId'] as string);
   }
 }

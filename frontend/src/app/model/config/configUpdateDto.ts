@@ -6,14 +6,12 @@ export class ConfigUpdateDto {
   }
 
   static fromJson(json: Record<string, unknown>): ConfigUpdateDto {
-    return new ConfigUpdateDto(
-      json['value'] as string
-    );
+    return new ConfigUpdateDto(json['value'] as string);
   }
 
   toJson(): Record<string, unknown> {
     return {
-      value: this.value
+      value: this.value,
     };
   }
 }

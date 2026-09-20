@@ -1,6 +1,6 @@
-import {ScannableDetailsDto} from '../../scannable/scannableDetailsDto';
-import {RentItemStatus} from './rentItemStatus';
-import {UserDetails} from '../../user/userDetails';
+import { ScannableDetailsDto } from '../../scannable/scannableDetailsDto';
+import { RentItemStatus } from './rentItemStatus';
+import { UserDetails } from '../../user/userDetails';
 
 export class RentItemDetailsDto {
   id: number;
@@ -20,7 +20,7 @@ export class RentItemDetailsDto {
     createdAt: Date,
     createdBy: UserDetails,
     updatedAt: Date,
-    updatedBy: UserDetails
+    updatedBy: UserDetails,
   ) {
     this.id = id;
     this.scannable = scannable;
@@ -41,7 +41,7 @@ export class RentItemDetailsDto {
       new Date(json['createdAt'] as string),
       UserDetails.fromJson(json['createdBy'] as Record<string, unknown>),
       new Date(json['updatedAt'] as string),
-      UserDetails.fromJson(json['updatedBy'] as Record<string, unknown>)
+      UserDetails.fromJson(json['updatedBy'] as Record<string, unknown>),
     );
   }
 }

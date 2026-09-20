@@ -7,7 +7,7 @@ export class ContainerItemUpdateDto {
 
   toJson(): Record<string, unknown> {
     return {
-      quantity: this.quantity
+      quantity: this.quantity,
     };
   }
 }

@@ -4,13 +4,26 @@
   <p>{{ deviceName }} - hány darabot adsz hozzá? (elérhető: {{ maxQuantity }} db)</p>
   <mat-form-field class="full-width">
     <mat-label>Mennyiség</mat-label>
-    <input matInput type="number" [min]="1" [max]="maxQuantity" [formControl]="quantityFormControl"
-    (keyup.enter)="save()"  >
-    <span matSuffix style="padding-right: 4px;">db&nbsp;</span>
+    <input
+      matInput
+      type="number"
+      [min]="1"
+      [max]="maxQuantity"
+      [formControl]="quantityFormControl"
+      (keyup.enter)="save()"
+    />
+    <span matSuffix style="padding-right: 4px">db&nbsp;</span>
   </mat-form-field>
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
   <button mat-button [mat-dialog-close]="false">Mégse</button>
-  <button mat-raised-button color="primary" [disabled]="quantityFormControl.invalid" (click)="save()">Hozzáadás</button>
+  <button
+    mat-raised-button
+    color="primary"
+    [disabled]="quantityFormControl.invalid"
+    (click)="save()"
+  >
+    Hozzáadás
+  </button>
 </mat-dialog-actions>

@@ -44,14 +44,14 @@ Currently, there are no automated tests in this part of the project.
 
 Environment-specific settings live in [`src/environments/environment.ts`](src/environments/environment.ts):
 
-| Property               | Default                 | Description                                    |
-|-------------------------|--------------------------|------------------------------------------------|
-| `apiUrl`                | `http://localhost:8080` | Base URL of the backend API                     |
-| `adminGroupName`        | `Admin`                 | OIDC group name that grants admin access        |
-| `fullAccessGroupNames`  | `['Stúdiós', 'Öregstúdiós']` | OIDC groups with full access            |
-| `defaultOwnerName`      | `SVIE`                  | Pre-selected owner when creating a device       |
-| `defaultDeviceStatus`   | `GOOD`                  | Pre-selected status when creating a device      |
-| `defaultDeviceQuantity` | `1`                     | Pre-filled quantity when creating a device      |
+| Property                | Default                      | Description                                |
+| ----------------------- | ---------------------------- | ------------------------------------------ |
+| `apiUrl`                | `http://localhost:8080`      | Base URL of the backend API                |
+| `adminGroupName`        | `Admin`                      | OIDC group name that grants admin access   |
+| `fullAccessGroupNames`  | `['Stúdiós', 'Öregstúdiós']` | OIDC groups with full access               |
+| `defaultOwnerName`      | `SVIE`                       | Pre-selected owner when creating a device  |
+| `defaultDeviceStatus`   | `GOOD`                       | Pre-selected status when creating a device |
+| `defaultDeviceQuantity` | `1`                          | Pre-filled quantity when creating a device |
 
 Authentication is handled via OIDC (Authentik) using `angular-auth-oidc-client`.
 

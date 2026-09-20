@@ -16,7 +16,7 @@ export class ContainerCreateDto {
     publicRentable: boolean,
     categoryName: string,
     locationName: string,
-    ownerId: number
+    ownerId: number,
   ) {
     this.assetTag = assetTag;
     this.barcode = barcode;
@@ -37,7 +37,7 @@ export class ContainerCreateDto {
       publicRentable: this.publicRentable,
       categoryName: this.categoryName,
       locationName: this.locationName,
-      ownerId: this.ownerId
+      ownerId: this.ownerId,
     };
   }
 }

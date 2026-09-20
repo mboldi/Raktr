@@ -1,6 +1,6 @@
 import { Component, ViewChild, ChangeDetectionStrategy, inject, OnInit } from '@angular/core';
-import {DatePipe} from "@angular/common";
-import {MatCard} from "@angular/material/card";
+import { DatePipe } from '@angular/common';
+import { MatCard } from '@angular/material/card';
 import {
   MatCell,
   MatCellDef,
@@ -11,22 +11,29 @@ import {
   MatHeaderRowDef,
   MatRow,
   MatRowDef,
-  MatTable
-} from "@angular/material/table";
-import {MatFabButton, MatIconButton, MatMiniFabButton} from "@angular/material/button";
-import {MatFormField, MatInput, MatLabel, MatSuffix} from "@angular/material/input";
-import {MatIcon} from "@angular/material/icon";
-import {MatProgressSpinner} from "@angular/material/progress-spinner";
-import {FormControl, ReactiveFormsModule} from "@angular/forms";
-import {OwnerDetailsDto} from "../../../../model/owner/ownerDetailsDto";
-import {OwnerService} from "../../../../services/owner.service";
-import {MatDialog} from "@angular/material/dialog";
-import {MatSnackBar} from "@angular/material/snack-bar";
-import {YesnoModalComponent} from "../../../../components/yesno-modal/yesno-modal.component";
-import {EditOwnerModalComponent} from "../../../../components/edit-owner-modal/edit-owner-modal.component";
-import {OwnerUpdateDto} from "../../../../model/owner/ownerUpdateDto";
+  MatTable,
+} from '@angular/material/table';
+import { MatFabButton, MatIconButton, MatMiniFabButton } from '@angular/material/button';
+import { MatFormField, MatInput, MatLabel, MatSuffix } from '@angular/material/input';
+import { MatIcon } from '@angular/material/icon';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { OwnerDetailsDto } from '../../../../model/owner/ownerDetailsDto';
+import { OwnerService } from '../../../../services/owner.service';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { YesnoModalComponent } from '../../../../components/yesno-modal/yesno-modal.component';
+import { EditOwnerModalComponent } from '../../../../components/edit-owner-modal/edit-owner-modal.component';
+import { OwnerUpdateDto } from '../../../../model/owner/ownerUpdateDto';
 
-const COLUMNS: string[] = ['name', 'inSchInventory', 'assignedScannables', 'updatedAt', 'updatedBy', 'delete'];
+const COLUMNS: string[] = [
+  'name',
+  'inSchInventory',
+  'assignedScannables',
+  'updatedAt',
+  'updatedBy',
+  'delete',
+];
 
 @Component({
   selector: 'app-owners',
@@ -52,7 +59,7 @@ const COLUMNS: string[] = ['name', 'inSchInventory', 'assignedScannables', 'upda
     MatSuffix,
     MatTable,
     ReactiveFormsModule,
-    MatHeaderCellDef
+    MatHeaderCellDef,
   ],
   templateUrl: './owners.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,
@@ -70,9 +77,8 @@ export class OwnersComponent implements OnInit {
   protected loading = true;
   protected columns = COLUMNS;
 
-  protected owners: OwnerDetailsDto[] = []
-  protected filteredOwners: OwnerDetailsDto[] = []
-
+  protected owners: OwnerDetailsDto[] = [];
+  protected filteredOwners: OwnerDetailsDto[] = [];
 
   ngOnInit(): void {
     this.getCategories();
@@ -91,7 +97,9 @@ export class OwnersComponent implements OnInit {
     const searchValue = this.searchFormControl.value;
 
     if (searchValue && searchValue.length > 0) {
-      this.filteredOwners = this.owners.filter(category => category.name.toLowerCase().includes(searchValue.toLowerCase()));
+      this.filteredOwners = this.owners.filter((category) =>
+        category.name.toLowerCase().includes(searchValue.toLowerCase()),
+      );
     } else {
       this.filteredOwners = this.owners;
     }
@@ -105,17 +113,17 @@ export class OwnersComponent implements OnInit {
     const editOwnerDialog = this.dialog.open(EditOwnerModalComponent, {
       width: '30vw',
       minWidth: '350px',
-      data: new OwnerUpdateDto('', false)
+      data: new OwnerUpdateDto('', false),
     });
 
-    editOwnerDialog.afterClosed().subscribe(result => {
+    editOwnerDialog.afterClosed().subscribe((result) => {
       if (result !== false) {
         this.ownerService.addOwner(result).subscribe({
           next: (data) => {
             this.owners.push(data);
             this.applyFilter();
 
-            this.snackBar.open(`${data.name} tulajdonos létrehozva!`, "Remek!", {
+            this.snackBar.open(`${data.name} tulajdonos létrehozva!`, 'Remek!', {
               duration: 3000,
               horizontalPosition: 'right',
               verticalPosition: 'top',
@@ -123,33 +131,37 @@ export class OwnersComponent implements OnInit {
             });
           },
           error: () => {
-            this.snackBar.open(`Nem sikerült létrehozni a(z) ${result.name} tulajdonost!`, "Értem", {
-              duration: 4000,
-              horizontalPosition: 'right',
-              verticalPosition: 'top',
-              panelClass: ['error-snackbar'],
-            });
-          }
-        })
+            this.snackBar.open(
+              `Nem sikerült létrehozni a(z) ${result.name} tulajdonost!`,
+              'Értem',
+              {
+                duration: 4000,
+                horizontalPosition: 'right',
+                verticalPosition: 'top',
+                panelClass: ['error-snackbar'],
+              },
+            );
+          },
+        });
       }
-    })
+    });
   }
 
   protected editOwner(ownerToUpdate: OwnerDetailsDto) {
     const editOwnerDialog = this.dialog.open(EditOwnerModalComponent, {
       width: '30vw',
       minWidth: '350px',
-      data: ownerToUpdate
+      data: ownerToUpdate,
     });
 
-    editOwnerDialog.afterClosed().subscribe(result => {
+    editOwnerDialog.afterClosed().subscribe((result) => {
       if (result !== false && result !== undefined) {
         this.ownerService.updateOwner(ownerToUpdate.id, result).subscribe({
           next: (data) => {
             this.getCategories();
             this.applyFilter();
 
-            this.snackBar.open(`${data.name} tulajdonos szerkesztve!`, "Remek!", {
+            this.snackBar.open(`${data.name} tulajdonos szerkesztve!`, 'Remek!', {
               duration: 3000,
               horizontalPosition: 'right',
               verticalPosition: 'top',
@@ -157,57 +169,69 @@ export class OwnersComponent implements OnInit {
             });
           },
           error: () => {
-            this.snackBar.open(`Nem sikerült menteni a(z) ${ownerToUpdate.name} tulajdonost!`, "Értem", {
-              duration: 4000,
-              horizontalPosition: 'right',
-              verticalPosition: 'top',
-              panelClass: ['error-snackbar'],
-            });
-          }
-        })
+            this.snackBar.open(
+              `Nem sikerült menteni a(z) ${ownerToUpdate.name} tulajdonost!`,
+              'Értem',
+              {
+                duration: 4000,
+                horizontalPosition: 'right',
+                verticalPosition: 'top',
+                panelClass: ['error-snackbar'],
+              },
+            );
+          },
+        });
       }
-    })
+    });
   }
 
   protected deleteOwner(ownerToDelete: OwnerDetailsDto) {
     const yesnoDialog = this.dialog.open(YesnoModalComponent, {
       width: '20vw',
       minWidth: '350px',
-      data: `Biztos törölnéd a(z) ${ownerToDelete.name} tulajdonost?`
+      data: `Biztos törölnéd a(z) ${ownerToDelete.name} tulajdonost?`,
     });
 
-    yesnoDialog.afterClosed().subscribe(result => {
+    yesnoDialog.afterClosed().subscribe((result) => {
       if (result) {
         this.ownerService.deleteOwner(ownerToDelete.id).subscribe({
           next: (deleted) => {
             this.getCategories();
 
             if (deleted) {
-              this.snackBar.open(`${ownerToDelete.name} törölve!`, "Remek!", {
+              this.snackBar.open(`${ownerToDelete.name} törölve!`, 'Remek!', {
                 duration: 3000,
                 horizontalPosition: 'right',
                 verticalPosition: 'top',
                 panelClass: ['success-snackbar'],
               });
             } else {
-              this.snackBar.open(`A(z) ${ownerToDelete.name} tulajdonos használatban van, nem törölhető!`, "Értem", {
+              this.snackBar.open(
+                `A(z) ${ownerToDelete.name} tulajdonos használatban van, nem törölhető!`,
+                'Értem',
+                {
+                  duration: 4000,
+                  horizontalPosition: 'right',
+                  verticalPosition: 'top',
+                  panelClass: ['error-snackbar'],
+                },
+              );
+            }
+          },
+          error: () => {
+            this.snackBar.open(
+              `Nem sikerült törölni a(z) ${ownerToDelete.name} tulajdonost!`,
+              'Értem',
+              {
                 duration: 4000,
                 horizontalPosition: 'right',
                 verticalPosition: 'top',
                 panelClass: ['error-snackbar'],
-              });
-            }
+              },
+            );
           },
-          error: () => {
-            this.snackBar.open(`Nem sikerült törölni a(z) ${ownerToDelete.name} tulajdonost!`, "Értem", {
-              duration: 4000,
-              horizontalPosition: 'right',
-              verticalPosition: 'top',
-              panelClass: ['error-snackbar'],
-            });
-          }
-        })
+        });
       }
-    })
+    });
   }
 }

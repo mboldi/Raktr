@@ -1,8 +1,8 @@
-import {TicketSeverity} from './ticketSeverity';
-import {TicketStatus} from './ticketStatus';
-import {Scannable} from '../scannable/scannable';
-import {CommentDetailsDto} from '../comment/commentDetailsDto';
-import {UserDetails} from '../user/userDetails';
+import { TicketSeverity } from './ticketSeverity';
+import { TicketStatus } from './ticketStatus';
+import { Scannable } from '../scannable/scannable';
+import { CommentDetailsDto } from '../comment/commentDetailsDto';
+import { UserDetails } from '../user/userDetails';
 
 export class TicketDetails {
   id: number;
@@ -26,7 +26,7 @@ export class TicketDetails {
     createdAt: Date,
     createdBy: UserDetails,
     updatedAt: Date,
-    updatedBy: UserDetails
+    updatedBy: UserDetails,
   ) {
     this.id = id;
     this.description = description;
@@ -51,7 +51,7 @@ export class TicketDetails {
       new Date(json['createdAt'] as string),
       UserDetails.fromJson(json['createdBy'] as Record<string, unknown>),
       new Date(json['updatedAt'] as string),
-      UserDetails.fromJson(json['updatedBy'] as Record<string, unknown>)
+      UserDetails.fromJson(json['updatedBy'] as Record<string, unknown>),
     );
   }
 }

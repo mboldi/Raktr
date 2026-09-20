@@ -1,15 +1,15 @@
 import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
-import {MatButton} from '@angular/material/button';
+import { MatButton } from '@angular/material/button';
 import {
   MAT_DIALOG_DATA,
   MatDialogActions,
   MatDialogClose,
   MatDialogContent,
   MatDialogRef,
-  MatDialogTitle
+  MatDialogTitle,
 } from '@angular/material/dialog';
-import {MatFormField, MatInput, MatLabel, MatSuffix} from '@angular/material/input';
-import {FormControl, ReactiveFormsModule, Validators} from '@angular/forms';
+import { MatFormField, MatInput, MatLabel, MatSuffix } from '@angular/material/input';
+import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 
 export class QuantityInputDialogData {
   deviceName: string;
@@ -35,7 +35,7 @@ export class QuantityInputDialogData {
     MatLabel,
     MatSuffix,
     ReactiveFormsModule,
-    MatDialogClose
+    MatDialogClose,
   ],
   templateUrl: './quantity-input-modal.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,

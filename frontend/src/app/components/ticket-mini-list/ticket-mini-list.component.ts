@@ -1,6 +1,6 @@
 import { Component, input, ChangeDetectionStrategy, inject } from '@angular/core';
-import {Router} from '@angular/router';
-import {MatDialog} from '@angular/material/dialog';
+import { Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
 import {
   MatCell,
   MatCellDef,
@@ -11,16 +11,16 @@ import {
   MatHeaderRowDef,
   MatRow,
   MatRowDef,
-  MatTable
+  MatTable,
 } from '@angular/material/table';
-import {DatePipe} from '@angular/common';
-import {MatIcon} from '@angular/material/icon';
-import {MatProgressSpinner} from '@angular/material/progress-spinner';
-import {MatTooltip} from '@angular/material/tooltip';
-import {TicketDetails} from '../../model/ticket/ticketDetails';
-import {TicketStatus} from '../../model/ticket/ticketStatus';
-import {TicketSeverity} from '../../model/ticket/ticketSeverity';
-import {TICKET_SEVERITY_LABELS, TICKET_STATUS_LABELS} from '../../model/ticket/ticketLabels';
+import { DatePipe } from '@angular/common';
+import { MatIcon } from '@angular/material/icon';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { MatTooltip } from '@angular/material/tooltip';
+import { TicketDetails } from '../../model/ticket/ticketDetails';
+import { TicketStatus } from '../../model/ticket/ticketStatus';
+import { TicketSeverity } from '../../model/ticket/ticketSeverity';
+import { TICKET_SEVERITY_LABELS, TICKET_STATUS_LABELS } from '../../model/ticket/ticketLabels';
 
 const DISPLAYED_COLUMNS: string[] = ['status', 'severity', 'createdAt', 'description'];
 

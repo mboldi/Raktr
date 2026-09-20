@@ -1,6 +1,6 @@
 import { Component, input, ChangeDetectionStrategy, inject } from '@angular/core';
-import {Router} from '@angular/router';
-import {MatDialog} from '@angular/material/dialog';
+import { Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
 import {
   MatCell,
   MatCellDef,
@@ -11,15 +11,21 @@ import {
   MatHeaderRowDef,
   MatRow,
   MatRowDef,
-  MatTable
+  MatTable,
 } from '@angular/material/table';
-import {DatePipe} from '@angular/common';
-import {MatIcon} from '@angular/material/icon';
-import {MatProgressSpinner} from '@angular/material/progress-spinner';
-import {MatTooltip} from '@angular/material/tooltip';
-import {RentDetails} from '../../model/rent/rentDetails';
+import { DatePipe } from '@angular/common';
+import { MatIcon } from '@angular/material/icon';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { MatTooltip } from '@angular/material/tooltip';
+import { RentDetails } from '../../model/rent/rentDetails';
 
-const DISPLAYED_COLUMNS: string[] = ['status', 'destination', 'outDate', 'expectedReturnDate', 'actualReturnDate'];
+const DISPLAYED_COLUMNS: string[] = [
+  'status',
+  'destination',
+  'outDate',
+  'expectedReturnDate',
+  'actualReturnDate',
+];
 
 @Component({
   selector: 'app-rent-mini-list',

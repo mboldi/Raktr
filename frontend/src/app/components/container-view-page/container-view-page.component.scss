@@ -1,6 +1,6 @@
 .container-card {
   margin: 0 auto;
-  border-color: rgba(0, 0, 0, 0.0);
+  border-color: rgba(0, 0, 0, 0);
 
   .header {
     display: flex;
@@ -42,7 +42,6 @@
   }
 }
 
-
 .rentable-chip {
   display: inline-flex;
   align-items: center;
@@ -83,8 +82,6 @@
     color: light-dark(rgba(0, 0, 0, 0.6), rgba(255, 255, 255, 0.7));
   }
 }
-
-
 
 .field-grid {
   display: grid;

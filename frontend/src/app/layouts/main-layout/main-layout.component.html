@@ -1,5 +1,10 @@
 @if (isMobile() && !sidebarOpen) {
-  <button mat-icon-button class="menu-toggle-button" (click)="toggleSidebar()" aria-label="Menü megnyitása">
+  <button
+    mat-icon-button
+    class="menu-toggle-button"
+    (click)="toggleSidebar()"
+    aria-label="Menü megnyitása"
+  >
     <mat-icon>menu</mat-icon>
   </button>
 }
@@ -17,4 +22,3 @@
     <router-outlet></router-outlet>
   </div>
 </div>
-

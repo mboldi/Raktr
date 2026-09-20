@@ -1,5 +1,5 @@
-import {DeviceStatus} from './deviceStatus';
-import {DeviceFormValue} from './deviceFormValue';
+import { DeviceStatus } from './deviceStatus';
+import { DeviceFormValue } from './deviceFormValue';
 
 export class DeviceUpdateDto {
   assetTag: string;
@@ -39,7 +39,7 @@ export class DeviceUpdateDto {
     acquisitionSource: string,
     acquisitionDate: Date,
     warrantyEndDate: Date,
-    notes: string
+    notes: string,
   ) {
     this.assetTag = assetTag;
     this.barcode = barcode;
@@ -80,12 +80,11 @@ export class DeviceUpdateDto {
       acquisitionSource: this.acquisitionSource,
       acquisitionDate: this.acquisitionDate.toISOString().split('T')[0],
       warrantyEndDate: this.warrantyEndDate.toISOString().split('T')[0],
-      notes: this.notes
+      notes: this.notes,
     };
   }
 
   static fromFormControl(formValue: DeviceFormValue) {
-
     return new DeviceUpdateDto(
       formValue.assetTag,
       formValue.barcode,
@@ -104,7 +103,7 @@ export class DeviceUpdateDto {
       formValue.acquisitionSource,
       new Date(formValue.acquisitionDate),
       new Date(formValue.warrantyEndDate),
-      formValue.notes
-    )
+      formValue.notes,
+    );
   }
 }

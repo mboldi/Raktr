@@ -1,15 +1,11 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import {RouterOutlet} from '@angular/router';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-inventory',
-  imports: [
-    RouterOutlet
-  ],
+  imports: [RouterOutlet],
   templateUrl: './inventory.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './inventory.component.scss',
 })
-export class InventoryComponent {
-
-}
+export class InventoryComponent {}

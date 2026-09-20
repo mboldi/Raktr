@@ -1,5 +1,5 @@
-import {Owner} from '../owner/owner';
-import {UserDetails} from '../user/userDetails';
+import { Owner } from '../owner/owner';
+import { UserDetails } from '../user/userDetails';
 
 export class ScannableDetailsDto {
   id: number;
@@ -31,7 +31,7 @@ export class ScannableDetailsDto {
     createdAt: Date,
     createdBy: UserDetails,
     updatedAt: Date,
-    updatedBy: UserDetails
+    updatedBy: UserDetails,
   ) {
     this.id = id;
     this.assetTag = assetTag;
@@ -64,7 +64,7 @@ export class ScannableDetailsDto {
       new Date(json['createdAt'] as string),
       UserDetails.fromJson(json['createdBy'] as Record<string, unknown>),
       new Date(json['updatedAt'] as string),
-      UserDetails.fromJson(json['updatedBy'] as Record<string, unknown>)
+      UserDetails.fromJson(json['updatedBy'] as Record<string, unknown>),
     );
   }
 }

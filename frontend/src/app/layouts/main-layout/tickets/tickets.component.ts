@@ -9,35 +9,52 @@ import {
   MatHeaderRowDef,
   MatRow,
   MatRowDef,
-  MatTable
+  MatTable,
 } from '@angular/material/table';
-import {MatFormField, MatInput, MatLabel, MatSuffix} from '@angular/material/input';
-import {TicketService} from '../../../services/ticket.service';
-import {TicketDetails} from '../../../model/ticket/ticketDetails';
-import {TicketStatus} from '../../../model/ticket/ticketStatus';
-import {TicketSeverity} from '../../../model/ticket/ticketSeverity';
-import {TICKET_SEVERITY_LABELS, TICKET_SEVERITY_ORDER, TICKET_STATUS_LABELS, TICKET_STATUS_ORDER} from '../../../model/ticket/ticketLabels';
-import {MatPaginator, PageEvent} from '@angular/material/paginator';
-import {DatePipe} from '@angular/common';
-import {MatSortModule, Sort} from '@angular/material/sort';
-import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {MatIcon} from '@angular/material/icon';
-import {MatButton, MatFabButton, MatIconButton} from '@angular/material/button';
-import {MatCard} from '@angular/material/card';
-import {LocalStorageService} from '../../../services/localStorage.service';
-import {environment} from '../../../../environments/environment';
-import {MatProgressSpinner} from '@angular/material/progress-spinner';
-import {WindowWidthService} from '../../../services/windowWidth.service';
-import {MatCheckbox} from '@angular/material/checkbox';
-import {MatSlideToggle} from '@angular/material/slide-toggle';
-import {MatTooltip} from '@angular/material/tooltip';
-import {MatDialog} from '@angular/material/dialog';
-import {MatSnackBar} from '@angular/material/snack-bar';
-import {TicketDialogResult, TicketEditDialogComponent} from '../../../components/ticket-edit-modal/ticket-edit-dialog.component';
-import {Location} from '@angular/common';
-import {ActivatedRoute} from '@angular/router';
+import { MatFormField, MatInput, MatLabel, MatSuffix } from '@angular/material/input';
+import { TicketService } from '../../../services/ticket.service';
+import { TicketDetails } from '../../../model/ticket/ticketDetails';
+import { TicketStatus } from '../../../model/ticket/ticketStatus';
+import { TicketSeverity } from '../../../model/ticket/ticketSeverity';
+import {
+  TICKET_SEVERITY_LABELS,
+  TICKET_SEVERITY_ORDER,
+  TICKET_STATUS_LABELS,
+  TICKET_STATUS_ORDER,
+} from '../../../model/ticket/ticketLabels';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
+import { DatePipe } from '@angular/common';
+import { MatSortModule, Sort } from '@angular/material/sort';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatIcon } from '@angular/material/icon';
+import { MatButton, MatFabButton, MatIconButton } from '@angular/material/button';
+import { MatCard } from '@angular/material/card';
+import { LocalStorageService } from '../../../services/localStorage.service';
+import { environment } from '../../../../environments/environment';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { WindowWidthService } from '../../../services/windowWidth.service';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { MatSlideToggle } from '@angular/material/slide-toggle';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import {
+  TicketDialogResult,
+  TicketEditDialogComponent,
+} from '../../../components/ticket-edit-modal/ticket-edit-dialog.component';
+import { Location } from '@angular/common';
+import { ActivatedRoute } from '@angular/router';
 
-const ALL_COLUMNS: string[] = ['severity', 'status', 'id', 'createdAt', 'device', 'description', 'createdBy', 'comments'];
+const ALL_COLUMNS: string[] = [
+  'severity',
+  'status',
+  'id',
+  'createdAt',
+  'device',
+  'description',
+  'createdBy',
+  'comments',
+];
 const REDUCED_COLUMNS: string[] = ['severity', 'id', 'status', 'createdAt', 'device'];
 
 @Component({
@@ -85,7 +102,6 @@ export class TicketsComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private location = inject(Location);
 
-
   protected loading = true;
 
   protected ticketSearchFormControl = new FormControl();
@@ -100,7 +116,7 @@ export class TicketsComponent implements OnInit {
   private lastPageSetting: PageEvent | undefined;
   protected pageSize = 5;
 
-  private lastSort: Sort = {active: 'createdAt', direction: 'desc'};
+  private lastSort: Sort = { active: 'createdAt', direction: 'desc' };
 
   protected filterPanelOpen = false;
 
@@ -142,7 +158,7 @@ export class TicketsComponent implements OnInit {
       this.pageSize = parseInt(readPageSize);
     }
 
-    this.ticketService.getTickets().subscribe(tickets => {
+    this.ticketService.getTickets().subscribe((tickets) => {
       this.tickets = tickets;
       this.updateCreators();
       this.filterSortTickets();
@@ -151,7 +167,7 @@ export class TicketsComponent implements OnInit {
 
       const ticketId = this.route.snapshot.paramMap.get('id');
       if (ticketId) {
-        const ticket = this.tickets.find(t => t.id === +ticketId);
+        const ticket = this.tickets.find((t) => t.id === +ticketId);
         if (ticket) {
           this.openTicket(ticket);
         } else {
@@ -168,9 +184,13 @@ export class TicketsComponent implements OnInit {
   }
 
   private updateCreators() {
-    this.creators = Array.from(new Set(
-      this.tickets.map(ticket => ticket.createdBy?.nickname).filter((nickname): nickname is string => !!nickname)
-    )).sort((a, b) => a.localeCompare(b));
+    this.creators = Array.from(
+      new Set(
+        this.tickets
+          .map((ticket) => ticket.createdBy?.nickname)
+          .filter((nickname): nickname is string => !!nickname),
+      ),
+    ).sort((a, b) => a.localeCompare(b));
   }
 
   protected applyFilter() {
@@ -190,12 +210,14 @@ export class TicketsComponent implements OnInit {
   }
 
   protected filterSortTickets() {
-    this.filteredTickets = this.tickets.filter(ticket =>
-      this.matchesSearch(ticket) &&
-      (this.showClosedTickets || ticket.status !== TicketStatus.CLOSED) &&
-      (this.selectedStatuses.size === 0 || this.selectedStatuses.has(ticket.status)) &&
-      (this.selectedSeverities.size === 0 || this.selectedSeverities.has(ticket.severity)) &&
-      (this.selectedCreators.size === 0 || this.selectedCreators.has(ticket.createdBy?.nickname ?? ''))
+    this.filteredTickets = this.tickets.filter(
+      (ticket) =>
+        this.matchesSearch(ticket) &&
+        (this.showClosedTickets || ticket.status !== TicketStatus.CLOSED) &&
+        (this.selectedStatuses.size === 0 || this.selectedStatuses.has(ticket.status)) &&
+        (this.selectedSeverities.size === 0 || this.selectedSeverities.has(ticket.severity)) &&
+        (this.selectedCreators.size === 0 ||
+          this.selectedCreators.has(ticket.createdBy?.nickname ?? '')),
     );
 
     this.sortTickets();
@@ -209,17 +231,20 @@ export class TicketsComponent implements OnInit {
   }
 
   private sortTickets() {
-    const {active, direction} = this.lastSort;
+    const { active, direction } = this.lastSort;
     const comparator = direction ? this.getSortComparator(active) : null;
     if (!comparator) {
       return;
     }
 
-    this.filteredTickets = this.filteredTickets.slice().sort((a, b) =>
-      direction === 'asc' ? comparator(a, b) : -comparator(a, b));
+    this.filteredTickets = this.filteredTickets
+      .slice()
+      .sort((a, b) => (direction === 'asc' ? comparator(a, b) : -comparator(a, b)));
   }
 
-  private getSortComparator(active: string): ((a: TicketDetails, b: TicketDetails) => number) | null {
+  private getSortComparator(
+    active: string,
+  ): ((a: TicketDetails, b: TicketDetails) => number) | null {
     switch (active) {
       case 'id':
         return (a, b) => a.id - b.id;
@@ -250,40 +275,61 @@ export class TicketsComponent implements OnInit {
 
   private matchesSearch(ticket: TicketDetails): boolean {
     const search = this.searchFilter.toLowerCase();
-    return (ticket.scannable?.name ?? '').toLowerCase().includes(search) ||
-      (ticket.description ?? '').toLowerCase().includes(search);
+    return (
+      (ticket.scannable?.name ?? '').toLowerCase().includes(search) ||
+      (ticket.description ?? '').toLowerCase().includes(search)
+    );
   }
 
   private ticketsMatchingExcept(excludedFacet: 'status' | 'severity' | 'creator'): TicketDetails[] {
-    return this.tickets.filter(ticket =>
-      this.matchesSearch(ticket) &&
-      (this.showClosedTickets || ticket.status !== TicketStatus.CLOSED) &&
-      (excludedFacet === 'status' || this.selectedStatuses.size === 0 || this.selectedStatuses.has(ticket.status)) &&
-      (excludedFacet === 'severity' || this.selectedSeverities.size === 0 || this.selectedSeverities.has(ticket.severity)) &&
-      (excludedFacet === 'creator' || this.selectedCreators.size === 0 || this.selectedCreators.has(ticket.createdBy?.nickname ?? ''))
+    return this.tickets.filter(
+      (ticket) =>
+        this.matchesSearch(ticket) &&
+        (this.showClosedTickets || ticket.status !== TicketStatus.CLOSED) &&
+        (excludedFacet === 'status' ||
+          this.selectedStatuses.size === 0 ||
+          this.selectedStatuses.has(ticket.status)) &&
+        (excludedFacet === 'severity' ||
+          this.selectedSeverities.size === 0 ||
+          this.selectedSeverities.has(ticket.severity)) &&
+        (excludedFacet === 'creator' ||
+          this.selectedCreators.size === 0 ||
+          this.selectedCreators.has(ticket.createdBy?.nickname ?? '')),
     );
   }
 
   private updateVisibleFilterOptions() {
-    const availableStatuses = new Set(this.ticketsMatchingExcept('status').map(ticket => ticket.status));
-    this.visibleStatuses = this.statuses.filter(status =>
-      availableStatuses.has(status) || this.selectedStatuses.has(status));
+    const availableStatuses = new Set(
+      this.ticketsMatchingExcept('status').map((ticket) => ticket.status),
+    );
+    this.visibleStatuses = this.statuses.filter(
+      (status) => availableStatuses.has(status) || this.selectedStatuses.has(status),
+    );
 
-    const availableSeverities = new Set(this.ticketsMatchingExcept('severity').map(ticket => ticket.severity));
-    this.visibleSeverities = this.severities.filter(severity =>
-      availableSeverities.has(severity) || this.selectedSeverities.has(severity));
+    const availableSeverities = new Set(
+      this.ticketsMatchingExcept('severity').map((ticket) => ticket.severity),
+    );
+    this.visibleSeverities = this.severities.filter(
+      (severity) => availableSeverities.has(severity) || this.selectedSeverities.has(severity),
+    );
 
-    const availableCreators = new Set(this.ticketsMatchingExcept('creator').map(ticket => ticket.createdBy?.nickname ?? ''));
-    this.visibleCreators = this.creators.filter(creator =>
-      availableCreators.has(creator) || this.selectedCreators.has(creator));
+    const availableCreators = new Set(
+      this.ticketsMatchingExcept('creator').map((ticket) => ticket.createdBy?.nickname ?? ''),
+    );
+    this.visibleCreators = this.creators.filter(
+      (creator) => availableCreators.has(creator) || this.selectedCreators.has(creator),
+    );
   }
 
   protected pageTickets(pageEvent: PageEvent) {
     this.lastPageSetting = pageEvent;
     this.pageSize = pageEvent.pageSize;
-    this.localStorageService.write(`${environment.defaultPageSizeKey}`, pageEvent.pageSize.toString());
+    this.localStorageService.write(
+      `${environment.defaultPageSizeKey}`,
+      pageEvent.pageSize.toString(),
+    );
 
-    const startId = (pageEvent.pageIndex) * pageEvent.pageSize;
+    const startId = pageEvent.pageIndex * pageEvent.pageSize;
     const endId = startId + pageEvent.pageSize;
 
     this.pagedTickets = this.filteredTickets.slice(startId, endId);
@@ -314,7 +360,11 @@ export class TicketsComponent implements OnInit {
   }
 
   protected hasActiveFilters(): boolean {
-    return this.selectedStatuses.size > 0 || this.selectedSeverities.size > 0 || this.selectedCreators.size > 0;
+    return (
+      this.selectedStatuses.size > 0 ||
+      this.selectedSeverities.size > 0 ||
+      this.selectedCreators.size > 0
+    );
   }
 
   protected clearFilters() {
@@ -329,7 +379,7 @@ export class TicketsComponent implements OnInit {
     const dialogRef = this.dialog.open(TicketEditDialogComponent, {
       width: '60vw',
       maxWidth: '100vw',
-      position: {top: '40px'},
+      position: { top: '40px' },
     });
 
     dialogRef.afterClosed().subscribe((response?: TicketDialogResult) => {
@@ -358,8 +408,8 @@ export class TicketsComponent implements OnInit {
     const dialogRef = this.dialog.open(TicketEditDialogComponent, {
       width: '60vw',
       maxWidth: '100vw',
-      position: {top: '40px'},
-      data: {ticket},
+      position: { top: '40px' },
+      data: { ticket },
     });
 
     dialogRef.afterClosed().subscribe((response?: TicketDialogResult) => {
@@ -382,7 +432,7 @@ export class TicketsComponent implements OnInit {
   }
 
   private replaceById<T extends { id: number }>(array: T[], newObject: T): void {
-    const index = array.findIndex(item => item.id === newObject.id);
+    const index = array.findIndex((item) => item.id === newObject.id);
     if (index !== -1) {
       array[index] = newObject;
     }

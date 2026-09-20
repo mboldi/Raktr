@@ -1,7 +1,7 @@
-import {DeviceStatus} from "./deviceStatus";
-import {ScannableDetailsDto} from "../scannableDetailsDto";
-import {Owner} from "../../owner/owner";
-import {UserDetails} from "../../user/userDetails";
+import { DeviceStatus } from './deviceStatus';
+import { ScannableDetailsDto } from '../scannableDetailsDto';
+import { Owner } from '../../owner/owner';
+import { UserDetails } from '../../user/userDetails';
 
 export class DeviceDetails extends ScannableDetailsDto {
   manufacturer: string;
@@ -39,9 +39,24 @@ export class DeviceDetails extends ScannableDetailsDto {
     acquisitionSource: string,
     acquisitionDate: Date,
     warrantyEndDate: Date,
-    notes: string
+    notes: string,
   ) {
-    super(id, assetTag, barcode, name, weight, publicRentable, deleted, category, location, owner, createdAt, createdBy, updatedAt, updatedBy);
+    super(
+      id,
+      assetTag,
+      barcode,
+      name,
+      weight,
+      publicRentable,
+      deleted,
+      category,
+      location,
+      owner,
+      createdAt,
+      createdBy,
+      updatedAt,
+      updatedBy,
+    );
     this.manufacturer = manufacturer;
     this.model = model;
     this.serialNumber = serialNumber;
@@ -79,7 +94,7 @@ export class DeviceDetails extends ScannableDetailsDto {
       json['acquisitionSource'] as string,
       new Date(json['acquisitionDate'] as string),
       new Date(json['warrantyEndDate'] as string),
-      json['notes'] as string
+      json['notes'] as string,
     );
   }
 }

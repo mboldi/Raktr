@@ -1,5 +1,5 @@
-import {TicketStatus} from './ticketStatus';
-import {TicketSeverity} from './ticketSeverity';
+import { TicketStatus } from './ticketStatus';
+import { TicketSeverity } from './ticketSeverity';
 
 export const TICKET_STATUS_ORDER: Record<TicketStatus, number> = {
   [TicketStatus.OPEN]: 0,

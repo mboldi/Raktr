@@ -1,4 +1,11 @@
-import { Component, effect, OnInit, ViewChild, ChangeDetectionStrategy, inject } from '@angular/core';
+import {
+  Component,
+  effect,
+  OnInit,
+  ViewChild,
+  ChangeDetectionStrategy,
+  inject,
+} from '@angular/core';
 import {
   MatCell,
   MatCellDef,
@@ -9,27 +16,37 @@ import {
   MatHeaderRowDef,
   MatRow,
   MatRowDef,
-  MatTable
+  MatTable,
 } from '@angular/material/table';
-import {MatFormField, MatInput, MatLabel, MatSuffix} from '@angular/material/input';
-import {RentService} from '../../../services/rent.service';
-import {RentDetails} from '../../../model/rent/rentDetails';
-import {MatPaginator, PageEvent} from '@angular/material/paginator';
-import {DatePipe, DecimalPipe} from '@angular/common';
-import {MatSortModule, Sort} from '@angular/material/sort';
-import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {MatIcon} from '@angular/material/icon';
-import {MatButton, MatFabButton, MatIconButton} from '@angular/material/button';
-import {MatCard} from '@angular/material/card';
-import {LocalStorageService} from '../../../services/localStorage.service';
-import {environment} from '../../../../environments/environment';
-import {MatProgressSpinner} from '@angular/material/progress-spinner';
-import {WindowWidthService} from '../../../services/windowWidth.service';
-import {MatCheckbox} from '@angular/material/checkbox';
-import {MatSlideToggle} from '@angular/material/slide-toggle';
-import {Router} from '@angular/router';
+import { MatFormField, MatInput, MatLabel, MatSuffix } from '@angular/material/input';
+import { RentService } from '../../../services/rent.service';
+import { RentDetails } from '../../../model/rent/rentDetails';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
+import { DatePipe, DecimalPipe } from '@angular/common';
+import { MatSortModule, Sort } from '@angular/material/sort';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatIcon } from '@angular/material/icon';
+import { MatButton, MatFabButton, MatIconButton } from '@angular/material/button';
+import { MatCard } from '@angular/material/card';
+import { LocalStorageService } from '../../../services/localStorage.service';
+import { environment } from '../../../../environments/environment';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { WindowWidthService } from '../../../services/windowWidth.service';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { MatSlideToggle } from '@angular/material/slide-toggle';
+import { Router } from '@angular/router';
 
-const ALL_COLUMNS: string[] = ['status', 'issuer', 'renter', 'destination', 'outDate', 'expectedReturnDate', 'actualReturnDate', 'itemCount', 'totalWeight'];
+const ALL_COLUMNS: string[] = [
+  'status',
+  'issuer',
+  'renter',
+  'destination',
+  'outDate',
+  'expectedReturnDate',
+  'actualReturnDate',
+  'itemCount',
+  'totalWeight',
+];
 const REDUCED_COLUMNS: string[] = ['status', 'issuer', 'renter', 'destination', 'outDate'];
 
 @Component({
@@ -74,7 +91,6 @@ export class RentsComponent implements OnInit {
   private rentService = inject(RentService);
   private router = inject(Router);
 
-
   protected loading = true;
   @ViewChild(MatTable) table!: MatTable<RentDetails>;
 
@@ -90,7 +106,7 @@ export class RentsComponent implements OnInit {
   private lastPageSetting: PageEvent | undefined;
   protected pageSize = 5;
 
-  private lastSort: Sort = {active: 'outDate', direction: 'desc'};
+  private lastSort: Sort = { active: 'outDate', direction: 'desc' };
 
   protected filterPanelOpen = false;
 
@@ -118,7 +134,7 @@ export class RentsComponent implements OnInit {
       this.pageSize = parseInt(readPageSize);
     }
 
-    this.rentService.getRents().subscribe(rents => {
+    this.rentService.getRents().subscribe((rents) => {
       this.rents = rents;
       this.updateFilterOptions();
       this.filterSortRents();
@@ -128,13 +144,21 @@ export class RentsComponent implements OnInit {
   }
 
   private updateFilterOptions() {
-    this.issuers = Array.from(new Set(
-      this.rents.map(rent => rent.issuer?.nickname).filter((nickname): nickname is string => !!nickname)
-    )).sort((a, b) => a.localeCompare(b));
+    this.issuers = Array.from(
+      new Set(
+        this.rents
+          .map((rent) => rent.issuer?.nickname)
+          .filter((nickname): nickname is string => !!nickname),
+      ),
+    ).sort((a, b) => a.localeCompare(b));
 
-    this.renters = Array.from(new Set(
-      this.rents.map(rent => rent.renterName).filter((renterName): renterName is string => !!renterName)
-    )).sort((a, b) => a.localeCompare(b));
+    this.renters = Array.from(
+      new Set(
+        this.rents
+          .map((rent) => rent.renterName)
+          .filter((renterName): renterName is string => !!renterName),
+      ),
+    ).sort((a, b) => a.localeCompare(b));
   }
 
   protected applyFilter() {
@@ -154,11 +178,13 @@ export class RentsComponent implements OnInit {
   }
 
   protected filterSortRents() {
-    this.filteredRents = this.rents.filter(rent =>
-      this.matchesSearch(rent) &&
-      (this.showClosedRents || !rent.closed) &&
-      (this.selectedIssuers.size === 0 || this.selectedIssuers.has(rent.issuer?.nickname ?? '')) &&
-      (this.selectedRenters.size === 0 || this.selectedRenters.has(rent.renterName ?? ''))
+    this.filteredRents = this.rents.filter(
+      (rent) =>
+        this.matchesSearch(rent) &&
+        (this.showClosedRents || !rent.closed) &&
+        (this.selectedIssuers.size === 0 ||
+          this.selectedIssuers.has(rent.issuer?.nickname ?? '')) &&
+        (this.selectedRenters.size === 0 || this.selectedRenters.has(rent.renterName ?? '')),
     );
 
     this.sortRents();
@@ -172,14 +198,15 @@ export class RentsComponent implements OnInit {
   }
 
   private sortRents() {
-    const {active, direction} = this.lastSort;
+    const { active, direction } = this.lastSort;
     const comparator = direction ? this.getSortComparator(active) : null;
     if (!comparator) {
       return;
     }
 
-    this.filteredRents = this.filteredRents.slice().sort((a, b) =>
-      direction === 'asc' ? comparator(a, b) : -comparator(a, b));
+    this.filteredRents = this.filteredRents
+      .slice()
+      .sort((a, b) => (direction === 'asc' ? comparator(a, b) : -comparator(a, b)));
   }
 
   private getSortComparator(active: string): ((a: RentDetails, b: RentDetails) => number) | null {
@@ -209,28 +236,41 @@ export class RentsComponent implements OnInit {
 
   private matchesSearch(rent: RentDetails): boolean {
     const search = this.searchFilter.toLowerCase();
-    return (rent.destination ?? '').toLowerCase().includes(search) ||
+    return (
+      (rent.destination ?? '').toLowerCase().includes(search) ||
       (rent.issuer?.nickname ?? '').toLowerCase().includes(search) ||
-      (rent.renterName ?? '').toLowerCase().includes(search);
+      (rent.renterName ?? '').toLowerCase().includes(search)
+    );
   }
 
   private rentsMatchingExcept(excludedFacet: 'issuer' | 'renter'): RentDetails[] {
-    return this.rents.filter(rent =>
-      this.matchesSearch(rent) &&
-      (this.showClosedRents || !rent.closed) &&
-      (excludedFacet === 'issuer' || this.selectedIssuers.size === 0 || this.selectedIssuers.has(rent.issuer?.nickname ?? '')) &&
-      (excludedFacet === 'renter' || this.selectedRenters.size === 0 || this.selectedRenters.has(rent.renterName ?? ''))
+    return this.rents.filter(
+      (rent) =>
+        this.matchesSearch(rent) &&
+        (this.showClosedRents || !rent.closed) &&
+        (excludedFacet === 'issuer' ||
+          this.selectedIssuers.size === 0 ||
+          this.selectedIssuers.has(rent.issuer?.nickname ?? '')) &&
+        (excludedFacet === 'renter' ||
+          this.selectedRenters.size === 0 ||
+          this.selectedRenters.has(rent.renterName ?? '')),
     );
   }
 
   private updateVisibleFilterOptions() {
-    const availableIssuers = new Set(this.rentsMatchingExcept('issuer').map(rent => rent.issuer?.nickname ?? ''));
-    this.visibleIssuers = this.issuers.filter(issuer =>
-      availableIssuers.has(issuer) || this.selectedIssuers.has(issuer));
+    const availableIssuers = new Set(
+      this.rentsMatchingExcept('issuer').map((rent) => rent.issuer?.nickname ?? ''),
+    );
+    this.visibleIssuers = this.issuers.filter(
+      (issuer) => availableIssuers.has(issuer) || this.selectedIssuers.has(issuer),
+    );
 
-    const availableRenters = new Set(this.rentsMatchingExcept('renter').map(rent => rent.renterName ?? ''));
-    this.visibleRenters = this.renters.filter(renter =>
-      availableRenters.has(renter) || this.selectedRenters.has(renter));
+    const availableRenters = new Set(
+      this.rentsMatchingExcept('renter').map((rent) => rent.renterName ?? ''),
+    );
+    this.visibleRenters = this.renters.filter(
+      (renter) => availableRenters.has(renter) || this.selectedRenters.has(renter),
+    );
   }
 
   protected toggleFilterPanel() {
@@ -265,9 +305,12 @@ export class RentsComponent implements OnInit {
   protected pageRents(pageEvent: PageEvent) {
     this.lastPageSetting = pageEvent;
     this.pageSize = pageEvent.pageSize;
-    this.localStorageService.write(`${environment.defaultPageSizeKey}`, pageEvent.pageSize.toString());
+    this.localStorageService.write(
+      `${environment.defaultPageSizeKey}`,
+      pageEvent.pageSize.toString(),
+    );
 
-    const startId = (pageEvent.pageIndex) * pageEvent.pageSize;
+    const startId = pageEvent.pageIndex * pageEvent.pageSize;
     const endId = startId + pageEvent.pageSize;
 
     this.pagedRents = this.filteredRents.slice(startId, endId);

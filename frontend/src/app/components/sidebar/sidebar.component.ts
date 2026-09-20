@@ -1,12 +1,16 @@
 import { Component, OnInit, ChangeDetectionStrategy, inject } from '@angular/core';
-import {OidcSecurityService} from 'angular-auth-oidc-client';
-import {Router, RouterLink, RouterLinkActive} from '@angular/router';
-import {MatDivider, MatListItem, MatNavList} from '@angular/material/list';
-import {MatIcon} from '@angular/material/icon';
-import {MatSlideToggle, MatSlideToggleChange} from '@angular/material/slide-toggle';
-import {ThemeService} from '../../services/theme.service';
-import {AdminAccessService} from '../../services/adminAccess.service';
-import {MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle} from '@angular/material/expansion';
+import { OidcSecurityService } from 'angular-auth-oidc-client';
+import { Router, RouterLink, RouterLinkActive } from '@angular/router';
+import { MatDivider, MatListItem, MatNavList } from '@angular/material/list';
+import { MatIcon } from '@angular/material/icon';
+import { MatSlideToggle, MatSlideToggleChange } from '@angular/material/slide-toggle';
+import { ThemeService } from '../../services/theme.service';
+import { AdminAccessService } from '../../services/adminAccess.service';
+import {
+  MatExpansionPanel,
+  MatExpansionPanelHeader,
+  MatExpansionPanelTitle,
+} from '@angular/material/expansion';
 
 declare interface RouteInfo {
   path: string;
@@ -18,22 +22,113 @@ declare interface RouteInfo {
 }
 
 export const ROUTES: RouteInfo[] = [
-  {path: '/overview', title: 'Áttekintés', icon: 'dashboard', class: '', inMenuBar: true, children: []},
-  {path: '/inventory', title: 'Eszközök kezelése', icon: 'sd_storage', class: '', inMenuBar: true, children: [
-      {path: '/inventory/devices', title: "Eszközök", icon: 'sd_storage', class: '', inMenuBar: true, children: []},
+  {
+    path: '/overview',
+    title: 'Áttekintés',
+    icon: 'dashboard',
+    class: '',
+    inMenuBar: true,
+    children: [],
+  },
+  {
+    path: '/inventory',
+    title: 'Eszközök kezelése',
+    icon: 'sd_storage',
+    class: '',
+    inMenuBar: true,
+    children: [
+      {
+        path: '/inventory/devices',
+        title: 'Eszközök',
+        icon: 'sd_storage',
+        class: '',
+        inMenuBar: true,
+        children: [],
+      },
       // {path: '/inventory/compositeitems', title: "Összetett eszközök", icon: 'inventory_2', class: '', inMenuBar: true, children: []},
-      {path: '/inventory/containers', title: "Szállítóládák", icon: 'pallet', class: '', inMenuBar: true, children: []},
-    ]},
-  {path: '/rents', title: 'Kivitelek kezelése', icon: 'local_shipping', class: '', inMenuBar: true, children: []},
-  {path: '/tickets', title: 'Hibajegyek', icon: 'bug_report', class: '', inMenuBar: true, children: []},
-  {path: '/settings', title: 'Beállítások', icon: 'person', class: '', inMenuBar: true, children: []},
-  {path: '/admin', title: 'Admin', icon: 'inventory', class: '', inMenuBar: true, children: [
-      {path: '/admin/categories', title: "Kategóriák", icon: 'shelves', class: '', inMenuBar: true, children: []},
-      {path: '/admin/locations', title: "Tárolási helyek", icon: 'forklift', class: '', inMenuBar: true, children: []},
-      {path: '/admin/owners', title: "Tulajdonosok", icon: 'assured_workload', class: '', inMenuBar: true, children: []},
-      {path: '/admin/signers', title: "Aláírók", icon: 'draw', class: '', inMenuBar: true, children: []},
-      {path: '/admin/export-import', title: "Export/Import", icon: 'import_export', class: '', inMenuBar: true, children: []},
-    ]},
+      {
+        path: '/inventory/containers',
+        title: 'Szállítóládák',
+        icon: 'pallet',
+        class: '',
+        inMenuBar: true,
+        children: [],
+      },
+    ],
+  },
+  {
+    path: '/rents',
+    title: 'Kivitelek kezelése',
+    icon: 'local_shipping',
+    class: '',
+    inMenuBar: true,
+    children: [],
+  },
+  {
+    path: '/tickets',
+    title: 'Hibajegyek',
+    icon: 'bug_report',
+    class: '',
+    inMenuBar: true,
+    children: [],
+  },
+  {
+    path: '/settings',
+    title: 'Beállítások',
+    icon: 'person',
+    class: '',
+    inMenuBar: true,
+    children: [],
+  },
+  {
+    path: '/admin',
+    title: 'Admin',
+    icon: 'inventory',
+    class: '',
+    inMenuBar: true,
+    children: [
+      {
+        path: '/admin/categories',
+        title: 'Kategóriák',
+        icon: 'shelves',
+        class: '',
+        inMenuBar: true,
+        children: [],
+      },
+      {
+        path: '/admin/locations',
+        title: 'Tárolási helyek',
+        icon: 'forklift',
+        class: '',
+        inMenuBar: true,
+        children: [],
+      },
+      {
+        path: '/admin/owners',
+        title: 'Tulajdonosok',
+        icon: 'assured_workload',
+        class: '',
+        inMenuBar: true,
+        children: [],
+      },
+      {
+        path: '/admin/signers',
+        title: 'Aláírók',
+        icon: 'draw',
+        class: '',
+        inMenuBar: true,
+        children: [],
+      },
+      {
+        path: '/admin/export-import',
+        title: 'Export/Import',
+        icon: 'import_export',
+        class: '',
+        inMenuBar: true,
+        children: [],
+      },
+    ],
+  },
 ];
 
 @Component({
@@ -48,7 +143,7 @@ export const ROUTES: RouteInfo[] = [
     MatSlideToggle,
     MatExpansionPanel,
     MatExpansionPanelHeader,
-    MatExpansionPanelTitle
+    MatExpansionPanelTitle,
   ],
   templateUrl: './sidebar.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,
@@ -60,26 +155,23 @@ export class SidebarComponent implements OnInit {
   private themeService = inject(ThemeService);
   private adminAccessService = inject(AdminAccessService);
 
-
   menuItems: RouteInfo[] = [];
 
   isDark = false;
   protected admin = false;
 
   constructor() {
-    this.isDark = this.themeService.isDark()
+    this.isDark = this.themeService.isDark();
   }
 
   ngOnInit() {
-    this.menuItems = ROUTES.filter(menuItem => menuItem);
+    this.menuItems = ROUTES.filter((menuItem) => menuItem);
 
-    this.adminAccessService.isAdmin().subscribe(admin => this.admin = admin);
+    this.adminAccessService.isAdmin().subscribe((admin) => (this.admin = admin));
   }
 
   isActiveParent(menuItem: RouteInfo): boolean {
-    return menuItem.children?.some(child =>
-      this.router.isActive(child.path, false)
-    ) ?? false;
+    return menuItem.children?.some((child) => this.router.isActive(child.path, false)) ?? false;
   }
 
   protected logout() {
@@ -88,6 +180,6 @@ export class SidebarComponent implements OnInit {
   }
 
   protected toggleDarkMode($event: MatSlideToggleChange) {
-    this.themeService.setDark($event.checked)
+    this.themeService.setDark($event.checked);
   }
 }

@@ -7,6 +7,4 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
   changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './composite-items.component.scss',
 })
-export class CompositeItemsComponent {
-
-}
+export class CompositeItemsComponent {}

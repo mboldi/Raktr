@@ -1,33 +1,44 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, ViewChild, inject } from '@angular/core';
-import {ActivatedRoute, Router, RouterLink} from '@angular/router';
-import {MatCard, MatCardContent, MatCardHeader} from '@angular/material/card';
-import {MatButton, MatFabButton} from '@angular/material/button';
-import {MatIcon} from '@angular/material/icon';
-import {MatFormField, MatInput, MatLabel} from '@angular/material/input';
-import {MatDivider} from '@angular/material/list';
-import {MatChip} from '@angular/material/chips';
-import {MatProgressSpinner} from '@angular/material/progress-spinner';
-import {DatePipe} from '@angular/common';
-import {FormControl, ReactiveFormsModule} from '@angular/forms';
-import {MatDialog} from '@angular/material/dialog';
-import {MatSnackBar} from '@angular/material/snack-bar';
-import {HttpErrorResponse} from '@angular/common/http';
-import {RentFormComponent} from '../../../components/rent-form/rent-form.component';
-import {RentDetails} from '../../../model/rent/rentDetails';
-import {RentCreateDto} from '../../../model/rent/rentCreateDto';
-import {RentUpdateDto} from '../../../model/rent/rentUpdateDto';
-import {RentItemCreateDto} from '../../../model/rent/rentItem/rentItemCreateDto';
-import {RentItemUpdateDto} from '../../../model/rent/rentItem/rentItemUpdateDto';
-import {RentItemDetailsDto} from '../../../model/rent/rentItem/rentItemDetails';
-import {RentItemStatus} from '../../../model/rent/rentItem/rentItemStatus';
-import {CommentCreateDto} from '../../../model/comment/commentCreateDto';
-import {CommentDetailsDto} from '../../../model/comment/commentDetailsDto';
-import {RentPdfCreateDto} from '../../../model/rent/rentPdfCreateDto';
-import {UserDetails} from '../../../model/user/userDetails';
-import {RentService} from '../../../services/rent.service';
-import {AdminAccessService} from '../../../services/adminAccess.service';
-import {AddScannableEvent, ItemQuantityChangedEvent, ItemStatusChangedEvent} from '../../../components/rent-form/rent-form.component';
-import {YesnoModalComponent} from '../../../components/yesno-modal/yesno-modal.component';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  ViewChild,
+  inject,
+} from '@angular/core';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { MatCard, MatCardContent, MatCardHeader } from '@angular/material/card';
+import { MatButton, MatFabButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { MatFormField, MatInput, MatLabel } from '@angular/material/input';
+import { MatDivider } from '@angular/material/list';
+import { MatChip } from '@angular/material/chips';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { DatePipe } from '@angular/common';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { HttpErrorResponse } from '@angular/common/http';
+import { RentFormComponent } from '../../../components/rent-form/rent-form.component';
+import { RentDetails } from '../../../model/rent/rentDetails';
+import { RentCreateDto } from '../../../model/rent/rentCreateDto';
+import { RentUpdateDto } from '../../../model/rent/rentUpdateDto';
+import { RentItemCreateDto } from '../../../model/rent/rentItem/rentItemCreateDto';
+import { RentItemUpdateDto } from '../../../model/rent/rentItem/rentItemUpdateDto';
+import { RentItemDetailsDto } from '../../../model/rent/rentItem/rentItemDetails';
+import { RentItemStatus } from '../../../model/rent/rentItem/rentItemStatus';
+import { CommentCreateDto } from '../../../model/comment/commentCreateDto';
+import { CommentDetailsDto } from '../../../model/comment/commentDetailsDto';
+import { RentPdfCreateDto } from '../../../model/rent/rentPdfCreateDto';
+import { UserDetails } from '../../../model/user/userDetails';
+import { RentService } from '../../../services/rent.service';
+import { AdminAccessService } from '../../../services/adminAccess.service';
+import {
+  AddScannableEvent,
+  ItemQuantityChangedEvent,
+  ItemStatusChangedEvent,
+} from '../../../components/rent-form/rent-form.component';
+import { YesnoModalComponent } from '../../../components/yesno-modal/yesno-modal.component';
 
 @Component({
   selector: 'app-edit-rent',
@@ -77,15 +88,15 @@ export class EditRentComponent implements OnInit {
   protected exportingPdf = false;
 
   ngOnInit(): void {
-    this.adminAccessService.getCurrentUser().subscribe(user => {
+    this.adminAccessService.getCurrentUser().subscribe((user) => {
       this.currentUser = user;
       this.cdr.markForCheck();
     });
-    this.adminAccessService.isAdmin().subscribe(isAdmin => {
+    this.adminAccessService.isAdmin().subscribe((isAdmin) => {
       this.isAdmin = isAdmin;
       this.cdr.markForCheck();
     });
-    this.adminAccessService.isFullAccessMember().subscribe(isFullAccess => {
+    this.adminAccessService.isFullAccessMember().subscribe((isFullAccess) => {
       this.isFullAccessMember = isFullAccess;
       this.cdr.markForCheck();
     });
@@ -99,7 +110,7 @@ export class EditRentComponent implements OnInit {
 
     this.isNew = false;
     this.rentService.getRent(+idParam).subscribe({
-      next: rent => {
+      next: (rent) => {
         this.rent = rent;
         this.loading = false;
         this.cdr.markForCheck();
@@ -112,12 +123,14 @@ export class EditRentComponent implements OnInit {
           verticalPosition: 'top',
           panelClass: ['error-snackbar'],
         });
-      }
+      },
     });
   }
 
   protected get sortedComments(): CommentDetailsDto[] {
-    return [...(this.rent?.comments ?? [])].sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+    return [...(this.rent?.comments ?? [])].sort(
+      (a, b) => b.createdAt.getTime() - a.createdAt.getTime(),
+    );
   }
 
   /** Closed rents are read-only for everyone except admins, who can still fix mistakes
@@ -135,7 +148,7 @@ export class EditRentComponent implements OnInit {
       return;
     }
 
-    this.rentService.getRent(this.rent.id).subscribe(rent => {
+    this.rentService.getRent(this.rent.id).subscribe((rent) => {
       this.rent = rent;
       this.cdr.markForCheck();
     });
@@ -170,7 +183,7 @@ export class EditRentComponent implements OnInit {
         formValue.expectedReturnDate,
       );
 
-      this.rentService.createRent(newRent).subscribe(createdRent => {
+      this.rentService.createRent(newRent).subscribe((createdRent) => {
         this.rent = createdRent;
         this.isNew = false;
 
@@ -188,7 +201,7 @@ export class EditRentComponent implements OnInit {
         formValue.actualReturnDate || null,
       );
 
-      this.rentService.updateRent(this.rent!.id, updatedRent).subscribe(rent => {
+      this.rentService.updateRent(this.rent!.id, updatedRent).subscribe((rent) => {
         this.rent = rent;
 
         this.notify('Kivitel mentve!', 'success-snackbar', 'Remek!');
@@ -196,24 +209,29 @@ export class EditRentComponent implements OnInit {
     }
   }
 
-  protected onAddScannable({scannable, quantity}: AddScannableEvent) {
+  protected onAddScannable({ scannable, quantity }: AddScannableEvent) {
     if (!this.rent) {
       return;
     }
 
-    this.rentService.addRentItem(this.rent.id, new RentItemCreateDto(scannable.id, quantity)).subscribe({
-      next: () => {
-        this.refreshRent();
-        this.notify(`${scannable.name} hozzáadva a kivitelhez!`, 'success-snackbar', 'Remek!');
-      },
-      error: (error: HttpErrorResponse) => {
-        if (error.status === 409) {
-          this.notify(`A(z) ${scannable.name} már hozzá van adva a kivitelhez!`, 'error-snackbar');
-        } else {
-          this.notify(`Nem sikerült hozzáadni a(z) ${scannable.name} eszközt!`, 'error-snackbar');
-        }
-      }
-    });
+    this.rentService
+      .addRentItem(this.rent.id, new RentItemCreateDto(scannable.id, quantity))
+      .subscribe({
+        next: () => {
+          this.refreshRent();
+          this.notify(`${scannable.name} hozzáadva a kivitelhez!`, 'success-snackbar', 'Remek!');
+        },
+        error: (error: HttpErrorResponse) => {
+          if (error.status === 409) {
+            this.notify(
+              `A(z) ${scannable.name} már hozzá van adva a kivitelhez!`,
+              'error-snackbar',
+            );
+          } else {
+            this.notify(`Nem sikerült hozzáadni a(z) ${scannable.name} eszközt!`, 'error-snackbar');
+          }
+        },
+      });
   }
 
   protected onScannableNotFound() {
@@ -231,33 +249,49 @@ export class EditRentComponent implements OnInit {
 
     this.rentService.deleteRentItem(this.rent.id, item.id).subscribe(() => {
       this.refreshRent();
-      this.notify(`${item.scannable.name} eltávolítva a kivitelből!`, 'success-snackbar', 'Rendben');
+      this.notify(
+        `${item.scannable.name} eltávolítva a kivitelből!`,
+        'success-snackbar',
+        'Rendben',
+      );
     });
   }
 
-  protected onItemQuantityChanged({item, quantity}: ItemQuantityChangedEvent) {
-    this.updateItem(item, item.status, quantity, `${item.scannable.name} mennyisége frissítve: ${quantity} db`);
+  protected onItemQuantityChanged({ item, quantity }: ItemQuantityChangedEvent) {
+    this.updateItem(
+      item,
+      item.status,
+      quantity,
+      `${item.scannable.name} mennyisége frissítve: ${quantity} db`,
+    );
   }
 
-  protected onItemStatusChanged({item, status}: ItemStatusChangedEvent) {
+  protected onItemStatusChanged({ item, status }: ItemStatusChangedEvent) {
     this.updateItem(item, status, item.quantity, 'Sikeresen mentve!');
   }
 
-  private updateItem(item: RentItemDetailsDto, status: RentItemStatus, quantity: number, successMessage: string) {
+  private updateItem(
+    item: RentItemDetailsDto,
+    status: RentItemStatus,
+    quantity: number,
+    successMessage: string,
+  ) {
     if (!this.rent) {
       return;
     }
 
-    this.rentService.updateRentItem(this.rent.id, item.id, new RentItemUpdateDto(status, quantity)).subscribe({
-      next: () => {
-        this.refreshRent();
-        this.notify(successMessage, 'success-snackbar', 'Remek!');
-      },
-      error: () => {
-        this.refreshRent();
-        this.notify('Nem sikerült menteni :(', 'error-snackbar');
-      }
-    });
+    this.rentService
+      .updateRentItem(this.rent.id, item.id, new RentItemUpdateDto(status, quantity))
+      .subscribe({
+        next: () => {
+          this.refreshRent();
+          this.notify(successMessage, 'success-snackbar', 'Remek!');
+        },
+        error: () => {
+          this.refreshRent();
+          this.notify('Nem sikerült menteni :(', 'error-snackbar');
+        },
+      });
   }
 
   protected deleteRent() {
@@ -268,10 +302,10 @@ export class EditRentComponent implements OnInit {
     const confirmDialog = this.dialog.open(YesnoModalComponent, {
       width: '20vw',
       minWidth: '350px',
-      data: `Biztos törlöd a(z) "${this.rent.destination}" kivitelt?`
+      data: `Biztos törlöd a(z) "${this.rent.destination}" kivitelt?`,
     });
 
-    confirmDialog.afterClosed().subscribe(result => {
+    confirmDialog.afterClosed().subscribe((result) => {
       if (result && this.rent) {
         this.rentService.deleteRent(this.rent.id).subscribe(() => {
           this.notify('Kivitel törölve!', 'success-snackbar', 'Rendben');
@@ -287,7 +321,7 @@ export class EditRentComponent implements OnInit {
       return;
     }
 
-    this.rentService.addComment(this.rent.id, new CommentCreateDto(body)).subscribe(comment => {
+    this.rentService.addComment(this.rent.id, new CommentCreateDto(body)).subscribe((comment) => {
       this.rent!.comments = [...this.rent!.comments, comment];
       this.newCommentControl.reset('');
       this.cdr.markForCheck();
@@ -301,14 +335,17 @@ export class EditRentComponent implements OnInit {
 
     const renterId = this.currentUser?.personalId;
     if (!renterId) {
-      this.notify('Nincs beállítva személyi igazolvány szám a fiókodban - add meg a Beállítások oldalon!', 'error-snackbar');
+      this.notify(
+        'Nincs beállítva személyi igazolvány szám a fiókodban - add meg a Beállítások oldalon!',
+        'error-snackbar',
+      );
       return;
     }
 
     this.exportingPdf = true;
 
     this.rentService.getRentPdf(this.rent.id, new RentPdfCreateDto(renterId)).subscribe({
-      next: pdf => {
+      next: (pdf) => {
         this.exportingPdf = false;
         this.cdr.markForCheck();
 
@@ -323,7 +360,7 @@ export class EditRentComponent implements OnInit {
         this.exportingPdf = false;
         this.cdr.markForCheck();
         this.notify('Nem sikerült létrehozni a PDF-et!', 'error-snackbar');
-      }
+      },
     });
   }
 }

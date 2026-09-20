@@ -1,5 +1,5 @@
-import {DeviceStatus} from './deviceStatus';
-import {DeviceFormValue} from './deviceFormValue';
+import { DeviceStatus } from './deviceStatus';
+import { DeviceFormValue } from './deviceFormValue';
 
 export class DeviceCreateDto {
   assetTag: string;
@@ -39,7 +39,7 @@ export class DeviceCreateDto {
     acquisitionSource: string,
     acquisitionDate: Date,
     warrantyEndDate: Date,
-    notes: string
+    notes: string,
   ) {
     this.assetTag = assetTag;
     this.barcode = barcode;
@@ -78,9 +78,9 @@ export class DeviceCreateDto {
       status: this.status,
       quantity: this.quantity,
       acquisitionSource: this.acquisitionSource,
-      acquisitionDate: this.acquisitionDate ? this.acquisitionDate.toISOString().split('T')[0] : "",
-      warrantyEndDate: this.warrantyEndDate ? this.warrantyEndDate.toISOString().split('T')[0] : "",
-      notes: this.notes
+      acquisitionDate: this.acquisitionDate ? this.acquisitionDate.toISOString().split('T')[0] : '',
+      warrantyEndDate: this.warrantyEndDate ? this.warrantyEndDate.toISOString().split('T')[0] : '',
+      notes: this.notes,
     };
   }
 
@@ -103,7 +103,7 @@ export class DeviceCreateDto {
       formValue.acquisitionSource,
       formValue.acquisitionDate,
       formValue.warrantyEndDate,
-      formValue.notes
-    )
+      formValue.notes,
+    );
   }
 }

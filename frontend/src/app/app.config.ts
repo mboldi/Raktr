@@ -1,4 +1,4 @@
-import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
+import { ApplicationConfig, isDevMode, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
 
 import { routes } from './app.routes';
@@ -27,8 +27,8 @@ export const appConfig: ApplicationConfig = {
         responseType: 'code',
         silentRenew: true,
         useRefreshToken: true,
-        logLevel: LogLevel.Debug,
-        secureRoutes: ['http://localhost:8080'],
+        logLevel: isDevMode() ? LogLevel.Debug : LogLevel.Warn,
+        secureRoutes: ['/api'],
       },
     }),
     { provide: AbstractSecurityStorage, useClass: LocalStorageService },

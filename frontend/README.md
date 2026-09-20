@@ -19,7 +19,9 @@ pnpm install
 pnpm start
 ```
 
-The app will be available at `http://localhost:4200` and proxies API calls to the backend at `http://localhost:8080`.
+The app will be available at `http://localhost:4200`. Requests to `/api` are proxied to the
+backend at `http://localhost:8080` by [`proxy.conf.json`](proxy.conf.json), which strips the
+`/api` prefix before forwarding.
 
 ### Docker Compose
 
@@ -46,14 +48,25 @@ Environment-specific settings live in [`src/environments/environment.ts`](src/en
 
 | Property                | Default                      | Description                                |
 | ----------------------- | ---------------------------- | ------------------------------------------ |
-| `apiUrl`                | `http://localhost:8080`      | Base URL of the backend API                |
+| `apiUrl`                | `/api`                       | Base path of the backend API, same origin  |
 | `adminGroupName`        | `Admin`                      | OIDC group name that grants admin access   |
 | `fullAccessGroupNames`  | `['Stúdiós', 'Öregstúdiós']` | OIDC groups with full access               |
 | `defaultOwnerName`      | `SVIE`                       | Pre-selected owner when creating a device  |
 | `defaultDeviceStatus`   | `GOOD`                       | Pre-selected status when creating a device |
 | `defaultDeviceQuantity` | `1`                          | Pre-filled quantity when creating a device |
 
-Authentication is handled via OIDC (Authentik) using `angular-auth-oidc-client`.
+Authentication is handled via OIDC (Authentik) using `angular-auth-oidc-client`. Access tokens
+are attached to requests under `/api` only.
+
+### Same-origin API
+
+The app calls the backend at `/api` on its own origin, so it carries no environment-specific
+configuration and the same image runs anywhere. Routing `/api` to the backend and everything
+else to the frontend is the deployment's job; under Docker Compose that is
+[`../deploy/local-proxy.conf`](../deploy/local-proxy.conf).
+
+Both strip the `/api` prefix, since the backend serves its routes at `/v1/...`. If the backend
+ever moves under `/api` itself, drop the prefix rewrite from all three places instead.
 
 ### Production
 

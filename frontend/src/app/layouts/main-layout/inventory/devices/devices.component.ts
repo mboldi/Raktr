@@ -1,4 +1,4 @@
-import {Component, effect, OnInit, ViewChild} from '@angular/core';
+import {Component, effect, OnInit, ViewChild, ChangeDetectionStrategy} from '@angular/core';
 import {
   MatCell,
   MatCellDef,
@@ -76,6 +76,7 @@ const REDUCED_COLUMNS: string[] = ['name', 'assetTag', 'maker', 'model'];
     MatButton
   ],
   templateUrl: './devices.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './devices.component.scss',
 })
 export class DevicesComponent implements OnInit {

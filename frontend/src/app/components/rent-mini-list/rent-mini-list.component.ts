@@ -1,4 +1,4 @@
-import {Component, input} from '@angular/core';
+import {Component, input, ChangeDetectionStrategy} from '@angular/core';
 import {Router} from '@angular/router';
 import {MatDialog} from '@angular/material/dialog';
 import {
@@ -40,6 +40,7 @@ const DISPLAYED_COLUMNS: string[] = ['status', 'destination', 'outDate', 'expect
     MatTooltip,
   ],
   templateUrl: './rent-mini-list.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './rent-mini-list.component.scss',
 })
 export class RentMiniListComponent {

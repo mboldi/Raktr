@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import {Component, Input, ChangeDetectionStrategy} from '@angular/core';
 import {DeviceStatus} from '../../model/scannable/device/deviceStatus';
 import {DeviceDetails} from '../../model/scannable/device/deviceDetails';
 import {MatIcon} from '@angular/material/icon';
@@ -19,6 +19,7 @@ import {MatCard, MatCardContent} from '@angular/material/card';
     MatCard
   ],
   templateUrl: './device-view-page.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './device-view-page.component.scss',
 })
 export class DeviceViewPageComponent {

@@ -1,4 +1,4 @@
-import {Component, Inject} from '@angular/core';
+import {Component, Inject, ChangeDetectionStrategy} from '@angular/core';
 import {MatButton} from '@angular/material/button';
 import {
   MAT_DIALOG_DATA,
@@ -38,6 +38,7 @@ export class QuantityInputDialogData {
     MatDialogClose
   ],
   templateUrl: './quantity-input-modal.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './quantity-input-modal.component.scss',
 })
 export class QuantityInputModalComponent {

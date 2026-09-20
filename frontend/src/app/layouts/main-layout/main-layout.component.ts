@@ -1,4 +1,4 @@
-import {Component, computed, effect} from '@angular/core';
+import {Component, computed, effect, ChangeDetectionStrategy} from '@angular/core';
 import {SidebarComponent} from '../../components/sidebar/sidebar.component';
 import {NavigationEnd, Router, RouterOutlet} from '@angular/router';
 import {filter} from 'rxjs';
@@ -17,6 +17,7 @@ const MOBILE_WIDTH_BREAKPOINT = 992;
     MatIcon
   ],
   templateUrl: './main-layout.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './main-layout.component.scss'
 })
 export class MainLayoutComponent {

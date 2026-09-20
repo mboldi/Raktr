@@ -2,7 +2,7 @@ import {ApplicationConfig, provideZoneChangeDetection} from '@angular/core';
 import {provideRouter} from '@angular/router';
 
 import {routes} from './app.routes';
-import {provideHttpClient, withInterceptors} from '@angular/common/http';
+import {provideHttpClient, withInterceptors, withXhr} from '@angular/common/http';
 import {AbstractSecurityStorage, authInterceptor, LogLevel, provideAuth} from 'angular-auth-oidc-client';
 import {LocalStorageService} from './services/localStorage.service';
 import {provideNativeDateAdapter} from '@angular/material/core';
@@ -12,7 +12,7 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({eventCoalescing: true}),
     provideRouter(routes),
-    provideHttpClient(withInterceptors([authInterceptor()])),
+    provideHttpClient(withXhr(), withInterceptors([authInterceptor()])),
     provideAuth({
       config: {
         authority: 'https://login.bsstudio.hu/application/o/raktr',

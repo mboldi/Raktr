@@ -1,4 +1,4 @@
-import {Component, ViewChild} from '@angular/core';
+import {Component, ViewChild, ChangeDetectionStrategy} from '@angular/core';
 import {DatePipe} from "@angular/common";
 import {MatCard} from "@angular/material/card";
 import {
@@ -55,6 +55,7 @@ const COLUMNS: string[] = ['name', 'assignedScannables', 'createdAt', 'createdBy
         MatHeaderCellDef
     ],
     templateUrl: './locations.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrl: './locations.component.scss',
 })
 export class LocationsComponent {

@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import {Component, Input, ChangeDetectionStrategy} from '@angular/core';
 import {ContainerDetails} from '../../model/scannable/container/containerDetails';
 import {MatIcon} from '@angular/material/icon';
 import {MatChip} from '@angular/material/chips';
@@ -17,6 +17,7 @@ import {DecimalPipe} from '@angular/common';
     DecimalPipe
   ],
   templateUrl: './container-view-page.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './container-view-page.component.scss',
 })
 export class ContainerViewPageComponent {

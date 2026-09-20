@@ -1,4 +1,4 @@
-import {Component, Inject, Type} from '@angular/core';
+import {Component, Inject, Type, ChangeDetectionStrategy} from '@angular/core';
 import {NgComponentOutlet} from '@angular/common';
 import {MatButton, MatFabButton} from "@angular/material/button";
 import {
@@ -88,6 +88,7 @@ const VIEW_DEFINITIONS: Record<TabbedEditModalKind, TabbedEditModalViewDefinitio
     MatBadge,
   ],
   templateUrl: './tabbed-edit-modal.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './tabbed-edit-modal.component.scss',
 })
 export class TabbedEditModalComponent {

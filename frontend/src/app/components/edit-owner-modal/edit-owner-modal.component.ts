@@ -1,4 +1,4 @@
-import {Component, Inject} from '@angular/core';
+import {Component, Inject, ChangeDetectionStrategy} from '@angular/core';
 import {MatButton} from "@angular/material/button";
 import {
   MAT_DIALOG_DATA,
@@ -31,6 +31,7 @@ import {MatSnackBar} from "@angular/material/snack-bar";
     MatDialogClose
   ],
   templateUrl: './edit-owner-modal.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './edit-owner-modal.component.scss',
 })
 export class EditOwnerModalComponent {

@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, ChangeDetectionStrategy} from '@angular/core';
 import {MatCard, MatCardContent, MatCardHeader} from '@angular/material/card';
 import {MatButton} from '@angular/material/button';
 import {MatIcon} from '@angular/material/icon';
@@ -42,6 +42,7 @@ interface ImportFailure {
     MatProgressBar,
   ],
   templateUrl: './export-import.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './export-import.component.scss',
 })
 export class ExportImportComponent {

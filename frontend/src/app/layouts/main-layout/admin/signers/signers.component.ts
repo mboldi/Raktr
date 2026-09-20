@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import {FormControl, FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatCard, MatCardContent, MatCardHeader} from "@angular/material/card";
 import {MatFormField, MatInput, MatLabel} from "@angular/material/input";
@@ -24,6 +24,7 @@ import {forkJoin} from 'rxjs';
     MatButton
   ],
   templateUrl: './signers.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './signers.component.scss',
 })
 export class SignersComponent implements OnInit {

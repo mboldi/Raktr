@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import {Component, Input, ChangeDetectionStrategy} from '@angular/core';
 import {ScannableDetailsDto} from '../../model/scannable/scannableDetailsDto';
 import {MatIcon} from '@angular/material/icon';
 import {MatChip} from '@angular/material/chips';
@@ -17,6 +17,7 @@ import {DecimalPipe} from '@angular/common';
     DecimalPipe
   ],
   templateUrl: './scannable-view-page.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './scannable-view-page.component.scss',
 })
 export class ScannableViewPageComponent {

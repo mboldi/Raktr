@@ -1,4 +1,4 @@
-import {Component, effect} from '@angular/core';
+import {Component, effect, ChangeDetectionStrategy} from '@angular/core';
 import {MatCard, MatCardContent, MatCardHeader, MatCardTitle} from '@angular/material/card';
 import {MatIcon} from '@angular/material/icon';
 import {MatFormField, MatInput, MatLabel, MatSuffix} from '@angular/material/input';
@@ -84,6 +84,7 @@ const REDUCED_COLUMNS: string[] = ['destination', 'issuer', 'renter', 'outDate',
     MatOption,
   ],
   templateUrl: './overview.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './overview.component.scss',
 })
 export class OverviewComponent {

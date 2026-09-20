@@ -1,4 +1,4 @@
-import {Component, Inject} from '@angular/core';
+import {Component, Inject, ChangeDetectionStrategy} from '@angular/core';
 import {
   MAT_DIALOG_DATA,
   MatDialogActions,
@@ -18,6 +18,7 @@ import {MatButton} from "@angular/material/button";
     MatDialogClose
   ],
   templateUrl: './yesno-modal.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './yesno-modal.component.scss',
 })
 export class YesnoModalComponent {

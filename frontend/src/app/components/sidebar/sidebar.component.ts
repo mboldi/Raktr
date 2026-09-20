@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import {OidcSecurityService} from 'angular-auth-oidc-client';
 import {Router, RouterLink, RouterLinkActive} from '@angular/router';
 import {MatDivider, MatListItem, MatNavList} from '@angular/material/list';
@@ -51,6 +51,7 @@ export const ROUTES: RouteInfo[] = [
     MatExpansionPanelTitle
   ],
   templateUrl: './sidebar.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './sidebar.component.scss',
 })
 export class SidebarComponent implements OnInit {

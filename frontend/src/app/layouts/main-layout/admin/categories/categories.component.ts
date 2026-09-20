@@ -1,4 +1,4 @@
-import {Component, ViewChild} from '@angular/core';
+import {Component, ViewChild, ChangeDetectionStrategy} from '@angular/core';
 import {FormControl, FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatCard} from "@angular/material/card";
 import {MatFabButton, MatIconButton, MatMiniFabButton} from "@angular/material/button";
@@ -57,6 +57,7 @@ const COLUMNS: string[] = ['name', 'assignedScannables', 'createdAt', 'createdBy
         MatMiniFabButton
     ],
     templateUrl: './categories.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrl: './categories.component.scss',
 })
 export class CategoriesComponent {

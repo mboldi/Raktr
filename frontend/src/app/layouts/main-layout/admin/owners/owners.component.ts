@@ -1,4 +1,4 @@
-import {Component, ViewChild} from '@angular/core';
+import {Component, ViewChild, ChangeDetectionStrategy} from '@angular/core';
 import {DatePipe} from "@angular/common";
 import {MatCard} from "@angular/material/card";
 import {
@@ -56,6 +56,7 @@ const COLUMNS: string[] = ['name', 'inSchInventory', 'assignedScannables', 'upda
     MatHeaderCellDef
   ],
   templateUrl: './owners.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './owners.component.scss',
 })
 export class OwnersComponent {

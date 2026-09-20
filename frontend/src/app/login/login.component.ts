@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, ChangeDetectionStrategy} from '@angular/core';
 import {Title} from '@angular/platform-browser';
 import {OidcSecurityService} from "angular-auth-oidc-client";
 import {Router} from '@angular/router';
@@ -14,6 +14,7 @@ import {MatCard, MatCardContent, MatCardHeader} from '@angular/material/card';
     MatCardContent
   ],
   templateUrl: './login.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './login.component.scss'
 })
 export class LoginComponent {

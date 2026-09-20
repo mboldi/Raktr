@@ -59,7 +59,7 @@
         <mat-form-field class="full-width">
           <mat-label>Várható visszaérkezés</mat-label>
           <input matInput [matDatepicker]="pickerExpected" formControlName="expectedReturnDate"
-                 [min]="rentForm.get('outDate')?.value" autocomplete="off">
+                 [min]="rentForm.get('outDate')?.value ?? null" autocomplete="off">
           <mat-datepicker-toggle matIconSuffix [for]="pickerExpected"></mat-datepicker-toggle>
           <mat-datepicker #pickerExpected></mat-datepicker>
           @if (rentForm.get('expectedReturnDate')?.hasError('matDatepickerMin')) {
@@ -71,7 +71,7 @@
         <mat-form-field class="full-width">
           <mat-label>Tényleges visszaérkezés</mat-label>
           <input matInput [matDatepicker]="pickerActual" formControlName="actualReturnDate"
-                 [min]="rentForm.get('outDate')?.value" autocomplete="off">
+                 [min]="rentForm.get('outDate')?.value ?? null" autocomplete="off">
           <mat-datepicker-toggle matIconSuffix [for]="pickerActual"></mat-datepicker-toggle>
           <mat-datepicker #pickerActual></mat-datepicker>
           @if (rentForm.get('actualReturnDate')?.hasError('matDatepickerMin')) {

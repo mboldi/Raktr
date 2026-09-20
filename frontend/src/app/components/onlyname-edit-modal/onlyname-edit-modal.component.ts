@@ -1,4 +1,4 @@
-import {Component, Inject} from '@angular/core';
+import {Component, Inject, ChangeDetectionStrategy} from '@angular/core';
 import {MatButton} from "@angular/material/button";
 import {
     MAT_DIALOG_DATA, MatDialog,
@@ -34,6 +34,7 @@ export class OnlyNameDialogData {
         MatDialogClose
     ],
     templateUrl: './onlyname-edit-modal.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrl: './onlyname-edit-modal.component.scss',
 })
 export class OnlynameEditModalComponent {

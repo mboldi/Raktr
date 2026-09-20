@@ -1,4 +1,4 @@
-import {Component, effect, OnInit} from '@angular/core';
+import {Component, effect, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import {
   MatCell,
   MatCellDef,
@@ -73,6 +73,7 @@ const REDUCED_COLUMNS: string[] = ['severity', 'id', 'status', 'createdAt', 'dev
     MatTooltip,
   ],
   templateUrl: './tickets.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './tickets.component.scss',
 })
 export class TicketsComponent implements OnInit {

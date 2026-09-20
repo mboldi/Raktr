@@ -1,4 +1,4 @@
-import {Component, input} from '@angular/core';
+import {Component, input, ChangeDetectionStrategy} from '@angular/core';
 import {Router} from '@angular/router';
 import {MatDialog} from '@angular/material/dialog';
 import {
@@ -43,6 +43,7 @@ const DISPLAYED_COLUMNS: string[] = ['status', 'severity', 'createdAt', 'descrip
     MatTooltip,
   ],
   templateUrl: './ticket-mini-list.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './ticket-mini-list.component.scss',
 })
 export class TicketMiniListComponent {

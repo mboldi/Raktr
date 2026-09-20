@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import {FormControl, ReactiveFormsModule} from '@angular/forms';
 import {MatCard, MatCardContent, MatCardHeader} from '@angular/material/card';
 import {MatFormField, MatInput, MatLabel} from '@angular/material/input';
@@ -27,6 +27,7 @@ import {environment} from '../../../../environments/environment';
     MatCheckbox,
   ],
   templateUrl: './settings.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './settings.component.scss',
 })
 export class SettingsComponent implements OnInit {

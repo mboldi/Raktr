@@ -1,4 +1,4 @@
-import {Component, effect, OnInit, ViewChild} from '@angular/core';
+import {Component, effect, OnInit, ViewChild, ChangeDetectionStrategy} from '@angular/core';
 import {
   MatCell,
   MatCellDef,
@@ -65,6 +65,7 @@ const REDUCED_COLUMNS: string[] = ['status', 'issuer', 'renter', 'destination', 
     MatSlideToggle,
   ],
   templateUrl: './rents.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './rents.component.scss',
 })
 export class RentsComponent implements OnInit {

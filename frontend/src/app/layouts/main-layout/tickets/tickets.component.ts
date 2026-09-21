@@ -186,7 +186,9 @@ export class TicketsComponent implements OnInit {
       this.loading = false;
 
       const ticketId = this.route.snapshot.paramMap.get('id');
-      if (ticketId) {
+      if (ticketId === 'new') {
+        this.newTicket();
+      } else if (ticketId) {
         const ticket = this.tickets.find((t) => t.id === +ticketId);
         if (ticket) {
           this.openTicket(ticket);
@@ -468,6 +470,8 @@ export class TicketsComponent implements OnInit {
   }
 
   protected newTicket() {
+    this.location.go('/tickets/new');
+
     const dialogRef = this.dialog.open(TicketEditDialogComponent, {
       width: '60vw',
       maxWidth: '100vw',
@@ -475,6 +479,8 @@ export class TicketsComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe((response?: TicketDialogResult) => {
+      this.location.go('/tickets');
+
       if (response) {
         this.tickets.push(response.ticket);
         this.updateCreators();

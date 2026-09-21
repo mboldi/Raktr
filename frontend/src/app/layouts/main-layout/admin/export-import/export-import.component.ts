@@ -6,15 +6,20 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { MatProgressBar } from '@angular/material/progress-bar';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { HttpErrorResponse } from '@angular/common/http';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, Observable } from 'rxjs';
 import type { Column, Value } from 'write-excel-file/browser';
 import { DeviceService } from '../../../../services/device.service';
+import { ContainerService } from '../../../../services/container.service';
 import { CategoryService } from '../../../../services/category.service';
 import { LocationService } from '../../../../services/location.service';
 import { OwnerService } from '../../../../services/owner.service';
 import { ScannableService } from '../../../../services/scannable.service';
 import { DeviceDetails } from '../../../../model/scannable/device/deviceDetails';
+import { ContainerDetails } from '../../../../model/scannable/container/containerDetails';
+import { ContainerCreateDto } from '../../../../model/scannable/container/containerCreateDto';
+import { ContainerUpdateDto } from '../../../../model/scannable/container/containerUpdateDto';
 import { DeviceCreateDto } from '../../../../model/scannable/device/deviceCreateDto';
+import { DeviceUpdateDto } from '../../../../model/scannable/device/deviceUpdateDto';
 import { DeviceStatus } from '../../../../model/scannable/device/deviceStatus';
 import { OwnerCreateDto } from '../../../../model/owner/ownerCreateDto';
 import { environment } from '../../../../../environments/environment';
@@ -32,46 +37,116 @@ interface ImportFailure {
 
 type CellValue = string | number | boolean | Date;
 
-function deviceColumn(
+// `DeviceCreateDto` and `DeviceUpdateDto` take identical constructor parameters in the same
+// order, so a single field tuple built once per row can construct whichever one is needed.
+type DeviceDtoFields = [
+  assetTag: string,
+  barcode: string,
+  name: string,
+  weight: number,
+  publicRentable: boolean,
+  categoryName: string,
+  locationName: string,
+  ownerId: number,
+  manufacturer: string,
+  model: string,
+  serialNumber: string,
+  estimatedValue: number,
+  status: DeviceStatus,
+  quantity: number,
+  acquisitionSource: string,
+  acquisitionDate: Date | null,
+  warrantyEndDate: Date | null,
+  notes: string,
+];
+
+// `ContainerCreateDto` and `ContainerUpdateDto` likewise share one constructor shape.
+type ContainerDtoFields = [
+  assetTag: string,
+  barcode: string,
+  name: string,
+  weight: number,
+  publicRentable: boolean,
+  categoryName: string,
+  locationName: string,
+  ownerId: number,
+];
+
+function excelColumn<T>(
   header: string,
   width: number,
-  value: (device: DeviceDetails) => Value | null | undefined,
+  value: (item: T) => Value | null | undefined,
   format?: string,
-): Column<DeviceDetails> {
+): Column<T> {
   return {
     header: { value: header, fontWeight: 'bold' },
     width,
-    cell: (device) => {
-      const cellValue = value(device);
+    cell: (item) => {
+      const cellValue = value(item);
       return cellValue === null || cellValue === undefined ? null : { value: cellValue, format };
     },
   };
 }
 
 const DEVICE_EXPORT_COLUMNS: Column<DeviceDetails>[] = [
-  deviceColumn('assetTag', 16, (device) => device.assetTag),
-  deviceColumn('barcode', 14, (device) => device.barcode),
-  deviceColumn('name', 28, (device) => device.name),
-  deviceColumn('manufacturer', 16, (device) => device.manufacturer),
-  deviceColumn('model', 16, (device) => device.model),
-  deviceColumn('serialNumber', 18, (device) => device.serialNumber),
-  deviceColumn('quantity', 10, (device) => device.quantity),
-  deviceColumn('category', 16, (device) => device.category),
-  deviceColumn('location', 16, (device) => device.location),
-  deviceColumn('owner', 16, (device) => device.owner?.name),
-  deviceColumn('weight', 10, (device) => device.weight),
-  deviceColumn('estimatedValue', 14, (device) => device.estimatedValue),
-  deviceColumn('status', 16, (device) => device.status),
-  deviceColumn('publicRentable', 12, (device) => device.publicRentable),
-  deviceColumn('acquisitionSource', 18, (device) => device.acquisitionSource),
-  deviceColumn('acquisitionDate', 16, (device) => device.acquisitionDate, 'yyyy. mm. dd.'),
-  deviceColumn('warrantyEndDate', 16, (device) => device.warrantyEndDate, 'yyyy. mm. dd.'),
-  deviceColumn('notes', 30, (device) => device.notes),
-  deviceColumn('deleted', 10, (device) => device.deleted),
-  deviceColumn('createdAt', 18, (device) => device.createdAt, 'yyyy. mm. dd. hh:mm'),
-  deviceColumn('createdBy', 16, (device) => device.createdBy?.nickname),
-  deviceColumn('updatedAt', 18, (device) => device.updatedAt, 'yyyy. mm. dd. hh:mm'),
-  deviceColumn('updatedBy', 16, (device) => device.updatedBy?.nickname),
+  excelColumn('assetTag', 16, (device: DeviceDetails) => device.assetTag),
+  excelColumn('barcode', 14, (device: DeviceDetails) => device.barcode),
+  excelColumn('name', 28, (device: DeviceDetails) => device.name),
+  excelColumn('manufacturer', 16, (device: DeviceDetails) => device.manufacturer),
+  excelColumn('model', 16, (device: DeviceDetails) => device.model),
+  excelColumn('serialNumber', 18, (device: DeviceDetails) => device.serialNumber),
+  excelColumn('quantity', 10, (device: DeviceDetails) => device.quantity),
+  excelColumn('category', 16, (device: DeviceDetails) => device.category),
+  excelColumn('location', 16, (device: DeviceDetails) => device.location),
+  excelColumn('owner', 16, (device: DeviceDetails) => device.owner?.name),
+  excelColumn('weight', 10, (device: DeviceDetails) => device.weight),
+  excelColumn('estimatedValue', 14, (device: DeviceDetails) => device.estimatedValue),
+  excelColumn('status', 16, (device: DeviceDetails) => device.status),
+  excelColumn('publicRentable', 12, (device: DeviceDetails) => device.publicRentable),
+  excelColumn('acquisitionSource', 18, (device: DeviceDetails) => device.acquisitionSource),
+  excelColumn(
+    'acquisitionDate',
+    16,
+    (device: DeviceDetails) => device.acquisitionDate,
+    'yyyy. mm. dd.',
+  ),
+  excelColumn(
+    'warrantyEndDate',
+    16,
+    (device: DeviceDetails) => device.warrantyEndDate,
+    'yyyy. mm. dd.',
+  ),
+  excelColumn('notes', 30, (device: DeviceDetails) => device.notes),
+  excelColumn('createdAt', 18, (device: DeviceDetails) => device.createdAt, 'yyyy. mm. dd. hh:mm'),
+  excelColumn('createdBy', 16, (device: DeviceDetails) => device.createdBy?.nickname),
+  excelColumn('updatedAt', 18, (device: DeviceDetails) => device.updatedAt, 'yyyy. mm. dd. hh:mm'),
+  excelColumn('updatedBy', 16, (device: DeviceDetails) => device.updatedBy?.nickname),
+];
+
+const CONTAINER_EXPORT_COLUMNS: Column<ContainerDetails>[] = [
+  excelColumn('assetTag', 16, (container: ContainerDetails) => container.assetTag),
+  excelColumn('barcode', 14, (container: ContainerDetails) => container.barcode),
+  excelColumn('name', 28, (container: ContainerDetails) => container.name),
+  excelColumn('category', 16, (container: ContainerDetails) => container.category),
+  excelColumn('location', 16, (container: ContainerDetails) => container.location),
+  excelColumn('owner', 16, (container: ContainerDetails) => container.owner?.name),
+  excelColumn('weight', 10, (container: ContainerDetails) => container.weight),
+  excelColumn('totalWeight', 12, (container: ContainerDetails) => container.totalWeight),
+  excelColumn('publicRentable', 12, (container: ContainerDetails) => container.publicRentable),
+  excelColumn(
+    'createdAt',
+    18,
+    (container: ContainerDetails) => container.createdAt,
+    'yyyy. mm. dd. hh:mm',
+  ),
+  excelColumn('createdBy', 16, (container: ContainerDetails) => container.createdBy?.nickname),
+  excelColumn(
+    'updatedAt',
+    18,
+    (container: ContainerDetails) => container.updatedAt,
+    'yyyy. mm. dd. hh:mm',
+  ),
+  excelColumn('updatedBy', 16, (container: ContainerDetails) => container.updatedBy?.nickname),
 ];
 
 @Component({
@@ -91,6 +166,7 @@ const DEVICE_EXPORT_COLUMNS: Column<DeviceDetails>[] = [
 })
 export class ExportImportComponent {
   private deviceService = inject(DeviceService);
+  private containerService = inject(ContainerService);
   private categoryService = inject(CategoryService);
   private locationService = inject(LocationService);
   private ownerService = inject(OwnerService);
@@ -98,8 +174,10 @@ export class ExportImportComponent {
   private snackBar = inject(MatSnackBar);
 
   protected exportingDevices = false;
+  protected exportingContainers = false;
 
   protected importing = false;
+  protected importKind: 'device' | 'container' | null = null;
   protected importProgress: ImportProgress | null = null;
   protected importFailures: ImportFailure[] = [];
 
@@ -110,44 +188,143 @@ export class ExportImportComponent {
 
     this.deviceService.getDevices().subscribe({
       next: (devices) => {
-        this.downloadDevicesXlsx(devices)
-          .catch(() => this.notifyError('Nem sikerült létrehozni az exportot!'))
+        this.downloadXlsx(devices, DEVICE_EXPORT_COLUMNS, 'Eszközök', 'eszkozok')
+          .catch((error: unknown) => {
+            console.error('Device export failed:', error);
+            this.notifyError('Nem sikerült létrehozni az exportot!');
+          })
           .finally(() => (this.exportingDevices = false));
       },
-      error: () => {
+      error: (error: unknown) => {
+        console.error('Failed to load devices for export:', error);
         this.exportingDevices = false;
         this.notifyError('Nem sikerült létrehozni az exportot!');
       },
     });
   }
 
-  private async downloadDevicesXlsx(devices: DeviceDetails[]) {
-    const { default: writeExcelFile } = await import('write-excel-file/browser');
+  protected exportContainers() {
+    this.exportingContainers = true;
 
-    await writeExcelFile(devices, {
-      sheet: 'Eszközök',
-      columns: DEVICE_EXPORT_COLUMNS,
-    }).toFile(`eszkozok_${new Date().toISOString().split('T')[0]}.xlsx`);
+    this.containerService.getContainers().subscribe({
+      next: (containers) => {
+        this.downloadXlsx(containers, CONTAINER_EXPORT_COLUMNS, 'Szállítóládák', 'szallitoladak')
+          .catch((error: unknown) => {
+            console.error('Container export failed:', error);
+            this.notifyError('Nem sikerült létrehozni az exportot!');
+          })
+          .finally(() => (this.exportingContainers = false));
+      },
+      error: (error: unknown) => {
+        console.error('Failed to load containers for export:', error);
+        this.exportingContainers = false;
+        this.notifyError('Nem sikerült létrehozni az exportot!');
+      },
+    });
   }
 
-  protected onFileSelected(event: Event) {
-    const input = event.target as HTMLInputElement;
-    const file = input.files?.[0];
-    input.value = '';
+  private async downloadXlsx<T extends object>(
+    items: T[],
+    columns: Column<T>[],
+    sheetName: string,
+    fileNamePrefix: string,
+  ) {
+    const { default: writeExcelFile } = await import('write-excel-file/browser');
 
+    // write-excel-file only accepts plain objects for its `Object[] + columns` API (it checks
+    // `value.constructor === Object`) - our model classes fail that check and get rejected as
+    // an invalid first argument, so they're copied into plain objects here first.
+    await writeExcelFile(
+      items.map((item) => ({ ...item })),
+      {
+        sheet: sheetName,
+        columns,
+      },
+    ).toFile(`${fileNamePrefix}_${new Date().toISOString().split('T')[0]}.xlsx`);
+  }
+
+  protected onDeviceFileSelected(event: Event) {
+    const file = this.takeSelectedFile(event);
     if (file) {
       this.importDevices(file);
     }
   }
 
+  protected onContainerFileSelected(event: Event) {
+    const file = this.takeSelectedFile(event);
+    if (file) {
+      this.importContainers(file);
+    }
+  }
+
+  private takeSelectedFile(event: Event): File | undefined {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    input.value = '';
+    return file;
+  }
+
   private async importDevices(file: File) {
+    const existingDevices = await firstValueFrom(this.deviceService.getDevices());
+    const deviceByBarcode = new Map(existingDevices.map((device) => [device.barcode, device]));
+    const deviceByAssetTag = new Map(existingDevices.map((device) => [device.assetTag, device]));
+
+    await this.runImport(file, 'device', (row, ownerIdByName) =>
+      this.buildDeviceFields(row, ownerIdByName, deviceByBarcode, deviceByAssetTag).then(
+        ({ existing, fields }) => ({
+          existing,
+          create: () => this.deviceService.createDevice(new DeviceCreateDto(...fields)),
+          update: () =>
+            this.deviceService.updateDevice(existing!.id, new DeviceUpdateDto(...fields)),
+        }),
+      ),
+    );
+  }
+
+  private async importContainers(file: File) {
+    const existingContainers = await firstValueFrom(this.containerService.getContainers());
+    const containerByBarcode = new Map(
+      existingContainers.map((container) => [container.barcode, container]),
+    );
+    const containerByAssetTag = new Map(
+      existingContainers.map((container) => [container.assetTag, container]),
+    );
+
+    await this.runImport(file, 'container', (row, ownerIdByName) =>
+      this.buildContainerFields(row, ownerIdByName, containerByBarcode, containerByAssetTag).then(
+        ({ existing, fields }) => ({
+          existing,
+          create: () => this.containerService.createContainer(new ContainerCreateDto(...fields)),
+          update: () =>
+            this.containerService.updateContainer(existing!.id, new ContainerUpdateDto(...fields)),
+        }),
+      ),
+    );
+  }
+
+  /** Shared row-by-row import driver: parses the file, makes sure every referenced
+   * category/location/owner exists, then lets `buildRow` decide - per row - whether an existing
+   * item should be updated or a new one created, tracking progress/failures/counts throughout. */
+  private async runImport<TExisting extends { id: number }>(
+    file: File,
+    kind: 'device' | 'container',
+    buildRow: (
+      row: Record<string, CellValue>,
+      ownerIdByName: Map<string, number>,
+    ) => Promise<{
+      existing: TExisting | undefined;
+      create: () => Observable<unknown>;
+      update: () => Observable<unknown>;
+    }>,
+  ) {
     this.importing = true;
+    this.importKind = kind;
     this.importFailures = [];
     this.importProgress = null;
 
     let rows: Record<string, CellValue>[];
     try {
-      rows = await this.parseDevicesFile(file);
+      rows = await this.parseXlsxFile(file);
     } catch {
       this.importing = false;
       this.notifyError(
@@ -176,10 +353,20 @@ export class ExportImportComponent {
     this.nextBarcodeCounter = await firstValueFrom(this.scannableService.getScannablesCount());
     this.importProgress = { current: 0, total: rows.length };
 
+    let createdCount = 0;
+    let updatedCount = 0;
+
     for (let i = 0; i < rows.length; i++) {
       try {
-        const dto = await this.buildDeviceCreateDto(rows[i], ownerIdByName);
-        await firstValueFrom(this.deviceService.createDevice(dto));
+        const { existing, create, update } = await buildRow(rows[i], ownerIdByName);
+
+        if (existing) {
+          await firstValueFrom(update());
+          updatedCount++;
+        } else {
+          await firstValueFrom(create());
+          createdCount++;
+        }
       } catch (error) {
         this.importFailures.push({
           row: i + 2, // +1 for the header row, +1 for 1-indexing
@@ -196,41 +383,43 @@ export class ExportImportComponent {
 
     this.importing = false;
 
-    const successCount = rows.length - this.importFailures.length;
-    this.snackBar.open(
-      this.importFailures.length === 0
-        ? `Import kész! Mind a(z) ${rows.length} eszköz létrejött.`
-        : `Import kész: ${successCount}/${rows.length} eszköz létrejött, ${this.importFailures.length} sikertelen.`,
-      'Rendben',
-      {
-        duration: 4000,
-        horizontalPosition: 'right',
-        verticalPosition: 'top',
-        panelClass: [this.importFailures.length === 0 ? 'success-snackbar' : 'error-snackbar'],
-      },
-    );
+    const parts = [];
+    if (createdCount > 0) {
+      parts.push(`${createdCount} létrehozva`);
+    }
+    if (updatedCount > 0) {
+      parts.push(`${updatedCount} frissítve`);
+    }
+    if (this.importFailures.length > 0) {
+      parts.push(`${this.importFailures.length} sikertelen`);
+    }
+
+    this.snackBar.open(`Import kész: ${parts.join(', ')}.`, 'Rendben', {
+      duration: 4000,
+      horizontalPosition: 'right',
+      verticalPosition: 'top',
+      panelClass: [this.importFailures.length === 0 ? 'success-snackbar' : 'error-snackbar'],
+    });
   }
 
-  private async parseDevicesFile(file: File): Promise<Record<string, CellValue>[]> {
+  private async parseXlsxFile(file: File): Promise<Record<string, CellValue>[]> {
     const { readSheet } = await import('read-excel-file/universal');
     const [headerRow = [], ...dataRows] = (await readSheet(file)) as (CellValue | null)[][];
 
     const headers = headerRow.map((cell) => this.cellToString(cell));
 
-    return (
-      dataRows
-        .filter((row) => row.some((cell) => this.cellToString(cell) !== ''))
-        .map((row) => {
-          const record: Record<string, CellValue> = {};
-          row.forEach((cell, index) => {
-            const header = headers[index];
-            if (header && cell !== null) {
-              record[header] = cell;
-            }
-          });
-          return record;
-        })
-    );
+    return dataRows
+      .filter((row) => row.some((cell) => this.cellToString(cell) !== ''))
+      .map((row) => {
+        const record: Record<string, CellValue> = {};
+        row.forEach((cell, index) => {
+          const header = headers[index];
+          if (header && cell !== null) {
+            record[header] = cell;
+          }
+        });
+        return record;
+      });
   }
 
   private async ensureCategoriesLocationsOwnersExist(
@@ -286,14 +475,30 @@ export class ExportImportComponent {
     return Array.from(referenced).filter((name) => !existing.has(name));
   }
 
-  private async buildDeviceCreateDto(
+  /** A row matching an existing item (by either identifier) updates that item in place instead
+   * of creating a duplicate - its own asset tag/barcode are kept as-is, so a blank cell on the
+   * row doesn't trigger generating a new code for an already-identified item. Only genuinely
+   * new items (no match, and missing one or both identifiers) get a generated code. */
+  private async resolveIdentity<T extends { assetTag: string; barcode: string }>(
     row: Record<string, CellValue>,
-    ownerIdByName: Map<string, number>,
-  ): Promise<DeviceCreateDto> {
+    byBarcode: Map<string, T>,
+    byAssetTag: Map<string, T>,
+  ): Promise<{ assetTag: string; barcode: string; existing: T | undefined }> {
     let assetTag = this.cellToString(row['assetTag']);
     let barcode = this.cellToString(row['barcode']);
 
-    if (!assetTag || !barcode) {
+    if (!assetTag && barcode) {
+      assetTag = barcode;
+    }
+
+    const existing =
+      (barcode ? byBarcode.get(barcode) : undefined) ??
+      (assetTag ? byAssetTag.get(assetTag) : undefined);
+
+    if (existing) {
+      assetTag = existing.assetTag;
+      barcode = existing.barcode;
+    } else if (!assetTag || !barcode) {
       const generated = await this.generateNextFreeBarcode();
       if (!barcode) {
         barcode = generated;
@@ -303,30 +508,77 @@ export class ExportImportComponent {
       }
     }
 
+    return { assetTag, barcode, existing };
+  }
+
+  private async buildDeviceFields(
+    row: Record<string, CellValue>,
+    ownerIdByName: Map<string, number>,
+    deviceByBarcode: Map<string, DeviceDetails>,
+    deviceByAssetTag: Map<string, DeviceDetails>,
+  ): Promise<{ existing: DeviceDetails | undefined; fields: DeviceDtoFields }> {
+    const { assetTag, barcode, existing } = await this.resolveIdentity(
+      row,
+      deviceByBarcode,
+      deviceByAssetTag,
+    );
+
     const ownerName = this.cellToString(row['owner']) || environment.defaultOwnerName;
     const status = this.cellToString(row['status']) || environment.defaultDeviceStatus;
     const acquisitionDate = this.cellToDate(row['acquisitionDate']) ?? new Date();
 
-    return new DeviceCreateDto(
-      assetTag,
-      barcode,
-      this.cellToString(row['name']),
-      this.cellToNumber(row['weight']) as number,
-      this.cellToBoolean(row['publicRentable']),
-      this.cellToString(row['category']),
-      this.cellToString(row['location']),
-      ownerIdByName.get(ownerName) as number,
-      this.cellToString(row['manufacturer']),
-      this.cellToString(row['model']),
-      this.cellToString(row['serialNumber']),
-      this.cellToNumber(row['estimatedValue']) as number,
-      status as DeviceStatus,
-      this.cellToNumber(row['quantity']) ?? environment.defaultDeviceQuantity,
-      this.cellToString(row['acquisitionSource']),
-      acquisitionDate,
-      this.cellToDate(row['warrantyEndDate']) ?? null,
-      this.cellToString(row['notes']),
+    return {
+      existing,
+      fields: [
+        assetTag,
+        barcode,
+        this.cellToString(row['name']),
+        this.cellToNumber(row['weight']) ?? 1000,
+        this.cellToBoolean(row['publicRentable']),
+        this.cellToString(row['category']),
+        this.cellToString(row['location']),
+        ownerIdByName.get(ownerName) as number,
+        this.cellToString(row['manufacturer']),
+        this.cellToString(row['model']),
+        this.cellToString(row['serialNumber']),
+        this.cellToNumber(row['estimatedValue']) ?? 1,
+        status as DeviceStatus,
+        this.cellToNumber(row['quantity']) ?? environment.defaultDeviceQuantity,
+        this.cellToString(row['acquisitionSource']),
+        acquisitionDate,
+        this.cellToDate(row['warrantyEndDate']) ?? null,
+        this.cellToString(row['notes']),
+      ],
+    };
+  }
+
+  private async buildContainerFields(
+    row: Record<string, CellValue>,
+    ownerIdByName: Map<string, number>,
+    containerByBarcode: Map<string, ContainerDetails>,
+    containerByAssetTag: Map<string, ContainerDetails>,
+  ): Promise<{ existing: ContainerDetails | undefined; fields: ContainerDtoFields }> {
+    const { assetTag, barcode, existing } = await this.resolveIdentity(
+      row,
+      containerByBarcode,
+      containerByAssetTag,
     );
+
+    const ownerName = this.cellToString(row['owner']) || environment.defaultOwnerName;
+
+    return {
+      existing,
+      fields: [
+        assetTag,
+        barcode,
+        this.cellToString(row['name']),
+        this.cellToNumber(row['weight']) ?? 1000,
+        this.cellToBoolean(row['publicRentable']),
+        this.cellToString(row['category']),
+        this.cellToString(row['location']),
+        ownerIdByName.get(ownerName) as number,
+      ],
+    };
   }
 
   private async generateNextFreeBarcode(): Promise<string> {
@@ -393,7 +645,7 @@ export class ExportImportComponent {
         return backendMessage;
       }
       if (error.status === 409) {
-        return 'Már létezik eszköz ezzel a vonalkóddal vagy azonosítóval';
+        return 'Már létezik tétel ezzel a vonalkóddal vagy azonosítóval';
       }
       return `Hiba (${error.status})`;
     }

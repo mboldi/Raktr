@@ -10,6 +10,7 @@ import { RentService } from '../../../services/rent.service';
 import { TicketService } from '../../../services/ticket.service';
 import { DeviceService } from '../../../services/device.service';
 import { ContainerService } from '../../../services/container.service';
+import { AdminAccessService } from '../../../services/adminAccess.service';
 import { RentDetails } from '../../../model/rent/rentDetails';
 import { ScannableDetailsDto } from '../../../model/scannable/scannableDetailsDto';
 import { DeviceDetails } from '../../../model/scannable/device/deviceDetails';
@@ -112,6 +113,9 @@ export class OverviewComponent implements OnInit {
   private dialog = inject(MatDialog);
   private snackBar = inject(MatSnackBar);
   private router = inject(Router);
+  private adminAccessService = inject(AdminAccessService);
+
+  protected canCreate = false;
 
   protected deviceSearchFormControl: FormControl = new FormControl();
   protected filteredSearchOptions: Observable<ScannableDetailsDto[]>;
@@ -139,6 +143,10 @@ export class OverviewComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.adminAccessService
+      .canCreateContent()
+      .subscribe((canCreate) => (this.canCreate = canCreate));
+
     this.getScannables();
 
     this.deviceService.getDevices().subscribe((devices) => (this.devices = devices));
@@ -214,7 +222,7 @@ export class OverviewComponent implements OnInit {
         position: { top: '40px' },
         data: { kind: 'scannable', item: matched } as TabbedEditModalData,
       });
-    } else {
+    } else if (this.canCreate) {
       this.offerCreateDevice(barcode);
     }
 

@@ -8,6 +8,7 @@ import { EditRentComponent } from './edit-rent/edit-rent.component';
 import { AdminComponent } from './admin/admin.component';
 import { UnauthorizedPageComponent } from './unauthorized-page/unauthorized-page.component';
 import { adminGuard } from '../../guards/admin.guard';
+import { createContentGuard } from '../../guards/create-content.guard';
 
 export const MAIN_LAYOUT_ROUTES: Routes = [
   { path: '', redirectTo: 'overview', pathMatch: 'full' },
@@ -18,9 +19,10 @@ export const MAIN_LAYOUT_ROUTES: Routes = [
     loadChildren: () => import('./inventory/inventory.routes').then((m) => m.INVENTORY_ROUTES),
   },
   { path: 'rents', component: RentsComponent },
-  { path: 'rents/new', component: EditRentComponent },
+  { path: 'rents/new', component: EditRentComponent, canActivate: [createContentGuard] },
   { path: 'rents/:id', component: EditRentComponent },
   { path: 'tickets', component: TicketsComponent },
+  { path: 'tickets/new', component: TicketsComponent },
   { path: 'tickets/:id', component: TicketsComponent },
   { path: 'settings', component: SettingsComponent },
   {

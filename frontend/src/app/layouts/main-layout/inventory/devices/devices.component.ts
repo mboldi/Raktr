@@ -43,6 +43,7 @@ import { WindowWidthService } from '../../../../services/windowWidth.service';
 import { CategoryService } from '../../../../services/category.service';
 import { LocationService } from '../../../../services/location.service';
 import { OwnerService } from '../../../../services/owner.service';
+import { AdminAccessService } from '../../../../services/adminAccess.service';
 import { CategoryDetails } from '../../../../model/category/categoryDetails';
 import { LocationDetails } from '../../../../model/location/LocationDetails';
 import { OwnerDetailsDto } from '../../../../model/owner/ownerDetailsDto';
@@ -118,8 +119,10 @@ export class DevicesComponent implements OnInit {
   private ownerService = inject(OwnerService);
   private route = inject(ActivatedRoute);
   private location = inject(Location);
+  private adminAccessService = inject(AdminAccessService);
 
   protected loading = true;
+  protected canCreate = false;
   @ViewChild(MatTable) table!: MatTable<DeviceDetails>;
   @ViewChild('optionSearchInput') optionSearchInput?: ElementRef<HTMLInputElement>;
 
@@ -168,6 +171,10 @@ export class DevicesComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.adminAccessService
+      .canCreateContent()
+      .subscribe((canCreate) => (this.canCreate = canCreate));
+
     const readPageSize = this.localStorageService.read(`${environment.defaultPageSizeKey}`);
     if (readPageSize) {
       this.pageSize = parseInt(readPageSize);
@@ -181,7 +188,9 @@ export class DevicesComponent implements OnInit {
       this.loading = false;
 
       const deviceId = this.route.snapshot.paramMap.get('id');
-      if (deviceId) {
+      if (deviceId === 'new') {
+        this.newDevice();
+      } else if (deviceId) {
         const device = this.devices.find((d) => d.id === +deviceId);
         if (device) {
           this.openDevice(device);
@@ -262,12 +271,16 @@ export class DevicesComponent implements OnInit {
   }
 
   protected newDevice() {
+    this.location.go('/inventory/devices/new');
+
     const editDeviceDialog = this.dialog.open(DeviceEditDialogComponent, {
       width: '60vw',
       maxWidth: '100vw',
     });
 
     editDeviceDialog.afterClosed().subscribe((result) => {
+      this.location.go('/inventory/devices');
+
       if (result) {
         this.devices.push(result);
         this.updateMakersAndModels();

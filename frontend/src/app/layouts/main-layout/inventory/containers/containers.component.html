@@ -2,10 +2,12 @@
   <div class="header-title-row">
     <h2>Szállítóládák kezelése</h2>
 
-    <button matFab extended class="add-button" (click)="newContainer()">
-      <mat-icon>add</mat-icon>
-      Új hozzáadása
-    </button>
+    @if (canCreate) {
+      <button matFab extended class="add-button" (click)="newContainer()">
+        <mat-icon>add</mat-icon>
+        Új hozzáadása
+      </button>
+    }
   </div>
 
   <div class="list-header-actions-row">

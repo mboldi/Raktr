@@ -42,6 +42,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { WindowWidthService } from '../../../../services/windowWidth.service';
 import { CategoryService } from '../../../../services/category.service';
 import { LocationService } from '../../../../services/location.service';
+import { AdminAccessService } from '../../../../services/adminAccess.service';
 import { CategoryDetails } from '../../../../model/category/categoryDetails';
 import { LocationDetails } from '../../../../model/location/LocationDetails';
 import { MatCheckbox } from '@angular/material/checkbox';
@@ -112,8 +113,10 @@ export class ContainersComponent implements OnInit {
   private snackBar = inject(MatSnackBar);
   private route = inject(ActivatedRoute);
   private location = inject(Location);
+  private adminAccessService = inject(AdminAccessService);
 
   protected loading = true;
+  protected canCreate = false;
   @ViewChild(MatTable) table!: MatTable<ContainerDetails>;
   @ViewChild('optionSearchInput') optionSearchInput?: ElementRef<HTMLInputElement>;
 
@@ -153,6 +156,10 @@ export class ContainersComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.adminAccessService
+      .canCreateContent()
+      .subscribe((canCreate) => (this.canCreate = canCreate));
+
     const readPageSize = this.localStorageService.read(`${environment.defaultPageSizeKey}`);
     if (readPageSize) {
       this.pageSize = parseInt(readPageSize);
@@ -165,7 +172,9 @@ export class ContainersComponent implements OnInit {
       this.loading = false;
 
       const containerId = this.route.snapshot.paramMap.get('id');
-      if (containerId) {
+      if (containerId === 'new') {
+        this.newContainer();
+      } else if (containerId) {
         const container = this.containers.find((c) => c.id === +containerId);
         if (container) {
           this.openContainer(container);
@@ -229,12 +238,16 @@ export class ContainersComponent implements OnInit {
   }
 
   protected newContainer() {
+    this.location.go('/inventory/containers/new');
+
     const editContainerDialog = this.dialog.open(ContainerEditDialogComponent, {
       width: '40vw',
       maxWidth: '100vw',
     });
 
     editContainerDialog.afterClosed().subscribe((result) => {
+      this.location.go('/inventory/containers');
+
       if (result) {
         this.containers.push(result);
         this.filterSortContainers();

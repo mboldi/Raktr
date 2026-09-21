@@ -40,4 +40,16 @@ export class AdminAccessService {
       map((user) => user.groups.some((group) => environment.fullAccessGroupNames.includes(group))),
     );
   }
+
+  /** Admins and full-access members are the only ones allowed to create new items
+   * (devices, containers, rents, tickets, ...) - everyone else can only view/use them. */
+  canCreateContent(): Observable<boolean> {
+    return this.getCurrentUser().pipe(
+      map(
+        (user) =>
+          user.groups.includes(environment.adminGroupName) ||
+          user.groups.some((group) => environment.fullAccessGroupNames.includes(group)),
+      ),
+    );
+  }
 }

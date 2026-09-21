@@ -62,7 +62,7 @@
       >
         <mat-icon>bug_report</mat-icon>
       </button>
-      @if (view.editable) {
+      @if (view.editable && canEdit) {
         <button matFab color="primary" style="margin-right: 8px" (click)="edit()">
           <mat-icon>edit</mat-icon>
         </button>

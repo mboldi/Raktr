@@ -15,6 +15,7 @@ import { OwnerService } from '../../../../services/owner.service';
 import { ScannableService } from '../../../../services/scannable.service';
 import { DeviceDetails } from '../../../../model/scannable/device/deviceDetails';
 import { DeviceCreateDto } from '../../../../model/scannable/device/deviceCreateDto';
+import { DeviceUpdateDto } from '../../../../model/scannable/device/deviceUpdateDto';
 import { DeviceStatus } from '../../../../model/scannable/device/deviceStatus';
 import { OwnerCreateDto } from '../../../../model/owner/ownerCreateDto';
 import { environment } from '../../../../../environments/environment';
@@ -31,6 +32,29 @@ interface ImportFailure {
 }
 
 type CellValue = string | number | boolean | Date;
+
+// `DeviceCreateDto` and `DeviceUpdateDto` take identical constructor parameters in the same
+// order, so a single field tuple built once per row can construct whichever one is needed.
+type DeviceDtoFields = [
+  assetTag: string,
+  barcode: string,
+  name: string,
+  weight: number,
+  publicRentable: boolean,
+  categoryName: string,
+  locationName: string,
+  ownerId: number,
+  manufacturer: string,
+  model: string,
+  serialNumber: string,
+  estimatedValue: number,
+  status: DeviceStatus,
+  quantity: number,
+  acquisitionSource: string,
+  acquisitionDate: Date | null,
+  warrantyEndDate: Date | null,
+  notes: string,
+];
 
 function deviceColumn(
   header: string,
@@ -183,13 +207,34 @@ export class ExportImportComponent {
       return;
     }
 
+    const existingDevices = await firstValueFrom(this.deviceService.getDevices());
+    const deviceByBarcode = new Map(existingDevices.map((device) => [device.barcode, device]));
+    const deviceByAssetTag = new Map(existingDevices.map((device) => [device.assetTag, device]));
+
     this.nextBarcodeCounter = await firstValueFrom(this.scannableService.getScannablesCount());
     this.importProgress = { current: 0, total: rows.length };
 
+    let createdCount = 0;
+    let updatedCount = 0;
+
     for (let i = 0; i < rows.length; i++) {
       try {
-        const dto = await this.buildDeviceCreateDto(rows[i], ownerIdByName);
-        await firstValueFrom(this.deviceService.createDevice(dto));
+        const { existing, fields } = await this.buildDeviceFields(
+          rows[i],
+          ownerIdByName,
+          deviceByBarcode,
+          deviceByAssetTag,
+        );
+
+        if (existing) {
+          await firstValueFrom(
+            this.deviceService.updateDevice(existing.id, new DeviceUpdateDto(...fields)),
+          );
+          updatedCount++;
+        } else {
+          await firstValueFrom(this.deviceService.createDevice(new DeviceCreateDto(...fields)));
+          createdCount++;
+        }
       } catch (error) {
         this.importFailures.push({
           row: i + 2, // +1 for the header row, +1 for 1-indexing
@@ -206,19 +251,23 @@ export class ExportImportComponent {
 
     this.importing = false;
 
-    const successCount = rows.length - this.importFailures.length;
-    this.snackBar.open(
-      this.importFailures.length === 0
-        ? `Import kész! Mind a(z) ${rows.length} eszköz létrejött.`
-        : `Import kész: ${successCount}/${rows.length} eszköz létrejött, ${this.importFailures.length} sikertelen.`,
-      'Rendben',
-      {
-        duration: 4000,
-        horizontalPosition: 'right',
-        verticalPosition: 'top',
-        panelClass: [this.importFailures.length === 0 ? 'success-snackbar' : 'error-snackbar'],
-      },
-    );
+    const parts = [];
+    if (createdCount > 0) {
+      parts.push(`${createdCount} létrehozva`);
+    }
+    if (updatedCount > 0) {
+      parts.push(`${updatedCount} frissítve`);
+    }
+    if (this.importFailures.length > 0) {
+      parts.push(`${this.importFailures.length} sikertelen`);
+    }
+
+    this.snackBar.open(`Import kész: ${parts.join(', ')}.`, 'Rendben', {
+      duration: 4000,
+      horizontalPosition: 'right',
+      verticalPosition: 'top',
+      panelClass: [this.importFailures.length === 0 ? 'success-snackbar' : 'error-snackbar'],
+    });
   }
 
   private async parseDevicesFile(file: File): Promise<Record<string, CellValue>[]> {
@@ -294,10 +343,12 @@ export class ExportImportComponent {
     return Array.from(referenced).filter((name) => !existing.has(name));
   }
 
-  private async buildDeviceCreateDto(
+  private async buildDeviceFields(
     row: Record<string, CellValue>,
     ownerIdByName: Map<string, number>,
-  ): Promise<DeviceCreateDto> {
+    deviceByBarcode: Map<string, DeviceDetails>,
+    deviceByAssetTag: Map<string, DeviceDetails>,
+  ): Promise<{ existing: DeviceDetails | undefined; fields: DeviceDtoFields }> {
     let assetTag = this.cellToString(row['assetTag']);
     let barcode = this.cellToString(row['barcode']);
 
@@ -305,7 +356,17 @@ export class ExportImportComponent {
       assetTag = barcode;
     }
 
-    if (!assetTag || !barcode) {
+    // A row matching an existing device (by either identifier) updates that device in place
+    // instead of creating a duplicate - its own asset tag/barcode are kept as-is, so a blank
+    // cell on the row doesn't trigger generating a new code for an already-identified device.
+    const existing =
+      (barcode ? deviceByBarcode.get(barcode) : undefined) ??
+      (assetTag ? deviceByAssetTag.get(assetTag) : undefined);
+
+    if (existing) {
+      assetTag = existing.assetTag;
+      barcode = existing.barcode;
+    } else if (!assetTag || !barcode) {
       const generated = await this.generateNextFreeBarcode();
       if (!barcode) {
         barcode = generated;
@@ -319,26 +380,29 @@ export class ExportImportComponent {
     const status = this.cellToString(row['status']) || environment.defaultDeviceStatus;
     const acquisitionDate = this.cellToDate(row['acquisitionDate']) ?? new Date();
 
-    return new DeviceCreateDto(
-      assetTag,
-      barcode,
-      this.cellToString(row['name']),
-      this.cellToNumber(row['weight']) ?? 1000,
-      this.cellToBoolean(row['publicRentable']),
-      this.cellToString(row['category']),
-      this.cellToString(row['location']),
-      ownerIdByName.get(ownerName) as number,
-      this.cellToString(row['manufacturer']),
-      this.cellToString(row['model']),
-      this.cellToString(row['serialNumber']),
-      this.cellToNumber(row['estimatedValue']) ?? 1,
-      status as DeviceStatus,
-      this.cellToNumber(row['quantity']) ?? environment.defaultDeviceQuantity,
-      this.cellToString(row['acquisitionSource']),
-      acquisitionDate,
-      this.cellToDate(row['warrantyEndDate']) ?? null,
-      this.cellToString(row['notes']),
-    );
+    return {
+      existing,
+      fields: [
+        assetTag,
+        barcode,
+        this.cellToString(row['name']),
+        this.cellToNumber(row['weight']) ?? 1000,
+        this.cellToBoolean(row['publicRentable']),
+        this.cellToString(row['category']),
+        this.cellToString(row['location']),
+        ownerIdByName.get(ownerName) as number,
+        this.cellToString(row['manufacturer']),
+        this.cellToString(row['model']),
+        this.cellToString(row['serialNumber']),
+        this.cellToNumber(row['estimatedValue']) ?? 1,
+        status as DeviceStatus,
+        this.cellToNumber(row['quantity']) ?? environment.defaultDeviceQuantity,
+        this.cellToString(row['acquisitionSource']),
+        acquisitionDate,
+        this.cellToDate(row['warrantyEndDate']) ?? null,
+        this.cellToString(row['notes']),
+      ],
+    };
   }
 
   private async generateNextFreeBarcode(): Promise<string> {

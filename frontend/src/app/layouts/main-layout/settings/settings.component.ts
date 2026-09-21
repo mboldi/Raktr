@@ -13,6 +13,7 @@ import { UserDetails } from '../../../model/user/userDetails';
 import { UserUpdateDto } from '../../../model/user/userUpdateDto';
 import { ConfigUpdateDto } from '../../../model/config/configUpdateDto';
 import { environment } from '../../../../environments/environment';
+import {MatBadge} from '@angular/material/badge';
 
 @Component({
   selector: 'app-settings',
@@ -26,6 +27,7 @@ import { environment } from '../../../../environments/environment';
     MatInput,
     MatButton,
     MatCheckbox,
+    MatBadge,
   ],
   templateUrl: './settings.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,

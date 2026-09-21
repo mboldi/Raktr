@@ -207,7 +207,7 @@ export class TicketsComponent implements OnInit {
     this.creators = Array.from(
       new Set(
         this.tickets
-          .map((ticket) => ticket.createdBy?.nickname)
+          .map((ticket) => ticket.createdBy?.displayName)
           .filter((nickname): nickname is string => !!nickname),
       ),
     ).sort((a, b) => a.localeCompare(b));
@@ -243,7 +243,7 @@ export class TicketsComponent implements OnInit {
         (this.selectedStatuses.size === 0 || this.selectedStatuses.has(ticket.status)) &&
         (this.selectedSeverities.size === 0 || this.selectedSeverities.has(ticket.severity)) &&
         (this.selectedCreators.size === 0 ||
-          this.selectedCreators.has(ticket.createdBy?.nickname ?? '')),
+          this.selectedCreators.has(ticket.createdBy?.displayName ?? '')),
     );
 
     this.sortTickets();
@@ -283,7 +283,7 @@ export class TicketsComponent implements OnInit {
       case 'device':
         return (a, b) => this.compareStrings(a.scannable?.name, b.scannable?.name);
       case 'createdBy':
-        return (a, b) => this.compareStrings(a.createdBy?.nickname, b.createdBy?.nickname);
+        return (a, b) => this.compareStrings(a.createdBy?.displayName, b.createdBy?.displayName);
       case 'comments':
         return (a, b) => a.comments.length - b.comments.length;
       default:
@@ -320,7 +320,7 @@ export class TicketsComponent implements OnInit {
           this.selectedSeverities.has(ticket.severity)) &&
         (excludedFacet === 'creator' ||
           this.selectedCreators.size === 0 ||
-          this.selectedCreators.has(ticket.createdBy?.nickname ?? '')),
+          this.selectedCreators.has(ticket.createdBy?.displayName ?? '')),
     );
   }
 
@@ -340,7 +340,7 @@ export class TicketsComponent implements OnInit {
     );
 
     const availableCreators = new Set(
-      this.ticketsMatchingExcept('creator').map((ticket) => ticket.createdBy?.nickname ?? ''),
+      this.ticketsMatchingExcept('creator').map((ticket) => ticket.createdBy?.displayName ?? ''),
     );
     this.visibleCreators = this.creators.filter(
       (creator) => availableCreators.has(creator) || this.selectedCreators.has(creator),

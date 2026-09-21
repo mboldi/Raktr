@@ -53,7 +53,7 @@
         @for (comment of sortedComments; track comment.id) {
           <div class="comment">
             <div class="comment-header">
-              <span class="comment-author">{{ comment.createdBy.nickname }}</span>
+              <span class="comment-author">{{ comment.createdBy.displayName }}</span>
               <span class="comment-date">{{ comment.createdAt | date: 'medium' }}</span>
             </div>
             <mat-divider></mat-divider>

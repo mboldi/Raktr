@@ -277,7 +277,7 @@
         </span>
         <span class="th-label">Létrehozó</span>
       </th>
-      <td mat-cell *matCellDef="let ticket">{{ ticket.createdBy?.nickname }}</td>
+      <td mat-cell *matCellDef="let ticket">{{ ticket.createdBy?.displayName }}</td>
     </ng-container>
 
     <ng-container matColumnDef="device">

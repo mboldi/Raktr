@@ -228,7 +228,7 @@
       <ng-container matColumnDef="addedBy">
         <th mat-header-cell *matHeaderCellDef>Hozzáadva</th>
         <td mat-cell *matCellDef="let item">
-          {{ item.createdBy.nickname }} - {{ item.createdAt | date: 'yyyy. MM. d. H:mm' }}
+          {{ item.createdBy.displayName }} - {{ item.createdAt | date: 'yyyy. MM. d. H:mm' }}
         </td>
       </ng-container>
 

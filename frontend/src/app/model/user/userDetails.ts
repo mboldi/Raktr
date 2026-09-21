@@ -25,6 +25,10 @@ export class UserDetails {
     this.groups = groups;
   }
 
+  get displayName(): string {
+    return this.nickname || `${this.familyName} ${this.givenName}`;
+  }
+
   static fromJson(json: Record<string, unknown>): UserDetails {
     return new UserDetails(
       json['uuid'] as string,

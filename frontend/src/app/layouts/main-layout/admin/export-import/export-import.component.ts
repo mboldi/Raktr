@@ -131,9 +131,9 @@ export class ExportImportComponent {
         notes: device.notes,
         deleted: device.deleted,
         createdAt: device.createdAt,
-        createdBy: device.createdBy?.nickname,
+        createdBy: device.createdBy?.displayName,
         updatedAt: device.updatedAt,
-        updatedBy: device.updatedBy?.nickname,
+        updatedBy: device.updatedBy?.displayName,
       }),
     );
 

@@ -162,7 +162,7 @@ export class RentsComponent implements OnInit {
     this.issuers = Array.from(
       new Set(
         this.rents
-          .map((rent) => rent.issuer?.nickname)
+          .map((rent) => rent.issuer?.displayName)
           .filter((nickname): nickname is string => !!nickname),
       ),
     ).sort((a, b) => a.localeCompare(b));
@@ -204,7 +204,7 @@ export class RentsComponent implements OnInit {
         this.matchesSearch(rent) &&
         (this.showClosedRents || !rent.closed) &&
         (this.selectedIssuers.size === 0 ||
-          this.selectedIssuers.has(rent.issuer?.nickname ?? '')) &&
+          this.selectedIssuers.has(rent.issuer?.displayName ?? '')) &&
         (this.selectedRenters.size === 0 || this.selectedRenters.has(rent.renterName ?? '')),
     );
 
@@ -259,7 +259,7 @@ export class RentsComponent implements OnInit {
     const search = this.searchFilter.toLowerCase();
     return (
       (rent.destination ?? '').toLowerCase().includes(search) ||
-      (rent.issuer?.nickname ?? '').toLowerCase().includes(search) ||
+      (rent.issuer?.displayName ?? '').toLowerCase().includes(search) ||
       (rent.renterName ?? '').toLowerCase().includes(search)
     );
   }
@@ -271,7 +271,7 @@ export class RentsComponent implements OnInit {
         (this.showClosedRents || !rent.closed) &&
         (excludedFacet === 'issuer' ||
           this.selectedIssuers.size === 0 ||
-          this.selectedIssuers.has(rent.issuer?.nickname ?? '')) &&
+          this.selectedIssuers.has(rent.issuer?.displayName ?? '')) &&
         (excludedFacet === 'renter' ||
           this.selectedRenters.size === 0 ||
           this.selectedRenters.has(rent.renterName ?? '')),
@@ -280,7 +280,7 @@ export class RentsComponent implements OnInit {
 
   private updateVisibleFilterOptions() {
     const availableIssuers = new Set(
-      this.rentsMatchingExcept('issuer').map((rent) => rent.issuer?.nickname ?? ''),
+      this.rentsMatchingExcept('issuer').map((rent) => rent.issuer?.displayName ?? ''),
     );
     this.visibleIssuers = this.issuers.filter(
       (issuer) => availableIssuers.has(issuer) || this.selectedIssuers.has(issuer),

@@ -64,6 +64,7 @@ import { DeviceService } from '../../services/device.service';
 import { ContainerService } from '../../services/container.service';
 import { UserDetails } from '../../model/user/userDetails';
 import { UserService } from '../../services/user.service';
+import { findByBarcode } from '../../util/ean8';
 import {
   QuantityInputDialogData,
   QuantityInputModalComponent,
@@ -420,7 +421,7 @@ export class RentFormComponent implements OnInit {
       return;
     }
 
-    const matched = this.scannables.find((scannable) => scannable.barcode === enteredValue);
+    const matched = findByBarcode(this.scannables, (scannable) => scannable.barcode, enteredValue);
     if (!matched) {
       this.scannableNotFound.emit();
       return;

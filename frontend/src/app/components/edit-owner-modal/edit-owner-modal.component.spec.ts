@@ -8,9 +8,8 @@ describe('EditOwnerModalComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [EditOwnerModalComponent]
-    })
-    .compileComponents();
+      imports: [EditOwnerModalComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(EditOwnerModalComponent);
     component = fixture.componentInstance;

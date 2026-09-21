@@ -1,15 +1,11 @@
-import {TicketSeverity} from './ticketSeverity';
+import { TicketSeverity } from './ticketSeverity';
 
 export class TicketCreateDto {
   description: string;
   severity: TicketSeverity;
   scannableId: number;
 
-  constructor(
-    description: string,
-    severity: TicketSeverity,
-    scannableId: number
-  ) {
+  constructor(description: string, severity: TicketSeverity, scannableId: number) {
     this.description = description;
     this.severity = severity;
     this.scannableId = scannableId;
@@ -19,7 +15,7 @@ export class TicketCreateDto {
     return {
       description: this.description,
       severity: this.severity,
-      scannableId: this.scannableId
+      scannableId: this.scannableId,
     };
   }
 }

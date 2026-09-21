@@ -1,178 +1,187 @@
-import {Component, ViewChild} from '@angular/core';
-import {DatePipe} from "@angular/common";
-import {MatCard} from "@angular/material/card";
+import { Component, ViewChild, ChangeDetectionStrategy, inject, OnInit } from '@angular/core';
+import { DatePipe } from '@angular/common';
+import { MatCard } from '@angular/material/card';
 import {
-    MatCell,
-    MatCellDef,
-    MatColumnDef,
-    MatHeaderCell, MatHeaderCellDef,
-    MatHeaderRow,
-    MatHeaderRowDef,
-    MatRow, MatRowDef, MatTable
-} from "@angular/material/table";
-import {MatFabButton, MatIconButton, MatMiniFabButton} from "@angular/material/button";
-import {MatFormField, MatInput, MatLabel, MatSuffix} from "@angular/material/input";
-import {MatIcon} from "@angular/material/icon";
-import {MatProgressSpinner} from "@angular/material/progress-spinner";
-import {FormControl, ReactiveFormsModule} from "@angular/forms";
-import {LocationService} from "../../../../services/location.service";
-import {MatDialog} from "@angular/material/dialog";
-import {MatSnackBar} from "@angular/material/snack-bar";
-import {HttpErrorResponse} from '@angular/common/http';
+  MatCell,
+  MatCellDef,
+  MatColumnDef,
+  MatHeaderCell,
+  MatHeaderCellDef,
+  MatHeaderRow,
+  MatHeaderRowDef,
+  MatRow,
+  MatRowDef,
+  MatTable,
+} from '@angular/material/table';
+import { MatFabButton, MatIconButton, MatMiniFabButton } from '@angular/material/button';
+import { MatFormField, MatInput, MatLabel, MatSuffix } from '@angular/material/input';
+import { MatIcon } from '@angular/material/icon';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { LocationService } from '../../../../services/location.service';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { HttpErrorResponse } from '@angular/common/http';
 import {
-    OnlyNameDialogData,
-    OnlynameEditModalComponent
-} from "../../../../components/onlyname-edit-modal/onlyname-edit-modal.component";
-import {YesnoModalComponent} from "../../../../components/yesno-modal/yesno-modal.component";
-import {LocationDetails} from "../../../../model/location/LocationDetails";
+  OnlyNameDialogData,
+  OnlynameEditModalComponent,
+} from '../../../../components/onlyname-edit-modal/onlyname-edit-modal.component';
+import { YesnoModalComponent } from '../../../../components/yesno-modal/yesno-modal.component';
+import { LocationDetails } from '../../../../model/location/LocationDetails';
 
 const COLUMNS: string[] = ['name', 'assignedScannables', 'createdAt', 'createdBy', 'delete'];
 
 @Component({
-    selector: 'app-locations',
-    imports: [
-        DatePipe,
-        MatCard,
-        MatCell,
-        MatCellDef,
-        MatColumnDef,
-        MatFabButton,
-        MatFormField,
-        MatHeaderCell,
-        MatHeaderRow,
-        MatHeaderRowDef,
-        MatIcon,
-        MatIconButton,
-        MatInput,
-        MatLabel,
-        MatMiniFabButton,
-        MatProgressSpinner,
-        MatRow,
-        MatRowDef,
-        MatSuffix,
-        MatTable,
-        ReactiveFormsModule,
-        MatHeaderCellDef
-    ],
-    templateUrl: './locations.component.html',
-    styleUrl: './locations.component.scss',
+  selector: 'app-locations',
+  imports: [
+    DatePipe,
+    MatCard,
+    MatCell,
+    MatCellDef,
+    MatColumnDef,
+    MatFabButton,
+    MatFormField,
+    MatHeaderCell,
+    MatHeaderRow,
+    MatHeaderRowDef,
+    MatIcon,
+    MatIconButton,
+    MatInput,
+    MatLabel,
+    MatMiniFabButton,
+    MatProgressSpinner,
+    MatRow,
+    MatRowDef,
+    MatSuffix,
+    MatTable,
+    ReactiveFormsModule,
+    MatHeaderCellDef,
+  ],
+  templateUrl: './locations.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
+  styleUrl: './locations.component.scss',
 })
-export class LocationsComponent {
-    @ViewChild(MatTable) locationTable!: MatTable<any>;
+export class LocationsComponent implements OnInit {
+  private locationService = inject(LocationService);
+  private dialog = inject(MatDialog);
+  private snackBar = inject(MatSnackBar);
 
-    protected locationSearchFormControl = new FormControl();
+  @ViewChild(MatTable) locationTable!: MatTable<LocationDetails>;
 
-    protected locations: LocationDetails[] = [];
-    protected filteredLocations: LocationDetails[] = [];
+  protected locationSearchFormControl = new FormControl();
 
-    protected loading = true;
-    protected columns = COLUMNS;
+  protected locations: LocationDetails[] = [];
+  protected filteredLocations: LocationDetails[] = [];
 
-    constructor(private locationService: LocationService,
-                private dialog: MatDialog,
-                private snackBar: MatSnackBar,) {
+  protected loading = true;
+  protected columns = COLUMNS;
+
+  ngOnInit(): void {
+    this.getCategories();
+  }
+
+  private getCategories() {
+    this.locationService.getLocations().subscribe((data) => {
+      this.locations = data;
+      this.loading = false;
+
+      this.applyFilter();
+    });
+  }
+
+  protected applyFilter() {
+    const searchValue = this.locationSearchFormControl.value;
+
+    if (searchValue && searchValue.length > 0) {
+      this.filteredLocations = this.locations.filter((category) =>
+        category.name.toLowerCase().includes(searchValue.toLowerCase()),
+      );
+    } else {
+      this.filteredLocations = this.locations;
     }
 
-    ngOnInit(): void {
-        this.getCategories();
-    }
+    this.filteredLocations = this.filteredLocations.sort((a, b) => a.name.localeCompare(b.name));
 
-    private getCategories() {
-        this.locationService.getLocations().subscribe((data) => {
-            this.locations = data;
-            this.loading = false;
+    this.locationTable.renderRows();
+  }
 
+  protected newLocation() {
+    const editCategoryDialog = this.dialog.open(OnlynameEditModalComponent, {
+      width: '20vw',
+      minWidth: '350px',
+      data: new OnlyNameDialogData('', 'Új tárolási hely'),
+    });
+
+    editCategoryDialog.afterClosed().subscribe((result) => {
+      if (result) {
+        this.locationService.addLocation(result).subscribe({
+          next: (data) => {
+            this.locations.push(data);
             this.applyFilter();
+
+            this.snackBar.open(`${data.name} tárolási hely létrehozva!`, 'Remek!', {
+              duration: 3000,
+              horizontalPosition: 'right',
+              verticalPosition: 'top',
+              panelClass: ['success-snackbar'],
+            });
+          },
+          error: () => {
+            this.snackBar.open(`Nem sikerült létrehozni a(z) ${result} tárolási helyet!`, 'Értem', {
+              duration: 4000,
+              horizontalPosition: 'right',
+              verticalPosition: 'top',
+              panelClass: ['error-snackbar'],
+            });
+          },
         });
-    }
+      }
+    });
+  }
 
-    protected applyFilter() {
-        const searchValue = this.locationSearchFormControl.value;
+  protected deleteLocation(name: string) {
+    const yesnoDialog = this.dialog.open(YesnoModalComponent, {
+      width: '20vw',
+      minWidth: '350px',
+      data: `Biztos törölnéd a(z) ${name} tárolási helyet?`,
+    });
 
-        if (searchValue && searchValue.length > 0) {
-            this.filteredLocations = this.locations.filter(category => category.name.toLowerCase().includes(searchValue.toLowerCase()));
-        } else {
-            this.filteredLocations = this.locations;
-        }
+    yesnoDialog.afterClosed().subscribe((result) => {
+      if (result) {
+        this.locationService.deleteLocation(name).subscribe({
+          next: () => {
+            this.getCategories();
 
-        this.filteredLocations = this.filteredLocations.sort((a, b) => a.name.localeCompare(b.name));
-
-        this.locationTable.renderRows();
-    }
-
-    protected newLocation() {
-        const editCategoryDialog = this.dialog.open(OnlynameEditModalComponent, {
-            width: '20vw',
-            minWidth: '350px',
-            data: new OnlyNameDialogData('', 'Új tárolási hely')
-        });
-
-        editCategoryDialog.afterClosed().subscribe(result => {
-            if (result) {
-                this.locationService.addLocation(result).subscribe({
-                    next: (data) => {
-                        this.locations.push(data);
-                        this.applyFilter();
-
-                        this.snackBar.open(`${data.name} tárolási hely létrehozva!`, "Remek!", {
-                            duration: 3000,
-                            horizontalPosition: 'right',
-                            verticalPosition: 'top',
-                            panelClass: ['success-snackbar'],
-                        });
-                    },
-                    error: () => {
-                        this.snackBar.open(`Nem sikerült létrehozni a(z) ${result} tárolási helyet!`, "Értem", {
-                            duration: 4000,
-                            horizontalPosition: 'right',
-                            verticalPosition: 'top',
-                            panelClass: ['error-snackbar'],
-                        });
-                    }
-                })
+            this.snackBar.open(`${name} tárolási hely törölve!`, 'Remek!', {
+              duration: 3000,
+              horizontalPosition: 'right',
+              verticalPosition: 'top',
+              panelClass: ['success-snackbar'],
+            });
+          },
+          error: (error: HttpErrorResponse) => {
+            if (error.status === 409) {
+              this.snackBar.open(
+                `A(z) ${name} tárolási hely használatban van, nem törölhető!`,
+                'Értem',
+                {
+                  duration: 4000,
+                  horizontalPosition: 'right',
+                  verticalPosition: 'top',
+                  panelClass: ['error-snackbar'],
+                },
+              );
+            } else {
+              this.snackBar.open(`Nem sikerült törölni a(z) ${name} tárolási helyet!`, 'Értem', {
+                duration: 4000,
+                horizontalPosition: 'right',
+                verticalPosition: 'top',
+                panelClass: ['error-snackbar'],
+              });
             }
-        })
-    }
-
-    protected deleteLocation(name: string) {
-        const yesnoDialog = this.dialog.open(YesnoModalComponent, {
-            width: '20vw',
-            minWidth: '350px',
-            data: `Biztos törölnéd a(z) ${name} tárolási helyet?`
+          },
         });
-
-        yesnoDialog.afterClosed().subscribe(result => {
-            if (result) {
-                this.locationService.deleteLocation(name).subscribe({
-                    next: () => {
-                        this.getCategories();
-
-                        this.snackBar.open(`${name} tárolási hely törölve!`, "Remek!", {
-                            duration: 3000,
-                            horizontalPosition: 'right',
-                            verticalPosition: 'top',
-                            panelClass: ['success-snackbar'],
-                        });
-                    },
-                    error: (error: HttpErrorResponse) => {
-                        if (error.status === 409) {
-                            this.snackBar.open(`A(z) ${name} tárolási hely használatban van, nem törölhető!`, "Értem", {
-                                duration: 4000,
-                                horizontalPosition: 'right',
-                                verticalPosition: 'top',
-                                panelClass: ['error-snackbar'],
-                            });
-                        } else {
-                            this.snackBar.open(`Nem sikerült törölni a(z) ${name} tárolási helyet!`, "Értem", {
-                                duration: 4000,
-                                horizontalPosition: 'right',
-                                verticalPosition: 'top',
-                                panelClass: ['error-snackbar'],
-                            });
-                        }
-                    }
-                })
-            }
-        })
-    }
+      }
+    });
+  }
 }

@@ -1,6 +1,5 @@
 export const environment = {
-  production: false,
-  apiUrl: 'http://localhost:8080',
+  apiUrl: '/api',
   defaultPageSizeKey: 'DEFAULT_PAGE_SIZE',
 
   rentTeamNameKey: 'RENT_TEAM_NAME',

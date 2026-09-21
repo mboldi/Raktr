@@ -1,20 +1,35 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, effect, input, OnInit, output} from '@angular/core';
-import {MatFormField, MatInput, MatLabel, MatSuffix} from '@angular/material/input';
-import {FormBuilder, FormControl, ReactiveFormsModule, UntypedFormGroup, Validators} from '@angular/forms';
-import {MatSelect} from '@angular/material/select';
-import {MatAutocomplete, MatAutocompleteTrigger, MatOption} from '@angular/material/autocomplete';
-import {MatIcon} from '@angular/material/icon';
-import {MatButton, MatIconButton} from '@angular/material/button';
-import {MatCard, MatCardContent} from '@angular/material/card';
-import {AsyncPipe} from '@angular/common';
-import {map, Observable, startWith} from 'rxjs';
-import {TicketDetails} from '../../model/ticket/ticketDetails';
-import {TicketSeverity} from '../../model/ticket/ticketSeverity';
-import {TicketStatus} from '../../model/ticket/ticketStatus';
-import {Scannable} from '../../model/scannable/scannable';
-import {ScannableDetailsDto} from '../../model/scannable/scannableDetailsDto';
-import {DeviceDetails} from '../../model/scannable/device/deviceDetails';
-import {DeviceService} from '../../services/device.service';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  effect,
+  input,
+  OnInit,
+  output,
+  inject,
+} from '@angular/core';
+import { MatFormField, MatInput, MatLabel, MatSuffix } from '@angular/material/input';
+import {
+  FormBuilder,
+  FormControl,
+  ReactiveFormsModule,
+  UntypedFormGroup,
+  Validators,
+} from '@angular/forms';
+import { MatSelect } from '@angular/material/select';
+import { MatAutocomplete, MatAutocompleteTrigger, MatOption } from '@angular/material/autocomplete';
+import { MatIcon } from '@angular/material/icon';
+import { MatButton, MatIconButton } from '@angular/material/button';
+import { MatCard, MatCardContent } from '@angular/material/card';
+import { AsyncPipe } from '@angular/common';
+import { map, Observable, startWith } from 'rxjs';
+import { TicketDetails } from '../../model/ticket/ticketDetails';
+import { TicketSeverity } from '../../model/ticket/ticketSeverity';
+import { TicketStatus } from '../../model/ticket/ticketStatus';
+import { Scannable } from '../../model/scannable/scannable';
+import { ScannableDetailsDto } from '../../model/scannable/scannableDetailsDto';
+import { DeviceDetails } from '../../model/scannable/device/deviceDetails';
+import { DeviceService } from '../../services/device.service';
 
 @Component({
   selector: 'app-ticket-form',
@@ -40,6 +55,10 @@ import {DeviceService} from '../../services/device.service';
   styleUrl: './ticket-form.component.scss',
 })
 export class TicketFormComponent implements OnInit {
+  private fb = inject(FormBuilder);
+  private deviceService = inject(DeviceService);
+  private cdr = inject(ChangeDetectorRef);
+
   /** Pass an existing ticket to pre-populate the form, or leave null for a blank create form. */
   ticketData = input<TicketDetails | null>(null);
 
@@ -69,11 +88,7 @@ export class TicketFormComponent implements OnInit {
   protected deviceModel: string | null = null;
   protected deviceSerialNumber: string | null = null;
 
-  constructor(
-    private fb: FormBuilder,
-    private deviceService: DeviceService,
-    private cdr: ChangeDetectorRef,
-  ) {
+  constructor() {
     this.ticketForm = this.fb.group({
       description: ['', Validators.required],
       severity: [TicketSeverity.MINOR, Validators.required],
@@ -82,9 +97,9 @@ export class TicketFormComponent implements OnInit {
 
     effect(() => {
       if (this.disabled()) {
-        this.ticketForm.disable({emitEvent: false});
+        this.ticketForm.disable({ emitEvent: false });
       } else {
-        this.ticketForm.enable({emitEvent: false});
+        this.ticketForm.enable({ emitEvent: false });
       }
     });
 
@@ -95,14 +110,14 @@ export class TicketFormComponent implements OnInit {
       if (data !== null) {
         const statusControl = this.ticketForm.get('status')!;
         if (statusControl.value !== data.status) {
-          statusControl.setValue(data.status, {emitEvent: false});
+          statusControl.setValue(data.status, { emitEvent: false });
         }
       }
     });
 
     this.filteredDeviceOptions = this.addDeviceFormControl.valueChanges.pipe(
       startWith(''),
-      map(value => this.filterDevices(value || ''))
+      map((value) => this.filterDevices(value || '')),
     );
   }
 
@@ -117,13 +132,13 @@ export class TicketFormComponent implements OnInit {
       this.existingScannable = data.scannable;
       this.loadDeviceExtras(data.scannable.id);
     } else if (this.presetScannable() === null) {
-      this.deviceService.getDevices().subscribe(devices => {
+      this.deviceService.getDevices().subscribe((devices) => {
         this.devices = devices;
         this.addDeviceFormControl.updateValueAndValidity();
       });
     }
 
-    this.ticketForm.valueChanges.subscribe(value => this.formChanged.emit(value));
+    this.ticketForm.valueChanges.subscribe((value) => this.formChanged.emit(value));
   }
 
   private filterDevices(value: string): DeviceDetails[] {
@@ -132,11 +147,14 @@ export class TicketFormComponent implements OnInit {
       return [];
     }
 
-    return this.devices.filter(device =>
-      device.name.toLowerCase().includes(filter) ||
-      (device.model ?? '').toLowerCase().includes(filter) ||
-      (device.manufacturer ?? '').toLowerCase().includes(filter)
-    ).slice(0, 5);
+    return this.devices
+      .filter(
+        (device) =>
+          device.name.toLowerCase().includes(filter) ||
+          (device.model ?? '').toLowerCase().includes(filter) ||
+          (device.manufacturer ?? '').toLowerCase().includes(filter),
+      )
+      .slice(0, 5);
   }
 
   // MatAutocomplete's Enter-to-select handling runs on keydown and fires (optionSelected),
@@ -164,7 +182,7 @@ export class TicketFormComponent implements OnInit {
       return;
     }
 
-    const matchedDevice = this.devices.find(device => device.barcode === enteredValue);
+    const matchedDevice = this.devices.find((device) => device.barcode === enteredValue);
     if (!matchedDevice) {
       this.deviceNotFound.emit();
       return;
@@ -182,7 +200,7 @@ export class TicketFormComponent implements OnInit {
    * so this is fetched separately and simply left blank when the scannable turns out not to be a device. */
   private loadDeviceExtras(scannableId: number) {
     this.deviceService.getDevice(scannableId).subscribe({
-      next: device => {
+      next: (device) => {
         this.deviceModel = device.model;
         this.deviceSerialNumber = device.serialNumber;
         this.cdr.markForCheck();
@@ -191,7 +209,7 @@ export class TicketFormComponent implements OnInit {
         this.deviceModel = null;
         this.deviceSerialNumber = null;
         this.cdr.markForCheck();
-      }
+      },
     });
   }
 

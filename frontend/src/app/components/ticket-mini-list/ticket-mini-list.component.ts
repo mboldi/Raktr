@@ -1,6 +1,6 @@
-import {Component, input} from '@angular/core';
-import {Router} from '@angular/router';
-import {MatDialog} from '@angular/material/dialog';
+import { Component, input, ChangeDetectionStrategy, inject } from '@angular/core';
+import { Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
 import {
   MatCell,
   MatCellDef,
@@ -11,16 +11,16 @@ import {
   MatHeaderRowDef,
   MatRow,
   MatRowDef,
-  MatTable
+  MatTable,
 } from '@angular/material/table';
-import {DatePipe} from '@angular/common';
-import {MatIcon} from '@angular/material/icon';
-import {MatProgressSpinner} from '@angular/material/progress-spinner';
-import {MatTooltip} from '@angular/material/tooltip';
-import {TicketDetails} from '../../model/ticket/ticketDetails';
-import {TicketStatus} from '../../model/ticket/ticketStatus';
-import {TicketSeverity} from '../../model/ticket/ticketSeverity';
-import {TICKET_SEVERITY_LABELS, TICKET_STATUS_LABELS} from '../../model/ticket/ticketLabels';
+import { DatePipe } from '@angular/common';
+import { MatIcon } from '@angular/material/icon';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { MatTooltip } from '@angular/material/tooltip';
+import { TicketDetails } from '../../model/ticket/ticketDetails';
+import { TicketStatus } from '../../model/ticket/ticketStatus';
+import { TicketSeverity } from '../../model/ticket/ticketSeverity';
+import { TICKET_SEVERITY_LABELS, TICKET_STATUS_LABELS } from '../../model/ticket/ticketLabels';
 
 const DISPLAYED_COLUMNS: string[] = ['status', 'severity', 'createdAt', 'description'];
 
@@ -43,9 +43,13 @@ const DISPLAYED_COLUMNS: string[] = ['status', 'severity', 'createdAt', 'descrip
     MatTooltip,
   ],
   templateUrl: './ticket-mini-list.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './ticket-mini-list.component.scss',
 })
 export class TicketMiniListComponent {
+  private router = inject(Router);
+  private dialog = inject(MatDialog);
+
   /** The host is responsible for fetching - this component only displays what it's given, so
    * it doesn't depend on the tab it lives in actually being selected (mat-tab-group only
    * instantiates a tab's content once selected, which would otherwise delay the fetch). */
@@ -53,12 +57,6 @@ export class TicketMiniListComponent {
   loading = input<boolean>(false);
 
   protected readonly displayedColumns = DISPLAYED_COLUMNS;
-
-  constructor(
-    private router: Router,
-    private dialog: MatDialog,
-  ) {
-  }
 
   protected openTicket(ticket: TicketDetails) {
     // Navigating away to the ticket editing route would otherwise leave this dialog (and any

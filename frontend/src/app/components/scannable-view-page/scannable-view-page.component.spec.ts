@@ -8,9 +8,8 @@ describe('ScannableViewPageComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ScannableViewPageComponent]
-    })
-    .compileComponents();
+      imports: [ScannableViewPageComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(ScannableViewPageComponent);
     component = fixture.componentInstance;

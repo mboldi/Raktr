@@ -5,11 +5,14 @@
     <div style="display: flex; flex-direction: row; align-items: start">
       <mat-form-field class="search-box">
         <mat-label>Keresés</mat-label>
-        <input matInput (keyup)="applyFilter($event)" placeholder="Kamera"
-               [formControl]="deviceSearchFormControl">
+        <input
+          matInput
+          (keyup)="applyFilter()"
+          placeholder="Kamera"
+          [formControl]="deviceSearchFormControl"
+        />
         @if (deviceSearchFormControl.value) {
-          <button mat-icon-button matSuffix
-                  (click)="resetFilter()">
+          <button mat-icon-button matSuffix (click)="resetFilter()">
             <mat-icon matSuffix>close</mat-icon>
           </button>
         }
@@ -17,13 +20,19 @@
 
       <div style="display: flex; align-items: center">
         <div class="filter-anchor">
-          <button matFab class="filter-button" [class.filter-button-active]="hasActiveFilters()"
-                  (click)="toggleFilterPanel()">
+          <button
+            matFab
+            class="filter-button"
+            [class.filter-button-active]="hasActiveFilters()"
+            (click)="toggleFilterPanel()"
+          >
             <mat-icon>filter_alt</mat-icon>
           </button>
 
           @if (filterPanelOpen) {
-            <div class="filter-backdrop" (click)="closeFilterPanel()"></div>
+            <!-- Decorative click-to-dismiss overlay: the panel it closes has its own
+                 close button, so it stays hidden from assistive tech. -->
+            <div class="filter-backdrop" aria-hidden="true" (click)="closeFilterPanel()"></div>
 
             <mat-card class="filter-panel">
               <div class="filter-panel-header">
@@ -38,8 +47,10 @@
                   <h4>Kategória</h4>
                   <div class="filter-options">
                     @for (category of visibleCategories; track category.name) {
-                      <mat-checkbox [checked]="selectedCategories.has(category.name)"
-                                    (change)="toggleFilterValue(selectedCategories, category.name)">
+                      <mat-checkbox
+                        [checked]="selectedCategories.has(category.name)"
+                        (change)="toggleFilterValue(selectedCategories, category.name)"
+                      >
                         {{ category.name }}
                       </mat-checkbox>
                     } @empty {
@@ -52,8 +63,10 @@
                   <h4>Tárolási hely</h4>
                   <div class="filter-options">
                     @for (location of visibleLocations; track location.name) {
-                      <mat-checkbox [checked]="selectedLocations.has(location.name)"
-                                    (change)="toggleFilterValue(selectedLocations, location.name)">
+                      <mat-checkbox
+                        [checked]="selectedLocations.has(location.name)"
+                        (change)="toggleFilterValue(selectedLocations, location.name)"
+                      >
                         {{ location.name }}
                       </mat-checkbox>
                     } @empty {
@@ -66,8 +79,10 @@
                   <h4>Tulajdonos</h4>
                   <div class="filter-options">
                     @for (owner of visibleOwners; track owner.id) {
-                      <mat-checkbox [checked]="selectedOwners.has(owner.name)"
-                                    (change)="toggleFilterValue(selectedOwners, owner.name)">
+                      <mat-checkbox
+                        [checked]="selectedOwners.has(owner.name)"
+                        (change)="toggleFilterValue(selectedOwners, owner.name)"
+                      >
                         {{ owner.name }}
                       </mat-checkbox>
                     } @empty {
@@ -80,8 +95,10 @@
                   <h4>Gyártó</h4>
                   <div class="filter-options">
                     @for (maker of visibleMakers; track maker) {
-                      <mat-checkbox [checked]="selectedMakers.has(maker)"
-                                    (change)="toggleFilterValue(selectedMakers, maker)">
+                      <mat-checkbox
+                        [checked]="selectedMakers.has(maker)"
+                        (change)="toggleFilterValue(selectedMakers, maker)"
+                      >
                         {{ maker }}
                       </mat-checkbox>
                     } @empty {
@@ -92,8 +109,12 @@
               </div>
 
               <div class="filter-panel-footer">
-                <button mat-button [disabled]="!hasActiveFilters()" (click)="clearFilters()">Szűrők törlése</button>
-                <button mat-flat-button color="primary" (click)="closeFilterPanel()">Bezárás</button>
+                <button mat-button [disabled]="!hasActiveFilters()" (click)="clearFilters()">
+                  Szűrők törlése
+                </button>
+                <button mat-flat-button color="primary" (click)="closeFilterPanel()">
+                  Bezárás
+                </button>
               </div>
             </mat-card>
           }
@@ -116,65 +137,72 @@
 </mat-card>
 
 <div class="table-wrapper mb-5">
-
-
-  <mat-paginator [pageSizeOptions]="[25, 50, 100]"
-                 [length]="devices.length"
-                 (page)="pageDevices($event)"
-                 [pageSize]="pageSize"
-                 showFirstLastButtons
-                 aria-label="Oldalváltás">
+  <mat-paginator
+    [pageSizeOptions]="[25, 50, 100]"
+    [length]="devices.length"
+    (page)="pageDevices($event)"
+    [pageSize]="pageSize"
+    showFirstLastButtons
+    aria-label="Oldalváltás"
+  >
   </mat-paginator>
 
-  <table mat-table matSort matSortActive="name" matSortDirection="asc"
-         (matSortChange)="announceSortChange($event)" [dataSource]="pagedDevices"
-         class="mat-elevation-z8">
-
+  <table
+    mat-table
+    matSort
+    matSortActive="name"
+    matSortDirection="asc"
+    (matSortChange)="announceSortChange($event)"
+    [dataSource]="pagedDevices"
+    class="mat-elevation-z8"
+  >
     <ng-container matColumnDef="name">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> Név</th>
-      <td mat-cell *matCellDef="let device"> {{ device.name }}</td>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Név</th>
+      <td mat-cell *matCellDef="let device">{{ device.name }}</td>
     </ng-container>
 
     <ng-container matColumnDef="assetTag">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> Címke</th>
-      <td mat-cell *matCellDef="let device"> {{ device.assetTag }}</td>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Címke</th>
+      <td mat-cell *matCellDef="let device">{{ device.assetTag }}</td>
     </ng-container>
 
     <ng-container matColumnDef="maker">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> Gyártó</th>
-      <td mat-cell *matCellDef="let device"> {{ device.manufacturer }}</td>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Gyártó</th>
+      <td mat-cell *matCellDef="let device">{{ device.manufacturer }}</td>
     </ng-container>
 
     <ng-container matColumnDef="model">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> Típus</th>
-      <td mat-cell *matCellDef="let device"> {{ device.model }}</td>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Típus</th>
+      <td mat-cell *matCellDef="let device">{{ device.model }}</td>
     </ng-container>
 
     <ng-container matColumnDef="quantity">
-      <th mat-header-cell *matHeaderCellDef> Mennyiség</th>
-      <td mat-cell *matCellDef="let device"> {{ device.quantity }} db</td>
+      <th mat-header-cell *matHeaderCellDef>Mennyiség</th>
+      <td mat-cell *matCellDef="let device">{{ device.quantity }} db</td>
     </ng-container>
 
     <ng-container matColumnDef="category">
-      <th mat-header-cell *matHeaderCellDef> Kategória</th>
-      <td mat-cell *matCellDef="let device"> {{ device.category }}</td>
+      <th mat-header-cell *matHeaderCellDef>Kategória</th>
+      <td mat-cell *matCellDef="let device">{{ device.category }}</td>
     </ng-container>
 
     <ng-container matColumnDef="location">
-      <th mat-header-cell *matHeaderCellDef> Tárolási hely</th>
-      <td mat-cell *matCellDef="let device"> {{ device.location }}</td>
+      <th mat-header-cell *matHeaderCellDef>Tárolási hely</th>
+      <td mat-cell *matCellDef="let device">{{ device.location }}</td>
     </ng-container>
 
     <ng-container matColumnDef="weight">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> Tömeg</th>
-      <td mat-cell *matCellDef="let device">{{ (device.weight / 1000) | number: '1.0-2' }} kg</td>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Tömeg</th>
+      <td mat-cell *matCellDef="let device">{{ device.weight / 1000 | number: '1.0-2' }} kg</td>
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row
-        (click)="openDevice(row)"
-        class="clickable-row"
-        *matRowDef="let row; columns: displayedColumns;"></tr>
+    <tr
+      mat-row
+      (click)="openDevice(row)"
+      class="clickable-row"
+      *matRowDef="let row; columns: displayedColumns"
+    ></tr>
   </table>
 
   @if (loading) {

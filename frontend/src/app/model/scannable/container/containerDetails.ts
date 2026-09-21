@@ -1,7 +1,7 @@
-import {ScannableDetailsDto} from '../scannableDetailsDto';
-import {Owner} from '../../owner/owner';
-import {UserDetails} from '../../user/userDetails';
-import {ContainerItemDetails} from './containerItemDetails';
+import { ScannableDetailsDto } from '../scannableDetailsDto';
+import { Owner } from '../../owner/owner';
+import { UserDetails } from '../../user/userDetails';
+import { ContainerItemDetails } from './containerItemDetails';
 
 export class ContainerDetails extends ScannableDetailsDto {
   totalWeight: number;
@@ -23,9 +23,24 @@ export class ContainerDetails extends ScannableDetailsDto {
     updatedAt: Date,
     updatedBy: UserDetails,
     totalWeight: number,
-    items: ContainerItemDetails[]
+    items: ContainerItemDetails[],
   ) {
-    super(id, assetTag, barcode, name, weight, publicRentable, deleted, category, location, owner, createdAt, createdBy, updatedAt, updatedBy);
+    super(
+      id,
+      assetTag,
+      barcode,
+      name,
+      weight,
+      publicRentable,
+      deleted,
+      category,
+      location,
+      owner,
+      createdAt,
+      createdBy,
+      updatedAt,
+      updatedBy,
+    );
     this.totalWeight = totalWeight;
     this.items = items;
   }
@@ -52,8 +67,10 @@ export class ContainerDetails extends ScannableDetailsDto {
       UserDetails.fromJson(json['updatedBy'] as Record<string, unknown>),
       json['totalWeight'] as number,
       Array.isArray(json['items'])
-        ? (json['items'] as Record<string, unknown>[]).map(item => ContainerItemDetails.fromJson(item))
-        : []
+        ? (json['items'] as Record<string, unknown>[]).map((item) =>
+            ContainerItemDetails.fromJson(item),
+          )
+        : [],
     );
   }
 }

@@ -1,0 +1,55 @@
+// @ts-check
+const eslint = require('@eslint/js');
+const { defineConfig } = require('eslint/config');
+const tseslint = require('typescript-eslint');
+const angular = require('angular-eslint');
+const prettier = require('eslint-config-prettier/flat');
+
+module.exports = defineConfig([
+  {
+    ignores: ['dist/**', '.angular/**', 'node_modules/**'],
+  },
+  {
+    files: ['**/*.ts'],
+    extends: [
+      eslint.configs.recommended,
+      tseslint.configs.recommended,
+      tseslint.configs.stylistic,
+      angular.configs.tsRecommended,
+      // last, so it switches off the stylistic rules Prettier owns
+      prettier,
+    ],
+    processor: angular.processInlineTemplates,
+    rules: {
+      '@angular-eslint/directive-selector': [
+        'error',
+        {
+          type: 'attribute',
+          prefix: 'app',
+          style: 'camelCase',
+        },
+      ],
+      '@angular-eslint/component-selector': [
+        'error',
+        {
+          type: 'element',
+          prefix: 'app',
+          style: 'kebab-case',
+        },
+      ],
+      // Every component currently carries ChangeDetectionStrategy.Eager, added
+      // by the Angular 22 migration to keep the pre-v22 default. Switching them
+      // to OnPush changes runtime behaviour and has to be done and verified
+      // component by component, so the rule stays off until that happens.
+      '@angular-eslint/prefer-on-push-component-change-detection': 'off',
+      // warn and error are real diagnostics and are kept; log, debug and info
+      // are the ones that get left behind after debugging and ship to users.
+      'no-console': ['error', { allow: ['warn', 'error'] }],
+    },
+  },
+  {
+    files: ['**/*.html'],
+    extends: [angular.configs.templateRecommended, angular.configs.templateAccessibility, prettier],
+    rules: {},
+  },
+]);

@@ -1,4 +1,4 @@
-import {UserDetails} from '../user/userDetails';
+import { UserDetails } from '../user/userDetails';
 
 export class CategoryDetails {
   name: string;
@@ -7,7 +7,13 @@ export class CategoryDetails {
   updatedAt: Date;
   updatedBy: UserDetails;
 
-  constructor(name: string, createdAt: Date, createdBy: UserDetails, updatedAt: Date, updatedBy: UserDetails) {
+  constructor(
+    name: string,
+    createdAt: Date,
+    createdBy: UserDetails,
+    updatedAt: Date,
+    updatedBy: UserDetails,
+  ) {
     this.name = name;
     this.createdAt = createdAt;
     this.createdBy = createdBy;
@@ -21,7 +27,7 @@ export class CategoryDetails {
       new Date(json['createdAt'] as string),
       UserDetails.fromJson(json['createdBy'] as Record<string, unknown>),
       new Date(json['updatedAt'] as string),
-      UserDetails.fromJson(json['updatedBy'] as Record<string, unknown>)
+      UserDetails.fromJson(json['updatedBy'] as Record<string, unknown>),
     );
   }
 }

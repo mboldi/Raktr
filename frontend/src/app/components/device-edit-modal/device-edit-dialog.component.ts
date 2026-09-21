@@ -1,18 +1,19 @@
-import {ChangeDetectionStrategy, Component, Inject, ViewChild} from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewChild, inject } from '@angular/core';
 import {
   MAT_DIALOG_DATA,
   MatDialogActions,
   MatDialogClose,
-  MatDialogContent, MatDialogRef,
+  MatDialogContent,
+  MatDialogRef,
   MatDialogTitle,
 } from '@angular/material/dialog';
-import {MatButton} from '@angular/material/button';
-import {DeviceDetails} from '../../model/scannable/device/deviceDetails';
-import {DeviceFormComponent} from '../device-form/device-form.component';
-import {DeviceCreateDto} from '../../model/scannable/device/deviceCreateDto';
-import {MatSnackBar} from '@angular/material/snack-bar';
-import {DeviceService} from '../../services/device.service';
-import {DeviceUpdateDto} from '../../model/scannable/device/deviceUpdateDto';
+import { MatButton } from '@angular/material/button';
+import { DeviceDetails } from '../../model/scannable/device/deviceDetails';
+import { DeviceFormComponent } from '../device-form/device-form.component';
+import { DeviceCreateDto } from '../../model/scannable/device/deviceCreateDto';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { DeviceService } from '../../services/device.service';
+import { DeviceUpdateDto } from '../../model/scannable/device/deviceUpdateDto';
 
 export interface DeviceDialogData {
   /** Pass to open the dialog in edit mode for an existing device. */
@@ -37,16 +38,20 @@ export interface DeviceDialogData {
   styleUrl: './device-edit-dialog.component.scss',
 })
 export class DeviceEditDialogComponent {
+  protected dialogData = inject<DeviceDialogData | undefined>(MAT_DIALOG_DATA);
+  private dialogRef = inject<MatDialogRef<DeviceEditDialogComponent>>(MatDialogRef);
+  private snackBar = inject(MatSnackBar);
+  private deviceService = inject(DeviceService);
+
   @ViewChild(DeviceFormComponent) deviceFormComponent!: DeviceFormComponent;
 
   protected title = 'Új eszköz hozzáadása';
-  protected isNew: boolean = true;
+  protected isNew = true;
   protected deviceData: DeviceDetails | null;
 
-  constructor(@Inject(MAT_DIALOG_DATA) protected dialogData: DeviceDialogData | undefined,
-              private dialogRef: MatDialogRef<DeviceEditDialogComponent>,
-              private snackBar: MatSnackBar,
-              private deviceService: DeviceService) {
+  constructor() {
+    const dialogData = this.dialogData;
+
     this.deviceData = dialogData?.device ?? null;
 
     if (this.deviceData) {
@@ -64,21 +69,28 @@ export class DeviceEditDialogComponent {
   }
 
   protected save() {
-    if (this.isFormValid) {     // New device, has to be created
-      if(this.isNew){
-        const newDevice = DeviceCreateDto.fromFormControl(this.deviceFormComponent?.deviceForm?.value);
+    if (this.isFormValid) {
+      // New device, has to be created
+      if (this.isNew) {
+        const newDevice = DeviceCreateDto.fromFormControl(
+          this.deviceFormComponent?.deviceForm?.value,
+        );
 
-        this.deviceService.createDevice(newDevice).subscribe(createdDevice => {
+        this.deviceService.createDevice(newDevice).subscribe((createdDevice) => {
           this.dialogRef.close(createdDevice);
         });
-      } else {                  // Device exists, only update
-        const updateDevice = DeviceUpdateDto.fromFormControl(this.deviceFormComponent?.deviceForm?.value);
+      } else {
+        // Device exists, only update
+        const updateDevice = DeviceUpdateDto.fromFormControl(
+          this.deviceFormComponent?.deviceForm?.value,
+        );
 
-        this.deviceService.updateDevice(this.deviceData!.id, updateDevice).subscribe(updatedDevice => {
-          this.dialogRef.close(updatedDevice);
-        })
+        this.deviceService
+          .updateDevice(this.deviceData!.id, updateDevice)
+          .subscribe((updatedDevice) => {
+            this.dialogRef.close(updatedDevice);
+          });
       }
-
     } else {
       this.deviceFormComponent?.markAllFieldsAsTouched();
 
@@ -89,6 +101,5 @@ export class DeviceEditDialogComponent {
         panelClass: ['error-snackbar'],
       });
     }
-
   }
 }

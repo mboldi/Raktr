@@ -8,9 +8,8 @@ describe('DeviceEditModalComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [DeviceEditDialogComponent]
-    })
-    .compileComponents();
+      imports: [DeviceEditDialogComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(DeviceEditDialogComponent);
     component = fixture.componentInstance;

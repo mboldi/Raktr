@@ -1,22 +1,22 @@
-import {Component, Inject} from '@angular/core';
-import {MatButton} from '@angular/material/button';
+import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
+import { MatButton } from '@angular/material/button';
 import {
   MAT_DIALOG_DATA,
   MatDialogActions,
   MatDialogClose,
   MatDialogContent,
   MatDialogRef,
-  MatDialogTitle
+  MatDialogTitle,
 } from '@angular/material/dialog';
-import {MatFormField, MatInput, MatLabel, MatSuffix} from '@angular/material/input';
-import {FormControl, ReactiveFormsModule, Validators} from '@angular/forms';
+import { MatFormField, MatInput, MatLabel, MatSuffix } from '@angular/material/input';
+import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 
 export class QuantityInputDialogData {
   deviceName: string;
   maxQuantity: number;
   initialQuantity: number;
 
-  constructor(deviceName: string, maxQuantity: number, initialQuantity: number = 1) {
+  constructor(deviceName: string, maxQuantity: number, initialQuantity = 1) {
     this.deviceName = deviceName;
     this.maxQuantity = maxQuantity;
     this.initialQuantity = initialQuantity;
@@ -35,19 +35,24 @@ export class QuantityInputDialogData {
     MatLabel,
     MatSuffix,
     ReactiveFormsModule,
-    MatDialogClose
+    MatDialogClose,
   ],
   templateUrl: './quantity-input-modal.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './quantity-input-modal.component.scss',
 })
 export class QuantityInputModalComponent {
+  protected data = inject<QuantityInputDialogData>(MAT_DIALOG_DATA);
+  private dialogRef = inject<MatDialogRef<QuantityInputModalComponent>>(MatDialogRef);
+
   protected quantityFormControl: FormControl;
 
   protected deviceName: string;
   protected maxQuantity: number;
 
-  constructor(@Inject(MAT_DIALOG_DATA) protected data: QuantityInputDialogData,
-              private dialogRef: MatDialogRef<QuantityInputModalComponent>) {
+  constructor() {
+    const data = this.data;
+
     this.deviceName = data.deviceName;
     this.maxQuantity = data.maxQuantity;
 

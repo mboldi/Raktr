@@ -1,18 +1,45 @@
-import {ChangeDetectionStrategy, Component, computed, effect, input, OnInit, output, ViewChild} from '@angular/core';
-import {MatFormField, MatInput, MatInputModule, MatLabel, MatSuffix} from '@angular/material/input';
-import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatAutocomplete, MatAutocompleteTrigger, MatOption} from '@angular/material/autocomplete';
-import {FormBuilder, FormControl, FormsModule, ReactiveFormsModule, UntypedFormGroup, Validators} from '@angular/forms';
-import {map, Observable, startWith} from 'rxjs';
-import {AsyncPipe, DatePipe, DecimalPipe} from '@angular/common';
-import {MatSelect} from '@angular/material/select';
-import {MatDatepickerModule} from '@angular/material/datepicker';
-import {MatIcon, MatIconModule} from '@angular/material/icon';
-import {MatButton, MatIconButton} from '@angular/material/button';
-import {MatCheckbox, MatCheckboxChange} from '@angular/material/checkbox';
-import {MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle} from '@angular/material/expansion';
-import {MatTooltip} from '@angular/material/tooltip';
-import {MatDialog} from '@angular/material/dialog';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  effect,
+  input,
+  OnInit,
+  output,
+  ViewChild,
+  inject,
+} from '@angular/core';
+import {
+  MatFormField,
+  MatInput,
+  MatInputModule,
+  MatLabel,
+  MatSuffix,
+} from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatAutocomplete, MatAutocompleteTrigger, MatOption } from '@angular/material/autocomplete';
+import {
+  FormBuilder,
+  FormControl,
+  FormsModule,
+  ReactiveFormsModule,
+  UntypedFormGroup,
+  Validators,
+} from '@angular/forms';
+import { map, Observable, startWith } from 'rxjs';
+import { AsyncPipe, DatePipe, DecimalPipe } from '@angular/common';
+import { MatSelect } from '@angular/material/select';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatIcon, MatIconModule } from '@angular/material/icon';
+import { MatButton, MatIconButton } from '@angular/material/button';
+import { MatCheckbox, MatCheckboxChange } from '@angular/material/checkbox';
+import {
+  MatExpansionPanel,
+  MatExpansionPanelHeader,
+  MatExpansionPanelTitle,
+} from '@angular/material/expansion';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatDialog } from '@angular/material/dialog';
 import {
   MatCell,
   MatCellDef,
@@ -23,26 +50,26 @@ import {
   MatHeaderRowDef,
   MatRow,
   MatRowDef,
-  MatTable
+  MatTable,
 } from '@angular/material/table';
-import {RentDetails} from '../../model/rent/rentDetails';
-import {RentType} from '../../model/rent/rentType';
-import {RentItemStatus} from '../../model/rent/rentItem/rentItemStatus';
-import {RentItemDetailsDto} from '../../model/rent/rentItem/rentItemDetails';
-import {RENT_TYPE_LABELS} from '../../model/rent/rentLabels';
-import {ScannableDetailsDto} from '../../model/scannable/scannableDetailsDto';
-import {DeviceDetails} from '../../model/scannable/device/deviceDetails';
-import {ContainerDetails} from '../../model/scannable/container/containerDetails';
-import {DeviceService} from '../../services/device.service';
-import {ContainerService} from '../../services/container.service';
-import {UserDetails} from '../../model/user/userDetails';
-import {UserService} from '../../services/user.service';
+import { RentDetails } from '../../model/rent/rentDetails';
+import { RentType } from '../../model/rent/rentType';
+import { RentItemStatus } from '../../model/rent/rentItem/rentItemStatus';
+import { RentItemDetailsDto } from '../../model/rent/rentItem/rentItemDetails';
+import { RENT_TYPE_LABELS } from '../../model/rent/rentLabels';
+import { ScannableDetailsDto } from '../../model/scannable/scannableDetailsDto';
+import { DeviceDetails } from '../../model/scannable/device/deviceDetails';
+import { ContainerDetails } from '../../model/scannable/container/containerDetails';
+import { DeviceService } from '../../services/device.service';
+import { ContainerService } from '../../services/container.service';
+import { UserDetails } from '../../model/user/userDetails';
+import { UserService } from '../../services/user.service';
 import {
   QuantityInputDialogData,
-  QuantityInputModalComponent
+  QuantityInputModalComponent,
 } from '../quantity-input-modal/quantity-input-modal.component';
-import {YesnoModalComponent} from '../yesno-modal/yesno-modal.component';
-import {WindowWidthService} from '../../services/windowWidth.service';
+import { YesnoModalComponent } from '../yesno-modal/yesno-modal.component';
+import { WindowWidthService } from '../../services/windowWidth.service';
 
 const MOBILE_WIDTH_THRESHOLD = 768;
 
@@ -108,6 +135,13 @@ export type StatusMode = 'packed' | 'returned';
   styleUrl: './rent-form.component.scss',
 })
 export class RentFormComponent implements OnInit {
+  private fb = inject(FormBuilder);
+  private userService = inject(UserService);
+  private deviceService = inject(DeviceService);
+  private containerService = inject(ContainerService);
+  private dialog = inject(MatDialog);
+  private windowService = inject(WindowWidthService);
+
   @ViewChild(MatTable) itemsTable?: MatTable<unknown>;
 
   /** Pass an existing rent to pre-populate the form, or leave null for a blank create form. */
@@ -166,14 +200,7 @@ export class RentFormComponent implements OnInit {
   /** Recomputed reactively off both the rent (type/closed) and the viewport width. */
   protected readonly itemColumns = computed(() => this.computeItemColumns(this.rentData()));
 
-  constructor(
-    private fb: FormBuilder,
-    private userService: UserService,
-    private deviceService: DeviceService,
-    private containerService: ContainerService,
-    private dialog: MatDialog,
-    private windowService: WindowWidthService,
-  ) {
+  constructor() {
     this.rentForm = this.fb.group({
       destination: ['', Validators.required],
       type: [RentType.SIMPLE, Validators.required],
@@ -186,12 +213,12 @@ export class RentFormComponent implements OnInit {
 
     this.filteredIssuers = this.rentForm.get('issuer')!.valueChanges.pipe(
       startWith(''),
-      map(value => this.filterIssuers(value || ''))
+      map((value) => this.filterIssuers(value || '')),
     );
 
     this.filteredNewScannableOptions = this.addScannableFormControl.valueChanges.pipe(
       startWith(''),
-      map(value => this.filterScannables(value || ''))
+      map((value) => this.filterScannables(value || '')),
     );
 
     // The rent type decides how items are tracked (SIMPLE vs. COMPLEX packing/return steps),
@@ -201,12 +228,12 @@ export class RentFormComponent implements OnInit {
       const isNew = this.isNew;
 
       if (this.disabled()) {
-        this.rentForm.disable({emitEvent: false});
+        this.rentForm.disable({ emitEvent: false });
       } else {
-        this.rentForm.enable({emitEvent: false});
+        this.rentForm.enable({ emitEvent: false });
 
         if (!isNew) {
-          this.rentForm.get('type')!.disable({emitEvent: false});
+          this.rentForm.get('type')!.disable({ emitEvent: false });
         }
       }
     });
@@ -250,11 +277,11 @@ export class RentFormComponent implements OnInit {
       });
     }
 
-    this.rentForm.valueChanges.subscribe(value => this.formChanged.emit(value));
+    this.rentForm.valueChanges.subscribe((value) => this.formChanged.emit(value));
 
     this.itemSearchControl.valueChanges.subscribe(() => this.refilterItems());
 
-    this.userService.getUsers(true).subscribe(issuers => {
+    this.userService.getUsers(true).subscribe((issuers) => {
       this.issuers = issuers;
 
       if (data === null) {
@@ -268,13 +295,13 @@ export class RentFormComponent implements OnInit {
       this.rentForm.get('issuer')!.updateValueAndValidity();
     });
 
-    this.deviceService.getDevices().subscribe(devices => {
+    this.deviceService.getDevices().subscribe((devices) => {
       this.devices = devices;
-      this.devicesById = new Map(devices.map(device => [device.id, device]));
+      this.devicesById = new Map(devices.map((device) => [device.id, device]));
       this.addScannableFormControl.updateValueAndValidity();
     });
 
-    this.containerService.getContainers().subscribe(containers => {
+    this.containerService.getContainers().subscribe((containers) => {
       this.containers = containers;
       this.addScannableFormControl.updateValueAndValidity();
     });
@@ -308,10 +335,12 @@ export class RentFormComponent implements OnInit {
   }
 
   private filterIssuers(value: UserDetails | string): UserDetails[] {
-    const filter = (typeof value === 'string' ? value : `${value.familyName} ${value.givenName}`).toLowerCase();
-    return this.issuers.filter(issuer =>
-      `${issuer.familyName} ${issuer.givenName}`.toLowerCase().includes(filter)
-    ).slice(0, 10);
+    const filter = (
+      typeof value === 'string' ? value : `${value.familyName} ${value.givenName}`
+    ).toLowerCase();
+    return this.issuers
+      .filter((issuer) => `${issuer.familyName} ${issuer.givenName}`.toLowerCase().includes(filter))
+      .slice(0, 10);
   }
 
   private filterScannables(value: string): ScannableDetailsDto[] {
@@ -324,21 +353,28 @@ export class RentFormComponent implements OnInit {
     // searching the addable scannables wouldn't make sense there.
     if (this.selectedStatusMode) {
       return (this.rentData()?.rentItems ?? [])
-        .map(item => item.scannable)
-        .filter(scannable =>
-          scannable.name.toLowerCase().includes(filter) || scannable.assetTag.toLowerCase().includes(filter)
-        ).slice(0, 5);
+        .map((item) => item.scannable)
+        .filter(
+          (scannable) =>
+            scannable.name.toLowerCase().includes(filter) ||
+            scannable.assetTag.toLowerCase().includes(filter),
+        )
+        .slice(0, 5);
     }
 
-    const addedIds = new Set((this.rentData()?.rentItems ?? []).map(item => item.scannable.id));
+    const addedIds = new Set((this.rentData()?.rentItems ?? []).map((item) => item.scannable.id));
 
-    return this.scannables.filter(scannable =>
-      // Devices with more than one in stock stay searchable even once added, so more can be
-      // taken out - anything else (containers, single-quantity devices) drops off the list.
-      (!addedIds.has(scannable.id) || this.isStackable(scannable.id)) &&
-      !scannable.deleted &&
-      (scannable.name.toLowerCase().includes(filter) || scannable.assetTag.toLowerCase().includes(filter))
-    ).slice(0, 5);
+    return this.scannables
+      .filter(
+        (scannable) =>
+          // Devices with more than one in stock stay searchable even once added, so more can be
+          // taken out - anything else (containers, single-quantity devices) drops off the list.
+          (!addedIds.has(scannable.id) || this.isStackable(scannable.id)) &&
+          !scannable.deleted &&
+          (scannable.name.toLowerCase().includes(filter) ||
+            scannable.assetTag.toLowerCase().includes(filter)),
+      )
+      .slice(0, 5);
   }
 
   protected toggleStatusMode(mode: StatusMode) {
@@ -356,7 +392,7 @@ export class RentFormComponent implements OnInit {
   }
 
   private findExistingItem(scannableId: number): RentItemDetailsDto | undefined {
-    return this.rentData()?.rentItems.find(item => item.scannable.id === scannableId);
+    return this.rentData()?.rentItems.find((item) => item.scannable.id === scannableId);
   }
 
   // MatAutocomplete's Enter-to-select handling runs on keydown and fires (optionSelected),
@@ -384,7 +420,7 @@ export class RentFormComponent implements OnInit {
       return;
     }
 
-    const matched = this.scannables.find(scannable => scannable.barcode === enteredValue);
+    const matched = this.scannables.find((scannable) => scannable.barcode === enteredValue);
     if (!matched) {
       this.scannableNotFound.emit();
       return;
@@ -402,21 +438,25 @@ export class RentFormComponent implements OnInit {
       const quantityDialog = this.dialog.open(QuantityInputModalComponent, {
         width: '20vw',
         minWidth: '350px',
-        data: new QuantityInputDialogData(device.name, device.quantity, existingItem?.quantity ?? 1)
+        data: new QuantityInputDialogData(
+          device.name,
+          device.quantity,
+          existingItem?.quantity ?? 1,
+        ),
       });
 
-      quantityDialog.afterClosed().subscribe(chosenQuantity => {
+      quantityDialog.afterClosed().subscribe((chosenQuantity) => {
         if (chosenQuantity) {
           if (existingItem) {
-            this.itemQuantityChanged.emit({item: existingItem, quantity: chosenQuantity});
+            this.itemQuantityChanged.emit({ item: existingItem, quantity: chosenQuantity });
           } else {
-            this.addScannable.emit({scannable: matched, quantity: chosenQuantity});
+            this.addScannable.emit({ scannable: matched, quantity: chosenQuantity });
           }
           this.addScannableFormControl.reset();
         }
       });
     } else {
-      this.addScannable.emit({scannable: matched, quantity: 1});
+      this.addScannable.emit({ scannable: matched, quantity: 1 });
       this.addScannableFormControl.reset();
     }
   }
@@ -443,12 +483,13 @@ export class RentFormComponent implements OnInit {
     const search = (this.itemSearchControl.value ?? '').toLowerCase();
     const items = this.rentData()?.rentItems ?? [];
 
-    this.filteredItems = items.filter(item =>
-      item.scannable.name.toLowerCase().includes(search) ||
-      item.scannable.barcode.toLowerCase().includes(search) ||
-      item.scannable.assetTag.toLowerCase().includes(search) ||
-      item.scannable.category.toLowerCase().includes(search) ||
-      item.scannable.location.toLowerCase().includes(search)
+    this.filteredItems = items.filter(
+      (item) =>
+        item.scannable.name.toLowerCase().includes(search) ||
+        item.scannable.barcode.toLowerCase().includes(search) ||
+        item.scannable.assetTag.toLowerCase().includes(search) ||
+        item.scannable.category.toLowerCase().includes(search) ||
+        item.scannable.location.toLowerCase().includes(search),
     );
   }
 
@@ -467,7 +508,7 @@ export class RentFormComponent implements OnInit {
       return;
     }
 
-    this.itemQuantityChanged.emit({item, quantity: newQuantity});
+    this.itemQuantityChanged.emit({ item, quantity: newQuantity });
   }
 
   protected onPackedChanged(checkboxChange: MatCheckboxChange, item: RentItemDetailsDto) {
@@ -488,8 +529,9 @@ export class RentFormComponent implements OnInit {
       return false;
     }
 
-    const newStatus = item.status === RentItemStatus.PENDING ? RentItemStatus.OUT : RentItemStatus.PENDING;
-    this.itemStatusChanged.emit({item, status: newStatus});
+    const newStatus =
+      item.status === RentItemStatus.PENDING ? RentItemStatus.OUT : RentItemStatus.PENDING;
+    this.itemStatusChanged.emit({ item, status: newStatus });
     return true;
   }
 
@@ -498,7 +540,7 @@ export class RentFormComponent implements OnInit {
     const rent = this.rentData();
 
     if (item.status === RentItemStatus.RETURNED) {
-      this.itemStatusChanged.emit({item, status: RentItemStatus.OUT});
+      this.itemStatusChanged.emit({ item, status: RentItemStatus.OUT });
       return true;
     }
 
@@ -506,7 +548,7 @@ export class RentFormComponent implements OnInit {
       return false;
     }
 
-    this.itemStatusChanged.emit({item, status: RentItemStatus.RETURNED});
+    this.itemStatusChanged.emit({ item, status: RentItemStatus.RETURNED });
     return true;
   }
 
@@ -522,10 +564,10 @@ export class RentFormComponent implements OnInit {
     const confirmDialog = this.dialog.open(YesnoModalComponent, {
       width: '20vw',
       minWidth: '350px',
-      data: `Biztos eltávolítod a(z) ${item.scannable.name} eszközt a kivitelből?`
+      data: `Biztos eltávolítod a(z) ${item.scannable.name} eszközt a kivitelből?`,
     });
 
-    confirmDialog.afterClosed().subscribe(result => {
+    confirmDialog.afterClosed().subscribe((result) => {
       if (result) {
         this.removeItem.emit(item);
       }

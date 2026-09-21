@@ -1,4 +1,4 @@
-import {ContainerAddItemDto} from './containerAddItemDto';
+import { ContainerAddItemDto } from './containerAddItemDto';
 
 export class ContainerAddDevicesDto {
   items: ContainerAddItemDto[];
@@ -9,7 +9,7 @@ export class ContainerAddDevicesDto {
 
   toJson(): Record<string, unknown> {
     return {
-      items: this.items.map(item => item.toJson())
+      items: this.items.map((item) => item.toJson()),
     };
   }
 }

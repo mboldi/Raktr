@@ -1,4 +1,6 @@
-import {DeviceStatus} from './deviceStatus';
+import { DeviceStatus } from './deviceStatus';
+import { DeviceFormValue } from './deviceFormValue';
+import { dateToJson } from '../../jsonDate';
 
 export class DeviceUpdateDto {
   assetTag: string;
@@ -16,8 +18,8 @@ export class DeviceUpdateDto {
   status: DeviceStatus;
   quantity: number;
   acquisitionSource: string;
-  acquisitionDate: Date;
-  warrantyEndDate: Date;
+  acquisitionDate: Date | null;
+  warrantyEndDate: Date | null;
   notes: string;
 
   constructor(
@@ -36,9 +38,9 @@ export class DeviceUpdateDto {
     status: DeviceStatus,
     quantity: number,
     acquisitionSource: string,
-    acquisitionDate: Date,
-    warrantyEndDate: Date,
-    notes: string
+    acquisitionDate: Date | null,
+    warrantyEndDate: Date | null,
+    notes: string,
   ) {
     this.assetTag = assetTag;
     this.barcode = barcode;
@@ -55,8 +57,8 @@ export class DeviceUpdateDto {
     this.status = status;
     this.quantity = quantity;
     this.acquisitionSource = acquisitionSource;
-    this.acquisitionDate = new Date(acquisitionDate);
-    this.warrantyEndDate = new Date(warrantyEndDate);
+    this.acquisitionDate = acquisitionDate;
+    this.warrantyEndDate = warrantyEndDate;
     this.notes = notes;
   }
 
@@ -77,14 +79,13 @@ export class DeviceUpdateDto {
       status: this.status,
       quantity: this.quantity,
       acquisitionSource: this.acquisitionSource,
-      acquisitionDate: this.acquisitionDate.toISOString().split('T')[0],
-      warrantyEndDate: this.warrantyEndDate.toISOString().split('T')[0],
-      notes: this.notes
+      acquisitionDate: dateToJson(this.acquisitionDate),
+      warrantyEndDate: dateToJson(this.warrantyEndDate),
+      notes: this.notes,
     };
   }
 
-  static fromFormControl(formValue: any) {
-
+  static fromFormControl(formValue: DeviceFormValue) {
     return new DeviceUpdateDto(
       formValue.assetTag,
       formValue.barcode,
@@ -101,9 +102,9 @@ export class DeviceUpdateDto {
       formValue.status,
       formValue.quantity,
       formValue.acquisitionSource,
-      new Date(formValue.acquisitionDate),
-      new Date(formValue.warrantyEndDate),
-      formValue.notes
-    )
+      formValue.acquisitionDate,
+      formValue.warrantyEndDate,
+      formValue.notes,
+    );
   }
 }

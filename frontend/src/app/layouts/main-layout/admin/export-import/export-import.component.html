@@ -11,9 +11,13 @@
               <h5>Eszközök exportálása</h5>
               <p>Az összes eszköz letöltése Excel (.xlsx) fájlként, minden mezővel.</p>
             </div>
-            <button mat-raised-button color="primary" type="button"
-                    [disabled]="exportingDevices"
-                    (click)="exportDevices()">
+            <button
+              mat-raised-button
+              color="primary"
+              type="button"
+              [disabled]="exportingDevices"
+              (click)="exportDevices()"
+            >
               @if (exportingDevices) {
                 <mat-spinner diameter="20"></mat-spinner>
               } @else {
@@ -33,16 +37,22 @@
           <div class="export-row">
             <div class="export-info">
               <h5>Import Excelből</h5>
-              <p>Az exportált fájlhoz hasonló oszlopnevekkel rendelkező .xlsx fájl feltöltése. A createdAt,
-                createdBy, updatedAt, updatedBy és deleted oszlopok elhagyhatók, azok nem szükségesek az eszközök
-                létrehozásához. Hiányzó vonalkód/azonosító, beszerzés dátuma, állapot és mennyiség esetén automatikus
-                érték kerül kitöltésre.</p>
+              <p>
+                Az exportált fájlhoz hasonló oszlopnevekkel rendelkező .xlsx fájl feltöltése. A
+                createdAt, createdBy, updatedAt, updatedBy és deleted oszlopok elhagyhatók, azok nem
+                szükségesek az eszközök létrehozásához. Hiányzó vonalkód/azonosító, beszerzés
+                dátuma, állapot és mennyiség esetén automatikus érték kerül kitöltésre.
+              </p>
             </div>
 
-            <input #fileInput type="file" accept=".xlsx" hidden (change)="onFileSelected($event)">
-            <button mat-raised-button color="primary" type="button"
-                    [disabled]="importing"
-                    (click)="fileInput.click()">
+            <input #fileInput type="file" accept=".xlsx" hidden (change)="onFileSelected($event)" />
+            <button
+              mat-raised-button
+              color="primary"
+              type="button"
+              [disabled]="importing"
+              (click)="fileInput.click()"
+            >
               @if (importing) {
                 <mat-spinner diameter="20"></mat-spinner>
               } @else {
@@ -54,9 +64,13 @@
 
           @if (importProgress) {
             <div class="import-progress">
-              <mat-progress-bar mode="determinate"
-                                 [value]="(importProgress.current / importProgress.total) * 100"></mat-progress-bar>
-              <span>{{ importProgress.current }} / {{ importProgress.total }} eszköz feldolgozva</span>
+              <mat-progress-bar
+                mode="determinate"
+                [value]="(importProgress.current / importProgress.total) * 100"
+              ></mat-progress-bar>
+              <span
+                >{{ importProgress.current }} / {{ importProgress.total }} eszköz feldolgozva</span
+              >
             </div>
           }
 
@@ -65,7 +79,10 @@
               <h5>Sikertelen sorok ({{ importFailures.length }})</h5>
               <ul>
                 @for (failure of importFailures; track failure.row) {
-                  <li>{{ failure.row }}. sor &ndash; <b>{{ failure.name }}</b>: {{ failure.message }}</li>
+                  <li>
+                    {{ failure.row }}. sor &ndash; <b>{{ failure.name }}</b
+                    >: {{ failure.message }}
+                  </li>
                 }
               </ul>
             </div>

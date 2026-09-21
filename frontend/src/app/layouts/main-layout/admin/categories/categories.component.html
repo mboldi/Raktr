@@ -1,6 +1,5 @@
 <div class="container-fluid" style="padding-right: 24px">
   <div class="row">
-
     <mat-card class="list-header-card bg-orange col-xxl-7 col-xl-10 col-lg-12">
       <h2>Eszközkategóriák kezelése</h2>
 
@@ -8,11 +7,18 @@
         <div>
           <mat-form-field class="search-box">
             <mat-label>Keresés</mat-label>
-            <input matInput (keyup)="applyFilter()" placeholder="Videó"
-                   [formControl]="categorySearchFormControl">
+            <input
+              matInput
+              (keyup)="applyFilter()"
+              placeholder="Videó"
+              [formControl]="categorySearchFormControl"
+            />
             @if (categorySearchFormControl.value) {
-              <button mat-icon-button matSuffix
-                      (click)="categorySearchFormControl.setValue(''); applyFilter();">
+              <button
+                mat-icon-button
+                matSuffix
+                (click)="categorySearchFormControl.setValue(''); applyFilter()"
+              >
                 <mat-icon matSuffix>close</mat-icon>
               </button>
             }
@@ -25,19 +31,14 @@
         </button>
       </div>
     </mat-card>
-
   </div>
 
   <div class="row">
-
     <div class="table-wrapper col-xxl-7 col-xl-10 col-lg-12">
-
-      <table mat-table #categoryTable [dataSource]="filteredCategories"
-             class="mat-elevation-z8">
-
+      <table mat-table #categoryTable [dataSource]="filteredCategories" class="mat-elevation-z8">
         <ng-container matColumnDef="name">
           <th mat-header-cell *matHeaderCellDef>Név</th>
-          <td mat-cell *matCellDef="let category"> {{ category.name }}</td>
+          <td mat-cell *matCellDef="let category">{{ category.name }}</td>
         </ng-container>
 
         <ng-container matColumnDef="assignedScannables">
@@ -47,36 +48,39 @@
 
         <ng-container matColumnDef="createdAt">
           <th mat-header-cell *matHeaderCellDef>Létrehozva</th>
-          <td mat-cell *matCellDef="let category"> {{category.createdAt | date:'yyyy. MM. dd.' }} </td>
+          <td mat-cell *matCellDef="let category">
+            {{ category.createdAt | date: 'yyyy. MM. dd.' }}
+          </td>
         </ng-container>
 
         <ng-container matColumnDef="createdBy">
           <th mat-header-cell *matHeaderCellDef>Létrehozta</th>
-          <td mat-cell *matCellDef="let category">{{category.createdBy.familyName}} {{category.createdBy.givenName}}</td>
+          <td mat-cell *matCellDef="let category">
+            {{ category.createdBy.familyName }} {{ category.createdBy.givenName }}
+          </td>
         </ng-container>
 
-          <ng-container matColumnDef="delete">
-              <th mat-header-cell *matHeaderCellDef>Törlés</th>
-              <td mat-cell *matCellDef="let category">
-                  <button matMiniFab aria-label="Delete category"
-                          class="alert-button"
-                          (click)="deleteCategory(category.name)">
-                      <mat-icon>delete</mat-icon>
-                  </button>
-              </td>
-          </ng-container>
+        <ng-container matColumnDef="delete">
+          <th mat-header-cell *matHeaderCellDef>Törlés</th>
+          <td mat-cell *matCellDef="let category">
+            <button
+              matMiniFab
+              aria-label="Delete category"
+              class="alert-button"
+              (click)="deleteCategory(category.name)"
+            >
+              <mat-icon>delete</mat-icon>
+            </button>
+          </td>
+        </ng-container>
 
         <tr mat-header-row *matHeaderRowDef="columns"></tr>
-        <tr mat-row
-            *matRowDef="let row; columns: columns;"></tr>
+        <tr mat-row *matRowDef="let row; columns: columns"></tr>
       </table>
 
       @if (loading) {
         <mat-spinner class="list-loading-spinner mt-3"></mat-spinner>
       }
     </div>
-
   </div>
 </div>
-
-

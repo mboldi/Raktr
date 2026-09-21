@@ -1,4 +1,3 @@
-
 export class CategoryCreateDto {
   name: string;
 
@@ -7,7 +6,6 @@ export class CategoryCreateDto {
   }
 
   static fromJson(json: Record<string, unknown>): CategoryCreateDto {
-    return new CategoryCreateDto(
-      json['name'] as string);
+    return new CategoryCreateDto(json['name'] as string);
   }
 }

@@ -1,4 +1,4 @@
-import {RentItemStatus} from './rentItemStatus';
+import { RentItemStatus } from './rentItemStatus';
 
 export class RentItemUpdateDto {
   status: RentItemStatus;
@@ -12,7 +12,7 @@ export class RentItemUpdateDto {
   toJson(): Record<string, unknown> {
     return {
       status: this.status,
-      quantity: this.quantity
+      quantity: this.quantity,
     };
   }
 }

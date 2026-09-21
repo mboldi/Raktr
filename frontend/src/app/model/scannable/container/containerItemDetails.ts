@@ -1,4 +1,4 @@
-import {DeviceDetails} from '../device/deviceDetails';
+import { DeviceDetails } from '../device/deviceDetails';
 
 export class ContainerItemDetails {
   device: DeviceDetails;
@@ -12,7 +12,7 @@ export class ContainerItemDetails {
   static fromJson(json: Record<string, unknown>): ContainerItemDetails {
     return new ContainerItemDetails(
       DeviceDetails.fromJson(json['device'] as Record<string, unknown>),
-      json['quantity'] as number
+      json['quantity'] as number,
     );
   }
 }

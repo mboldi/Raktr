@@ -1,13 +1,11 @@
-import {Component} from '@angular/core';
-import {MatIcon} from '@angular/material/icon';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'app-unauthorized-page',
-  imports: [
-    MatIcon
-  ],
+  imports: [MatIcon],
   templateUrl: './unauthorized-page.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './unauthorized-page.component.scss',
 })
-export class UnauthorizedPageComponent {
-}
+export class UnauthorizedPageComponent {}

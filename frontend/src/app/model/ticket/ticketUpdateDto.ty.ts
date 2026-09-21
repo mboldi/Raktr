@@ -1,16 +1,12 @@
-import {TicketSeverity} from './ticketSeverity';
-import {TicketStatus} from './ticketStatus';
+import { TicketSeverity } from './ticketSeverity';
+import { TicketStatus } from './ticketStatus';
 
 export class TicketUpdateDto {
   description: string;
   status: TicketStatus;
   severity: TicketSeverity;
 
-  constructor(
-    description: string,
-    status: TicketStatus,
-    severity: TicketSeverity
-  ) {
+  constructor(description: string, status: TicketStatus, severity: TicketSeverity) {
     this.description = description;
     this.status = status;
     this.severity = severity;
@@ -20,7 +16,7 @@ export class TicketUpdateDto {
     return {
       description: this.description,
       status: this.status,
-      severity: this.severity
+      severity: this.severity,
     };
   }
 }

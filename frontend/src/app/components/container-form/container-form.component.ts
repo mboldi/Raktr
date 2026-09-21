@@ -1,9 +1,24 @@
-import {ChangeDetectionStrategy, Component, effect, input, OnInit, output, ViewChild} from '@angular/core';
-import {MatFormField, MatInput, MatInputModule, MatLabel, MatSuffix} from '@angular/material/input';
-import {MatCheckbox} from '@angular/material/checkbox';
-import {CategoryDetails} from '../../model/category/categoryDetails';
-import {CategoryService} from '../../services/category.service';
-import {MatAutocomplete, MatAutocompleteTrigger, MatOption} from '@angular/material/autocomplete';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  effect,
+  input,
+  OnInit,
+  output,
+  ViewChild,
+  inject,
+} from '@angular/core';
+import {
+  MatFormField,
+  MatInput,
+  MatInputModule,
+  MatLabel,
+  MatSuffix,
+} from '@angular/material/input';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { CategoryDetails } from '../../model/category/categoryDetails';
+import { CategoryService } from '../../services/category.service';
+import { MatAutocomplete, MatAutocompleteTrigger, MatOption } from '@angular/material/autocomplete';
 import {
   AbstractControl,
   AsyncValidatorFn,
@@ -12,28 +27,32 @@ import {
   ReactiveFormsModule,
   UntypedFormGroup,
   ValidationErrors,
-  Validators
+  Validators,
 } from '@angular/forms';
-import {catchError, map, Observable, of, startWith, switchMap, timer} from 'rxjs';
-import {AsyncPipe} from '@angular/common';
-import {LocationDetails} from '../../model/location/LocationDetails';
-import {LocationService} from '../../services/location.service';
-import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatIcon, MatIconModule} from '@angular/material/icon';
-import {OwnerDetailsDto} from '../../model/owner/ownerDetailsDto';
-import {OwnerService} from '../../services/owner.service';
-import {ContainerDetails} from '../../model/scannable/container/containerDetails';
-import {DeviceDetails} from '../../model/scannable/device/deviceDetails';
-import {DeviceService} from '../../services/device.service';
-import {ScannableService} from '../../services/scannable.service';
-import {MatIconButton} from '@angular/material/button';
-import {MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle} from '@angular/material/expansion';
-import {MatDialog} from '@angular/material/dialog';
+import { catchError, map, Observable, of, startWith, switchMap, timer } from 'rxjs';
+import { AsyncPipe } from '@angular/common';
+import { LocationDetails } from '../../model/location/LocationDetails';
+import { LocationService } from '../../services/location.service';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIcon, MatIconModule } from '@angular/material/icon';
+import { OwnerDetailsDto } from '../../model/owner/ownerDetailsDto';
+import { OwnerService } from '../../services/owner.service';
+import { ContainerDetails } from '../../model/scannable/container/containerDetails';
+import { DeviceDetails } from '../../model/scannable/device/deviceDetails';
+import { DeviceService } from '../../services/device.service';
+import { ScannableService } from '../../services/scannable.service';
+import { MatIconButton } from '@angular/material/button';
+import {
+  MatExpansionPanel,
+  MatExpansionPanelHeader,
+  MatExpansionPanelTitle,
+} from '@angular/material/expansion';
+import { MatDialog } from '@angular/material/dialog';
 import {
   QuantityInputDialogData,
-  QuantityInputModalComponent
+  QuantityInputModalComponent,
 } from '../quantity-input-modal/quantity-input-modal.component';
-import {YesnoModalComponent} from '../yesno-modal/yesno-modal.component';
+import { YesnoModalComponent } from '../yesno-modal/yesno-modal.component';
 import {
   MatCell,
   MatCellDef,
@@ -44,9 +63,9 @@ import {
   MatHeaderRowDef,
   MatRow,
   MatRowDef,
-  MatTable
+  MatTable,
 } from '@angular/material/table';
-import {environment} from '../../../environments/environment';
+import { environment } from '../../../environments/environment';
 
 export interface AddDeviceEvent {
   device: DeviceDetails;
@@ -90,6 +109,14 @@ export interface AddDeviceEvent {
   styleUrl: './container-form.component.scss',
 })
 export class ContainerFormComponent implements OnInit {
+  private fb = inject(FormBuilder);
+  private ownerService = inject(OwnerService);
+  private categoryService = inject(CategoryService);
+  private locationService = inject(LocationService);
+  private deviceService = inject(DeviceService);
+  private scannableService = inject(ScannableService);
+  private dialog = inject(MatDialog);
+
   @ViewChild(MatTable) itemsTable?: MatTable<unknown>;
 
   /** Pass an existing container to pre-populate the form, or leave undefined for a blank create form. */
@@ -122,15 +149,7 @@ export class ContainerFormComponent implements OnInit {
 
   protected itemColumns = ['name', 'model', 'assetTag', 'remove'];
 
-  constructor(
-    private fb: FormBuilder,
-    private ownerService: OwnerService,
-    private categoryService: CategoryService,
-    private locationService: LocationService,
-    private deviceService: DeviceService,
-    private scannableService: ScannableService,
-    private dialog: MatDialog,
-  ) {
+  constructor() {
     this.containerForm = this.fb.group({
       name: ['', Validators.required],
       publicRentable: [false],
@@ -144,22 +163,22 @@ export class ContainerFormComponent implements OnInit {
 
     this.filteredCategories = this.containerForm.get('category')!.valueChanges.pipe(
       startWith(''),
-      map(value => this.filterCategories(value || ''))
+      map((value) => this.filterCategories(value || '')),
     );
 
     this.filteredLocations = this.containerForm.get('location')!.valueChanges.pipe(
       startWith(''),
-      map(value => this.filterLocations(value || ''))
+      map((value) => this.filterLocations(value || '')),
     );
 
     this.filteredOwners = this.containerForm.get('owner')!.valueChanges.pipe(
       startWith(''),
-      map(value => this.filterOwners(value || ''))
+      map((value) => this.filterOwners(value || '')),
     );
 
     this.filteredNewDeviceOptions = this.addDeviceFormControl.valueChanges.pipe(
       startWith(''),
-      map(value => this.filterDevices(value || ''))
+      map((value) => this.filterDevices(value || '')),
     );
 
     // The items table binds [dataSource] to containerData().items, which is a plain array -
@@ -179,16 +198,16 @@ export class ContainerFormComponent implements OnInit {
       this.generateBarcode();
     }
 
-    this.containerForm.valueChanges.subscribe(value => this.formChanged.emit(value));
+    this.containerForm.valueChanges.subscribe((value) => this.formChanged.emit(value));
 
     // Each filtered stream below is seeded via startWith('') at construction time, before
     // this data has loaded - re-running validity once it arrives forces a fresh filter pass
     // instead of leaving the panel showing the empty result cached from that initial seed.
-    this.ownerService.getOwners().subscribe(owners => {
+    this.ownerService.getOwners().subscribe((owners) => {
       this.owners = owners;
 
       if (data === null) {
-        const defaultOwner = owners.find(owner => owner.name === environment.defaultOwnerName);
+        const defaultOwner = owners.find((owner) => owner.name === environment.defaultOwnerName);
         if (defaultOwner) {
           this.containerForm.get('owner')!.setValue(defaultOwner);
           return;
@@ -197,22 +216,22 @@ export class ContainerFormComponent implements OnInit {
 
       this.containerForm.get('owner')!.updateValueAndValidity();
     });
-    this.categoryService.getCategories().subscribe(categories => {
+    this.categoryService.getCategories().subscribe((categories) => {
       this.categories = categories;
       this.containerForm.get('category')!.updateValueAndValidity();
     });
-    this.locationService.getLocations().subscribe(locations => {
+    this.locationService.getLocations().subscribe((locations) => {
       this.locations = locations;
       this.containerForm.get('location')!.updateValueAndValidity();
     });
-    this.deviceService.getDevices().subscribe(devices => {
+    this.deviceService.getDevices().subscribe((devices) => {
       this.devices = devices;
       this.addDeviceFormControl.updateValueAndValidity();
     });
   }
 
   private generateBarcode() {
-    this.scannableService.getScannablesCount().subscribe(count => {
+    this.scannableService.getScannablesCount().subscribe((count) => {
       this.findAvailableBarcode(count + 1);
     });
   }
@@ -220,7 +239,7 @@ export class ContainerFormComponent implements OnInit {
   private findAvailableBarcode(candidate: number) {
     const candidateBarcode = candidate.toString().padStart(7, '0');
 
-    this.scannableService.isBarcodeTaken(candidateBarcode).subscribe(taken => {
+    this.scannableService.isBarcodeTaken(candidateBarcode).subscribe((taken) => {
       if (taken) {
         this.findAvailableBarcode(candidate + 1);
       } else {
@@ -238,8 +257,8 @@ export class ContainerFormComponent implements OnInit {
 
       return timer(400).pipe(
         switchMap(() => this.scannableService.isAssetTagTaken(value)),
-        map(taken => (taken ? {assetTagTaken: true} : null)),
-        catchError(() => of(null))
+        map((taken) => (taken ? { assetTagTaken: true } : null)),
+        catchError(() => of(null)),
       );
     };
   }
@@ -253,25 +272,25 @@ export class ContainerFormComponent implements OnInit {
 
       return timer(400).pipe(
         switchMap(() => this.scannableService.isBarcodeTaken(value)),
-        map(taken => (taken ? {barcodeTaken: true} : null)),
-        catchError(() => of(null))
+        map((taken) => (taken ? { barcodeTaken: true } : null)),
+        catchError(() => of(null)),
       );
     };
   }
 
   private filterCategories(value: string): CategoryDetails[] {
     const filter = value.toLowerCase();
-    return this.categories.filter(c => c.name.toLowerCase().includes(filter)).slice(0, 3);
+    return this.categories.filter((c) => c.name.toLowerCase().includes(filter)).slice(0, 3);
   }
 
   private filterLocations(value: string): LocationDetails[] {
     const filter = value.toLowerCase();
-    return this.locations.filter(l => l.name.toLowerCase().includes(filter)).slice(0, 3);
+    return this.locations.filter((l) => l.name.toLowerCase().includes(filter)).slice(0, 3);
   }
 
   private filterOwners(value: OwnerDetailsDto | string): OwnerDetailsDto[] {
     const filter = (typeof value === 'string' ? value : value.name).toLowerCase();
-    return this.owners.filter(o => o.name.toLowerCase().includes(filter)).slice(0, 3);
+    return this.owners.filter((o) => o.name.toLowerCase().includes(filter)).slice(0, 3);
   }
 
   private filterDevices(value: string): DeviceDetails[] {
@@ -280,14 +299,19 @@ export class ContainerFormComponent implements OnInit {
       return [];
     }
 
-    const addedDeviceIds = new Set((this.containerData()?.items ?? []).map(item => item.device.id));
+    const addedDeviceIds = new Set(
+      (this.containerData()?.items ?? []).map((item) => item.device.id),
+    );
 
-    return this.devices.filter(device =>
-      !addedDeviceIds.has(device.id) &&
-      (device.name.toLowerCase().includes(filter) ||
-        (device.model ?? '').toLowerCase().includes(filter) ||
-        (device.manufacturer ?? '').toLowerCase().includes(filter))
-    ).slice(0, 5);
+    return this.devices
+      .filter(
+        (device) =>
+          !addedDeviceIds.has(device.id) &&
+          (device.name.toLowerCase().includes(filter) ||
+            (device.model ?? '').toLowerCase().includes(filter) ||
+            (device.manufacturer ?? '').toLowerCase().includes(filter)),
+      )
+      .slice(0, 5);
   }
 
   protected displayOwner(owner: OwnerDetailsDto | string | null): string {
@@ -321,7 +345,7 @@ export class ContainerFormComponent implements OnInit {
       return;
     }
 
-    const matchedDevice = this.devices.find(device => device.barcode === enteredValue);
+    const matchedDevice = this.devices.find((device) => device.barcode === enteredValue);
     if (!matchedDevice) {
       this.deviceNotFound.emit();
       return;
@@ -331,17 +355,17 @@ export class ContainerFormComponent implements OnInit {
       const quantityDialog = this.dialog.open(QuantityInputModalComponent, {
         width: '20vw',
         minWidth: '350px',
-        data: new QuantityInputDialogData(matchedDevice.name, matchedDevice.quantity)
+        data: new QuantityInputDialogData(matchedDevice.name, matchedDevice.quantity),
       });
 
-      quantityDialog.afterClosed().subscribe(chosenQuantity => {
+      quantityDialog.afterClosed().subscribe((chosenQuantity) => {
         if (chosenQuantity) {
-          this.addDevice.emit({device: matchedDevice, quantity: chosenQuantity});
+          this.addDevice.emit({ device: matchedDevice, quantity: chosenQuantity });
           this.addDeviceFormControl.reset();
         }
       });
     } else {
-      this.addDevice.emit({device: matchedDevice, quantity: 1});
+      this.addDevice.emit({ device: matchedDevice, quantity: 1 });
       this.addDeviceFormControl.reset();
     }
   }
@@ -350,10 +374,10 @@ export class ContainerFormComponent implements OnInit {
     const confirmDialog = this.dialog.open(YesnoModalComponent, {
       width: '20vw',
       minWidth: '350px',
-      data: `Biztos eltávolítod a(z) ${device.name} eszközt a szállítóládából?`
+      data: `Biztos eltávolítod a(z) ${device.name} eszközt a szállítóládából?`,
     });
 
-    confirmDialog.afterClosed().subscribe(result => {
+    confirmDialog.afterClosed().subscribe((result) => {
       if (result) {
         this.removeDevice.emit(device);
       }

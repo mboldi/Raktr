@@ -1,4 +1,5 @@
-import {Owner} from '../owner/owner';
+import { Owner } from '../owner/owner';
+import { dateFromJson, dateToJson } from '../jsonDate';
 
 export class Scannable {
   id: number;
@@ -7,8 +8,8 @@ export class Scannable {
   owner: Owner;
   manufacturer: string;
   acquisitionSource: string;
-  acquisitionDate: Date;
-  warrantyEndDate: Date;
+  acquisitionDate: Date | null;
+  warrantyEndDate: Date | null;
 
   protected constructor(
     id: number,
@@ -17,8 +18,8 @@ export class Scannable {
     owner: Owner,
     manufacturer: string,
     acquisitionSource: string,
-    acquisitionDate: Date,
-    warrantyEndDate: Date
+    acquisitionDate: Date | null,
+    warrantyEndDate: Date | null,
   ) {
     this.id = id;
     this.assetTag = assetTag;
@@ -38,25 +39,24 @@ export class Scannable {
       json['owner'] as Owner,
       json['manufacturer'] as string,
       json['acquisitionSource'] as string,
-      new Date(json['acquisitionDate'] as string),
-      new Date(json['warrantyEndDate'] as string)
+      dateFromJson(json['acquisitionDate']),
+      dateFromJson(json['warrantyEndDate']),
     );
   }
 
   toJson(): Record<string, unknown> {
-    console.log(this)
     return {
       id: this.id,
       assetTag: this.assetTag,
       name: this.name,
       owner: {
         id: this.owner.id,
-        name: this.owner.name
+        name: this.owner.name,
       },
       manufacturer: this.manufacturer,
       acquisitionSource: this.acquisitionSource,
-      acquisitionDate: this.acquisitionDate ? (this.acquisitionDate as Date).toISOString().split('T')[0] : "",
-      warrantyEndDate: this.warrantyEndDate ? (this.warrantyEndDate as Date).toISOString().split('T')[0] : "",
+      acquisitionDate: dateToJson(this.acquisitionDate),
+      warrantyEndDate: dateToJson(this.warrantyEndDate),
     };
   }
 }

@@ -1,30 +1,34 @@
-import {Component, Inject, Type} from '@angular/core';
-import {NgComponentOutlet} from '@angular/common';
-import {MatButton, MatFabButton} from "@angular/material/button";
+import { Component, Type, ChangeDetectionStrategy, inject } from '@angular/core';
+import { NgComponentOutlet } from '@angular/common';
+import { MatButton, MatFabButton } from '@angular/material/button';
 import {
   MAT_DIALOG_DATA,
   MatDialog,
   MatDialogActions,
   MatDialogClose,
   MatDialogRef,
-  MatDialogTitle
-} from "@angular/material/dialog";
-import {MatTab, MatTabGroup, MatTabLabel} from '@angular/material/tabs';
-import {MatBadge} from '@angular/material/badge';
-import {DeviceDetails} from '../../model/scannable/device/deviceDetails';
-import {ScannableDetailsDto} from '../../model/scannable/scannableDetailsDto';
-import {MatIcon} from '@angular/material/icon';
-import {DeviceViewPageComponent} from '../device-view-page/device-view-page.component';
-import {ScannableViewPageComponent} from '../scannable-view-page/scannable-view-page.component';
-import {ContainerViewPageComponent} from '../container-view-page/container-view-page.component';
-import {ContainerDetails} from '../../model/scannable/container/containerDetails';
-import {TicketMiniListComponent} from '../ticket-mini-list/ticket-mini-list.component';
-import {RentMiniListComponent} from '../rent-mini-list/rent-mini-list.component';
-import {TicketDetails} from '../../model/ticket/ticketDetails';
-import {RentDetails} from '../../model/rent/rentDetails';
-import {DeviceService} from '../../services/device.service';
-import {ContainerService} from '../../services/container.service';
-import {TicketDialogData, TicketDialogResult, TicketEditDialogComponent} from '../ticket-edit-modal/ticket-edit-dialog.component';
+  MatDialogTitle,
+} from '@angular/material/dialog';
+import { MatTab, MatTabGroup, MatTabLabel } from '@angular/material/tabs';
+import { MatBadge } from '@angular/material/badge';
+import { DeviceDetails } from '../../model/scannable/device/deviceDetails';
+import { ScannableDetailsDto } from '../../model/scannable/scannableDetailsDto';
+import { MatIcon } from '@angular/material/icon';
+import { DeviceViewPageComponent } from '../device-view-page/device-view-page.component';
+import { ScannableViewPageComponent } from '../scannable-view-page/scannable-view-page.component';
+import { ContainerViewPageComponent } from '../container-view-page/container-view-page.component';
+import { ContainerDetails } from '../../model/scannable/container/containerDetails';
+import { TicketMiniListComponent } from '../ticket-mini-list/ticket-mini-list.component';
+import { RentMiniListComponent } from '../rent-mini-list/rent-mini-list.component';
+import { TicketDetails } from '../../model/ticket/ticketDetails';
+import { RentDetails } from '../../model/rent/rentDetails';
+import { DeviceService } from '../../services/device.service';
+import { ContainerService } from '../../services/container.service';
+import {
+  TicketDialogData,
+  TicketDialogResult,
+  TicketEditDialogComponent,
+} from '../ticket-edit-modal/ticket-edit-dialog.component';
 
 export type TabbedEditModalKind = 'device' | 'scannable' | 'container';
 
@@ -39,7 +43,9 @@ interface TabbedEditModalViewDefinition {
   tabLabel: string;
   title: string;
   editable: boolean;
-  toInputs: (item: DeviceDetails | ScannableDetailsDto | ContainerDetails) => Record<string, unknown>;
+  toInputs: (
+    item: DeviceDetails | ScannableDetailsDto | ContainerDetails,
+  ) => Record<string, unknown>;
 }
 
 // Add an entry here to support opening a new *-view-page type in this modal - no template changes needed.
@@ -50,7 +56,7 @@ const VIEW_DEFINITIONS: Record<TabbedEditModalKind, TabbedEditModalViewDefinitio
     tabLabel: 'Eszköz adatok',
     title: 'Eszköz adatai',
     editable: true,
-    toInputs: item => ({device: item}),
+    toInputs: (item) => ({ device: item }),
   },
   scannable: {
     component: ScannableViewPageComponent,
@@ -58,7 +64,7 @@ const VIEW_DEFINITIONS: Record<TabbedEditModalKind, TabbedEditModalViewDefinitio
     tabLabel: 'Tulajdonságok',
     title: 'Elem adatai',
     editable: false,
-    toInputs: item => ({scannable: item}),
+    toInputs: (item) => ({ scannable: item }),
   },
   container: {
     component: ContainerViewPageComponent,
@@ -66,7 +72,7 @@ const VIEW_DEFINITIONS: Record<TabbedEditModalKind, TabbedEditModalViewDefinitio
     tabLabel: 'Szállítóláda adatok',
     title: 'Szállítóláda adatai',
     editable: true,
-    toInputs: item => ({container: item}),
+    toInputs: (item) => ({ container: item }),
   },
 };
 
@@ -88,9 +94,16 @@ const VIEW_DEFINITIONS: Record<TabbedEditModalKind, TabbedEditModalViewDefinitio
     MatBadge,
   ],
   templateUrl: './tabbed-edit-modal.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './tabbed-edit-modal.component.scss',
 })
 export class TabbedEditModalComponent {
+  protected data = inject<TabbedEditModalData>(MAT_DIALOG_DATA);
+  private dialogRef = inject<MatDialogRef<TabbedEditModalComponent>>(MatDialogRef);
+  private deviceService = inject(DeviceService);
+  private containerService = inject(ContainerService);
+  private dialog = inject(MatDialog);
+
   protected readonly view: TabbedEditModalViewDefinition;
   protected readonly viewInputs: Record<string, unknown>;
   protected readonly title: string;
@@ -102,13 +115,9 @@ export class TabbedEditModalComponent {
   protected rentsLoading = true;
   protected activeRentsCount = 0;
 
-  constructor(
-    @Inject(MAT_DIALOG_DATA) protected data: TabbedEditModalData,
-    private dialogRef: MatDialogRef<TabbedEditModalComponent>,
-    private deviceService: DeviceService,
-    private containerService: ContainerService,
-    private dialog: MatDialog,
-  ) {
+  constructor() {
+    const data = this.data;
+
     this.view = VIEW_DEFINITIONS[data.kind];
     this.viewInputs = this.view.toInputs(data.item);
     this.title = this.view.title;
@@ -118,10 +127,14 @@ export class TabbedEditModalComponent {
     // lets the ticket-count badge show up before the user ever opens that tab.
     switch (data.kind) {
       case 'device':
-        this.deviceService.getTicketsOfDevice(data.item.id).subscribe(tickets => this.onTicketsLoaded(tickets));
+        this.deviceService
+          .getTicketsOfDevice(data.item.id)
+          .subscribe((tickets) => this.onTicketsLoaded(tickets));
         break;
       case 'container':
-        this.containerService.getTicketsOfContainer(data.item.id).subscribe(tickets => this.onTicketsLoaded(tickets));
+        this.containerService
+          .getTicketsOfContainer(data.item.id)
+          .subscribe((tickets) => this.onTicketsLoaded(tickets));
         break;
       default:
         this.ticketsLoading = false;
@@ -129,10 +142,14 @@ export class TabbedEditModalComponent {
 
     switch (data.kind) {
       case 'device':
-        this.deviceService.getRentsOfDevice(data.item.id).subscribe(rents => this.onRentsLoaded(rents));
+        this.deviceService
+          .getRentsOfDevice(data.item.id)
+          .subscribe((rents) => this.onRentsLoaded(rents));
         break;
       case 'container':
-        this.containerService.getRentsOfContainer(data.item.id).subscribe(rents => this.onRentsLoaded(rents));
+        this.containerService
+          .getRentsOfContainer(data.item.id)
+          .subscribe((rents) => this.onRentsLoaded(rents));
         break;
       default:
         this.rentsLoading = false;
@@ -145,8 +162,11 @@ export class TabbedEditModalComponent {
   }
 
   private onRentsLoaded(rents: RentDetails[]) {
-    this.activeRentsCount = rents.filter(rent => !rent.closed).length;
-    this.rents = rents.slice().sort((a, b) => b.outDate.getTime() - a.outDate.getTime()).slice(0, 10);
+    this.activeRentsCount = rents.filter((rent) => !rent.closed).length;
+    this.rents = rents
+      .slice()
+      .sort((a, b) => b.outDate.getTime() - a.outDate.getTime())
+      .slice(0, 10);
     this.rentsLoading = false;
   }
 
@@ -158,8 +178,8 @@ export class TabbedEditModalComponent {
     const addTicketDialog = this.dialog.open(TicketEditDialogComponent, {
       width: '60vw',
       maxWidth: '100vw',
-      position: {top: '40px'},
-      data: {presetScannable: this.data.item} as TicketDialogData,
+      position: { top: '40px' },
+      data: { presetScannable: this.data.item } as TicketDialogData,
     });
 
     addTicketDialog.afterClosed().subscribe((response?: TicketDialogResult) => {

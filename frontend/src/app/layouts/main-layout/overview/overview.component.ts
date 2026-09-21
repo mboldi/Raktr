@@ -1,19 +1,19 @@
-import {Component, effect} from '@angular/core';
-import {MatCard, MatCardContent, MatCardHeader, MatCardTitle} from '@angular/material/card';
-import {MatIcon} from '@angular/material/icon';
-import {MatFormField, MatInput, MatLabel, MatSuffix} from '@angular/material/input';
-import {MatFabButton, MatIconButton} from '@angular/material/button';
-import {FormControl, ReactiveFormsModule} from '@angular/forms';
-import {MatAutocomplete, MatAutocompleteTrigger, MatOption} from '@angular/material/autocomplete';
-import {ScannableService} from '../../../services/scannable.service';
-import {RentService} from '../../../services/rent.service';
-import {TicketService} from '../../../services/ticket.service';
-import {DeviceService} from '../../../services/device.service';
-import {ContainerService} from '../../../services/container.service';
-import {RentDetails} from '../../../model/rent/rentDetails';
-import {ScannableDetailsDto} from '../../../model/scannable/scannableDetailsDto';
-import {DeviceDetails} from '../../../model/scannable/device/deviceDetails';
-import {ContainerDetails} from '../../../model/scannable/container/containerDetails';
+import { Component, effect, ChangeDetectionStrategy, inject, OnInit } from '@angular/core';
+import { MatCard, MatCardContent, MatCardHeader, MatCardTitle } from '@angular/material/card';
+import { MatIcon } from '@angular/material/icon';
+import { MatFormField, MatInput, MatLabel, MatSuffix } from '@angular/material/input';
+import { MatFabButton, MatIconButton } from '@angular/material/button';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { MatAutocomplete, MatAutocompleteTrigger, MatOption } from '@angular/material/autocomplete';
+import { ScannableService } from '../../../services/scannable.service';
+import { RentService } from '../../../services/rent.service';
+import { TicketService } from '../../../services/ticket.service';
+import { DeviceService } from '../../../services/device.service';
+import { ContainerService } from '../../../services/container.service';
+import { RentDetails } from '../../../model/rent/rentDetails';
+import { ScannableDetailsDto } from '../../../model/scannable/scannableDetailsDto';
+import { DeviceDetails } from '../../../model/scannable/device/deviceDetails';
+import { ContainerDetails } from '../../../model/scannable/container/containerDetails';
 import {
   MatCell,
   MatCellDef,
@@ -24,31 +24,45 @@ import {
   MatHeaderRowDef,
   MatRow,
   MatRowDef,
-  MatTable
+  MatTable,
 } from '@angular/material/table';
-import {AsyncPipe, DatePipe, DecimalPipe} from '@angular/common';
-import {WindowWidthService} from '../../../services/windowWidth.service';
-import {MatProgressSpinner} from '@angular/material/progress-spinner';
-import {MatDialog} from '@angular/material/dialog';
+import { AsyncPipe, DatePipe, DecimalPipe } from '@angular/common';
+import { WindowWidthService } from '../../../services/windowWidth.service';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { MatDialog } from '@angular/material/dialog';
 import {
   DeviceDialogData,
-  DeviceEditDialogComponent
+  DeviceEditDialogComponent,
 } from '../../../components/device-edit-modal/device-edit-dialog.component';
 import {
   TicketDialogResult,
-  TicketEditDialogComponent
+  TicketEditDialogComponent,
 } from '../../../components/ticket-edit-modal/ticket-edit-dialog.component';
 import {
   TabbedEditModalComponent,
-  TabbedEditModalData
+  TabbedEditModalData,
 } from '../../../components/tabbed-edit-modal/tabbed-edit-modal.component';
-import {YesnoModalComponent} from '../../../components/yesno-modal/yesno-modal.component';
-import {MatSnackBar} from '@angular/material/snack-bar';
-import {map, Observable, startWith} from 'rxjs';
-import {Router} from '@angular/router';
+import { YesnoModalComponent } from '../../../components/yesno-modal/yesno-modal.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { map, Observable, startWith } from 'rxjs';
+import { Router } from '@angular/router';
 
-const ALL_COLUMNS: string[] = ['destination', 'issuer', 'renter', 'outDate', 'expectedReturnDate', 'itemCount', 'sumWeight'];
-const REDUCED_COLUMNS: string[] = ['destination', 'issuer', 'renter', 'outDate', 'expectedReturnDate'];
+const ALL_COLUMNS: string[] = [
+  'destination',
+  'issuer',
+  'renter',
+  'outDate',
+  'expectedReturnDate',
+  'itemCount',
+  'sumWeight',
+];
+const REDUCED_COLUMNS: string[] = [
+  'destination',
+  'issuer',
+  'renter',
+  'outDate',
+  'expectedReturnDate',
+];
 
 @Component({
   selector: 'app-overview',
@@ -84,33 +98,34 @@ const REDUCED_COLUMNS: string[] = ['destination', 'issuer', 'renter', 'outDate',
     MatOption,
   ],
   templateUrl: './overview.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './overview.component.scss',
 })
-export class OverviewComponent {
+export class OverviewComponent implements OnInit {
+  private windowService = inject(WindowWidthService);
+  private scannableService = inject(ScannableService);
+  private rentService = inject(RentService);
+  private ticketService = inject(TicketService);
+  private deviceService = inject(DeviceService);
+  private containerService = inject(ContainerService);
+  private dialog = inject(MatDialog);
+  private snackBar = inject(MatSnackBar);
+  private router = inject(Router);
+
   protected deviceSearchFormControl: FormControl = new FormControl();
   protected filteredSearchOptions: Observable<ScannableDetailsDto[]>;
 
-  protected scannableCount: number = 0;
-  protected ticketCount: number = 0;
+  protected scannableCount = 0;
+  protected ticketCount = 0;
 
   protected activeRents: RentDetails[] = [];
   protected displayedColumns: string[] = ALL_COLUMNS;
-  protected rents_loaded: boolean = false;
+  protected rents_loaded = false;
 
   private devices: DeviceDetails[] = [];
   private containers: ContainerDetails[] = [];
 
-  constructor(
-    private windowService: WindowWidthService,
-    private scannableService: ScannableService,
-    private rentService: RentService,
-    private ticketService: TicketService,
-    private deviceService: DeviceService,
-    private containerService: ContainerService,
-    private dialog: MatDialog,
-    private snackBar: MatSnackBar,
-    private router: Router,) {
-
+  constructor() {
     effect(() => {
       const width = this.windowService.windowWidth();
       this.displayedColumns = width >= 1200 ? ALL_COLUMNS : REDUCED_COLUMNS;
@@ -118,24 +133,26 @@ export class OverviewComponent {
 
     this.filteredSearchOptions = this.deviceSearchFormControl.valueChanges.pipe(
       startWith(''),
-      map(value => this.filterScannables(value || ''))
+      map((value) => this.filterScannables(value || '')),
     );
   }
 
   ngOnInit() {
     this.getScannables();
 
-    this.deviceService.getDevices().subscribe(devices => this.devices = devices);
-    this.containerService.getContainers().subscribe(containers => this.containers = containers);
+    this.deviceService.getDevices().subscribe((devices) => (this.devices = devices));
+    this.containerService.getContainers().subscribe((containers) => (this.containers = containers));
 
-    this.rentService.getRents().subscribe(rents => {
-      this.activeRents = rents.filter(rent => !rent.closed)
-        .sort((a, b) => a.expectedReturnDate > b.expectedReturnDate ? 1 : -1);  // sorting from first expected to come back to last
+    this.rentService.getRents().subscribe((rents) => {
+      this.activeRents = rents
+        .filter((rent) => !rent.closed)
+        .sort((a, b) => (a.expectedReturnDate > b.expectedReturnDate ? 1 : -1)); // sorting from first expected to come back to last
       this.rents_loaded = true;
     });
 
-    this.ticketService.getTicketCount().subscribe(
-      ticketCount => this.ticketCount = ticketCount);
+    this.ticketService
+      .getTicketCount()
+      .subscribe((ticketCount) => (this.ticketCount = ticketCount));
   }
 
   private get scannables(): ScannableDetailsDto[] {
@@ -148,14 +165,15 @@ export class OverviewComponent {
       return [];
     }
 
-    const deviceMatches = this.devices.filter(device =>
-      device.name.toLowerCase().includes(filter) ||
-      (device.manufacturer ?? '').toLowerCase().includes(filter) ||
-      (device.model ?? '').toLowerCase().includes(filter)
+    const deviceMatches = this.devices.filter(
+      (device) =>
+        device.name.toLowerCase().includes(filter) ||
+        (device.manufacturer ?? '').toLowerCase().includes(filter) ||
+        (device.model ?? '').toLowerCase().includes(filter),
     );
 
-    const containerMatches = this.containers.filter(container =>
-      container.name.toLowerCase().includes(filter)
+    const containerMatches = this.containers.filter((container) =>
+      container.name.toLowerCase().includes(filter),
     );
 
     return [...deviceMatches, ...containerMatches].slice(0, 5);
@@ -186,30 +204,30 @@ export class OverviewComponent {
       return;
     }
 
-    const matched = this.scannables.find(scannable => scannable.barcode === barcode);
+    const matched = this.scannables.find((scannable) => scannable.barcode === barcode);
 
     if (matched) {
       this.dialog.open(TabbedEditModalComponent, {
         width: '60vw',
         maxWidth: '100vw',
-        position: {top: '40px'},
-        data: {kind: 'scannable', item: matched} as TabbedEditModalData
+        position: { top: '40px' },
+        data: { kind: 'scannable', item: matched } as TabbedEditModalData,
       });
     } else {
       this.offerCreateDevice(barcode);
     }
 
-    this.deviceSearchFormControl.setValue("");
+    this.deviceSearchFormControl.setValue('');
   }
 
   private offerCreateDevice(barcode: string) {
     const confirmDialog = this.dialog.open(YesnoModalComponent, {
       width: '20vw',
       minWidth: '350px',
-      data: `Nem található eszköz "${barcode}" vonalkóddal. Szeretnél létrehozni egy újat?`
+      data: `Nem található eszköz "${barcode}" vonalkóddal. Szeretnél létrehozni egy újat?`,
     });
 
-    confirmDialog.afterClosed().subscribe(confirmed => {
+    confirmDialog.afterClosed().subscribe((confirmed) => {
       if (confirmed) {
         this.addDevice(barcode);
       }
@@ -228,12 +246,12 @@ export class OverviewComponent {
     const addDeviceDialog = this.dialog.open(DeviceEditDialogComponent, {
       width: '60vw',
       maxWidth: '100vw',
-      data: {presetBarcode} as DeviceDialogData,
+      data: { presetBarcode } as DeviceDialogData,
     });
 
-    addDeviceDialog.afterClosed().subscribe(result => {
+    addDeviceDialog.afterClosed().subscribe((result) => {
       if (result) {
-        this.snackBar.open(`Eszköz hozzáadva: ${result.name}`, "Oh yeah!", {
+        this.snackBar.open(`Eszköz hozzáadva: ${result.name}`, 'Oh yeah!', {
           duration: 3000,
           horizontalPosition: 'right',
           verticalPosition: 'top',
@@ -242,14 +260,14 @@ export class OverviewComponent {
 
         this.getScannables();
       }
-    })
+    });
   }
 
   protected addTicket() {
     const addTicketDialog = this.dialog.open(TicketEditDialogComponent, {
       width: '60vw',
       maxWidth: '100vw',
-      position: {top: '40px'},
+      position: { top: '40px' },
     });
 
     addTicketDialog.afterClosed().subscribe((response?: TicketDialogResult) => {
@@ -261,7 +279,9 @@ export class OverviewComponent {
           panelClass: ['success-snackbar'],
         });
 
-        this.ticketService.getTicketCount().subscribe(ticketCount => this.ticketCount = ticketCount);
+        this.ticketService
+          .getTicketCount()
+          .subscribe((ticketCount) => (this.ticketCount = ticketCount));
       }
     });
   }
@@ -271,7 +291,6 @@ export class OverviewComponent {
   }
 
   private getScannables() {
-    this.scannableService.getScannablesCount().subscribe(
-      count => this.scannableCount = count);
+    this.scannableService.getScannablesCount().subscribe((count) => (this.scannableCount = count));
   }
 }

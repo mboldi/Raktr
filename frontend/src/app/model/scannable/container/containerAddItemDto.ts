@@ -10,7 +10,7 @@ export class ContainerAddItemDto {
   toJson(): Record<string, unknown> {
     return {
       deviceId: this.deviceId,
-      quantity: this.quantity
+      quantity: this.quantity,
     };
   }
 }

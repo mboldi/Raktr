@@ -1,7 +1,8 @@
-import {DeviceStatus} from "./deviceStatus";
-import {ScannableDetailsDto} from "../scannableDetailsDto";
-import {Owner} from "../../owner/owner";
-import {UserDetails} from "../../user/userDetails";
+import { DeviceStatus } from './deviceStatus';
+import { ScannableDetailsDto } from '../scannableDetailsDto';
+import { Owner } from '../../owner/owner';
+import { UserDetails } from '../../user/userDetails';
+import { dateFromJson } from '../../jsonDate';
 
 export class DeviceDetails extends ScannableDetailsDto {
   manufacturer: string;
@@ -11,8 +12,8 @@ export class DeviceDetails extends ScannableDetailsDto {
   status: DeviceStatus;
   quantity: number;
   acquisitionSource: string;
-  acquisitionDate: Date;
-  warrantyEndDate: Date;
+  acquisitionDate: Date | null;
+  warrantyEndDate: Date | null;
   notes: string;
 
   constructor(
@@ -37,11 +38,26 @@ export class DeviceDetails extends ScannableDetailsDto {
     status: DeviceStatus,
     quantity: number,
     acquisitionSource: string,
-    acquisitionDate: Date,
-    warrantyEndDate: Date,
-    notes: string
+    acquisitionDate: Date | null,
+    warrantyEndDate: Date | null,
+    notes: string,
   ) {
-    super(id, assetTag, barcode, name, weight, publicRentable, deleted, category, location, owner, createdAt, createdBy, updatedAt, updatedBy);
+    super(
+      id,
+      assetTag,
+      barcode,
+      name,
+      weight,
+      publicRentable,
+      deleted,
+      category,
+      location,
+      owner,
+      createdAt,
+      createdBy,
+      updatedAt,
+      updatedBy,
+    );
     this.manufacturer = manufacturer;
     this.model = model;
     this.serialNumber = serialNumber;
@@ -77,9 +93,9 @@ export class DeviceDetails extends ScannableDetailsDto {
       json['status'] as DeviceStatus,
       json['quantity'] as number,
       json['acquisitionSource'] as string,
-      new Date(json['acquisitionDate'] as string),
-      new Date(json['warrantyEndDate'] as string),
-      json['notes'] as string
+      dateFromJson(json['acquisitionDate']),
+      dateFromJson(json['warrantyEndDate']),
+      json['notes'] as string,
     );
   }
 }

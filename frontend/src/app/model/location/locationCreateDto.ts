@@ -1,4 +1,3 @@
-
 export class LocationCreateDto {
   name: string;
 
@@ -7,7 +6,6 @@ export class LocationCreateDto {
   }
 
   static fromJson(json: Record<string, unknown>): LocationCreateDto {
-    return new LocationCreateDto(
-      json['name'] as string);
+    return new LocationCreateDto(json['name'] as string);
   }
 }

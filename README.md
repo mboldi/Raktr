@@ -17,8 +17,10 @@ Run the full stack (frontend, backend, and database) with Docker Compose:
 docker compose up --build
 ```
 
-- Frontend: `http://localhost:80`
-- Backend API: `http://localhost:8080` (Swagger UI at `/swagger-ui.html`)
+- Everything: `http://localhost:80` — a proxy container routes `/api` to the backend and the
+  rest to the frontend, so the stack is served under one host like it is in production.
+  See [`deploy/local-proxy.conf`](deploy/local-proxy.conf).
+- Backend directly: `http://localhost:8080` (Swagger UI at `/swagger-ui.html`)
 - PostgreSQL: `localhost:5432`
 
 ## Development

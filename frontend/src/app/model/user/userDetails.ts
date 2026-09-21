@@ -7,7 +7,15 @@ export class UserDetails {
   personalId: string;
   groups: string[];
 
-  constructor(uuid: string, userName: string, familyName: string, givenName: string, nickName: string, personalId: string, groups: string[]) {
+  constructor(
+    uuid: string,
+    userName: string,
+    familyName: string,
+    givenName: string,
+    nickName: string,
+    personalId: string,
+    groups: string[],
+  ) {
     this.uuid = uuid;
     this.familyName = familyName;
     this.givenName = givenName;
@@ -25,7 +33,7 @@ export class UserDetails {
       json['givenName'] as string,
       json['nickname'] as string,
       json['personalId'] as string,
-      Array.isArray(json['groups']) ? (json['groups'] as string[]) : []
+      Array.isArray(json['groups']) ? (json['groups'] as string[]) : [],
     );
   }
 }

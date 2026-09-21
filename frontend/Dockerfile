@@ -1,15 +1,18 @@
 FROM node:24-alpine AS build
 
+ENV COREPACK_ENABLE_DOWNLOAD_PROMPT=0
+RUN corepack enable pnpm
+
 USER node
 WORKDIR /home/node/app
 
 # install dependencies (cached unless package files change)
-COPY --chown=node package.json package-lock.json ./
-RUN npm install --no-fund --no-audit --loglevel warn
+COPY --chown=node package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+RUN pnpm install --frozen-lockfile
 
 # build the Angular app in production mode
 COPY --chown=node . .
-RUN npm run build -- --configuration production
+RUN pnpm build --configuration production
 
 FROM nginx:alpine-slim AS runtime
 

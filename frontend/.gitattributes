@@ -1,0 +1,15 @@
+# Check out text files with LF on every platform. Prettier is configured with
+# endOfLine: lf, so without this "pnpm format:check" fails on a fresh clone on
+# Windows, where git would otherwise convert everything to CRLF.
+* text=auto eol=lf
+
+# Keep these byte-exact.
+*.ico  binary
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.gif  binary
+*.webp binary
+*.woff  binary
+*.woff2 binary
+*.ttf  binary

@@ -1,4 +1,10 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, ViewChild} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ViewChild,
+  inject,
+} from '@angular/core';
 import {
   MAT_DIALOG_DATA,
   MatDialogActions,
@@ -6,44 +12,41 @@ import {
   MatDialogRef,
   MatDialogTitle,
 } from '@angular/material/dialog';
-import {MatButton} from '@angular/material/button';
-import {ContainerDetails} from '../../model/scannable/container/containerDetails';
-import {AddDeviceEvent, ContainerFormComponent} from '../container-form/container-form.component';
-import {ContainerCreateDto} from '../../model/scannable/container/containerCreateDto';
-import {ContainerUpdateDto} from '../../model/scannable/container/containerUpdateDto';
-import {ContainerAddDevicesDto} from '../../model/scannable/container/containerAddDevicesDto';
-import {ContainerAddItemDto} from '../../model/scannable/container/containerAddItemDto';
-import {MatSnackBar} from '@angular/material/snack-bar';
-import {ContainerService} from '../../services/container.service';
-import {DeviceDetails} from '../../model/scannable/device/deviceDetails';
-import {HttpErrorResponse} from '@angular/common/http';
-import {filter} from 'rxjs';
+import { MatButton } from '@angular/material/button';
+import { ContainerDetails } from '../../model/scannable/container/containerDetails';
+import { AddDeviceEvent, ContainerFormComponent } from '../container-form/container-form.component';
+import { ContainerCreateDto } from '../../model/scannable/container/containerCreateDto';
+import { ContainerUpdateDto } from '../../model/scannable/container/containerUpdateDto';
+import { ContainerAddDevicesDto } from '../../model/scannable/container/containerAddDevicesDto';
+import { ContainerAddItemDto } from '../../model/scannable/container/containerAddItemDto';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { ContainerService } from '../../services/container.service';
+import { DeviceDetails } from '../../model/scannable/device/deviceDetails';
+import { HttpErrorResponse } from '@angular/common/http';
+import { filter } from 'rxjs';
 
 @Component({
   selector: 'app-container-edit-modal',
-  imports: [
-    MatButton,
-    MatDialogActions,
-    MatDialogContent,
-    MatDialogTitle,
-    ContainerFormComponent,
-  ],
+  imports: [MatButton, MatDialogActions, MatDialogContent, MatDialogTitle, ContainerFormComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './container-edit-dialog.component.html',
   styleUrl: './container-edit-dialog.component.scss',
 })
 export class ContainerEditDialogComponent {
+  private dialogRef = inject<MatDialogRef<ContainerEditDialogComponent>>(MatDialogRef);
+  private snackBar = inject(MatSnackBar);
+  private containerService = inject(ContainerService);
+  private cdr = inject(ChangeDetectorRef);
+
   @ViewChild(ContainerFormComponent) containerFormComponent!: ContainerFormComponent;
 
-  protected isNew: boolean = true;
+  protected isNew = true;
   protected containerData: ContainerDetails | null;
   protected containerName: string | null = null;
 
-  constructor(@Inject(MAT_DIALOG_DATA) containerData: ContainerDetails,
-              private dialogRef: MatDialogRef<ContainerEditDialogComponent>,
-              private snackBar: MatSnackBar,
-              private containerService: ContainerService,
-              private cdr: ChangeDetectorRef) {
+  constructor() {
+    const containerData = inject<ContainerDetails>(MAT_DIALOG_DATA);
+
     this.containerData = containerData ?? null;
 
     if (containerData) {
@@ -55,9 +58,10 @@ export class ContainerEditDialogComponent {
     // dialog is dismissed by clicking outside it or pressing Escape, not just "Vissza".
     this.dialogRef.disableClose = true;
     this.dialogRef.backdropClick().subscribe(() => this.close());
-    this.dialogRef.keydownEvents().pipe(
-      filter(event => event.key === 'Escape')
-    ).subscribe(() => this.close());
+    this.dialogRef
+      .keydownEvents()
+      .pipe(filter((event) => event.key === 'Escape'))
+      .subscribe(() => this.close());
   }
 
   protected get title(): string {
@@ -65,7 +69,9 @@ export class ContainerEditDialogComponent {
       return 'Új szállítóláda hozzáadása';
     }
 
-    return this.containerName ? `Szállítóláda szerkesztése - ${this.containerName}` : 'Szállítóláda szerkesztése';
+    return this.containerName
+      ? `Szállítóláda szerkesztése - ${this.containerName}`
+      : 'Szállítóláda szerkesztése';
   }
 
   protected get isFormValid(): boolean {
@@ -106,10 +112,10 @@ export class ContainerEditDialogComponent {
         formValue.publicRentable,
         formValue.category,
         formValue.location,
-        formValue.owner.id
+        formValue.owner.id,
       );
 
-      this.containerService.createContainer(newContainer).subscribe(createdContainer => {
+      this.containerService.createContainer(newContainer).subscribe((createdContainer) => {
         this.dialogRef.close(createdContainer);
       });
     } else {
@@ -121,64 +127,72 @@ export class ContainerEditDialogComponent {
         formValue.publicRentable,
         formValue.category,
         formValue.location,
-        formValue.owner.id
+        formValue.owner.id,
       );
 
-      this.containerService.updateContainer(this.containerData!.id, updateContainer).subscribe(updatedContainer => {
-        this.snackBar.open(`${updatedContainer.name} mentve!`, "Kitűnő!", {
-          duration: 3000,
-          horizontalPosition: 'right',
-          verticalPosition: 'top',
-          panelClass: ['success-snackbar'],
-        });
+      this.containerService
+        .updateContainer(this.containerData!.id, updateContainer)
+        .subscribe((updatedContainer) => {
+          this.snackBar.open(`${updatedContainer.name} mentve!`, 'Kitűnő!', {
+            duration: 3000,
+            horizontalPosition: 'right',
+            verticalPosition: 'top',
+            panelClass: ['success-snackbar'],
+          });
 
-        this.dialogRef.close(updatedContainer);
-      });
+          this.dialogRef.close(updatedContainer);
+        });
     }
   }
 
-  protected onAddDevice({device, quantity}: AddDeviceEvent) {
+  protected onAddDevice({ device, quantity }: AddDeviceEvent) {
     if (!this.containerData) {
       return;
     }
 
-    this.containerService.addDevicesToContainer(
-      this.containerData.id,
-      new ContainerAddDevicesDto([new ContainerAddItemDto(device.id, quantity)])
-    ).subscribe({
-      next: updatedContainer => {
-        this.containerData = updatedContainer;
-        this.cdr.markForCheck();
+    this.containerService
+      .addDevicesToContainer(
+        this.containerData.id,
+        new ContainerAddDevicesDto([new ContainerAddItemDto(device.id, quantity)]),
+      )
+      .subscribe({
+        next: (updatedContainer) => {
+          this.containerData = updatedContainer;
+          this.cdr.markForCheck();
 
-        this.snackBar.open(`${device.name} hozzáadva a szállítóládához!`, "Remek!", {
-          duration: 3000,
-          horizontalPosition: 'right',
-          verticalPosition: 'top',
-          panelClass: ['success-snackbar'],
-        });
-      },
-      error: (error: HttpErrorResponse) => {
-        if (error.status === 409) {
-          this.snackBar.open(`A(z) ${device.name} eszköz már hozzá van adva a szállítóládához!`, "Értem", {
-            duration: 4000,
+          this.snackBar.open(`${device.name} hozzáadva a szállítóládához!`, 'Remek!', {
+            duration: 3000,
             horizontalPosition: 'right',
             verticalPosition: 'top',
-            panelClass: ['error-snackbar'],
+            panelClass: ['success-snackbar'],
           });
-        } else {
-          this.snackBar.open(`Nem sikerült hozzáadni a(z) ${device.name} eszközt!`, "Értem", {
-            duration: 4000,
-            horizontalPosition: 'right',
-            verticalPosition: 'top',
-            panelClass: ['error-snackbar'],
-          });
-        }
-      }
-    });
+        },
+        error: (error: HttpErrorResponse) => {
+          if (error.status === 409) {
+            this.snackBar.open(
+              `A(z) ${device.name} eszköz már hozzá van adva a szállítóládához!`,
+              'Értem',
+              {
+                duration: 4000,
+                horizontalPosition: 'right',
+                verticalPosition: 'top',
+                panelClass: ['error-snackbar'],
+              },
+            );
+          } else {
+            this.snackBar.open(`Nem sikerült hozzáadni a(z) ${device.name} eszközt!`, 'Értem', {
+              duration: 4000,
+              horizontalPosition: 'right',
+              verticalPosition: 'top',
+              panelClass: ['error-snackbar'],
+            });
+          }
+        },
+      });
   }
 
   protected onDeviceNotFound() {
-    this.snackBar.open('Nem található eszköz ezzel a vonalkóddal!', "Értem", {
+    this.snackBar.open('Nem található eszköz ezzel a vonalkóddal!', 'Értem', {
       duration: 3000,
       horizontalPosition: 'right',
       verticalPosition: 'top',
@@ -191,16 +205,18 @@ export class ContainerEditDialogComponent {
       return;
     }
 
-    this.containerService.removeDeviceFromContainer(this.containerData.id, device.id).subscribe(updatedContainer => {
-      this.containerData = updatedContainer;
-      this.cdr.markForCheck();
+    this.containerService
+      .removeDeviceFromContainer(this.containerData.id, device.id)
+      .subscribe((updatedContainer) => {
+        this.containerData = updatedContainer;
+        this.cdr.markForCheck();
 
-      this.snackBar.open(`${device.name} eltávolítva a szállítóládából!`, "Rendben", {
-        duration: 3000,
-        horizontalPosition: 'right',
-        verticalPosition: 'top',
-        panelClass: ['success-snackbar'],
+        this.snackBar.open(`${device.name} eltávolítva a szállítóládából!`, 'Rendben', {
+          duration: 3000,
+          horizontalPosition: 'right',
+          verticalPosition: 'top',
+          panelClass: ['success-snackbar'],
+        });
       });
-    });
   }
 }

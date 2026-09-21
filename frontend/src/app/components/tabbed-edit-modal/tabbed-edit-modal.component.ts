@@ -24,6 +24,7 @@ import { TicketDetails } from '../../model/ticket/ticketDetails';
 import { RentDetails } from '../../model/rent/rentDetails';
 import { DeviceService } from '../../services/device.service';
 import { ContainerService } from '../../services/container.service';
+import { AdminAccessService } from '../../services/adminAccess.service';
 import {
   TicketDialogData,
   TicketDialogResult,
@@ -102,11 +103,14 @@ export class TabbedEditModalComponent {
   private dialogRef = inject<MatDialogRef<TabbedEditModalComponent>>(MatDialogRef);
   private deviceService = inject(DeviceService);
   private containerService = inject(ContainerService);
+  private adminAccessService = inject(AdminAccessService);
   private dialog = inject(MatDialog);
 
   protected readonly view: TabbedEditModalViewDefinition;
   protected readonly viewInputs: Record<string, unknown>;
   protected readonly title: string;
+
+  protected canEdit = false;
 
   protected tickets: TicketDetails[] = [];
   protected ticketsLoading = true;
@@ -121,6 +125,8 @@ export class TabbedEditModalComponent {
     this.view = VIEW_DEFINITIONS[data.kind];
     this.viewInputs = this.view.toInputs(data.item);
     this.title = this.view.title;
+
+    this.adminAccessService.canCreateContent().subscribe((canCreate) => (this.canEdit = canCreate));
 
     // Fetched here rather than inside the tickets tab itself, since mat-tab-group only
     // instantiates a tab's content once it's actually selected - fetching eagerly is what

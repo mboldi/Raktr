@@ -172,7 +172,9 @@ export class ContainersComponent implements OnInit {
       this.loading = false;
 
       const containerId = this.route.snapshot.paramMap.get('id');
-      if (containerId) {
+      if (containerId === 'new') {
+        this.newContainer();
+      } else if (containerId) {
         const container = this.containers.find((c) => c.id === +containerId);
         if (container) {
           this.openContainer(container);
@@ -236,12 +238,16 @@ export class ContainersComponent implements OnInit {
   }
 
   protected newContainer() {
+    this.location.go('/inventory/containers/new');
+
     const editContainerDialog = this.dialog.open(ContainerEditDialogComponent, {
       width: '40vw',
       maxWidth: '100vw',
     });
 
     editContainerDialog.afterClosed().subscribe((result) => {
+      this.location.go('/inventory/containers');
+
       if (result) {
         this.containers.push(result);
         this.filterSortContainers();

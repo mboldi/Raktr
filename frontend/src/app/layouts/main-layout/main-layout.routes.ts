@@ -22,6 +22,7 @@ export const MAIN_LAYOUT_ROUTES: Routes = [
   { path: 'rents/new', component: EditRentComponent, canActivate: [createContentGuard] },
   { path: 'rents/:id', component: EditRentComponent },
   { path: 'tickets', component: TicketsComponent },
+  { path: 'tickets/new', component: TicketsComponent },
   { path: 'tickets/:id', component: TicketsComponent },
   { path: 'settings', component: SettingsComponent },
   {

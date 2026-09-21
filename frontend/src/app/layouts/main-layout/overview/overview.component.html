@@ -93,11 +93,9 @@
         <mat-card-content>
           <div>
             <p>{{ ticketCount }} <b>db</b></p>
-            @if (canCreate) {
-              <button matFab aria-label="Új hibajegy" (click)="addTicket()">
-                <mat-icon matSuffix>add</mat-icon>
-              </button>
-            }
+            <button matFab aria-label="Új hibajegy" (click)="addTicket()">
+              <mat-icon matSuffix>add</mat-icon>
+            </button>
           </div>
         </mat-card-content>
       </mat-card>

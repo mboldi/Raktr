@@ -188,7 +188,9 @@ export class DevicesComponent implements OnInit {
       this.loading = false;
 
       const deviceId = this.route.snapshot.paramMap.get('id');
-      if (deviceId) {
+      if (deviceId === 'new') {
+        this.newDevice();
+      } else if (deviceId) {
         const device = this.devices.find((d) => d.id === +deviceId);
         if (device) {
           this.openDevice(device);
@@ -269,12 +271,16 @@ export class DevicesComponent implements OnInit {
   }
 
   protected newDevice() {
+    this.location.go('/inventory/devices/new');
+
     const editDeviceDialog = this.dialog.open(DeviceEditDialogComponent, {
       width: '60vw',
       maxWidth: '100vw',
     });
 
     editDeviceDialog.afterClosed().subscribe((result) => {
+      this.location.go('/inventory/devices');
+
       if (result) {
         this.devices.push(result);
         this.updateMakersAndModels();

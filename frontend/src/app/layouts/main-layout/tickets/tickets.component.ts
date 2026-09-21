@@ -21,7 +21,6 @@ import {
 } from '@angular/material/table';
 import { MatFormField, MatInput, MatLabel, MatSuffix } from '@angular/material/input';
 import { TicketService } from '../../../services/ticket.service';
-import { AdminAccessService } from '../../../services/adminAccess.service';
 import { TicketDetails } from '../../../model/ticket/ticketDetails';
 import { TicketStatus } from '../../../model/ticket/ticketStatus';
 import { TicketSeverity } from '../../../model/ticket/ticketSeverity';
@@ -118,10 +117,8 @@ export class TicketsComponent implements OnInit {
   private snackBar = inject(MatSnackBar);
   private route = inject(ActivatedRoute);
   private location = inject(Location);
-  private adminAccessService = inject(AdminAccessService);
 
   protected loading = true;
-  protected canCreate = false;
   @ViewChild('optionSearchInput') optionSearchInput?: ElementRef<HTMLInputElement>;
 
   protected ticketSearchFormControl = new FormControl();
@@ -176,10 +173,6 @@ export class TicketsComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.adminAccessService
-      .canCreateContent()
-      .subscribe((canCreate) => (this.canCreate = canCreate));
-
     const readPageSize = this.localStorageService.read(`${environment.defaultPageSizeKey}`);
     if (readPageSize) {
       this.pageSize = parseInt(readPageSize);
@@ -193,7 +186,9 @@ export class TicketsComponent implements OnInit {
       this.loading = false;
 
       const ticketId = this.route.snapshot.paramMap.get('id');
-      if (ticketId) {
+      if (ticketId === 'new') {
+        this.newTicket();
+      } else if (ticketId) {
         const ticket = this.tickets.find((t) => t.id === +ticketId);
         if (ticket) {
           this.openTicket(ticket);
@@ -475,6 +470,8 @@ export class TicketsComponent implements OnInit {
   }
 
   protected newTicket() {
+    this.location.go('/tickets/new');
+
     const dialogRef = this.dialog.open(TicketEditDialogComponent, {
       width: '60vw',
       maxWidth: '100vw',
@@ -482,6 +479,8 @@ export class TicketsComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe((response?: TicketDialogResult) => {
+      this.location.go('/tickets');
+
       if (response) {
         this.tickets.push(response.ticket);
         this.updateCreators();

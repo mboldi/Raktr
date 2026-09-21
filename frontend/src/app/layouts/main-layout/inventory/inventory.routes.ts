@@ -2,12 +2,15 @@ import { Routes } from '@angular/router';
 import { CompositeItemsComponent } from './composite-items/composite-items.component';
 import { DevicesComponent } from './devices/devices.component';
 import { ContainersComponent } from './containers/containers.component';
+import { createContentGuard } from '../../../guards/create-content.guard';
 
 export const INVENTORY_ROUTES: Routes = [
   { path: '', redirectTo: 'devices', pathMatch: 'full' },
   { path: 'devices', component: DevicesComponent },
+  { path: 'devices/new', component: DevicesComponent, canActivate: [createContentGuard] },
   { path: 'devices/:id', component: DevicesComponent },
   { path: 'compositeitems', component: CompositeItemsComponent },
   { path: 'containers', component: ContainersComponent },
+  { path: 'containers/new', component: ContainersComponent, canActivate: [createContentGuard] },
   { path: 'containers/:id', component: ContainersComponent },
 ];

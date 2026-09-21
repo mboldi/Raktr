@@ -52,10 +52,8 @@ export class SettingsComponent implements OnInit {
   ngOnInit() {
     this.currentUsername = this.localStorageService.read('username') ?? '';
 
-    this.userService.getUser(this.currentUsername).subscribe((user) => {
-      this.admin = user.groups.includes(environment.adminGroupName);
-      this.populateUserForm(user);
-    });
+    this.adminAccessService.getCurrentUser().subscribe((user) => this.populateUserForm(user));
+    this.adminAccessService.isAdmin().subscribe((admin) => (this.admin = admin));
 
     this.configService.getConfigs().subscribe((configs) => {
       const forceEan8Config = configs.find((config) => config.key === environment.forceEan8Key);

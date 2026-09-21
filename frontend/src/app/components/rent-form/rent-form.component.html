@@ -163,7 +163,7 @@
       "
     >
       @if (!itemsLocked) {
-        <mat-form-field style="width: 350px" [class.status-mode-field]="selectedStatusMode">
+        <mat-form-field style="width: 400px" [class.status-mode-field]="selectedStatusMode">
           <mat-label>{{
             selectedStatusMode ? 'Eszköz keresése státusz módosításához' : 'Eszköz hozzáadása'
           }}</mat-label>
@@ -185,6 +185,7 @@
 
           <mat-autocomplete
             #autoNewScannable="matAutocomplete"
+            class="scannable-autocomplete-panel"
             (optionSelected)="onScannableOptionSelected()"
           >
             @for (option of filteredNewScannableOptions | async; track option.id) {
@@ -214,10 +215,33 @@
   </div>
 
   <div class="table-wrapper">
-    <table mat-table [dataSource]="filteredItems" class="mat-elevation-z8 full-width">
+    <mat-paginator
+      [pageSizeOptions]="[5, 10, 25, 50]"
+      [length]="filteredItems.length"
+      [pageSize]="itemsPageSize"
+      (page)="onItemsPage($event)"
+      showFirstLastButtons
+      aria-label="Oldalváltás"
+    >
+    </mat-paginator>
+
+    <table
+      mat-table
+      matSort
+      matSortActive="addedBy"
+      matSortDirection="desc"
+      (matSortChange)="onItemsSortChange($event)"
+      [dataSource]="pagedItems"
+      class="mat-elevation-z8 full-width"
+    >
       <ng-container matColumnDef="name">
-        <th mat-header-cell *matHeaderCellDef>Eszköz neve</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Eszköz neve</th>
         <td mat-cell *matCellDef="let item">{{ item.scannable.name }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="assetTag">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Azonosító</th>
+        <td mat-cell *matCellDef="let item">{{ item.scannable.assetTag }}</td>
       </ng-container>
 
       <ng-container matColumnDef="quantity">
@@ -226,7 +250,7 @@
       </ng-container>
 
       <ng-container matColumnDef="addedBy">
-        <th mat-header-cell *matHeaderCellDef>Hozzáadva</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Hozzáadva</th>
         <td mat-cell *matCellDef="let item">
           {{ item.createdBy.displayName }} - {{ item.createdAt | date: 'yyyy. MM. d. H:mm' }}
         </td>

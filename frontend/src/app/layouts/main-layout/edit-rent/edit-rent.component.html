@@ -12,7 +12,7 @@
     <mat-spinner class="list-loading-spinner mt-5"></mat-spinner>
   } @else {
     <div class="row pt-2">
-      <div class="col-xxl-10 col-xl-12">
+      <div class="col-xl-12">
         <mat-card class="card-with-icon">
           <mat-card-header style="padding-bottom: 16px">
             <h4 class="card-header-text bg-blue">Kivitel szerkesztése</h4>
@@ -28,7 +28,7 @@
                   }
                 </div>
                 <div class="col-auto pdf-actions">
-                  @if (!isNew && rent) {
+                  @if (!isNew && rent && !rent.closed) {
                     <button
                       matFab
                       extended

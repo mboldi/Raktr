@@ -15,11 +15,25 @@ export class QuantityInputDialogData {
   deviceName: string;
   maxQuantity: number;
   initialQuantity: number;
+  minQuantity: number;
+  promptText: string;
+  confirmLabel: string;
 
-  constructor(deviceName: string, maxQuantity: number, initialQuantity = 1) {
+  constructor(
+    deviceName: string,
+    maxQuantity: number,
+    initialQuantity = 1,
+    minQuantity = 1,
+    promptText?: string,
+    confirmLabel = 'Hozzáadás',
+  ) {
     this.deviceName = deviceName;
     this.maxQuantity = maxQuantity;
     this.initialQuantity = initialQuantity;
+    this.minQuantity = minQuantity;
+    this.promptText =
+      promptText ?? `${deviceName} - hány darabot adsz hozzá? (elérhető: ${maxQuantity} db)`;
+    this.confirmLabel = confirmLabel;
   }
 }
 
@@ -49,16 +63,20 @@ export class QuantityInputModalComponent {
 
   protected deviceName: string;
   protected maxQuantity: number;
+  protected promptText: string;
+  protected confirmLabel: string;
 
   constructor() {
     const data = this.data;
 
     this.deviceName = data.deviceName;
     this.maxQuantity = data.maxQuantity;
+    this.promptText = data.promptText;
+    this.confirmLabel = data.confirmLabel;
 
     this.quantityFormControl = new FormControl(data.initialQuantity, [
       Validators.required,
-      Validators.min(1),
+      Validators.min(data.minQuantity),
       Validators.max(data.maxQuantity),
     ]);
   }

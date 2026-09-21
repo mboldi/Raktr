@@ -143,13 +143,42 @@ export class EditRentComponent implements OnInit {
     return this.rentFormComponent?.rentForm?.valid ?? false;
   }
 
-  private refreshRent() {
+  private refreshRent(onComplete?: () => void) {
     if (this.rent === null) {
       return;
     }
 
     this.rentService.getRent(this.rent.id).subscribe((rent) => {
       this.rent = rent;
+      this.cdr.markForCheck();
+      onComplete?.();
+    });
+  }
+
+  /** Once every item on the rent has been marked returned, the actual return date defaults to
+   * today instead of leaving the user to set it by hand on the rent's own form. */
+  private setActualReturnDateIfFullyReturned() {
+    const rent = this.rent;
+    if (
+      !rent ||
+      rent.actualReturnDate ||
+      rent.rentItems.length === 0 ||
+      !rent.rentItems.every((item) => item.status === RentItemStatus.RETURNED)
+    ) {
+      return;
+    }
+
+    const updatedRent = new RentUpdateDto(
+      rent.destination,
+      rent.issuer.uuid,
+      rent.renterName,
+      rent.outDate,
+      rent.expectedReturnDate,
+      new Date(),
+    );
+
+    this.rentService.updateRent(rent.id, updatedRent).subscribe((updated) => {
+      this.rent = updated;
       this.cdr.markForCheck();
     });
   }
@@ -284,7 +313,7 @@ export class EditRentComponent implements OnInit {
       .updateRentItem(this.rent.id, item.id, new RentItemUpdateDto(status, quantity))
       .subscribe({
         next: () => {
-          this.refreshRent();
+          this.refreshRent(() => this.setActualReturnDateIfFullyReturned());
           this.notify(successMessage, 'success-snackbar', 'Remek!');
         },
         error: () => {

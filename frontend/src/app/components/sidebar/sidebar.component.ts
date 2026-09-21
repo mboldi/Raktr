@@ -155,7 +155,7 @@ export class SidebarComponent implements OnInit {
   private themeService = inject(ThemeService);
   private adminAccessService = inject(AdminAccessService);
 
-  menuItems: RouteInfo[] = [];
+  protected readonly menuItems = ROUTES;
 
   isDark = false;
   protected admin = false;
@@ -165,8 +165,6 @@ export class SidebarComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.menuItems = ROUTES.filter((menuItem) => menuItem);
-
     this.adminAccessService.isAdmin().subscribe((admin) => (this.admin = admin));
   }
 

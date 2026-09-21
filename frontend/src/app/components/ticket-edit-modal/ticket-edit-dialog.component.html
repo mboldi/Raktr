@@ -13,6 +13,13 @@
     (deviceNotFound)="onDeviceNotFound()"
   />
 
+  <div class="form-actions-row">
+    <button mat-button (click)="close()">Vissza</button>
+    <button mat-raised-button color="primary" [disabled]="isReadOnly" (click)="save()">
+      Mentés
+    </button>
+  </div>
+
   @if (!isNew && ticket) {
     <mat-divider class="section-divider"></mat-divider>
 
@@ -66,8 +73,3 @@
     </div>
   }
 </mat-dialog-content>
-
-<mat-dialog-actions align="end">
-  <button mat-button (click)="close()">Vissza</button>
-  <button mat-raised-button color="primary" [disabled]="isReadOnly" (click)="save()">Mentés</button>
-</mat-dialog-actions>

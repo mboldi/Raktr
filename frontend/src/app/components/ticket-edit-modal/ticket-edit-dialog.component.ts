@@ -7,7 +7,6 @@ import {
 } from '@angular/core';
 import {
   MAT_DIALOG_DATA,
-  MatDialogActions,
   MatDialogContent,
   MatDialogRef,
   MatDialogTitle,
@@ -51,7 +50,6 @@ export interface TicketDialogResult {
   selector: 'app-ticket-edit-modal',
   imports: [
     MatButton,
-    MatDialogActions,
     MatDialogContent,
     MatDialogTitle,
     TicketFormComponent,

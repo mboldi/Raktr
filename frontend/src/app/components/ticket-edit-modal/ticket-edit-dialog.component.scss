@@ -10,10 +10,18 @@
 }
 
 // The dialog opens pinned near the top of the viewport (position.top: 40px), so its title
-// row and actions bar both eat into the space actually available below that - without this,
-// the content only starts scrolling once the whole dialog has already overflowed the screen.
+// row eats into the space actually available below that - without this, the content only
+// starts scrolling once the whole dialog has already overflowed the screen.
 mat-dialog-content {
-  max-height: calc(100vh - 220px);
+  max-height: calc(100vh - 160px);
+}
+
+.form-actions-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 16px;
 }
 
 .status-chip {

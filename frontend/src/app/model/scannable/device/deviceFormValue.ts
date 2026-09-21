@@ -22,7 +22,7 @@ export interface DeviceFormValue {
   status: DeviceStatus;
   quantity: number;
   acquisitionSource: string;
-  acquisitionDate: Date;
-  warrantyEndDate: Date;
+  acquisitionDate: Date | null;
+  warrantyEndDate: Date | null;
   notes: string;
 }

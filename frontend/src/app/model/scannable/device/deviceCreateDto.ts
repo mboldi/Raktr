@@ -1,5 +1,6 @@
 import { DeviceStatus } from './deviceStatus';
 import { DeviceFormValue } from './deviceFormValue';
+import { dateToJson } from '../../jsonDate';
 
 export class DeviceCreateDto {
   assetTag: string;
@@ -17,8 +18,8 @@ export class DeviceCreateDto {
   status: DeviceStatus;
   quantity: number;
   acquisitionSource: string;
-  acquisitionDate: Date;
-  warrantyEndDate: Date;
+  acquisitionDate: Date | null;
+  warrantyEndDate: Date | null;
   notes: string;
 
   constructor(
@@ -37,8 +38,8 @@ export class DeviceCreateDto {
     status: DeviceStatus,
     quantity: number,
     acquisitionSource: string,
-    acquisitionDate: Date,
-    warrantyEndDate: Date,
+    acquisitionDate: Date | null,
+    warrantyEndDate: Date | null,
     notes: string,
   ) {
     this.assetTag = assetTag;
@@ -78,8 +79,8 @@ export class DeviceCreateDto {
       status: this.status,
       quantity: this.quantity,
       acquisitionSource: this.acquisitionSource,
-      acquisitionDate: this.acquisitionDate ? this.acquisitionDate.toISOString().split('T')[0] : '',
-      warrantyEndDate: this.warrantyEndDate ? this.warrantyEndDate.toISOString().split('T')[0] : '',
+      acquisitionDate: dateToJson(this.acquisitionDate),
+      warrantyEndDate: dateToJson(this.warrantyEndDate),
       notes: this.notes,
     };
   }

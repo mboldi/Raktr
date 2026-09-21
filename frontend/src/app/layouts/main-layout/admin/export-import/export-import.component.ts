@@ -362,7 +362,7 @@ export class ExportImportComponent {
       this.cellToNumber(row['quantity']) ?? environment.defaultDeviceQuantity,
       this.cellToString(row['acquisitionSource']),
       acquisitionDate,
-      this.cellToDate(row['warrantyEndDate']) as Date,
+      this.cellToDate(row['warrantyEndDate']) ?? null,
       this.cellToString(row['notes']),
     );
   }

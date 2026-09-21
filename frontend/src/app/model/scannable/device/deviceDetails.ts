@@ -2,6 +2,7 @@ import { DeviceStatus } from './deviceStatus';
 import { ScannableDetailsDto } from '../scannableDetailsDto';
 import { Owner } from '../../owner/owner';
 import { UserDetails } from '../../user/userDetails';
+import { dateFromJson } from '../../jsonDate';
 
 export class DeviceDetails extends ScannableDetailsDto {
   manufacturer: string;
@@ -11,8 +12,8 @@ export class DeviceDetails extends ScannableDetailsDto {
   status: DeviceStatus;
   quantity: number;
   acquisitionSource: string;
-  acquisitionDate: Date;
-  warrantyEndDate: Date;
+  acquisitionDate: Date | null;
+  warrantyEndDate: Date | null;
   notes: string;
 
   constructor(
@@ -37,8 +38,8 @@ export class DeviceDetails extends ScannableDetailsDto {
     status: DeviceStatus,
     quantity: number,
     acquisitionSource: string,
-    acquisitionDate: Date,
-    warrantyEndDate: Date,
+    acquisitionDate: Date | null,
+    warrantyEndDate: Date | null,
     notes: string,
   ) {
     super(
@@ -92,8 +93,8 @@ export class DeviceDetails extends ScannableDetailsDto {
       json['status'] as DeviceStatus,
       json['quantity'] as number,
       json['acquisitionSource'] as string,
-      new Date(json['acquisitionDate'] as string),
-      new Date(json['warrantyEndDate'] as string),
+      dateFromJson(json['acquisitionDate']),
+      dateFromJson(json['warrantyEndDate']),
       json['notes'] as string,
     );
   }

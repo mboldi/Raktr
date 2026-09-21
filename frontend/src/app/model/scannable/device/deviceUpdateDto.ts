@@ -1,5 +1,6 @@
 import { DeviceStatus } from './deviceStatus';
 import { DeviceFormValue } from './deviceFormValue';
+import { dateToJson } from '../../jsonDate';
 
 export class DeviceUpdateDto {
   assetTag: string;
@@ -17,8 +18,8 @@ export class DeviceUpdateDto {
   status: DeviceStatus;
   quantity: number;
   acquisitionSource: string;
-  acquisitionDate: Date;
-  warrantyEndDate: Date;
+  acquisitionDate: Date | null;
+  warrantyEndDate: Date | null;
   notes: string;
 
   constructor(
@@ -37,8 +38,8 @@ export class DeviceUpdateDto {
     status: DeviceStatus,
     quantity: number,
     acquisitionSource: string,
-    acquisitionDate: Date,
-    warrantyEndDate: Date,
+    acquisitionDate: Date | null,
+    warrantyEndDate: Date | null,
     notes: string,
   ) {
     this.assetTag = assetTag;
@@ -56,8 +57,8 @@ export class DeviceUpdateDto {
     this.status = status;
     this.quantity = quantity;
     this.acquisitionSource = acquisitionSource;
-    this.acquisitionDate = new Date(acquisitionDate);
-    this.warrantyEndDate = new Date(warrantyEndDate);
+    this.acquisitionDate = acquisitionDate;
+    this.warrantyEndDate = warrantyEndDate;
     this.notes = notes;
   }
 
@@ -78,8 +79,8 @@ export class DeviceUpdateDto {
       status: this.status,
       quantity: this.quantity,
       acquisitionSource: this.acquisitionSource,
-      acquisitionDate: this.acquisitionDate.toISOString().split('T')[0],
-      warrantyEndDate: this.warrantyEndDate.toISOString().split('T')[0],
+      acquisitionDate: dateToJson(this.acquisitionDate),
+      warrantyEndDate: dateToJson(this.warrantyEndDate),
       notes: this.notes,
     };
   }
@@ -101,8 +102,8 @@ export class DeviceUpdateDto {
       formValue.status,
       formValue.quantity,
       formValue.acquisitionSource,
-      new Date(formValue.acquisitionDate),
-      new Date(formValue.warrantyEndDate),
+      formValue.acquisitionDate,
+      formValue.warrantyEndDate,
       formValue.notes,
     );
   }

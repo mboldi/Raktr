@@ -114,14 +114,14 @@
       "allowedVersions": "<6.1"
     },
     {
-      "description": "jasmine-core 7 freezes the global describe/it bindings, which breaks zone.js test patching",
+      "description": "Vitest is capped by the Angular unit-test builder peer range \"^4.0.8\"",
       "matchManagers": [
         "npm"
       ],
       "matchPackageNames": [
-        "jasmine-core"
+        "vitest"
       ],
-      "allowedVersions": "<7"
+      "allowedVersions": "<5"
     },
     {
       "description": "GitHub Actions",

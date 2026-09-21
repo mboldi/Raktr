@@ -7,7 +7,7 @@ import { MatProgressBar } from '@angular/material/progress-bar';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { HttpErrorResponse } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
-import type { CellValue } from 'exceljs';
+import type { Column, Value } from 'write-excel-file/browser';
 import { DeviceService } from '../../../../services/device.service';
 import { CategoryService } from '../../../../services/category.service';
 import { LocationService } from '../../../../services/location.service';
@@ -29,6 +29,50 @@ interface ImportFailure {
   name: string;
   message: string;
 }
+
+type CellValue = string | number | boolean | Date;
+
+function deviceColumn(
+  header: string,
+  width: number,
+  value: (device: DeviceDetails) => Value | null | undefined,
+  format?: string,
+): Column<DeviceDetails> {
+  return {
+    header: { value: header, fontWeight: 'bold' },
+    width,
+    cell: (device) => {
+      const cellValue = value(device);
+      return cellValue === null || cellValue === undefined ? null : { value: cellValue, format };
+    },
+  };
+}
+
+const DEVICE_EXPORT_COLUMNS: Column<DeviceDetails>[] = [
+  deviceColumn('assetTag', 16, (device) => device.assetTag),
+  deviceColumn('barcode', 14, (device) => device.barcode),
+  deviceColumn('name', 28, (device) => device.name),
+  deviceColumn('manufacturer', 16, (device) => device.manufacturer),
+  deviceColumn('model', 16, (device) => device.model),
+  deviceColumn('serialNumber', 18, (device) => device.serialNumber),
+  deviceColumn('quantity', 10, (device) => device.quantity),
+  deviceColumn('category', 16, (device) => device.category),
+  deviceColumn('location', 16, (device) => device.location),
+  deviceColumn('owner', 16, (device) => device.owner?.name),
+  deviceColumn('weight', 10, (device) => device.weight),
+  deviceColumn('estimatedValue', 14, (device) => device.estimatedValue),
+  deviceColumn('status', 16, (device) => device.status),
+  deviceColumn('publicRentable', 12, (device) => device.publicRentable),
+  deviceColumn('acquisitionSource', 18, (device) => device.acquisitionSource),
+  deviceColumn('acquisitionDate', 16, (device) => device.acquisitionDate, 'yyyy. mm. dd.'),
+  deviceColumn('warrantyEndDate', 16, (device) => device.warrantyEndDate, 'yyyy. mm. dd.'),
+  deviceColumn('notes', 30, (device) => device.notes),
+  deviceColumn('deleted', 10, (device) => device.deleted),
+  deviceColumn('createdAt', 18, (device) => device.createdAt, 'yyyy. mm. dd. hh:mm'),
+  deviceColumn('createdBy', 16, (device) => device.createdBy?.nickname),
+  deviceColumn('updatedAt', 18, (device) => device.updatedAt, 'yyyy. mm. dd. hh:mm'),
+  deviceColumn('updatedBy', 16, (device) => device.updatedBy?.nickname),
+];
 
 @Component({
   selector: 'app-export-import',
@@ -78,81 +122,12 @@ export class ExportImportComponent {
   }
 
   private async downloadDevicesXlsx(devices: DeviceDetails[]) {
-    const { default: ExcelJS } = await import('exceljs');
-    const workbook = new ExcelJS.Workbook();
-    const sheet = workbook.addWorksheet('Eszközök');
+    const { default: writeExcelFile } = await import('write-excel-file/browser');
 
-    sheet.columns = [
-      { header: 'assetTag', key: 'assetTag', width: 16 },
-      { header: 'barcode', key: 'barcode', width: 14 },
-      { header: 'name', key: 'name', width: 28 },
-      { header: 'manufacturer', key: 'manufacturer', width: 16 },
-      { header: 'model', key: 'model', width: 16 },
-      { header: 'serialNumber', key: 'serialNumber', width: 18 },
-      { header: 'quantity', key: 'quantity', width: 10 },
-      { header: 'category', key: 'category', width: 16 },
-      { header: 'location', key: 'location', width: 16 },
-      { header: 'owner', key: 'owner', width: 16 },
-      { header: 'weight', key: 'weight', width: 10 },
-      { header: 'estimatedValue', key: 'estimatedValue', width: 14 },
-      { header: 'status', key: 'status', width: 16 },
-      { header: 'publicRentable', key: 'publicRentable', width: 12 },
-      { header: 'acquisitionSource', key: 'acquisitionSource', width: 18 },
-      { header: 'acquisitionDate', key: 'acquisitionDate', width: 16 },
-      { header: 'warrantyEndDate', key: 'warrantyEndDate', width: 16 },
-      { header: 'notes', key: 'notes', width: 30 },
-      { header: 'deleted', key: 'deleted', width: 10 },
-      { header: 'createdAt', key: 'createdAt', width: 18 },
-      { header: 'createdBy', key: 'createdBy', width: 16 },
-      { header: 'updatedAt', key: 'updatedAt', width: 18 },
-      { header: 'updatedBy', key: 'updatedBy', width: 16 },
-    ];
-    sheet.getRow(1).font = { bold: true };
-
-    devices.forEach((device) =>
-      sheet.addRow({
-        assetTag: device.assetTag,
-        barcode: device.barcode,
-        name: device.name,
-        manufacturer: device.manufacturer,
-        model: device.model,
-        serialNumber: device.serialNumber,
-        quantity: device.quantity,
-        category: device.category,
-        location: device.location,
-        owner: device.owner?.name,
-        weight: device.weight,
-        estimatedValue: device.estimatedValue,
-        status: device.status,
-        publicRentable: device.publicRentable,
-        acquisitionSource: device.acquisitionSource,
-        acquisitionDate: device.acquisitionDate,
-        warrantyEndDate: device.warrantyEndDate,
-        notes: device.notes,
-        deleted: device.deleted,
-        createdAt: device.createdAt,
-        createdBy: device.createdBy?.nickname,
-        updatedAt: device.updatedAt,
-        updatedBy: device.updatedBy?.nickname,
-      }),
-    );
-
-    sheet.getColumn('acquisitionDate').numFmt = 'yyyy. mm. dd.';
-    sheet.getColumn('warrantyEndDate').numFmt = 'yyyy. mm. dd.';
-    sheet.getColumn('createdAt').numFmt = 'yyyy. mm. dd. hh:mm';
-    sheet.getColumn('updatedAt').numFmt = 'yyyy. mm. dd. hh:mm';
-
-    const buffer = await workbook.xlsx.writeBuffer();
-    const blob = new Blob([buffer], {
-      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-    });
-
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `eszkozok_${new Date().toISOString().split('T')[0]}.xlsx`;
-    link.click();
-    URL.revokeObjectURL(url);
+    await writeExcelFile(devices, {
+      sheet: 'Eszközök',
+      columns: DEVICE_EXPORT_COLUMNS,
+    }).toFile(`eszkozok_${new Date().toISOString().split('T')[0]}.xlsx`);
   }
 
   protected onFileSelected(event: Event) {
@@ -237,38 +212,25 @@ export class ExportImportComponent {
   }
 
   private async parseDevicesFile(file: File): Promise<Record<string, CellValue>[]> {
-    const buffer = await file.arrayBuffer();
-    const { default: ExcelJS } = await import('exceljs');
-    const workbook = new ExcelJS.Workbook();
-    await workbook.xlsx.load(buffer);
+    const { readSheet } = await import('read-excel-file/universal');
+    const [headerRow = [], ...dataRows] = (await readSheet(file)) as (CellValue | null)[][];
 
-    const sheet = workbook.worksheets[0];
-    if (!sheet) {
-      return [];
-    }
+    const headers = headerRow.map((cell) => this.cellToString(cell));
 
-    const headers: string[] = [];
-    sheet.getRow(1).eachCell({ includeEmpty: true }, (cell, colNumber) => {
-      headers[colNumber] = this.cellToString(cell.value);
-    });
-
-    const rows: Record<string, CellValue>[] = [];
-    sheet.eachRow((row, rowNumber) => {
-      if (rowNumber === 1) {
-        return;
-      }
-
-      const record: Record<string, CellValue> = {};
-      row.eachCell({ includeEmpty: true }, (cell, colNumber) => {
-        const header = headers[colNumber];
-        if (header) {
-          record[header] = cell.value;
-        }
-      });
-      rows.push(record);
-    });
-
-    return rows;
+    return (
+      dataRows
+        .filter((row) => row.some((cell) => this.cellToString(cell) !== ''))
+        .map((row) => {
+          const record: Record<string, CellValue> = {};
+          row.forEach((cell, index) => {
+            const header = headers[index];
+            if (header && cell !== null) {
+              record[header] = cell;
+            }
+          });
+          return record;
+        })
+    );
   }
 
   private async ensureCategoriesLocationsOwnersExist(
@@ -388,12 +350,9 @@ export class ExportImportComponent {
     }
   }
 
-  private cellToString(value: CellValue | undefined): string {
+  private cellToString(value: CellValue | null | undefined): string {
     if (value === null || value === undefined) {
       return '';
-    }
-    if (typeof value === 'object' && 'text' in value) {
-      return String((value as { text?: unknown }).text ?? '').trim();
     }
     return String(value).trim();
   }

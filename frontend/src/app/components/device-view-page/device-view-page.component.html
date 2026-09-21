@@ -77,7 +77,7 @@
       <div class="field-grid">
         <div class="field">
           <span class="label">Tömeg</span>
-          <span class="value">{{ device.weight }}&nbsp;g</span>
+          <span class="value">{{ device.weight / 1000 | number: '1.0-2' }}&nbsp;kg</span>
         </div>
         <div class="field">
           <span class="label">Érték</span>

@@ -18,8 +18,6 @@ export class AppComponent implements OnInit {
     this.oidcSecurityService.checkAuth().subscribe(({ isAuthenticated, userData }) => {
       if (isAuthenticated) {
         localStorage.setItem('username', userData['preferred_username']);
-        //console.log('isAuthenticated', isAuthenticated);
-        //console.log('userData', userData);
       }
     });
   }

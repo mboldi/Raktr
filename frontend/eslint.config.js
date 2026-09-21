@@ -42,6 +42,9 @@ module.exports = defineConfig([
       // to OnPush changes runtime behaviour and has to be done and verified
       // component by component, so the rule stays off until that happens.
       '@angular-eslint/prefer-on-push-component-change-detection': 'off',
+      // warn and error are real diagnostics and are kept; log, debug and info
+      // are the ones that get left behind after debugging and ship to users.
+      'no-console': ['error', { allow: ['warn', 'error'] }],
     },
   },
   {

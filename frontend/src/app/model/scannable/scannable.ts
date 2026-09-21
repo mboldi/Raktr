@@ -45,7 +45,6 @@ export class Scannable {
   }
 
   toJson(): Record<string, unknown> {
-    console.log(this);
     return {
       id: this.id,
       assetTag: this.assetTag,

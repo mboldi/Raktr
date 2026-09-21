@@ -49,10 +49,7 @@ export class OwnerService {
     return this.http
       .delete(`${environment.apiUrl}/v1/owners/${ownerId}`, { observe: 'response' })
       .pipe(
-        map((response) => {
-          console.log(response);
-          return response.status === 204;
-        }),
+        map((response) => response.status === 204),
         catchError((error) => {
           if (error.status === 409) {
             return of(false);

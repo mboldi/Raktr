@@ -6,6 +6,7 @@ import { MatButton } from '@angular/material/button';
 import { MatCheckbox, MatCheckboxChange } from '@angular/material/checkbox';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { UserService } from '../../../services/user.service';
+import { AdminAccessService } from '../../../services/adminAccess.service';
 import { ConfigService } from '../../../services/config.service';
 import { LocalStorageService } from '../../../services/localStorage.service';
 import { UserDetails } from '../../../model/user/userDetails';
@@ -32,6 +33,7 @@ import { environment } from '../../../../environments/environment';
 })
 export class SettingsComponent implements OnInit {
   private userService = inject(UserService);
+  private adminAccessService = inject(AdminAccessService);
   private configService = inject(ConfigService);
   private localStorageService = inject(LocalStorageService);
   private snackBar = inject(MatSnackBar);
@@ -75,6 +77,8 @@ export class SettingsComponent implements OnInit {
         new UserUpdateDto(this.nickNameFormControl.value, this.personalIdFormControl.value),
       )
       .subscribe((user) => {
+        this.adminAccessService.setCurrentUser(user);
+
         this.nickNameFormControl.setValue(user.nickname);
         this.personalIdFormControl.setValue(user.personalId);
 

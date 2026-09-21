@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
 import { UserService } from './user.service';
 import { LocalStorageService } from './localStorage.service';
@@ -23,6 +23,10 @@ export class AdminAccessService {
     }
 
     return this.currentUser$;
+  }
+
+  setCurrentUser(user: UserDetails): void {
+    this.currentUser$ = of(user);
   }
 
   isAdmin(): Observable<boolean> {

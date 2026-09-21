@@ -111,10 +111,14 @@ export class ExportImportComponent {
     this.deviceService.getDevices().subscribe({
       next: (devices) => {
         this.downloadDevicesXlsx(devices)
-          .catch(() => this.notifyError('Nem sikerült létrehozni az exportot!'))
+          .catch((error: unknown) => {
+            console.error('Device export failed:', error);
+            this.notifyError('Nem sikerült létrehozni az exportot!');
+          })
           .finally(() => (this.exportingDevices = false));
       },
-      error: () => {
+      error: (error: unknown) => {
+        console.error('Failed to load devices for export:', error);
         this.exportingDevices = false;
         this.notifyError('Nem sikerült létrehozni az exportot!');
       },
@@ -124,10 +128,16 @@ export class ExportImportComponent {
   private async downloadDevicesXlsx(devices: DeviceDetails[]) {
     const { default: writeExcelFile } = await import('write-excel-file/browser');
 
-    await writeExcelFile(devices, {
-      sheet: 'Eszközök',
-      columns: DEVICE_EXPORT_COLUMNS,
-    }).toFile(`eszkozok_${new Date().toISOString().split('T')[0]}.xlsx`);
+    // write-excel-file only accepts plain objects for its `Object[] + columns` API (it checks
+    // `value.constructor === Object`) - `DeviceDetails` instances fail that check and get
+    // rejected as an invalid first argument, so they're copied into plain objects here first.
+    await writeExcelFile(
+      devices.map((device) => ({ ...device })),
+      {
+        sheet: 'Eszközök',
+        columns: DEVICE_EXPORT_COLUMNS,
+      },
+    ).toFile(`eszkozok_${new Date().toISOString().split('T')[0]}.xlsx`);
   }
 
   protected onFileSelected(event: Event) {
@@ -217,20 +227,18 @@ export class ExportImportComponent {
 
     const headers = headerRow.map((cell) => this.cellToString(cell));
 
-    return (
-      dataRows
-        .filter((row) => row.some((cell) => this.cellToString(cell) !== ''))
-        .map((row) => {
-          const record: Record<string, CellValue> = {};
-          row.forEach((cell, index) => {
-            const header = headers[index];
-            if (header && cell !== null) {
-              record[header] = cell;
-            }
-          });
-          return record;
-        })
-    );
+    return dataRows
+      .filter((row) => row.some((cell) => this.cellToString(cell) !== ''))
+      .map((row) => {
+        const record: Record<string, CellValue> = {};
+        row.forEach((cell, index) => {
+          const header = headers[index];
+          if (header && cell !== null) {
+            record[header] = cell;
+          }
+        });
+        return record;
+      });
   }
 
   private async ensureCategoriesLocationsOwnersExist(

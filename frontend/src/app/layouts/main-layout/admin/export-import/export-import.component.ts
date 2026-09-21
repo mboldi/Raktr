@@ -301,6 +301,10 @@ export class ExportImportComponent {
     let assetTag = this.cellToString(row['assetTag']);
     let barcode = this.cellToString(row['barcode']);
 
+    if (!assetTag && barcode) {
+      assetTag = barcode;
+    }
+
     if (!assetTag || !barcode) {
       const generated = await this.generateNextFreeBarcode();
       if (!barcode) {

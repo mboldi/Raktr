@@ -7,7 +7,7 @@ import { MatProgressBar } from '@angular/material/progress-bar';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { HttpErrorResponse } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
-import { CellValue, Workbook } from 'exceljs';
+import type { CellValue } from 'exceljs';
 import { DeviceService } from '../../../../services/device.service';
 import { CategoryService } from '../../../../services/category.service';
 import { LocationService } from '../../../../services/location.service';
@@ -78,7 +78,8 @@ export class ExportImportComponent {
   }
 
   private async downloadDevicesXlsx(devices: DeviceDetails[]) {
-    const workbook = new Workbook();
+    const { default: ExcelJS } = await import('exceljs');
+    const workbook = new ExcelJS.Workbook();
     const sheet = workbook.addWorksheet('Eszközök');
 
     sheet.columns = [
@@ -237,7 +238,8 @@ export class ExportImportComponent {
 
   private async parseDevicesFile(file: File): Promise<Record<string, CellValue>[]> {
     const buffer = await file.arrayBuffer();
-    const workbook = new Workbook();
+    const { default: ExcelJS } = await import('exceljs');
+    const workbook = new ExcelJS.Workbook();
     await workbook.xlsx.load(buffer);
 
     const sheet = workbook.worksheets[0];

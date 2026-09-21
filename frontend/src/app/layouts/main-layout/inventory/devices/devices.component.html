@@ -1,8 +1,15 @@
 <mat-card class="list-header-card bg-blue">
-  <h2>Eszközök kezelése</h2>
+  <div class="header-title-row">
+    <h2>Eszközök kezelése</h2>
+
+    <button matFab extended class="add-button" (click)="newDevice()">
+      <mat-icon>add</mat-icon>
+      Új hozzáadása
+    </button>
+  </div>
 
   <div class="list-header-actions-row">
-    <div style="display: flex; flex-direction: row; align-items: start">
+    <div class="search-and-clear" style="display: flex; flex-direction: row; align-items: center">
       <mat-form-field class="search-box">
         <mat-label>Keresés</mat-label>
         <input
@@ -18,128 +25,84 @@
         }
       </mat-form-field>
 
-      <div style="display: flex; align-items: center">
-        <div class="filter-anchor">
-          <button
-            matFab
-            class="filter-button"
-            [class.filter-button-active]="hasActiveFilters()"
-            (click)="toggleFilterPanel()"
+      @if (hasActiveFilters()) {
+        <button
+          mat-icon-button
+          class="clear-filters-button mb-4"
+          (click)="clearFilters()"
+          aria-label="Szűrők törlése"
+          matTooltip="Szűrők törlése"
+        >
+          <mat-icon>filter_alt_off</mat-icon>
+        </button>
+      }
+    </div>
+
+    @if (hasActiveFilters()) {
+      <mat-chip-set class="active-filters-row" aria-label="Aktív szűrők">
+        @for (chip of activeFilterChips(); track chip.label) {
+          <mat-chip [removable]="true" (removed)="chip.remove()">
+            {{ chip.label }}
+            <button matChipRemove aria-label="Szűrő eltávolítása">
+              <mat-icon>cancel</mat-icon>
+            </button>
+          </mat-chip>
+        }
+      </mat-chip-set>
+    }
+  </div>
+</mat-card>
+
+<ng-template #checkboxFilterPopover let-label="label" let-options="options" let-selected="selected">
+  <div class="filter-backdrop" aria-hidden="true" (click)="closeFilterPanel()"></div>
+  <mat-card class="filter-panel" [class.filter-panel-right]="panelAlignRight">
+    <div class="filter-panel-header">
+      <h3>{{ label }}</h3>
+      <button mat-icon-button (click)="closeFilterPanel()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+    <div class="filter-panel-content">
+      <mat-form-field class="filter-search-field" subscriptSizing="dynamic">
+        <input
+          #optionSearchInput
+          matInput
+          [(ngModel)]="optionSearchText"
+          placeholder="Keresés a listában..."
+          (keydown.enter)="confirmFilterSelection(options, selected)"
+        />
+        @if (optionSearchText) {
+          <button mat-icon-button matSuffix (click)="optionSearchText = ''">
+            <mat-icon matSuffix>close</mat-icon>
+          </button>
+        }
+      </mat-form-field>
+
+      <div class="filter-options">
+        @for (option of filterOptions(options); track option) {
+          <mat-checkbox
+            [checked]="selected.has(option)"
+            (change)="toggleFilterValue(selected, option)"
           >
-            <mat-icon>filter_alt</mat-icon>
-          </button>
-
-          @if (filterPanelOpen) {
-            <!-- Decorative click-to-dismiss overlay: the panel it closes has its own
-                 close button, so it stays hidden from assistive tech. -->
-            <div class="filter-backdrop" aria-hidden="true" (click)="closeFilterPanel()"></div>
-
-            <mat-card class="filter-panel">
-              <div class="filter-panel-header">
-                <h3>Szűrők</h3>
-                <button mat-icon-button (click)="closeFilterPanel()">
-                  <mat-icon>close</mat-icon>
-                </button>
-              </div>
-
-              <div class="filter-panel-content">
-                <div class="filter-group">
-                  <h4>Kategória</h4>
-                  <div class="filter-options">
-                    @for (category of visibleCategories; track category.name) {
-                      <mat-checkbox
-                        [checked]="selectedCategories.has(category.name)"
-                        (change)="toggleFilterValue(selectedCategories, category.name)"
-                      >
-                        {{ category.name }}
-                      </mat-checkbox>
-                    } @empty {
-                      <span class="filter-empty">Nincs elérhető kategória</span>
-                    }
-                  </div>
-                </div>
-
-                <div class="filter-group">
-                  <h4>Tárolási hely</h4>
-                  <div class="filter-options">
-                    @for (location of visibleLocations; track location.name) {
-                      <mat-checkbox
-                        [checked]="selectedLocations.has(location.name)"
-                        (change)="toggleFilterValue(selectedLocations, location.name)"
-                      >
-                        {{ location.name }}
-                      </mat-checkbox>
-                    } @empty {
-                      <span class="filter-empty">Nincs elérhető tárolási hely</span>
-                    }
-                  </div>
-                </div>
-
-                <div class="filter-group">
-                  <h4>Tulajdonos</h4>
-                  <div class="filter-options">
-                    @for (owner of visibleOwners; track owner.id) {
-                      <mat-checkbox
-                        [checked]="selectedOwners.has(owner.name)"
-                        (change)="toggleFilterValue(selectedOwners, owner.name)"
-                      >
-                        {{ owner.name }}
-                      </mat-checkbox>
-                    } @empty {
-                      <span class="filter-empty">Nincs elérhető tulajdonos</span>
-                    }
-                  </div>
-                </div>
-
-                <div class="filter-group">
-                  <h4>Gyártó</h4>
-                  <div class="filter-options">
-                    @for (maker of visibleMakers; track maker) {
-                      <mat-checkbox
-                        [checked]="selectedMakers.has(maker)"
-                        (change)="toggleFilterValue(selectedMakers, maker)"
-                      >
-                        {{ maker }}
-                      </mat-checkbox>
-                    } @empty {
-                      <span class="filter-empty">Nincs elérhető gyártó</span>
-                    }
-                  </div>
-                </div>
-              </div>
-
-              <div class="filter-panel-footer">
-                <button mat-button [disabled]="!hasActiveFilters()" (click)="clearFilters()">
-                  Szűrők törlése
-                </button>
-                <button mat-flat-button color="primary" (click)="closeFilterPanel()">
-                  Bezárás
-                </button>
-              </div>
-            </mat-card>
-          }
-        </div>
-
-        @if (hasActiveFilters()) {
-          <button mat-button class="clear-filters-button" (click)="clearFilters()">
-            <mat-icon>filter_alt_off</mat-icon>
-            Szűrők törlése
-          </button>
+            {{ option }}
+          </mat-checkbox>
+        } @empty {
+          <span class="filter-empty">Nincs találat</span>
         }
       </div>
     </div>
-
-    <button matFab extended class="add-button" (click)="newDevice()">
-      <mat-icon>add</mat-icon>
-      Új hozzáadása
-    </button>
-  </div>
-</mat-card>
+    <div class="filter-panel-footer">
+      <button mat-button [disabled]="!selected.size" (click)="clearFilterSet(selected)">
+        Szűrő törlése
+      </button>
+    </div>
+  </mat-card>
+</ng-template>
 
 <div class="table-wrapper mb-5">
   <mat-paginator
     [pageSizeOptions]="[25, 50, 100]"
-    [length]="devices.length"
+    [length]="filteredDevices.length"
     (page)="pageDevices($event)"
     [pageSize]="pageSize"
     showFirstLastButtons
@@ -167,12 +130,68 @@
     </ng-container>
 
     <ng-container matColumnDef="maker">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Gyártó</th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        <span
+          class="filter-anchor"
+          [class.filter-anchor-open]="openFilterColumn === 'maker'"
+          (click)="$event.stopPropagation()"
+        >
+          <button
+            mat-icon-button
+            class="th-filter-button"
+            [class.filter-button-active]="selectedMakers.size > 0"
+            (click)="toggleColumnFilter('maker', $event)"
+          >
+            <mat-icon>filter_alt</mat-icon>
+          </button>
+          @if (openFilterColumn === 'maker') {
+            <ng-container
+              *ngTemplateOutlet="
+                checkboxFilterPopover;
+                context: {
+                  label: 'Gyártó szűrése',
+                  options: visibleMakers,
+                  selected: selectedMakers,
+                }
+              "
+            ></ng-container>
+          }
+        </span>
+        <span class="th-label">Gyártó</span>
+      </th>
       <td mat-cell *matCellDef="let device">{{ device.manufacturer }}</td>
     </ng-container>
 
     <ng-container matColumnDef="model">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Típus</th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        <span
+          class="filter-anchor"
+          [class.filter-anchor-open]="openFilterColumn === 'model'"
+          (click)="$event.stopPropagation()"
+        >
+          <button
+            mat-icon-button
+            class="th-filter-button"
+            [class.filter-button-active]="selectedModels.size > 0"
+            (click)="toggleColumnFilter('model', $event)"
+          >
+            <mat-icon>filter_alt</mat-icon>
+          </button>
+          @if (openFilterColumn === 'model') {
+            <ng-container
+              *ngTemplateOutlet="
+                checkboxFilterPopover;
+                context: {
+                  label: 'Típus szűrése',
+                  options: visibleModels,
+                  selected: selectedModels,
+                }
+              "
+            ></ng-container>
+          }
+        </span>
+        <span class="th-label">Típus</span>
+      </th>
       <td mat-cell *matCellDef="let device">{{ device.model }}</td>
     </ng-container>
 
@@ -182,13 +201,102 @@
     </ng-container>
 
     <ng-container matColumnDef="category">
-      <th mat-header-cell *matHeaderCellDef>Kategória</th>
+      <th mat-header-cell *matHeaderCellDef>
+        <span
+          class="filter-anchor"
+          [class.filter-anchor-open]="openFilterColumn === 'category'"
+          (click)="$event.stopPropagation()"
+        >
+          <button
+            mat-icon-button
+            class="th-filter-button"
+            [class.filter-button-active]="selectedCategories.size > 0"
+            (click)="toggleColumnFilter('category', $event)"
+          >
+            <mat-icon>filter_alt</mat-icon>
+          </button>
+          @if (openFilterColumn === 'category') {
+            <ng-container
+              *ngTemplateOutlet="
+                checkboxFilterPopover;
+                context: {
+                  label: 'Kategória szűrése',
+                  options: visibleCategories,
+                  selected: selectedCategories,
+                }
+              "
+            ></ng-container>
+          }
+        </span>
+        <span class="th-label">Kategória</span>
+      </th>
       <td mat-cell *matCellDef="let device">{{ device.category }}</td>
     </ng-container>
 
     <ng-container matColumnDef="location">
-      <th mat-header-cell *matHeaderCellDef>Tárolási hely</th>
+      <th mat-header-cell *matHeaderCellDef>
+        <span
+          class="filter-anchor"
+          [class.filter-anchor-open]="openFilterColumn === 'location'"
+          (click)="$event.stopPropagation()"
+        >
+          <button
+            mat-icon-button
+            class="th-filter-button"
+            [class.filter-button-active]="selectedLocations.size > 0"
+            (click)="toggleColumnFilter('location', $event)"
+          >
+            <mat-icon>filter_alt</mat-icon>
+          </button>
+          @if (openFilterColumn === 'location') {
+            <ng-container
+              *ngTemplateOutlet="
+                checkboxFilterPopover;
+                context: {
+                  label: 'Tárolási hely szűrése',
+                  options: visibleLocations,
+                  selected: selectedLocations,
+                }
+              "
+            ></ng-container>
+          }
+        </span>
+        <span class="th-label">Tárolási hely</span>
+      </th>
       <td mat-cell *matCellDef="let device">{{ device.location }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="owner">
+      <th mat-header-cell *matHeaderCellDef>
+        <span
+          class="filter-anchor"
+          [class.filter-anchor-open]="openFilterColumn === 'owner'"
+          (click)="$event.stopPropagation()"
+        >
+          <button
+            mat-icon-button
+            class="th-filter-button"
+            [class.filter-button-active]="selectedOwners.size > 0"
+            (click)="toggleColumnFilter('owner', $event)"
+          >
+            <mat-icon>filter_alt</mat-icon>
+          </button>
+          @if (openFilterColumn === 'owner') {
+            <ng-container
+              *ngTemplateOutlet="
+                checkboxFilterPopover;
+                context: {
+                  label: 'Tulajdonos szűrése',
+                  options: visibleOwners,
+                  selected: selectedOwners,
+                }
+              "
+            ></ng-container>
+          }
+        </span>
+        <span class="th-label">Tulajdonos</span>
+      </th>
+      <td mat-cell *matCellDef="let device">{{ device.owner?.name }}</td>
     </ng-container>
 
     <ng-container matColumnDef="weight">

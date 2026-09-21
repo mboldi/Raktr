@@ -50,7 +50,7 @@
       <mat-card class="card-with-icon overview-card">
         <mat-card-header>
           <mat-icon class="card-icon bg-green">content_paste</mat-icon>
-          <h4>Kivitelek</h4>
+          <h4>Aktív kivitelek</h4>
         </mat-card-header>
         <mat-card-content>
           <div>
@@ -103,66 +103,67 @@
       <mat-card>
         <mat-card-title style="padding: 16px 0 16px 16px"> Aktív kivitelek </mat-card-title>
         <mat-card-content>
-          <table mat-table [dataSource]="activeRents">
-            <ng-container matColumnDef="destination">
-              <th mat-header-cell *matHeaderCellDef>Kivitel célja</th>
-              <td mat-cell *matCellDef="let rent">{{ rent.destination }}</td>
-            </ng-container>
+          @if (rents_loaded && activeRents.length === 0) {
+            <div class="empty-state">
+              <mat-icon class="empty-state-icon">self_improvement</mat-icon>
+              <p>Nincs aktív kivitel, mindenki nyugodtan pihenhet!</p>
+            </div>
+          } @else {
+            <table mat-table [dataSource]="activeRents">
+              <ng-container matColumnDef="destination">
+                <th mat-header-cell *matHeaderCellDef>Kivitel célja</th>
+                <td mat-cell *matCellDef="let rent">{{ rent.destination }}</td>
+              </ng-container>
 
-            <ng-container matColumnDef="issuer">
-              <th mat-header-cell *matHeaderCellDef>Kiadó</th>
-              <td mat-cell *matCellDef="let rent">
-                {{
-                  rent.issuer.nickname
-                    ? rent.issuer.nickname
-                    : rent.issuer.familyName + ' ' + rent.issuer.givenName
-                }}
-              </td>
-            </ng-container>
+              <ng-container matColumnDef="issuer">
+                <th mat-header-cell *matHeaderCellDef>Kiadó</th>
+                <td mat-cell *matCellDef="let rent">{{ rent.issuer.displayName }}</td>
+              </ng-container>
 
-            <ng-container matColumnDef="renter">
-              <th mat-header-cell *matHeaderCellDef>Felelősségvállaló</th>
-              <td mat-cell *matCellDef="let rent">{{ rent.renterName }}</td>
-            </ng-container>
+              <ng-container matColumnDef="renter">
+                <th mat-header-cell *matHeaderCellDef>Felelősségvállaló</th>
+                <td mat-cell *matCellDef="let rent">{{ rent.renterName }}</td>
+              </ng-container>
 
-            <ng-container matColumnDef="outDate">
-              <th mat-header-cell *matHeaderCellDef>Kivitel napja</th>
-              <td mat-cell *matCellDef="let rent">{{ rent.outDate | date: 'yyyy. MM. dd.' }}</td>
-            </ng-container>
+              <ng-container matColumnDef="outDate">
+                <th mat-header-cell *matHeaderCellDef>Kivitel napja</th>
+                <td mat-cell *matCellDef="let rent">{{ rent.outDate | date: 'yyyy. MM. dd.' }}</td>
+              </ng-container>
 
-            <ng-container matColumnDef="expectedReturnDate">
-              <th mat-header-cell *matHeaderCellDef>Várható visszaérkezés</th>
-              <td
-                mat-cell
-                *matCellDef="let rent"
-                [class.text-alert]="beforeNow(rent.expectedReturnDate)"
-              >
-                {{ rent.expectedReturnDate | date: 'yyyy. MM. dd.' }}
-              </td>
-            </ng-container>
+              <ng-container matColumnDef="expectedReturnDate">
+                <th mat-header-cell *matHeaderCellDef>Várható visszaérkezés</th>
+                <td
+                  mat-cell
+                  *matCellDef="let rent"
+                  [class.text-alert]="beforeNow(rent.expectedReturnDate)"
+                >
+                  {{ rent.expectedReturnDate | date: 'yyyy. MM. dd.' }}
+                </td>
+              </ng-container>
 
-            <ng-container matColumnDef="itemCount">
-              <th mat-header-cell *matHeaderCellDef>Kivitt tételek</th>
-              <td mat-cell *matCellDef="let rent">{{ rent.rentItems.length }} db</td>
-            </ng-container>
+              <ng-container matColumnDef="itemCount">
+                <th mat-header-cell *matHeaderCellDef>Kivitt tételek</th>
+                <td mat-cell *matCellDef="let rent">{{ rent.rentItems.length }} db</td>
+              </ng-container>
 
-            <ng-container matColumnDef="sumWeight">
-              <th mat-header-cell *matHeaderCellDef>Össztömeg</th>
-              <td mat-cell *matCellDef="let rent">
-                {{ rent.getSumWeight() / 1000 | number: '1.0-2' }} kg
-              </td>
-            </ng-container>
+              <ng-container matColumnDef="sumWeight">
+                <th mat-header-cell *matHeaderCellDef>Össztömeg</th>
+                <td mat-cell *matCellDef="let rent">
+                  {{ rent.getSumWeight() / 1000 | number: '1.0-2' }} kg
+                </td>
+              </ng-container>
 
-            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr
-              mat-row
-              (click)="openRent(row)"
-              class="clickable-row"
-              *matRowDef="let row; columns: displayedColumns"
-            ></tr>
-          </table>
-          @if (!rents_loaded) {
-            <mat-spinner class="list-loading-spinner mt-3"></mat-spinner>
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr
+                mat-row
+                (click)="openRent(row)"
+                class="clickable-row"
+                *matRowDef="let row; columns: displayedColumns"
+              ></tr>
+            </table>
+            @if (!rents_loaded) {
+              <mat-spinner class="list-loading-spinner mt-3"></mat-spinner>
+            }
           }
         </mat-card-content>
       </mat-card>

@@ -21,63 +21,81 @@
     <section class="device-section">
       <h3 class="device-section__title">Azonosítás</h3>
       <div class="field-grid">
-        <div class="field">
-          <span class="label">Azonosító</span>
-          <span class="value">{{ device.assetTag }}</span>
-        </div>
-        <div class="field">
-          <span class="label">Vonalkód tartalma</span>
-          <span class="value">{{ device.barcode }}</span>
-        </div>
-        <div class="field">
-          <span class="label">Sorozatszám</span>
-          <span class="value">{{ device.serialNumber === '' ? '-' : device.serialNumber }}</span>
-        </div>
-        <div class="field">
-          <span class="label">Kategória</span>
-          <span class="value">{{ device.category }}</span>
-        </div>
-        <div class="field">
-          <span class="label">Tárolási hely</span>
-          <span class="value">{{ device.location }}</span>
-        </div>
-        <div class="field">
-          <span class="label">Tulajdonos</span>
-          <span class="value">{{ device.owner.name }}</span>
-        </div>
+        @if (device.assetTag) {
+          <div class="field">
+            <span class="label">Azonosító</span>
+            <span class="value">{{ device.assetTag }}</span>
+          </div>
+        }
+        @if (device.barcode) {
+          <div class="field">
+            <span class="label">Vonalkód tartalma</span>
+            <span class="value">{{ device.barcode }}</span>
+          </div>
+        }
+        @if (device.serialNumber) {
+          <div class="field">
+            <span class="label">Sorozatszám</span>
+            <span class="value">{{ device.serialNumber }}</span>
+          </div>
+        }
+        @if (device.category) {
+          <div class="field">
+            <span class="label">Kategória</span>
+            <span class="value">{{ device.category }}</span>
+          </div>
+        }
+        @if (device.location) {
+          <div class="field">
+            <span class="label">Tárolási hely</span>
+            <span class="value">{{ device.location }}</span>
+          </div>
+        }
+        @if (device.owner.name) {
+          <div class="field">
+            <span class="label">Tulajdonos</span>
+            <span class="value">{{ device.owner.name }}</span>
+          </div>
+        }
       </div>
     </section>
 
     <mat-divider></mat-divider>
 
-    <section class="device-section">
-      <h3 class="device-section__title">Beszerzés</h3>
-      <div class="field-grid">
-        <div class="field">
-          <span class="label">Forrás</span>
-          <span class="value">{{
-            device.acquisitionSource === '' ? '-' : device.acquisitionSource
-          }}</span>
+    @if (device.acquisitionSource || device.acquisitionDate || device.warrantyEndDate) {
+      <section class="device-section">
+        <h3 class="device-section__title">Beszerzés</h3>
+        <div class="field-grid">
+          @if (device.acquisitionSource) {
+            <div class="field">
+              <span class="label">Forrás</span>
+              <span class="value">{{ device.acquisitionSource }}</span>
+            </div>
+          }
+          @if (device.acquisitionDate) {
+            <div class="field">
+              <span class="label">Ideje</span>
+              <span class="value">{{ device.acquisitionDate | date: 'yyyy.MM.dd.' }}</span>
+            </div>
+          }
+          @if (device.warrantyEndDate) {
+            <div class="field">
+              <span class="label">Garancia vége</span>
+              <span class="value">{{ device.warrantyEndDate | date: 'yyyy.MM.dd.' }}</span>
+            </div>
+          }
         </div>
-        <div class="field">
-          <span class="label">Ideje</span>
-          <span class="value">{{ device.acquisitionDate | date: 'yyyy.MM.dd.' }}</span>
-        </div>
-        <div class="field">
-          <span class="label">Garancia vége</span>
-          <span class="value">{{ device.warrantyEndDate | date: 'yyyy.MM.dd.' }}</span>
-        </div>
-      </div>
-    </section>
+      </section>
 
-    <mat-divider></mat-divider>
+      <mat-divider></mat-divider>
+    }
 
     <section class="device-section">
       <h3 class="device-section__title">Fizikai adatok</h3>
       <div class="field-grid">
         <div class="field">
           <span class="label">Tömeg</span>
-          <span class="value">{{ device.weight }}&nbsp;g</span>
+          <span class="value">{{ device.weight / 1000 | number: '1.0-2' }}&nbsp;kg</span>
         </div>
         <div class="field">
           <span class="label">Érték</span>

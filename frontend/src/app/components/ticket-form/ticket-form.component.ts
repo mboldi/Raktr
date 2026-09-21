@@ -30,6 +30,7 @@ import { Scannable } from '../../model/scannable/scannable';
 import { ScannableDetailsDto } from '../../model/scannable/scannableDetailsDto';
 import { DeviceDetails } from '../../model/scannable/device/deviceDetails';
 import { DeviceService } from '../../services/device.service';
+import { findByBarcode } from '../../util/ean8';
 
 @Component({
   selector: 'app-ticket-form',
@@ -182,7 +183,7 @@ export class TicketFormComponent implements OnInit {
       return;
     }
 
-    const matchedDevice = this.devices.find((device) => device.barcode === enteredValue);
+    const matchedDevice = findByBarcode(this.devices, (device) => device.barcode, enteredValue);
     if (!matchedDevice) {
       this.deviceNotFound.emit();
       return;

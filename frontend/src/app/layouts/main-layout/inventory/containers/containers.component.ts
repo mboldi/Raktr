@@ -1,6 +1,7 @@
 import {
   Component,
   effect,
+  ElementRef,
   OnInit,
   ViewChild,
   ChangeDetectionStrategy,
@@ -41,12 +42,12 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { WindowWidthService } from '../../../../services/windowWidth.service';
 import { CategoryService } from '../../../../services/category.service';
 import { LocationService } from '../../../../services/location.service';
-import { OwnerService } from '../../../../services/owner.service';
 import { CategoryDetails } from '../../../../model/category/categoryDetails';
 import { LocationDetails } from '../../../../model/location/LocationDetails';
-import { OwnerDetailsDto } from '../../../../model/owner/ownerDetailsDto';
 import { MatCheckbox } from '@angular/material/checkbox';
-import { Location } from '@angular/common';
+import { MatChip, MatChipRemove, MatChipSet } from '@angular/material/chips';
+import { MatTooltip } from '@angular/material/tooltip';
+import { Location, NgTemplateOutlet } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 
 const ALL_COLUMNS: string[] = [
@@ -88,6 +89,11 @@ const REDUCED_COLUMNS: string[] = ['name', 'assetTag', 'location', 'itemCount'];
     MatProgressSpinner,
     MatCheckbox,
     MatButton,
+    MatChip,
+    MatChipRemove,
+    MatChipSet,
+    MatTooltip,
+    NgTemplateOutlet,
   ],
   templateUrl: './containers.component.html',
   host: {
@@ -103,13 +109,13 @@ export class ContainersComponent implements OnInit {
   private containerService = inject(ContainerService);
   private categoryService = inject(CategoryService);
   private locationService = inject(LocationService);
-  private ownerService = inject(OwnerService);
   private snackBar = inject(MatSnackBar);
   private route = inject(ActivatedRoute);
   private location = inject(Location);
 
   protected loading = true;
   @ViewChild(MatTable) table!: MatTable<ContainerDetails>;
+  @ViewChild('optionSearchInput') optionSearchInput?: ElementRef<HTMLInputElement>;
 
   protected containerSearchFormControl = new FormControl();
   private searchFilter = '';
@@ -125,19 +131,19 @@ export class ContainersComponent implements OnInit {
 
   private lastSort: Sort = { active: 'name', direction: 'asc' };
 
-  protected filterPanelOpen = false;
+  protected openFilterColumn: string | null = null;
+  protected panelAlignRight = false;
+  protected optionSearchText = '';
+  private readonly filterPanelWidth = 320;
 
   protected categories: CategoryDetails[] = [];
   protected locations: LocationDetails[] = [];
-  protected owners: OwnerDetailsDto[] = [];
 
-  protected visibleCategories: CategoryDetails[] = [];
-  protected visibleLocations: LocationDetails[] = [];
-  protected visibleOwners: OwnerDetailsDto[] = [];
+  protected visibleCategories: string[] = [];
+  protected visibleLocations: string[] = [];
 
   protected selectedCategories = new Set<string>();
   protected selectedLocations = new Set<string>();
-  protected selectedOwners = new Set<string>();
 
   constructor() {
     effect(() => {
@@ -181,10 +187,6 @@ export class ContainersComponent implements OnInit {
     });
     this.locationService.getLocations().subscribe((locations) => {
       this.locations = locations;
-      this.updateVisibleFilterOptions();
-    });
-    this.ownerService.getOwners().subscribe((owners) => {
-      this.owners = owners;
       this.updateVisibleFilterOptions();
     });
   }
@@ -255,6 +257,12 @@ export class ContainersComponent implements OnInit {
     this.filterSortContainers();
   }
 
+  protected resetFilter() {
+    this.containerSearchFormControl.reset();
+    this.searchFilter = '';
+    this.filterSortContainers();
+  }
+
   protected announceSortChange($event: Sort) {
     this.lastSort = $event;
     this.filterSortContainers();
@@ -265,8 +273,7 @@ export class ContainersComponent implements OnInit {
       (container) =>
         this.matchesSearch(container) &&
         (this.selectedCategories.size === 0 || this.selectedCategories.has(container.category)) &&
-        (this.selectedLocations.size === 0 || this.selectedLocations.has(container.location)) &&
-        (this.selectedOwners.size === 0 || this.selectedOwners.has(container.owner?.name ?? '')),
+        (this.selectedLocations.size === 0 || this.selectedLocations.has(container.location)),
     );
 
     this.sortContainers();
@@ -320,9 +327,7 @@ export class ContainersComponent implements OnInit {
     );
   }
 
-  private containersMatchingExcept(
-    excludedFacet: 'category' | 'location' | 'owner',
-  ): ContainerDetails[] {
+  private containersMatchingExcept(excludedFacet: 'category' | 'location'): ContainerDetails[] {
     return this.containers.filter(
       (container) =>
         this.matchesSearch(container) &&
@@ -331,10 +336,7 @@ export class ContainersComponent implements OnInit {
           this.selectedCategories.has(container.category)) &&
         (excludedFacet === 'location' ||
           this.selectedLocations.size === 0 ||
-          this.selectedLocations.has(container.location)) &&
-        (excludedFacet === 'owner' ||
-          this.selectedOwners.size === 0 ||
-          this.selectedOwners.has(container.owner?.name ?? '')),
+          this.selectedLocations.has(container.location)),
     );
   }
 
@@ -342,25 +344,16 @@ export class ContainersComponent implements OnInit {
     const availableCategories = new Set(
       this.containersMatchingExcept('category').map((container) => container.category),
     );
-    this.visibleCategories = this.categories.filter(
-      (category) =>
-        availableCategories.has(category.name) || this.selectedCategories.has(category.name),
-    );
+    this.visibleCategories = this.categories
+      .map((category) => category.name)
+      .filter((name) => availableCategories.has(name) || this.selectedCategories.has(name));
 
     const availableLocations = new Set(
       this.containersMatchingExcept('location').map((container) => container.location),
     );
-    this.visibleLocations = this.locations.filter(
-      (location) =>
-        availableLocations.has(location.name) || this.selectedLocations.has(location.name),
-    );
-
-    const availableOwners = new Set(
-      this.containersMatchingExcept('owner').map((container) => container.owner?.name ?? ''),
-    );
-    this.visibleOwners = this.owners.filter(
-      (owner) => availableOwners.has(owner.name) || this.selectedOwners.has(owner.name),
-    );
+    this.visibleLocations = this.locations
+      .map((location) => location.name)
+      .filter((name) => availableLocations.has(name) || this.selectedLocations.has(name));
   }
 
   protected pageContainers(pageEvent: PageEvent) {
@@ -384,18 +377,41 @@ export class ContainersComponent implements OnInit {
     }
   }
 
-  protected resetFilter() {
-    this.containerSearchFormControl.reset();
-    this.searchFilter = '';
+  protected toggleColumnFilter(column: string, event: MouseEvent) {
+    if (this.openFilterColumn === column) {
+      this.openFilterColumn = null;
+      return;
+    }
+
+    this.openFilterColumn = column;
+    this.optionSearchText = '';
+
+    const buttonRect = (event.currentTarget as HTMLElement).getBoundingClientRect();
+    this.panelAlignRight = buttonRect.left + this.filterPanelWidth > window.innerWidth;
+
+    setTimeout(() => this.optionSearchInput?.nativeElement.focus());
+  }
+
+  protected filterOptions(options: string[]): string[] {
+    const search = this.optionSearchText.toLowerCase();
+    return options.filter((option) => option.toLowerCase().includes(search));
+  }
+
+  protected activateFilteredOptions(options: string[], selectedValues: Set<string>) {
+    for (const option of this.filterOptions(options)) {
+      selectedValues.add(option);
+    }
+
     this.filterSortContainers();
   }
 
-  protected toggleFilterPanel() {
-    this.filterPanelOpen = !this.filterPanelOpen;
+  protected confirmFilterSelection(options: string[], selectedValues: Set<string>) {
+    this.activateFilteredOptions(options, selectedValues);
+    this.closeFilterPanel();
   }
 
   protected closeFilterPanel() {
-    this.filterPanelOpen = false;
+    this.openFilterColumn = null;
   }
 
   protected toggleFilterValue(selectedValues: Set<string>, value: string) {
@@ -408,19 +424,42 @@ export class ContainersComponent implements OnInit {
     this.filterSortContainers();
   }
 
+  protected clearFilterSet(selectedValues: Set<string>) {
+    selectedValues.clear();
+    this.filterSortContainers();
+  }
+
+  protected activeFilterChips(): { label: string; remove: () => void }[] {
+    const chips: { label: string; remove: () => void }[] = [];
+
+    if (this.searchFilter) {
+      chips.push({ label: `Keresés: ${this.searchFilter}`, remove: () => this.resetFilter() });
+    }
+    for (const category of this.selectedCategories) {
+      chips.push({
+        label: `Kategória: ${category}`,
+        remove: () => this.toggleFilterValue(this.selectedCategories, category),
+      });
+    }
+    for (const location of this.selectedLocations) {
+      chips.push({
+        label: `Tárolási hely: ${location}`,
+        remove: () => this.toggleFilterValue(this.selectedLocations, location),
+      });
+    }
+
+    return chips;
+  }
+
   protected hasActiveFilters(): boolean {
     return (
-      this.selectedCategories.size > 0 ||
-      this.selectedLocations.size > 0 ||
-      this.selectedOwners.size > 0
+      this.selectedCategories.size > 0 || this.selectedLocations.size > 0 || !!this.searchFilter
     );
   }
 
   protected clearFilters() {
     this.selectedCategories.clear();
     this.selectedLocations.clear();
-    this.selectedOwners.clear();
-
-    this.filterSortContainers();
+    this.resetFilter();
   }
 }

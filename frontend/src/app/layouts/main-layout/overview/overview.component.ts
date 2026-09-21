@@ -14,6 +14,7 @@ import { RentDetails } from '../../../model/rent/rentDetails';
 import { ScannableDetailsDto } from '../../../model/scannable/scannableDetailsDto';
 import { DeviceDetails } from '../../../model/scannable/device/deviceDetails';
 import { ContainerDetails } from '../../../model/scannable/container/containerDetails';
+import { findByBarcode } from '../../../util/ean8';
 import {
   MatCell,
   MatCellDef,
@@ -204,7 +205,7 @@ export class OverviewComponent implements OnInit {
       return;
     }
 
-    const matched = this.scannables.find((scannable) => scannable.barcode === barcode);
+    const matched = findByBarcode(this.scannables, (scannable) => scannable.barcode, barcode);
 
     if (matched) {
       this.dialog.open(TabbedEditModalComponent, {

@@ -18,6 +18,8 @@ import {
 } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatAutocomplete, MatAutocompleteTrigger, MatOption } from '@angular/material/autocomplete';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
+import { MatSortModule, Sort } from '@angular/material/sort';
 import {
   FormBuilder,
   FormControl,
@@ -64,6 +66,7 @@ import { DeviceService } from '../../services/device.service';
 import { ContainerService } from '../../services/container.service';
 import { UserDetails } from '../../model/user/userDetails';
 import { UserService } from '../../services/user.service';
+import { findByBarcode } from '../../util/ean8';
 import {
   QuantityInputDialogData,
   QuantityInputModalComponent,
@@ -129,6 +132,8 @@ export type StatusMode = 'packed' | 'returned';
     MatHeaderRowDef,
     MatRowDef,
     MatButton,
+    MatPaginator,
+    MatSortModule,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './rent-form.component.html',
@@ -196,6 +201,10 @@ export class RentFormComponent implements OnInit {
 
   protected itemSearchControl = new FormControl('');
   protected filteredItems: RentItemDetailsDto[] = [];
+  protected pagedItems: RentItemDetailsDto[] = [];
+  protected itemsPageSize = 5;
+  private itemsPageIndex = 0;
+  private itemsSort: Sort = { active: 'addedBy', direction: 'desc' };
 
   /** Recomputed reactively off both the rent (type/closed) and the viewport width. */
   protected readonly itemColumns = computed(() => this.computeItemColumns(this.rentData()));
@@ -245,6 +254,17 @@ export class RentFormComponent implements OnInit {
       this.rentData();
       this.refilterItems();
       this.itemsTable?.renderRows();
+    });
+
+    // The host page auto-fills the actual return date once every item is back (see
+    // EditRentComponent) and swaps in the updated rent - reflect that here too, but only while
+    // the field is still pristine, so it doesn't clobber a date the user is already editing by hand.
+    effect(() => {
+      const rent = this.rentData();
+      const control = this.rentForm.get('actualReturnDate')!;
+      if (rent && control.pristine) {
+        control.setValue(rent.actualReturnDate, { emitEvent: false });
+      }
     });
   }
 
@@ -310,7 +330,7 @@ export class RentFormComponent implements OnInit {
   private computeItemColumns(rent: RentDetails | null): string[] {
     const isMobile = this.windowService.windowWidth() < MOBILE_WIDTH_THRESHOLD;
 
-    const columns = ['name', 'quantity'];
+    const columns = ['name', 'assetTag', 'quantity'];
 
     if (!isMobile) {
       columns.push('addedBy', 'weight');
@@ -357,9 +377,10 @@ export class RentFormComponent implements OnInit {
         .filter(
           (scannable) =>
             scannable.name.toLowerCase().includes(filter) ||
-            scannable.assetTag.toLowerCase().includes(filter),
+            scannable.assetTag.toLowerCase().includes(filter) ||
+            (scannable instanceof DeviceDetails && scannable.model.toLowerCase().includes(filter)),
         )
-        .slice(0, 5);
+        .slice(0, 50);
     }
 
     const addedIds = new Set((this.rentData()?.rentItems ?? []).map((item) => item.scannable.id));
@@ -372,9 +393,10 @@ export class RentFormComponent implements OnInit {
           (!addedIds.has(scannable.id) || this.isStackable(scannable.id)) &&
           !scannable.deleted &&
           (scannable.name.toLowerCase().includes(filter) ||
-            scannable.assetTag.toLowerCase().includes(filter)),
+            scannable.assetTag.toLowerCase().includes(filter) ||
+            (scannable instanceof DeviceDetails && scannable.model.toLowerCase().includes(filter))),
       )
-      .slice(0, 5);
+      .slice(0, 50);
   }
 
   protected toggleStatusMode(mode: StatusMode) {
@@ -420,7 +442,7 @@ export class RentFormComponent implements OnInit {
       return;
     }
 
-    const matched = this.scannables.find((scannable) => scannable.barcode === enteredValue);
+    const matched = findByBarcode(this.scannables, (scannable) => scannable.barcode, enteredValue);
     if (!matched) {
       this.scannableNotFound.emit();
       return;
@@ -473,7 +495,7 @@ export class RentFormComponent implements OnInit {
     if (this.selectedStatusMode === 'packed') {
       this.togglePacked(item);
     } else {
-      this.toggleReturned(item);
+      this.processReturnToggle(item);
     }
 
     this.addScannableFormControl.reset();
@@ -491,6 +513,56 @@ export class RentFormComponent implements OnInit {
         item.scannable.category.toLowerCase().includes(search) ||
         item.scannable.location.toLowerCase().includes(search),
     );
+
+    this.sortItems();
+    this.itemsPageIndex = 0;
+    this.pageItems();
+  }
+
+  protected onItemsSortChange(sort: Sort) {
+    this.itemsSort = sort;
+    this.sortItems();
+    this.itemsPageIndex = 0;
+    this.pageItems();
+  }
+
+  private sortItems() {
+    const { active, direction } = this.itemsSort;
+    const comparator = direction ? this.getItemsSortComparator(active) : null;
+    if (!comparator) {
+      return;
+    }
+
+    this.filteredItems = this.filteredItems
+      .slice()
+      .sort((a, b) => (direction === 'asc' ? comparator(a, b) : -comparator(a, b)));
+  }
+
+  private getItemsSortComparator(
+    active: string,
+  ): ((a: RentItemDetailsDto, b: RentItemDetailsDto) => number) | null {
+    switch (active) {
+      case 'name':
+        return (a, b) => a.scannable.name.localeCompare(b.scannable.name);
+      case 'assetTag':
+        return (a, b) => a.scannable.assetTag.localeCompare(b.scannable.assetTag);
+      case 'addedBy':
+        // Sorted by the timestamp only - the added-by person's name isn't part of the sort.
+        return (a, b) => a.createdAt.getTime() - b.createdAt.getTime();
+      default:
+        return null;
+    }
+  }
+
+  protected onItemsPage(event: PageEvent) {
+    this.itemsPageIndex = event.pageIndex;
+    this.itemsPageSize = event.pageSize;
+    this.pageItems();
+  }
+
+  private pageItems() {
+    const start = this.itemsPageIndex * this.itemsPageSize;
+    this.pagedItems = this.filteredItems.slice(start, start + this.itemsPageSize);
   }
 
   protected isAmountEditable(item: RentItemDetailsDto): boolean {
@@ -518,9 +590,12 @@ export class RentFormComponent implements OnInit {
   }
 
   protected onReturnedChanged(checkboxChange: MatCheckboxChange, item: RentItemDetailsDto) {
-    if (!this.toggleReturned(item)) {
-      checkboxChange.source.checked = false;
-    }
+    const checkbox = checkboxChange.source;
+    this.processReturnToggle(
+      item,
+      () => (checkbox.checked = false),
+      () => (checkbox.checked = true),
+    );
   }
 
   /** Returns false (and leaves the item untouched) when it's already returned - packing can't be undone at that point. */
@@ -535,21 +610,54 @@ export class RentFormComponent implements OnInit {
     return true;
   }
 
-  /** Returns false (and leaves the item untouched) when a COMPLEX rent's item hasn't been packed yet. */
-  private toggleReturned(item: RentItemDetailsDto): boolean {
-    const rent = this.rentData();
-
+  /** Un-returns immediately; marking returned instead calls `onBlocked` (COMPLEX rent, not
+   * packed yet) or, for items rented in more than one unit, opens a confirmation dialog first
+   * and calls `onConfirmed` once the full quantity is confirmed as returned. */
+  private processReturnToggle(
+    item: RentItemDetailsDto,
+    onBlocked?: () => void,
+    onConfirmed?: () => void,
+  ) {
     if (item.status === RentItemStatus.RETURNED) {
       this.itemStatusChanged.emit({ item, status: RentItemStatus.OUT });
-      return true;
+      return;
     }
 
+    const rent = this.rentData();
     if (rent?.type === RentType.COMPLEX && item.status !== RentItemStatus.OUT) {
-      return false;
+      onBlocked?.();
+      return;
+    }
+
+    if (item.quantity > 1) {
+      onBlocked?.();
+      this.confirmFullReturn(item).subscribe((confirmed) => {
+        if (confirmed) {
+          onConfirmed?.();
+          this.itemStatusChanged.emit({ item, status: RentItemStatus.RETURNED });
+        }
+      });
+      return;
     }
 
     this.itemStatusChanged.emit({ item, status: RentItemStatus.RETURNED });
-    return true;
+  }
+
+  private confirmFullReturn(item: RentItemDetailsDto): Observable<boolean> {
+    const dialogRef = this.dialog.open(QuantityInputModalComponent, {
+      width: '20vw',
+      minWidth: '350px',
+      data: new QuantityInputDialogData(
+        item.scannable.name,
+        item.quantity,
+        item.quantity,
+        item.quantity,
+        `${item.scannable.name} - mind a(z) ${item.quantity} darab visszakerült?`,
+        'Visszahozás',
+      ),
+    });
+
+    return dialogRef.afterClosed().pipe(map((result) => !!result));
   }
 
   protected canRemove(item: RentItemDetailsDto): boolean {

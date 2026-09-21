@@ -40,6 +40,7 @@ import { OwnerService } from '../../services/owner.service';
 import { ContainerDetails } from '../../model/scannable/container/containerDetails';
 import { DeviceDetails } from '../../model/scannable/device/deviceDetails';
 import { DeviceService } from '../../services/device.service';
+import { findByBarcode } from '../../util/ean8';
 import { ScannableService } from '../../services/scannable.service';
 import { MatIconButton } from '@angular/material/button';
 import {
@@ -345,7 +346,7 @@ export class ContainerFormComponent implements OnInit {
       return;
     }
 
-    const matchedDevice = this.devices.find((device) => device.barcode === enteredValue);
+    const matchedDevice = findByBarcode(this.devices, (device) => device.barcode, enteredValue);
     if (!matchedDevice) {
       this.deviceNotFound.emit();
       return;

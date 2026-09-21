@@ -21,26 +21,36 @@
     <section class="scannable-section">
       <h3 class="title">Azonosítás</h3>
       <div class="field-grid">
-        <div class="field">
-          <span class="label">Azonosító</span>
-          <span class="value">{{ scannable.assetTag }}</span>
-        </div>
-        <div class="field">
-          <span class="label">Vonalkód tartalma</span>
-          <span class="value">{{ scannable.barcode }}</span>
-        </div>
-        <div class="field">
-          <span class="label">Kategória</span>
-          <span class="value">{{ scannable.category }}</span>
-        </div>
-        <div class="field">
-          <span class="label">Tárolási hely</span>
-          <span class="value">{{ scannable.location }}</span>
-        </div>
-        <div class="field">
-          <span class="label">Tulajdonos</span>
-          <span class="value">{{ scannable.owner.name }}</span>
-        </div>
+        @if (scannable.assetTag) {
+          <div class="field">
+            <span class="label">Azonosító</span>
+            <span class="value">{{ scannable.assetTag }}</span>
+          </div>
+        }
+        @if (scannable.barcode) {
+          <div class="field">
+            <span class="label">Vonalkód tartalma</span>
+            <span class="value">{{ scannable.barcode }}</span>
+          </div>
+        }
+        @if (scannable.category) {
+          <div class="field">
+            <span class="label">Kategória</span>
+            <span class="value">{{ scannable.category }}</span>
+          </div>
+        }
+        @if (scannable.location) {
+          <div class="field">
+            <span class="label">Tárolási hely</span>
+            <span class="value">{{ scannable.location }}</span>
+          </div>
+        }
+        @if (scannable.owner.name) {
+          <div class="field">
+            <span class="label">Tulajdonos</span>
+            <span class="value">{{ scannable.owner.name }}</span>
+          </div>
+        }
       </div>
     </section>
 

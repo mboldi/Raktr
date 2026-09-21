@@ -28,6 +28,9 @@ import { MatDialog } from '@angular/material/dialog';
 import { YesnoModalComponent } from '../../../../components/yesno-modal/yesno-modal.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { HttpErrorResponse } from '@angular/common/http';
+import { forkJoin } from 'rxjs';
+import { DeviceService } from '../../../../services/device.service';
+import { ContainerService } from '../../../../services/container.service';
 
 const COLUMNS: string[] = ['name', 'assignedScannables', 'createdAt', 'createdBy', 'delete'];
 
@@ -64,8 +67,12 @@ const COLUMNS: string[] = ['name', 'assignedScannables', 'createdAt', 'createdBy
 })
 export class CategoriesComponent implements OnInit {
   private categoryService = inject(CategoryService);
+  private deviceService = inject(DeviceService);
+  private containerService = inject(ContainerService);
   private dialog = inject(MatDialog);
   private snackBar = inject(MatSnackBar);
+
+  private assignedScannableCounts = new Map<string, number>();
 
   @ViewChild(MatTable) categoryTable!: MatTable<CategoryDetails>;
 
@@ -79,6 +86,25 @@ export class CategoriesComponent implements OnInit {
 
   ngOnInit(): void {
     this.getCategories();
+    this.loadAssignedScannableCounts();
+  }
+
+  private loadAssignedScannableCounts() {
+    forkJoin([this.deviceService.getDevices(), this.containerService.getContainers()]).subscribe(
+      ([devices, containers]) => {
+        this.assignedScannableCounts.clear();
+        for (const scannable of [...devices, ...containers]) {
+          this.assignedScannableCounts.set(
+            scannable.category,
+            (this.assignedScannableCounts.get(scannable.category) ?? 0) + 1,
+          );
+        }
+      },
+    );
+  }
+
+  protected assignedScannableCount(categoryName: string): number {
+    return this.assignedScannableCounts.get(categoryName) ?? 0;
   }
 
   private getCategories() {

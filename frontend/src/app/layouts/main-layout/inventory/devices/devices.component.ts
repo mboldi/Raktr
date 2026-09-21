@@ -1,6 +1,7 @@
 import {
   Component,
   effect,
+  ElementRef,
   OnInit,
   ViewChild,
   ChangeDetectionStrategy,
@@ -46,7 +47,9 @@ import { CategoryDetails } from '../../../../model/category/categoryDetails';
 import { LocationDetails } from '../../../../model/location/LocationDetails';
 import { OwnerDetailsDto } from '../../../../model/owner/ownerDetailsDto';
 import { MatCheckbox } from '@angular/material/checkbox';
-import { Location } from '@angular/common';
+import { MatChip, MatChipRemove, MatChipSet } from '@angular/material/chips';
+import { MatTooltip } from '@angular/material/tooltip';
+import { Location, NgTemplateOutlet } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 
 const ALL_COLUMNS: string[] = [
@@ -57,6 +60,7 @@ const ALL_COLUMNS: string[] = [
   'quantity',
   'category',
   'location',
+  'owner',
   'weight',
 ];
 const REDUCED_COLUMNS: string[] = ['name', 'assetTag', 'maker', 'model'];
@@ -90,6 +94,11 @@ const REDUCED_COLUMNS: string[] = ['name', 'assetTag', 'maker', 'model'];
     MatProgressSpinner,
     MatCheckbox,
     MatButton,
+    MatChip,
+    MatChipRemove,
+    MatChipSet,
+    MatTooltip,
+    NgTemplateOutlet,
   ],
   templateUrl: './devices.component.html',
   host: {
@@ -112,6 +121,7 @@ export class DevicesComponent implements OnInit {
 
   protected loading = true;
   @ViewChild(MatTable) table!: MatTable<DeviceDetails>;
+  @ViewChild('optionSearchInput') optionSearchInput?: ElementRef<HTMLInputElement>;
 
   protected deviceSearchFormControl = new FormControl();
   private searchFilter = '';
@@ -127,22 +137,28 @@ export class DevicesComponent implements OnInit {
 
   private lastSort: Sort = { active: 'name', direction: 'asc' };
 
-  protected filterPanelOpen = false;
+  protected openFilterColumn: string | null = null;
+  protected panelAlignRight = false;
+  protected optionSearchText = '';
+  private readonly filterPanelWidth = 320;
 
   protected categories: CategoryDetails[] = [];
   protected locations: LocationDetails[] = [];
   protected owners: OwnerDetailsDto[] = [];
   protected makers: string[] = [];
+  protected models: string[] = [];
 
-  protected visibleCategories: CategoryDetails[] = [];
-  protected visibleLocations: LocationDetails[] = [];
-  protected visibleOwners: OwnerDetailsDto[] = [];
+  protected visibleCategories: string[] = [];
+  protected visibleLocations: string[] = [];
+  protected visibleOwners: string[] = [];
   protected visibleMakers: string[] = [];
+  protected visibleModels: string[] = [];
 
   protected selectedCategories = new Set<string>();
   protected selectedLocations = new Set<string>();
   protected selectedOwners = new Set<string>();
   protected selectedMakers = new Set<string>();
+  protected selectedModels = new Set<string>();
 
   constructor() {
     effect(() => {
@@ -159,7 +175,7 @@ export class DevicesComponent implements OnInit {
 
     this.deviceService.getDevices().subscribe((devices) => {
       this.devices = devices;
-      this.updateMakers();
+      this.updateMakersAndModels();
       this.filterSortDevices();
 
       this.loading = false;
@@ -195,11 +211,15 @@ export class DevicesComponent implements OnInit {
     });
   }
 
-  private updateMakers() {
+  private updateMakersAndModels() {
     this.makers = Array.from(
       new Set(
         this.devices.map((device) => device.manufacturer).filter((manufacturer) => !!manufacturer),
       ),
+    ).sort((a, b) => a.localeCompare(b));
+
+    this.models = Array.from(
+      new Set(this.devices.map((device) => device.model).filter((model) => !!model)),
     ).sort((a, b) => a.localeCompare(b));
   }
 
@@ -250,7 +270,7 @@ export class DevicesComponent implements OnInit {
     editDeviceDialog.afterClosed().subscribe((result) => {
       if (result) {
         this.devices.push(result);
-        this.updateMakers();
+        this.updateMakersAndModels();
         this.filterSortDevices();
 
         const snackBarRef = this.snackBar.open(`${result.name} létrehozva!`, 'Megnyitás', {
@@ -271,6 +291,12 @@ export class DevicesComponent implements OnInit {
     this.filterSortDevices();
   }
 
+  protected resetFilter() {
+    this.deviceSearchFormControl.reset();
+    this.searchFilter = '';
+    this.filterSortDevices();
+  }
+
   protected announceSortChange($event: Sort) {
     this.lastSort = $event;
     this.filterSortDevices();
@@ -283,7 +309,8 @@ export class DevicesComponent implements OnInit {
         (this.selectedCategories.size === 0 || this.selectedCategories.has(device.category)) &&
         (this.selectedLocations.size === 0 || this.selectedLocations.has(device.location)) &&
         (this.selectedOwners.size === 0 || this.selectedOwners.has(device.owner?.name ?? '')) &&
-        (this.selectedMakers.size === 0 || this.selectedMakers.has(device.manufacturer)),
+        (this.selectedMakers.size === 0 || this.selectedMakers.has(device.manufacturer)) &&
+        (this.selectedModels.size === 0 || this.selectedModels.has(device.model)),
     );
 
     this.sortDevices();
@@ -341,7 +368,7 @@ export class DevicesComponent implements OnInit {
   }
 
   private devicesMatchingExcept(
-    excludedFacet: 'category' | 'location' | 'owner' | 'maker',
+    excludedFacet: 'category' | 'location' | 'owner' | 'maker' | 'model',
   ): DeviceDetails[] {
     return this.devices.filter(
       (device) =>
@@ -357,7 +384,10 @@ export class DevicesComponent implements OnInit {
           this.selectedOwners.has(device.owner?.name ?? '')) &&
         (excludedFacet === 'maker' ||
           this.selectedMakers.size === 0 ||
-          this.selectedMakers.has(device.manufacturer)),
+          this.selectedMakers.has(device.manufacturer)) &&
+        (excludedFacet === 'model' ||
+          this.selectedModels.size === 0 ||
+          this.selectedModels.has(device.model)),
     );
   }
 
@@ -365,31 +395,36 @@ export class DevicesComponent implements OnInit {
     const availableCategories = new Set(
       this.devicesMatchingExcept('category').map((device) => device.category),
     );
-    this.visibleCategories = this.categories.filter(
-      (category) =>
-        availableCategories.has(category.name) || this.selectedCategories.has(category.name),
-    );
+    this.visibleCategories = this.categories
+      .map((category) => category.name)
+      .filter((name) => availableCategories.has(name) || this.selectedCategories.has(name));
 
     const availableLocations = new Set(
       this.devicesMatchingExcept('location').map((device) => device.location),
     );
-    this.visibleLocations = this.locations.filter(
-      (location) =>
-        availableLocations.has(location.name) || this.selectedLocations.has(location.name),
-    );
+    this.visibleLocations = this.locations
+      .map((location) => location.name)
+      .filter((name) => availableLocations.has(name) || this.selectedLocations.has(name));
 
     const availableOwners = new Set(
       this.devicesMatchingExcept('owner').map((device) => device.owner?.name ?? ''),
     );
-    this.visibleOwners = this.owners.filter(
-      (owner) => availableOwners.has(owner.name) || this.selectedOwners.has(owner.name),
-    );
+    this.visibleOwners = this.owners
+      .map((owner) => owner.name)
+      .filter((name) => availableOwners.has(name) || this.selectedOwners.has(name));
 
     const availableMakers = new Set(
       this.devicesMatchingExcept('maker').map((device) => device.manufacturer),
     );
     this.visibleMakers = this.makers.filter(
       (maker) => availableMakers.has(maker) || this.selectedMakers.has(maker),
+    );
+
+    const availableModels = new Set(
+      this.devicesMatchingExcept('model').map((device) => device.model),
+    );
+    this.visibleModels = this.models.filter(
+      (model) => availableModels.has(model) || this.selectedModels.has(model),
     );
   }
 
@@ -414,18 +449,41 @@ export class DevicesComponent implements OnInit {
     }
   }
 
-  protected resetFilter() {
-    this.deviceSearchFormControl.reset();
-    this.searchFilter = '';
+  protected toggleColumnFilter(column: string, event: MouseEvent) {
+    if (this.openFilterColumn === column) {
+      this.openFilterColumn = null;
+      return;
+    }
+
+    this.openFilterColumn = column;
+    this.optionSearchText = '';
+
+    const buttonRect = (event.currentTarget as HTMLElement).getBoundingClientRect();
+    this.panelAlignRight = buttonRect.left + this.filterPanelWidth > window.innerWidth;
+
+    setTimeout(() => this.optionSearchInput?.nativeElement.focus());
+  }
+
+  protected filterOptions(options: string[]): string[] {
+    const search = this.optionSearchText.toLowerCase();
+    return options.filter((option) => option.toLowerCase().includes(search));
+  }
+
+  protected activateFilteredOptions(options: string[], selectedValues: Set<string>) {
+    for (const option of this.filterOptions(options)) {
+      selectedValues.add(option);
+    }
+
     this.filterSortDevices();
   }
 
-  protected toggleFilterPanel() {
-    this.filterPanelOpen = !this.filterPanelOpen;
+  protected confirmFilterSelection(options: string[], selectedValues: Set<string>) {
+    this.activateFilteredOptions(options, selectedValues);
+    this.closeFilterPanel();
   }
 
   protected closeFilterPanel() {
-    this.filterPanelOpen = false;
+    this.openFilterColumn = null;
   }
 
   protected toggleFilterValue(selectedValues: Set<string>, value: string) {
@@ -438,12 +496,59 @@ export class DevicesComponent implements OnInit {
     this.filterSortDevices();
   }
 
+  protected clearFilterSet(selectedValues: Set<string>) {
+    selectedValues.clear();
+    this.filterSortDevices();
+  }
+
+  protected activeFilterChips(): { label: string; remove: () => void }[] {
+    const chips: { label: string; remove: () => void }[] = [];
+
+    if (this.searchFilter) {
+      chips.push({ label: `Keresés: ${this.searchFilter}`, remove: () => this.resetFilter() });
+    }
+    for (const maker of this.selectedMakers) {
+      chips.push({
+        label: `Gyártó: ${maker}`,
+        remove: () => this.toggleFilterValue(this.selectedMakers, maker),
+      });
+    }
+    for (const category of this.selectedCategories) {
+      chips.push({
+        label: `Kategória: ${category}`,
+        remove: () => this.toggleFilterValue(this.selectedCategories, category),
+      });
+    }
+    for (const location of this.selectedLocations) {
+      chips.push({
+        label: `Tárolási hely: ${location}`,
+        remove: () => this.toggleFilterValue(this.selectedLocations, location),
+      });
+    }
+    for (const owner of this.selectedOwners) {
+      chips.push({
+        label: `Tulajdonos: ${owner}`,
+        remove: () => this.toggleFilterValue(this.selectedOwners, owner),
+      });
+    }
+    for (const model of this.selectedModels) {
+      chips.push({
+        label: `Típus: ${model}`,
+        remove: () => this.toggleFilterValue(this.selectedModels, model),
+      });
+    }
+
+    return chips;
+  }
+
   protected hasActiveFilters(): boolean {
     return (
       this.selectedCategories.size > 0 ||
       this.selectedLocations.size > 0 ||
       this.selectedOwners.size > 0 ||
-      this.selectedMakers.size > 0
+      this.selectedMakers.size > 0 ||
+      this.selectedModels.size > 0 ||
+      !!this.searchFilter
     );
   }
 
@@ -452,7 +557,7 @@ export class DevicesComponent implements OnInit {
     this.selectedLocations.clear();
     this.selectedOwners.clear();
     this.selectedMakers.clear();
-
-    this.filterSortDevices();
+    this.selectedModels.clear();
+    this.resetFilter();
   }
 }

@@ -54,7 +54,9 @@
 
         <ng-container matColumnDef="assignedScannables">
           <th mat-header-cell *matHeaderCellDef>Birtokolt eszközök száma</th>
-          <td mat-cell (click)="editOwner(owner)" *matCellDef="let owner"><i>sok</i> db</td>
+          <td mat-cell (click)="editOwner(owner)" *matCellDef="let owner">
+            {{ assignedScannableCount(owner.id) }} db
+          </td>
         </ng-container>
 
         <ng-container matColumnDef="updatedAt">

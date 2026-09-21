@@ -25,6 +25,9 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { YesnoModalComponent } from '../../../../components/yesno-modal/yesno-modal.component';
 import { EditOwnerModalComponent } from '../../../../components/edit-owner-modal/edit-owner-modal.component';
 import { OwnerUpdateDto } from '../../../../model/owner/ownerUpdateDto';
+import { forkJoin } from 'rxjs';
+import { DeviceService } from '../../../../services/device.service';
+import { ContainerService } from '../../../../services/container.service';
 
 const COLUMNS: string[] = [
   'name',
@@ -67,8 +70,12 @@ const COLUMNS: string[] = [
 })
 export class OwnersComponent implements OnInit {
   private ownerService = inject(OwnerService);
+  private deviceService = inject(DeviceService);
+  private containerService = inject(ContainerService);
   private dialog = inject(MatDialog);
   private snackBar = inject(MatSnackBar);
+
+  private assignedScannableCounts = new Map<number, number>();
 
   @ViewChild(MatTable) ownerTable!: MatTable<OwnerDetailsDto>;
 
@@ -82,6 +89,25 @@ export class OwnersComponent implements OnInit {
 
   ngOnInit(): void {
     this.getCategories();
+    this.loadAssignedScannableCounts();
+  }
+
+  private loadAssignedScannableCounts() {
+    forkJoin([this.deviceService.getDevices(), this.containerService.getContainers()]).subscribe(
+      ([devices, containers]) => {
+        this.assignedScannableCounts.clear();
+        for (const scannable of [...devices, ...containers]) {
+          this.assignedScannableCounts.set(
+            scannable.owner.id,
+            (this.assignedScannableCounts.get(scannable.owner.id) ?? 0) + 1,
+          );
+        }
+      },
+    );
+  }
+
+  protected assignedScannableCount(ownerId: number): number {
+    return this.assignedScannableCounts.get(ownerId) ?? 0;
   }
 
   private getCategories() {

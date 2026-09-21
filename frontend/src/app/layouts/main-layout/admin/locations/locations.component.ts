@@ -28,6 +28,9 @@ import {
 } from '../../../../components/onlyname-edit-modal/onlyname-edit-modal.component';
 import { YesnoModalComponent } from '../../../../components/yesno-modal/yesno-modal.component';
 import { LocationDetails } from '../../../../model/location/LocationDetails';
+import { forkJoin } from 'rxjs';
+import { DeviceService } from '../../../../services/device.service';
+import { ContainerService } from '../../../../services/container.service';
 
 const COLUMNS: string[] = ['name', 'assignedScannables', 'createdAt', 'createdBy', 'delete'];
 
@@ -63,8 +66,12 @@ const COLUMNS: string[] = ['name', 'assignedScannables', 'createdAt', 'createdBy
 })
 export class LocationsComponent implements OnInit {
   private locationService = inject(LocationService);
+  private deviceService = inject(DeviceService);
+  private containerService = inject(ContainerService);
   private dialog = inject(MatDialog);
   private snackBar = inject(MatSnackBar);
+
+  private assignedScannableCounts = new Map<string, number>();
 
   @ViewChild(MatTable) locationTable!: MatTable<LocationDetails>;
 
@@ -78,6 +85,25 @@ export class LocationsComponent implements OnInit {
 
   ngOnInit(): void {
     this.getCategories();
+    this.loadAssignedScannableCounts();
+  }
+
+  private loadAssignedScannableCounts() {
+    forkJoin([this.deviceService.getDevices(), this.containerService.getContainers()]).subscribe(
+      ([devices, containers]) => {
+        this.assignedScannableCounts.clear();
+        for (const scannable of [...devices, ...containers]) {
+          this.assignedScannableCounts.set(
+            scannable.location,
+            (this.assignedScannableCounts.get(scannable.location) ?? 0) + 1,
+          );
+        }
+      },
+    );
+  }
+
+  protected assignedScannableCount(locationName: string): number {
+    return this.assignedScannableCounts.get(locationName) ?? 0;
   }
 
   private getCategories() {

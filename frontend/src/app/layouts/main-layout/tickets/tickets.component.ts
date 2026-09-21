@@ -1,4 +1,12 @@
-import { Component, effect, OnInit, ChangeDetectionStrategy, inject } from '@angular/core';
+import {
+  Component,
+  effect,
+  ElementRef,
+  OnInit,
+  ViewChild,
+  ChangeDetectionStrategy,
+  inject,
+} from '@angular/core';
 import {
   MatCell,
   MatCellDef,
@@ -23,7 +31,7 @@ import {
   TICKET_STATUS_ORDER,
 } from '../../../model/ticket/ticketLabels';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
-import { DatePipe } from '@angular/common';
+import { DatePipe, NgTemplateOutlet } from '@angular/common';
 import { MatSortModule, Sort } from '@angular/material/sort';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatIcon } from '@angular/material/icon';
@@ -34,6 +42,7 @@ import { environment } from '../../../../environments/environment';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { WindowWidthService } from '../../../services/windowWidth.service';
 import { MatCheckbox } from '@angular/material/checkbox';
+import { MatChip, MatChipRemove, MatChipSet } from '@angular/material/chips';
 import { MatSlideToggle } from '@angular/material/slide-toggle';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatDialog } from '@angular/material/dialog';
@@ -50,9 +59,9 @@ const ALL_COLUMNS: string[] = [
   'status',
   'id',
   'createdAt',
+  'createdBy',
   'device',
   'description',
-  'createdBy',
   'comments',
 ];
 const REDUCED_COLUMNS: string[] = ['severity', 'id', 'status', 'createdAt', 'device'];
@@ -86,8 +95,12 @@ const REDUCED_COLUMNS: string[] = ['severity', 'id', 'status', 'createdAt', 'dev
     MatFabButton,
     MatButton,
     MatCheckbox,
+    MatChip,
+    MatChipRemove,
+    MatChipSet,
     MatSlideToggle,
     MatTooltip,
+    NgTemplateOutlet,
   ],
   templateUrl: './tickets.component.html',
   host: {
@@ -106,6 +119,7 @@ export class TicketsComponent implements OnInit {
   private location = inject(Location);
 
   protected loading = true;
+  @ViewChild('optionSearchInput') optionSearchInput?: ElementRef<HTMLInputElement>;
 
   protected ticketSearchFormControl = new FormControl();
   private searchFilter = '';
@@ -121,7 +135,10 @@ export class TicketsComponent implements OnInit {
 
   private lastSort: Sort = { active: 'createdAt', direction: 'desc' };
 
-  protected filterPanelOpen = false;
+  protected openFilterColumn: string | null = null;
+  protected panelAlignRight = false;
+  protected optionSearchText = '';
+  private readonly filterPanelWidth = 320;
 
   protected statuses: TicketStatus[] = Object.values(TicketStatus);
   protected severities: TicketSeverity[] = Object.values(TicketSeverity);
@@ -190,7 +207,7 @@ export class TicketsComponent implements OnInit {
     this.creators = Array.from(
       new Set(
         this.tickets
-          .map((ticket) => ticket.createdBy?.nickname)
+          .map((ticket) => ticket.createdBy?.displayName)
           .filter((nickname): nickname is string => !!nickname),
       ),
     ).sort((a, b) => a.localeCompare(b));
@@ -199,6 +216,12 @@ export class TicketsComponent implements OnInit {
   protected applyFilter() {
     this.searchFilter = this.ticketSearchFormControl.value;
 
+    this.filterSortTickets();
+  }
+
+  protected resetFilter() {
+    this.ticketSearchFormControl.reset();
+    this.searchFilter = '';
     this.filterSortTickets();
   }
 
@@ -220,7 +243,7 @@ export class TicketsComponent implements OnInit {
         (this.selectedStatuses.size === 0 || this.selectedStatuses.has(ticket.status)) &&
         (this.selectedSeverities.size === 0 || this.selectedSeverities.has(ticket.severity)) &&
         (this.selectedCreators.size === 0 ||
-          this.selectedCreators.has(ticket.createdBy?.nickname ?? '')),
+          this.selectedCreators.has(ticket.createdBy?.displayName ?? '')),
     );
 
     this.sortTickets();
@@ -260,7 +283,7 @@ export class TicketsComponent implements OnInit {
       case 'device':
         return (a, b) => this.compareStrings(a.scannable?.name, b.scannable?.name);
       case 'createdBy':
-        return (a, b) => this.compareStrings(a.createdBy?.nickname, b.createdBy?.nickname);
+        return (a, b) => this.compareStrings(a.createdBy?.displayName, b.createdBy?.displayName);
       case 'comments':
         return (a, b) => a.comments.length - b.comments.length;
       default:
@@ -297,7 +320,7 @@ export class TicketsComponent implements OnInit {
           this.selectedSeverities.has(ticket.severity)) &&
         (excludedFacet === 'creator' ||
           this.selectedCreators.size === 0 ||
-          this.selectedCreators.has(ticket.createdBy?.nickname ?? '')),
+          this.selectedCreators.has(ticket.createdBy?.displayName ?? '')),
     );
   }
 
@@ -317,11 +340,58 @@ export class TicketsComponent implements OnInit {
     );
 
     const availableCreators = new Set(
-      this.ticketsMatchingExcept('creator').map((ticket) => ticket.createdBy?.nickname ?? ''),
+      this.ticketsMatchingExcept('creator').map((ticket) => ticket.createdBy?.displayName ?? ''),
     );
     this.visibleCreators = this.creators.filter(
       (creator) => availableCreators.has(creator) || this.selectedCreators.has(creator),
     );
+  }
+
+  protected toggleColumnFilter(column: string, event: MouseEvent) {
+    if (this.openFilterColumn === column) {
+      this.openFilterColumn = null;
+      return;
+    }
+
+    this.openFilterColumn = column;
+    this.optionSearchText = '';
+
+    const buttonRect = (event.currentTarget as HTMLElement).getBoundingClientRect();
+    this.panelAlignRight = buttonRect.left + this.filterPanelWidth > window.innerWidth;
+
+    setTimeout(() => this.optionSearchInput?.nativeElement.focus());
+  }
+
+  protected filterOptions<T extends string>(options: T[], labelMap?: Record<string, string>): T[] {
+    const search = this.optionSearchText.toLowerCase();
+    return options.filter((option) =>
+      (labelMap?.[option] ?? option).toLowerCase().includes(search),
+    );
+  }
+
+  protected activateFilteredOptions<T extends string>(
+    options: T[],
+    selectedValues: Set<T>,
+    labelMap?: Record<string, string>,
+  ) {
+    for (const option of this.filterOptions(options, labelMap)) {
+      selectedValues.add(option);
+    }
+
+    this.filterSortTickets();
+  }
+
+  protected confirmFilterSelection<T extends string>(
+    options: T[],
+    selectedValues: Set<T>,
+    labelMap?: Record<string, string>,
+  ) {
+    this.activateFilteredOptions(options, selectedValues, labelMap);
+    this.closeFilterPanel();
+  }
+
+  protected closeFilterPanel() {
+    this.openFilterColumn = null;
   }
 
   protected pageTickets(pageEvent: PageEvent) {
@@ -338,20 +408,6 @@ export class TicketsComponent implements OnInit {
     this.pagedTickets = this.filteredTickets.slice(startId, endId);
   }
 
-  protected resetFilter() {
-    this.ticketSearchFormControl.reset();
-    this.searchFilter = '';
-    this.filterSortTickets();
-  }
-
-  protected toggleFilterPanel() {
-    this.filterPanelOpen = !this.filterPanelOpen;
-  }
-
-  protected closeFilterPanel() {
-    this.filterPanelOpen = false;
-  }
-
   protected toggleFilterValue<T>(selectedValues: Set<T>, value: T) {
     if (selectedValues.has(value)) {
       selectedValues.delete(value);
@@ -362,11 +418,45 @@ export class TicketsComponent implements OnInit {
     this.filterSortTickets();
   }
 
+  protected clearFilterSet(selectedValues: Set<unknown>) {
+    selectedValues.clear();
+    this.filterSortTickets();
+  }
+
+  protected activeFilterChips(): { label: string; remove: () => void }[] {
+    const chips: { label: string; remove: () => void }[] = [];
+
+    if (this.searchFilter) {
+      chips.push({ label: `Keresés: ${this.searchFilter}`, remove: () => this.resetFilter() });
+    }
+    for (const status of this.selectedStatuses) {
+      chips.push({
+        label: `Állapot: ${this.statusLabels[status]}`,
+        remove: () => this.toggleFilterValue(this.selectedStatuses, status),
+      });
+    }
+    for (const severity of this.selectedSeverities) {
+      chips.push({
+        label: `Súlyosság: ${this.severityLabels[severity]}`,
+        remove: () => this.toggleFilterValue(this.selectedSeverities, severity),
+      });
+    }
+    for (const creator of this.selectedCreators) {
+      chips.push({
+        label: `Létrehozó: ${creator}`,
+        remove: () => this.toggleFilterValue(this.selectedCreators, creator),
+      });
+    }
+
+    return chips;
+  }
+
   protected hasActiveFilters(): boolean {
     return (
       this.selectedStatuses.size > 0 ||
       this.selectedSeverities.size > 0 ||
-      this.selectedCreators.size > 0
+      this.selectedCreators.size > 0 ||
+      !!this.searchFilter
     );
   }
 
@@ -374,8 +464,7 @@ export class TicketsComponent implements OnInit {
     this.selectedStatuses.clear();
     this.selectedSeverities.clear();
     this.selectedCreators.clear();
-
-    this.filterSortTickets();
+    this.resetFilter();
   }
 
   protected newTicket() {

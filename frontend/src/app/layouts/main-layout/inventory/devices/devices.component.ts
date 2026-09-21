@@ -1,6 +1,7 @@
 import {
   Component,
   effect,
+  ElementRef,
   OnInit,
   ViewChild,
   ChangeDetectionStrategy,
@@ -120,6 +121,7 @@ export class DevicesComponent implements OnInit {
 
   protected loading = true;
   @ViewChild(MatTable) table!: MatTable<DeviceDetails>;
+  @ViewChild('optionSearchInput') optionSearchInput?: ElementRef<HTMLInputElement>;
 
   protected deviceSearchFormControl = new FormControl();
   private searchFilter = '';
@@ -458,11 +460,26 @@ export class DevicesComponent implements OnInit {
 
     const buttonRect = (event.currentTarget as HTMLElement).getBoundingClientRect();
     this.panelAlignRight = buttonRect.left + this.filterPanelWidth > window.innerWidth;
+
+    setTimeout(() => this.optionSearchInput?.nativeElement.focus());
   }
 
   protected filterOptions(options: string[]): string[] {
     const search = this.optionSearchText.toLowerCase();
     return options.filter((option) => option.toLowerCase().includes(search));
+  }
+
+  protected activateFilteredOptions(options: string[], selectedValues: Set<string>) {
+    for (const option of this.filterOptions(options)) {
+      selectedValues.add(option);
+    }
+
+    this.filterSortDevices();
+  }
+
+  protected confirmFilterSelection(options: string[], selectedValues: Set<string>) {
+    this.activateFilteredOptions(options, selectedValues);
+    this.closeFilterPanel();
   }
 
   protected closeFilterPanel() {

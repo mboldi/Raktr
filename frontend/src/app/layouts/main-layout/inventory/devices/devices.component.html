@@ -1,55 +1,55 @@
 <mat-card class="list-header-card bg-blue">
-  <h2>Eszközök kezelése</h2>
-
-  <div class="list-header-actions-row">
-    <div style="display: flex; flex-direction: row; align-items: start">
-      <div class="search-and-clear" style="display: flex; flex-direction: row; align-items: center">
-        <mat-form-field class="search-box">
-          <mat-label>Keresés</mat-label>
-          <input
-            matInput
-            (keyup)="applyFilter()"
-            placeholder="Kamera"
-            [formControl]="deviceSearchFormControl"
-          />
-          @if (deviceSearchFormControl.value) {
-            <button mat-icon-button matSuffix (click)="resetFilter()">
-              <mat-icon matSuffix>close</mat-icon>
-            </button>
-          }
-        </mat-form-field>
-
-        @if (hasActiveFilters()) {
-          <button
-            mat-icon-button
-            class="clear-filters-button mb-4"
-            (click)="clearFilters()"
-            aria-label="Szűrők törlése"
-            matTooltip="Szűrők törlése"
-          >
-            <mat-icon>filter_alt_off</mat-icon>
-          </button>
-        }
-      </div>
-
-      @if (hasActiveFilters()) {
-        <mat-chip-set class="active-filters-row" aria-label="Aktív szűrők">
-          @for (chip of activeFilterChips(); track chip.label) {
-            <mat-chip [removable]="true" (removed)="chip.remove()">
-              {{ chip.label }}
-              <button matChipRemove aria-label="Szűrő eltávolítása">
-                <mat-icon>cancel</mat-icon>
-              </button>
-            </mat-chip>
-          }
-        </mat-chip-set>
-      }
-    </div>
+  <div class="header-title-row">
+    <h2>Eszközök kezelése</h2>
 
     <button matFab extended class="add-button" (click)="newDevice()">
       <mat-icon>add</mat-icon>
       Új hozzáadása
     </button>
+  </div>
+
+  <div class="list-header-actions-row">
+    <div class="search-and-clear" style="display: flex; flex-direction: row; align-items: center">
+      <mat-form-field class="search-box">
+        <mat-label>Keresés</mat-label>
+        <input
+          matInput
+          (keyup)="applyFilter()"
+          placeholder="Kamera"
+          [formControl]="deviceSearchFormControl"
+        />
+        @if (deviceSearchFormControl.value) {
+          <button mat-icon-button matSuffix (click)="resetFilter()">
+            <mat-icon matSuffix>close</mat-icon>
+          </button>
+        }
+      </mat-form-field>
+
+      @if (hasActiveFilters()) {
+        <button
+          mat-icon-button
+          class="clear-filters-button mb-4"
+          (click)="clearFilters()"
+          aria-label="Szűrők törlése"
+          matTooltip="Szűrők törlése"
+        >
+          <mat-icon>filter_alt_off</mat-icon>
+        </button>
+      }
+    </div>
+
+    @if (hasActiveFilters()) {
+      <mat-chip-set class="active-filters-row" aria-label="Aktív szűrők">
+        @for (chip of activeFilterChips(); track chip.label) {
+          <mat-chip [removable]="true" (removed)="chip.remove()">
+            {{ chip.label }}
+            <button matChipRemove aria-label="Szűrő eltávolítása">
+              <mat-icon>cancel</mat-icon>
+            </button>
+          </mat-chip>
+        }
+      </mat-chip-set>
+    }
   </div>
 </mat-card>
 
@@ -63,8 +63,14 @@
       </button>
     </div>
     <div class="filter-panel-content">
-      <mat-form-field class="filter-search-field">
-        <input matInput [(ngModel)]="optionSearchText" placeholder="Keresés a listában..." />
+      <mat-form-field class="filter-search-field" subscriptSizing="dynamic">
+        <input
+          #optionSearchInput
+          matInput
+          [(ngModel)]="optionSearchText"
+          placeholder="Keresés a listában..."
+          (keydown.enter)="confirmFilterSelection(options, selected)"
+        />
         @if (optionSearchText) {
           <button mat-icon-button matSuffix (click)="optionSearchText = ''">
             <mat-icon matSuffix>close</mat-icon>

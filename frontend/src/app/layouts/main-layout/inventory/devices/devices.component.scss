@@ -1,3 +1,16 @@
+.header-title-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.list-header-actions-row {
+  justify-content: flex-start !important;
+  flex-wrap: nowrap !important;
+  align-items: flex-start !important;
+}
+
 .search-and-clear {
   display: flex;
   flex-direction: row;
@@ -6,8 +19,9 @@
 }
 
 .active-filters-row {
+  flex: 1 1 auto;
+  min-width: 0;
   margin-left: 8px;
-  align-self: center;
 
   --mat-chip-label-text-color: light-dark(#f8f9ff, #f8f9ff);
 
@@ -113,6 +127,17 @@ th.mat-mdc-header-cell {
 
 .filter-search-field {
   width: 100%;
+  font-size: 13px;
+
+  ::ng-deep .mat-mdc-text-field-wrapper {
+    height: 36px;
+  }
+
+  ::ng-deep .mat-mdc-form-field-infix {
+    min-height: 36px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+  }
 }
 
 .filter-options {

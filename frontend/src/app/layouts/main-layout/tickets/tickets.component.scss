@@ -3,15 +3,90 @@
   white-space: nowrap;
 }
 
+.header-title-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.header-title-group {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 24px;
+}
+
+.list-header-actions-row {
+  justify-content: flex-start !important;
+  flex-wrap: nowrap !important;
+  align-items: flex-start !important;
+}
+
+.search-and-clear {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  flex-shrink: 0;
+}
+
 .show-closed-toggle {
-  align-self: center;
-  margin: 0 16px;
   white-space: nowrap;
+
+  --mat-slide-toggle-label-text-color: light-dark(#f8f9ff, #f8f9ff);
+}
+
+.active-filters-row {
+  flex: 1 1 auto;
+  min-width: 0;
+  margin-left: 8px;
+  align-self: center;
+
+  --mat-chip-label-text-color: light-dark(#f8f9ff, #f8f9ff);
+
+  ::ng-deep .mat-mdc-chip-action-label {
+    color: light-dark(#f8f9ff, #f8f9ff) !important;
+  }
 }
 
 .filter-anchor {
   position: relative;
   display: inline-block;
+
+  // Only the open dropdown gets a stacking context, so it always paints above
+  // every other (unpositioned) header cell regardless of column order.
+  &.filter-anchor-open {
+    z-index: 1000;
+  }
+}
+
+::ng-deep .mat-mdc-table,
+::ng-deep .mat-mdc-header-row,
+::ng-deep .mat-mdc-row,
+::ng-deep th.mat-mdc-header-cell {
+  overflow: visible !important;
+}
+
+th.mat-mdc-header-cell {
+  white-space: nowrap;
+
+  .th-label {
+    vertical-align: middle;
+  }
+
+  .th-filter-button {
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    line-height: 28px;
+    vertical-align: middle;
+
+    .mat-icon {
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+    }
+  }
 }
 
 .filter-button-active {
@@ -20,33 +95,35 @@
 }
 
 .clear-filters-button {
-  margin-left: 8px;
+  margin-left: 4px;
   color: light-dark(#f8f9ff, #f8f9ff) !important;
-
-  mat-icon {
-    margin-right: 4px;
-  }
 }
 
 .filter-backdrop {
   position: fixed;
   inset: 0;
-  z-index: 100;
+  z-index: 1000;
 }
 
 .filter-panel {
   position: absolute;
   top: calc(100% + 8px);
   left: 0;
-  z-index: 101;
+  z-index: 1001;
 
-  width: 320px;
+  width: max-content;
+  min-width: 320px;
   max-width: 90vw;
-  max-height: 70vh;
+  max-height: 50vh;
 
   display: flex;
   flex-direction: column;
   padding: 0 !important;
+
+  &.filter-panel-right {
+    left: auto;
+    right: 0;
+  }
 }
 
 .filter-panel-header {
@@ -67,24 +144,25 @@
   padding: 0 16px;
 }
 
-.filter-group {
-  padding: 8px 0;
+.filter-search-field {
+  width: 100%;
+  font-size: 13px;
 
-  &:not(:last-child) {
-    border-bottom: 1px solid var(--mat-sys-outline-variant);
+  ::ng-deep .mat-mdc-text-field-wrapper {
+    height: 36px;
   }
 
-  h4 {
-    margin: 0 0 4px 0;
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--mat-sys-on-surface-variant);
+  ::ng-deep .mat-mdc-form-field-infix {
+    min-height: 36px;
+    padding-top: 8px;
+    padding-bottom: 8px;
   }
 }
 
 .filter-options {
   display: flex;
   flex-direction: column;
+  white-space: nowrap;
 }
 
 .filter-empty {

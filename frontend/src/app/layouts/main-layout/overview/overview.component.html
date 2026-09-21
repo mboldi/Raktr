@@ -55,9 +55,11 @@
         <mat-card-content>
           <div>
             <p>{{ activeRents.length }} <b>db</b></p>
-            <button matFab aria-label="Új kivitel" (click)="addRent()">
-              <mat-icon matSuffix>add</mat-icon>
-            </button>
+            @if (canCreate) {
+              <button matFab aria-label="Új kivitel" (click)="addRent()">
+                <mat-icon matSuffix>add</mat-icon>
+              </button>
+            }
           </div>
         </mat-card-content>
       </mat-card>
@@ -72,9 +74,11 @@
         <mat-card-content>
           <div>
             <p>{{ scannableCount }} <b>db</b></p>
-            <button matFab aria-label="Új eszköz" (click)="addDevice()">
-              <mat-icon matSuffix>add</mat-icon>
-            </button>
+            @if (canCreate) {
+              <button matFab aria-label="Új eszköz" (click)="addDevice()">
+                <mat-icon matSuffix>add</mat-icon>
+              </button>
+            }
           </div>
         </mat-card-content>
       </mat-card>
@@ -89,9 +93,11 @@
         <mat-card-content>
           <div>
             <p>{{ ticketCount }} <b>db</b></p>
-            <button matFab aria-label="Új hibajegy" (click)="addTicket()">
-              <mat-icon matSuffix>add</mat-icon>
-            </button>
+            @if (canCreate) {
+              <button matFab aria-label="Új hibajegy" (click)="addTicket()">
+                <mat-icon matSuffix>add</mat-icon>
+              </button>
+            }
           </div>
         </mat-card-content>
       </mat-card>

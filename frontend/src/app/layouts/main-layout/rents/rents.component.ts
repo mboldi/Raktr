@@ -21,6 +21,7 @@ import {
 } from '@angular/material/table';
 import { MatFormField, MatInput, MatLabel, MatSuffix } from '@angular/material/input';
 import { RentService } from '../../../services/rent.service';
+import { AdminAccessService } from '../../../services/adminAccess.service';
 import { RentDetails } from '../../../model/rent/rentDetails';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { DatePipe, DecimalPipe, NgTemplateOutlet } from '@angular/common';
@@ -101,8 +102,10 @@ export class RentsComponent implements OnInit {
   private localStorageService = inject(LocalStorageService);
   private rentService = inject(RentService);
   private router = inject(Router);
+  private adminAccessService = inject(AdminAccessService);
 
   protected loading = true;
+  protected canCreate = false;
   @ViewChild(MatTable) table!: MatTable<RentDetails>;
   @ViewChild('optionSearchInput') optionSearchInput?: ElementRef<HTMLInputElement>;
 
@@ -144,6 +147,10 @@ export class RentsComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.adminAccessService
+      .canCreateContent()
+      .subscribe((canCreate) => (this.canCreate = canCreate));
+
     const readPageSize = this.localStorageService.read(`${environment.defaultPageSizeKey}`);
     if (readPageSize) {
       this.pageSize = parseInt(readPageSize);

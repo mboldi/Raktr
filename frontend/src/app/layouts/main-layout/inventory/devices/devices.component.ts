@@ -43,6 +43,7 @@ import { WindowWidthService } from '../../../../services/windowWidth.service';
 import { CategoryService } from '../../../../services/category.service';
 import { LocationService } from '../../../../services/location.service';
 import { OwnerService } from '../../../../services/owner.service';
+import { AdminAccessService } from '../../../../services/adminAccess.service';
 import { CategoryDetails } from '../../../../model/category/categoryDetails';
 import { LocationDetails } from '../../../../model/location/LocationDetails';
 import { OwnerDetailsDto } from '../../../../model/owner/ownerDetailsDto';
@@ -118,8 +119,10 @@ export class DevicesComponent implements OnInit {
   private ownerService = inject(OwnerService);
   private route = inject(ActivatedRoute);
   private location = inject(Location);
+  private adminAccessService = inject(AdminAccessService);
 
   protected loading = true;
+  protected canCreate = false;
   @ViewChild(MatTable) table!: MatTable<DeviceDetails>;
   @ViewChild('optionSearchInput') optionSearchInput?: ElementRef<HTMLInputElement>;
 
@@ -168,6 +171,10 @@ export class DevicesComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.adminAccessService
+      .canCreateContent()
+      .subscribe((canCreate) => (this.canCreate = canCreate));
+
     const readPageSize = this.localStorageService.read(`${environment.defaultPageSizeKey}`);
     if (readPageSize) {
       this.pageSize = parseInt(readPageSize);

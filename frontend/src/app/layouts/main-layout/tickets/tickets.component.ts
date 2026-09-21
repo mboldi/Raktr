@@ -21,6 +21,7 @@ import {
 } from '@angular/material/table';
 import { MatFormField, MatInput, MatLabel, MatSuffix } from '@angular/material/input';
 import { TicketService } from '../../../services/ticket.service';
+import { AdminAccessService } from '../../../services/adminAccess.service';
 import { TicketDetails } from '../../../model/ticket/ticketDetails';
 import { TicketStatus } from '../../../model/ticket/ticketStatus';
 import { TicketSeverity } from '../../../model/ticket/ticketSeverity';
@@ -117,8 +118,10 @@ export class TicketsComponent implements OnInit {
   private snackBar = inject(MatSnackBar);
   private route = inject(ActivatedRoute);
   private location = inject(Location);
+  private adminAccessService = inject(AdminAccessService);
 
   protected loading = true;
+  protected canCreate = false;
   @ViewChild('optionSearchInput') optionSearchInput?: ElementRef<HTMLInputElement>;
 
   protected ticketSearchFormControl = new FormControl();
@@ -173,6 +176,10 @@ export class TicketsComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.adminAccessService
+      .canCreateContent()
+      .subscribe((canCreate) => (this.canCreate = canCreate));
+
     const readPageSize = this.localStorageService.read(`${environment.defaultPageSizeKey}`);
     if (readPageSize) {
       this.pageSize = parseInt(readPageSize);

@@ -12,10 +12,12 @@
       </mat-slide-toggle>
     </div>
 
-    <button matFab extended class="add-button" (click)="newRent()">
-      <mat-icon>add</mat-icon>
-      Új hozzáadása
-    </button>
+    @if (canCreate) {
+      <button matFab extended class="add-button" (click)="newRent()">
+        <mat-icon>add</mat-icon>
+        Új hozzáadása
+      </button>
+    }
   </div>
 
   <div class="list-header-actions-row">

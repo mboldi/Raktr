@@ -2,7 +2,7 @@ import { ApplicationConfig, isDevMode, provideZoneChangeDetection } from '@angul
 import { provideRouter } from '@angular/router';
 
 import { routes } from './app.routes';
-import { provideHttpClient, withInterceptors, withXhr } from '@angular/common/http';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import {
   AbstractSecurityStorage,
   authInterceptor,
@@ -16,7 +16,7 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
-    provideHttpClient(withXhr(), withInterceptors([authInterceptor()])),
+    provideHttpClient(withInterceptors([authInterceptor()])),
     provideAuth({
       config: {
         authority: 'https://login.bsstudio.hu/application/o/raktr',

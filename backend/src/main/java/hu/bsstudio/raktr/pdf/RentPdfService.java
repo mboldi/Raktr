@@ -1,9 +1,9 @@
 package hu.bsstudio.raktr.pdf;
 
 import com.itextpdf.io.font.PdfEncodings;
-import com.itextpdf.io.font.constants.StandardFonts;
 import com.itextpdf.kernel.font.PdfFont;
 import com.itextpdf.kernel.font.PdfFontFactory;
+import com.itextpdf.kernel.font.PdfFontFactory.EmbeddingStrategy;
 import com.itextpdf.kernel.geom.PageSize;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -33,6 +34,9 @@ import java.util.Map;
 public class RentPdfService {
 
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy. MM. dd.");
+
+    private static final byte[] REGULAR_FONT = loadFont("LiberationSerif-Regular.ttf");
+    private static final byte[] BOLD_FONT = loadFont("LiberationSerif-Bold.ttf");
 
     public byte[] generateRentPdf(RentPdfRequest request) {
         try (var outputStream = new ByteArrayOutputStream()) {
@@ -50,8 +54,8 @@ public class RentPdfService {
 
         var pageWidth = pdfDoc.getDefaultPageSize().getWidth() - document.getLeftMargin() - document.getRightMargin();
 
-        var regularFont = PdfFontFactory.createFont(StandardFonts.TIMES_ROMAN, PdfEncodings.CP1250);
-        var boldFont = PdfFontFactory.createFont(StandardFonts.TIMES_BOLD, PdfEncodings.CP1250);
+        var regularFont = PdfFontFactory.createFont(REGULAR_FONT, PdfEncodings.IDENTITY_H, EmbeddingStrategy.FORCE_EMBEDDED);
+        var boldFont = PdfFontFactory.createFont(BOLD_FONT, PdfEncodings.IDENTITY_H, EmbeddingStrategy.FORCE_EMBEDDED);
 
         addTitle(document, boldFont, regularFont, pageWidth);
         addPartiesTable(document, regularFont, boldFont, pageWidth, request);
@@ -315,6 +319,17 @@ public class RentPdfService {
 
     private String formatDate(LocalDate date) {
         return date != null ? date.format(DATE_FORMATTER) : "";
+    }
+
+    private static byte[] loadFont(String fileName) {
+        try (var stream = RentPdfService.class.getResourceAsStream("/fonts/" + fileName)) {
+            if (stream == null) {
+                throw new IllegalStateException("Font resource not found: " + fileName);
+            }
+            return stream.readAllBytes();
+        } catch (IOException e) {
+            throw new UncheckedIOException("Failed to load font resource: " + fileName, e);
+        }
     }
 
 }

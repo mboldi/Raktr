@@ -12,6 +12,9 @@ const MOBILE_WIDTH_BREAKPOINT = 992;
   selector: 'app-main-layout',
   imports: [SidebarComponent, RouterOutlet, MatIconButton, MatIcon],
   templateUrl: './main-layout.component.html',
+  host: {
+    '(document:keydown.escape)': 'closeSidebar()',
+  },
   changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './main-layout.component.scss',
 })

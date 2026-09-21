@@ -90,6 +90,9 @@ const REDUCED_COLUMNS: string[] = ['severity', 'id', 'status', 'createdAt', 'dev
     MatTooltip,
   ],
   templateUrl: './tickets.component.html',
+  host: {
+    '(document:keydown.escape)': 'closeFilterPanel()',
+  },
   changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './tickets.component.scss',
 })

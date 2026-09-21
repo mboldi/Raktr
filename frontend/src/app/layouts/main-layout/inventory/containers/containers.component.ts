@@ -90,6 +90,9 @@ const REDUCED_COLUMNS: string[] = ['name', 'assetTag', 'location', 'itemCount'];
     MatButton,
   ],
   templateUrl: './containers.component.html',
+  host: {
+    '(document:keydown.escape)': 'closeFilterPanel()',
+  },
   changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './containers.component.scss',
 })

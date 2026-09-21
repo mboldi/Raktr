@@ -92,6 +92,9 @@ const REDUCED_COLUMNS: string[] = ['name', 'assetTag', 'maker', 'model'];
     MatButton,
   ],
   templateUrl: './devices.component.html',
+  host: {
+    '(document:keydown.escape)': 'closeFilterPanel()',
+  },
   changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './devices.component.scss',
 })

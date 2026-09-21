@@ -82,6 +82,9 @@ const REDUCED_COLUMNS: string[] = ['status', 'issuer', 'renter', 'destination', 
     MatSlideToggle,
   ],
   templateUrl: './rents.component.html',
+  host: {
+    '(document:keydown.escape)': 'closeFilterPanel()',
+  },
   changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './rents.component.scss',
 })

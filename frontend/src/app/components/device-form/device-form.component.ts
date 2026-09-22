@@ -36,6 +36,7 @@ import { DeviceService } from '../../services/device.service';
 import { MatSelect } from '@angular/material/select';
 import { DeviceStatus } from '../../model/scannable/device/deviceStatus';
 import { environment } from '../../../environments/environment';
+import { incrementTrailingNumber } from '../../util/incrementTrailingNumber';
 
 @Component({
   selector: 'app-device-form',
@@ -149,6 +150,7 @@ export class DeviceFormComponent implements OnInit {
       this.deviceForm.patchValue(data);
     } else if (duplicateFrom !== null) {
       this.deviceForm.patchValue(duplicateFrom);
+      this.deviceForm.get('assetTag')!.setValue(incrementTrailingNumber(duplicateFrom.assetTag));
       this.generateBarcode();
     } else if (this.presetBarcode()) {
       this.deviceForm.get('barcode')!.setValue(this.presetBarcode());

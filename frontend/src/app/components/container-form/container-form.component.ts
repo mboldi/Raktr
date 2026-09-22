@@ -67,6 +67,7 @@ import {
   MatTable,
 } from '@angular/material/table';
 import { environment } from '../../../environments/environment';
+import { incrementTrailingNumber } from '../../util/incrementTrailingNumber';
 
 export interface AddDeviceEvent {
   device: DeviceDetails;
@@ -202,6 +203,7 @@ export class ContainerFormComponent implements OnInit {
       this.containerForm.patchValue(data);
     } else if (duplicateFrom !== null) {
       this.containerForm.patchValue(duplicateFrom);
+      this.containerForm.get('assetTag')!.setValue(incrementTrailingNumber(duplicateFrom.assetTag));
       this.generateBarcode();
     } else {
       this.generateBarcode();

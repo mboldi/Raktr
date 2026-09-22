@@ -177,12 +177,15 @@ export class OverviewComponent implements OnInit {
     const deviceMatches = this.devices.filter(
       (device) =>
         device.name.toLowerCase().includes(filter) ||
+        device.assetTag.toLowerCase().includes(filter) ||
         (device.manufacturer ?? '').toLowerCase().includes(filter) ||
         (device.model ?? '').toLowerCase().includes(filter),
     );
 
-    const containerMatches = this.containers.filter((container) =>
-      container.name.toLowerCase().includes(filter),
+    const containerMatches = this.containers.filter(
+      (container) =>
+        container.name.toLowerCase().includes(filter) ||
+        container.assetTag.toLowerCase().includes(filter),
     );
 
     return [...deviceMatches, ...containerMatches].slice(0, 5);

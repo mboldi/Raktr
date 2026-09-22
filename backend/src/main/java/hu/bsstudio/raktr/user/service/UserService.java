@@ -50,6 +50,13 @@ public class UserService {
         return userMapper.entityToDetailsDto(user);
     }
 
+    public UserDetailsDto getCurrentUser() {
+        var uuid = securityService.getCurrentUserUuid();
+        var user = userRepository.findById(uuid)
+                .orElseThrow(() -> new EntityNotFoundException(User.class, uuid));
+        return userMapper.entityToDetailsDto(user);
+    }
+
     @Transactional
     public UserDetailsDto updateUser(String username, UserUpdateDto updateDto) {
         var user = getUser(username);

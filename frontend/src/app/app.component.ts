@@ -15,10 +15,6 @@ export class AppComponent implements OnInit {
   title = 'Raktr';
 
   ngOnInit() {
-    this.oidcSecurityService.checkAuth().subscribe(({ isAuthenticated, userData }) => {
-      if (isAuthenticated) {
-        localStorage.setItem('username', userData['preferred_username']);
-      }
-    });
+    this.oidcSecurityService.checkAuth().subscribe();
   }
 }

@@ -2,7 +2,6 @@ import { Injectable, inject } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
 import { UserService } from './user.service';
-import { LocalStorageService } from './localStorage.service';
 import { environment } from '../../environments/environment';
 import { UserDetails } from '../model/user/userDetails';
 
@@ -11,15 +10,12 @@ import { UserDetails } from '../model/user/userDetails';
 })
 export class AdminAccessService {
   private userService = inject(UserService);
-  private localStorageService = inject(LocalStorageService);
 
   private currentUser$: Observable<UserDetails> | undefined;
 
   getCurrentUser(): Observable<UserDetails> {
     if (!this.currentUser$) {
-      const username = this.localStorageService.read('username') ?? '';
-
-      this.currentUser$ = this.userService.getUser(username).pipe(shareReplay(1));
+      this.currentUser$ = this.userService.getCurrentUser().pipe(shareReplay(1));
     }
 
     return this.currentUser$;

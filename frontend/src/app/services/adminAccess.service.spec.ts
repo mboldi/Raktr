@@ -16,8 +16,6 @@ describe('AdminAccessService', () => {
   let http: HttpTestingController;
 
   beforeEach(() => {
-    localStorage.setItem('username', 'someone');
-
     TestBed.configureTestingModule({
       providers: [provideHttpClient(), provideHttpClientTesting()],
     });
@@ -27,33 +25,32 @@ describe('AdminAccessService', () => {
   });
 
   afterEach(() => {
-    localStorage.removeItem('username');
     http.verify();
   });
 
   it('caches the user so it is only fetched once', async () => {
     const first = firstValueFrom(service.getCurrentUser());
     http
-      .expectOne(`${environment.apiUrl}/v1/users/someone`)
+      .expectOne(`${environment.apiUrl}/v1/users/me`)
       .flush({ username: 'someone', personalId: 'AB123456' });
     expect((await first).personalId).toBe('AB123456');
 
     // the cached observable answers, so no second request is issued
     const second = await firstValueFrom(service.getCurrentUser());
     expect(second.personalId).toBe('AB123456');
-    expect(http.match(`${environment.apiUrl}/v1/users/someone`).length).toBe(0);
+    expect(http.match(`${environment.apiUrl}/v1/users/me`).length).toBe(0);
   });
 
   it('serves the updated user after setCurrentUser, without a reload', async () => {
     const initial = firstValueFrom(service.getCurrentUser());
     http
-      .expectOne(`${environment.apiUrl}/v1/users/someone`)
+      .expectOne(`${environment.apiUrl}/v1/users/me`)
       .flush({ username: 'someone', personalId: '' });
     expect((await initial).personalId).toBe('');
 
     service.setCurrentUser(user('AB123456'));
 
     expect((await firstValueFrom(service.getCurrentUser())).personalId).toBe('AB123456');
-    http.expectNone(`${environment.apiUrl}/v1/users/someone`);
+    http.expectNone(`${environment.apiUrl}/v1/users/me`);
   });
 });

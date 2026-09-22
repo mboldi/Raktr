@@ -12,13 +12,13 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class SecurityService {
 
-    public String getCurrentUsername() {
+    public String getCurrentSubject() {
         return getAuthentication().getName();
     }
 
     public UUID getCurrentUserUuid() {
         try {
-            return UUID.fromString(getCurrentUsername());
+            return UUID.fromString(getCurrentSubject());
         } catch (IllegalArgumentException e) {
             throw new AccessDeniedException("Authenticated user has no valid UUID identifier!");
         }

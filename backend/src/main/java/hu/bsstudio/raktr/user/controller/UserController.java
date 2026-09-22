@@ -32,6 +32,11 @@ public class UserController {
         return userService.getUsers();
     }
 
+    @GetMapping("/me")
+    public UserDetailsDto getCurrentUser() {
+        return userService.getCurrentUser();
+    }
+
     @GetMapping("/{username}")
     public UserDetailsDto getUserByUsername(@PathVariable String username) {
         return userService.getUserByUsername(username);

@@ -28,14 +28,10 @@ export class UserService {
       );
   }
 
-  getUser(username: string): Observable<UserDetails> {
+  getCurrentUser(): Observable<UserDetails> {
     return this.http
-      .get<Record<string, unknown>>(`${environment.apiUrl}/v1/users/${username}`)
-      .pipe(
-        map((user) => {
-          return UserDetails.fromJson(user);
-        }),
-      );
+      .get<Record<string, unknown>>(`${environment.apiUrl}/v1/users/me`)
+      .pipe(map((user) => UserDetails.fromJson(user)));
   }
 
   updateUser(usernameToUpdate: string, userUpdate: UserUpdateDto): Observable<UserDetails> {

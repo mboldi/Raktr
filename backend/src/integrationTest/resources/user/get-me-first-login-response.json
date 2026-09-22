@@ -1,0 +1,11 @@
+{
+  "uuid": "00000000-0000-0000-0000-000000000005",
+  "username": "new_user",
+  "familyName": "New",
+  "givenName": "User",
+  "nickname": null,
+  "personalId": null,
+  "groups": [
+    "Stúdiós"
+  ]
+}

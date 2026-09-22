@@ -1,13 +1,17 @@
 package hu.bsstudio.raktr;
 
+import hu.bsstudio.raktr.dependency.SsoProviderMock;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.jdbc.Sql;
+
+import java.util.List;
 
 import static hu.bsstudio.raktr.support.AuthenticationHelper.givenAuthenticatedAdmin;
 import static hu.bsstudio.raktr.support.AuthenticationHelper.givenAuthenticatedCandidate;
 import static hu.bsstudio.raktr.support.JsonAssert.assertJson;
 import static hu.bsstudio.raktr.support.TestResourceHelper.loadFileContent;
+import static io.restassured.RestAssured.given;
 
 @Sql("/user/test-data.sql")
 public class UserIT extends RaktrIT {
@@ -75,6 +79,50 @@ public class UserIT extends RaktrIT {
                 .asString();
 
         assertJson(response).equalTo(loadFileContent("/user/get-not-found-response.json"));
+    }
+
+    @Test
+    void testGetCurrentUser() {
+        var response = givenAuthenticatedCandidate()
+                .when()
+                .get("/v1/users/me")
+                .then()
+                .statusCode(HttpStatus.OK.value())
+                .extract()
+                .asString();
+
+        assertJson(response).equalTo(loadFileContent("/user/get-response.json"));
+    }
+
+    @Test
+    void testGetCurrentUserOnFirstLogin() {
+        var token = SsoProviderMock.generateJwt(
+                "00000000-0000-0000-0000-000000000005",
+                "new_user",
+                "New",
+                "User",
+                List.of("Stúdiós")
+        );
+
+        var response = given()
+                .header("Authorization", "Bearer " + token)
+                .when()
+                .get("/v1/users/me")
+                .then()
+                .statusCode(HttpStatus.OK.value())
+                .extract()
+                .asString();
+
+        assertJson(response).equalTo(loadFileContent("/user/get-me-first-login-response.json"));
+    }
+
+    @Test
+    void testGetCurrentUserUnauthenticated() {
+        given()
+                .when()
+                .get("/v1/users/me")
+                .then()
+                .statusCode(HttpStatus.UNAUTHORIZED.value());
     }
 
     @Test

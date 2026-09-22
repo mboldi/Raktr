@@ -135,6 +135,7 @@
       <th mat-header-cell *matHeaderCellDef>
         <span
           class="filter-anchor"
+          aria-hidden="true"
           [class.filter-anchor-open]="openFilterColumn === 'category'"
           (click)="$event.stopPropagation()"
         >
@@ -168,6 +169,7 @@
       <th mat-header-cell *matHeaderCellDef>
         <span
           class="filter-anchor"
+          aria-hidden="true"
           [class.filter-anchor-open]="openFilterColumn === 'location'"
           (click)="$event.stopPropagation()"
         >

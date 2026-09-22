@@ -139,6 +139,7 @@
       <th mat-header-cell *matHeaderCellDef mat-sort-header>
         <span
           class="filter-anchor"
+          aria-hidden="true"
           [class.filter-anchor-open]="openFilterColumn === 'severity'"
           (click)="$event.stopPropagation()"
         >
@@ -189,6 +190,7 @@
       <th mat-header-cell *matHeaderCellDef mat-sort-header>
         <span
           class="filter-anchor"
+          aria-hidden="true"
           [class.filter-anchor-open]="openFilterColumn === 'status'"
           (click)="$event.stopPropagation()"
         >
@@ -251,6 +253,7 @@
       <th mat-header-cell *matHeaderCellDef mat-sort-header>
         <span
           class="filter-anchor"
+          aria-hidden="true"
           [class.filter-anchor-open]="openFilterColumn === 'createdBy'"
           (click)="$event.stopPropagation()"
         >

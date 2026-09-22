@@ -8,12 +8,15 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { UserService } from '../../../services/user.service';
 import { AdminAccessService } from '../../../services/adminAccess.service';
 import { ConfigService } from '../../../services/config.service';
-import { LocalStorageService } from '../../../services/localStorage.service';
 import { UserDetails } from '../../../model/user/userDetails';
 import { UserUpdateDto } from '../../../model/user/userUpdateDto';
 import { ConfigUpdateDto } from '../../../model/config/configUpdateDto';
 import { environment } from '../../../../environments/environment';
 import { MatBadge } from '@angular/material/badge';
+
+function blankToNull(value: string | null): string | null {
+  return value?.trim() || null;
+}
 
 @Component({
   selector: 'app-settings',
@@ -37,7 +40,6 @@ export class SettingsComponent implements OnInit {
   private userService = inject(UserService);
   private adminAccessService = inject(AdminAccessService);
   private configService = inject(ConfigService);
-  private localStorageService = inject(LocalStorageService);
   private snackBar = inject(MatSnackBar);
 
   protected admin = false;
@@ -52,8 +54,6 @@ export class SettingsComponent implements OnInit {
   private currentUsername = '';
 
   ngOnInit() {
-    this.currentUsername = this.localStorageService.read('username') ?? '';
-
     this.adminAccessService.getCurrentUser().subscribe((user) => this.populateUserForm(user));
     this.adminAccessService.isAdmin().subscribe((admin) => (this.admin = admin));
 
@@ -64,6 +64,7 @@ export class SettingsComponent implements OnInit {
   }
 
   private populateUserForm(user: UserDetails) {
+    this.currentUsername = user.username;
     this.usernameFormControl.setValue(user.username);
     this.fullNameFormControl.setValue(`${user.familyName} ${user.givenName}`);
     this.nickNameFormControl.setValue(user.nickname);
@@ -74,7 +75,10 @@ export class SettingsComponent implements OnInit {
     this.userService
       .updateUser(
         this.currentUsername,
-        new UserUpdateDto(this.nickNameFormControl.value, this.personalIdFormControl.value),
+        new UserUpdateDto(
+          blankToNull(this.nickNameFormControl.value),
+          blankToNull(this.personalIdFormControl.value),
+        ),
       )
       .subscribe((user) => {
         this.adminAccessService.setCurrentUser(user);

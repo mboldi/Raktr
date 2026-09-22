@@ -1,8 +1,8 @@
 export class UserUpdateDto {
-  nickname: string;
-  personalId: string;
+  nickname: string | null;
+  personalId: string | null;
 
-  constructor(nickName: string, personalId: string) {
+  constructor(nickName: string | null, personalId: string | null) {
     this.nickname = nickName;
     this.personalId = personalId;
   }

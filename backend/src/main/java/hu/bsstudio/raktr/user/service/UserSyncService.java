@@ -22,30 +22,29 @@ public class UserSyncService {
 
     private final UserRepository userRepository;
 
-    @Cacheable(value = "usersByUuid", key = "#jwt.getClaimAsString('sub')")
+    @Cacheable(value = "usersByUuid", key = "#jwt.getClaimAsString('sub')", sync = true)
     @Transactional
     public User syncUserFromJwt(Jwt jwt) {
         final UUID uuid = UUID.fromString(jwt.getClaimAsString("sub"));
         final String username = jwt.getClaimAsString("preferred_username");
+        final String familyName = jwt.getClaimAsString("family_name");
+        final String givenName = jwt.getClaimAsString("given_name");
 
-        User user = userRepository.findById(uuid)
-                .orElseGet(() -> {
-                    log.info("User with UUID [{}] not found. Creating new user for [{}].", uuid, username);
-                    var newUser = new User();
-                    newUser.setUuid(uuid);
-                    newUser.setUsername(username);
-                    return newUser;
-                });
+        if (userRepository.insertIfAbsent(uuid, username, familyName, givenName) > 0) {
+            log.info("Created new user [{}] with UUID [{}].", username, uuid);
+        }
 
-        user.setFamilyName(jwt.getClaimAsString("family_name"));
-        user.setGivenName(jwt.getClaimAsString("given_name"));
+        User user = userRepository.findById(uuid).orElseThrow();
+
+        user.setFamilyName(familyName);
+        user.setGivenName(givenName);
 
         @SuppressWarnings("unchecked")
         List<String> groups = (List<String>) jwt.getClaims().getOrDefault("groups", List.of());
         Set<String> normalizedGroups = groups.stream().filter(Objects::nonNull).collect(Collectors.toSet());
         user.setGroups(normalizedGroups);
 
-        return userRepository.save(user);
+        return user;
     }
 
 }

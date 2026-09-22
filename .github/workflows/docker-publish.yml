@@ -35,24 +35,28 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v7.0.1
         with:
-          fetch-tags: true
+          fetch-depth: 0
 
       - name: Resolve version
         id: version
+        env:
+          REF_TYPE: ${{ github.ref_type }}
+          REF_NAME: ${{ github.ref_name }}
         run: |
-          raw=$(git describe --tags --always)
-          tag=${raw#v}
-
-          if [ "$raw" = "$(git tag --points-at HEAD)" ]; then
-            echo "value=v$tag" >> "$GITHUB_OUTPUT"
-          else
-            hash=$(git rev-parse --short HEAD)
-            branch=$(git rev-parse --abbrev-ref HEAD | tr '/' '-')
-            case "$branch" in
-              main) echo "value=v$tag-$hash" >> "$GITHUB_OUTPUT" ;;
-              *)    echo "value=v$tag-$branch-$hash" >> "$GITHUB_OUTPUT" ;;
-            esac
+          if [ "$REF_TYPE" = "tag" ]; then
+            echo "value=$REF_NAME" >> "$GITHUB_OUTPUT"
+            exit 0
           fi
+
+          raw=$(git describe --tags --always --abbrev=0)
+          tag=${raw#v}
+          hash=$(git rev-parse --short HEAD)
+          branch=$(printf '%s' "$REF_NAME" | tr '/' '-')
+
+          case "$branch" in
+            main) echo "value=v$tag-$hash" >> "$GITHUB_OUTPUT" ;;
+            *)    echo "value=v$tag-$branch-$hash" >> "$GITHUB_OUTPUT" ;;
+          esac
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v4.4.1

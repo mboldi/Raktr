@@ -15,8 +15,8 @@ import static hu.bsstudio.raktr.support.AuthenticationHelper.givenAuthenticatedA
 import static hu.bsstudio.raktr.support.AuthenticationHelper.givenAuthenticatedCandidate;
 import static hu.bsstudio.raktr.support.JsonAssert.assertJson;
 import static hu.bsstudio.raktr.support.TestResourceHelper.loadFileContent;
-import static org.assertj.core.api.Assertions.assertThat;
 import static io.restassured.RestAssured.given;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @Sql("/user/test-data.sql")
 public class UserIT extends RaktrIT {

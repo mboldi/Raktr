@@ -75,6 +75,10 @@ export class DeviceFormComponent implements OnInit {
    * barcode in instead of auto-generating a fresh one. */
   presetBarcode = input<string | null>(null);
 
+  /** Pass another device to pre-fill a new (blank) form with its values, except the
+   * barcode, which is still freshly auto-generated. */
+  duplicateFrom = input<DeviceDetails | null>(null);
+
   /** Emits the latest raw form value whenever the user makes a change. */
   formChanged = output<Partial<DeviceDetails>>();
 
@@ -140,8 +144,12 @@ export class DeviceFormComponent implements OnInit {
 
   ngOnInit(): void {
     const data = this.deviceData();
+    const duplicateFrom = this.duplicateFrom();
     if (data !== null) {
       this.deviceForm.patchValue(data);
+    } else if (duplicateFrom !== null) {
+      this.deviceForm.patchValue(duplicateFrom);
+      this.generateBarcode();
     } else if (this.presetBarcode()) {
       this.deviceForm.get('barcode')!.setValue(this.presetBarcode());
     } else {
@@ -153,7 +161,7 @@ export class DeviceFormComponent implements OnInit {
     this.ownerService.getOwners().subscribe((owners) => {
       this.owners = owners;
 
-      if (data === null) {
+      if (data === null && duplicateFrom === null) {
         const defaultOwner = owners.find((owner) => owner.name === environment.defaultOwnerName);
         if (defaultOwner) {
           this.deviceForm.get('owner')!.setValue(defaultOwner);

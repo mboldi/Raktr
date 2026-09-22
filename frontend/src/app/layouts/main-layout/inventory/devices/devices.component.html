@@ -310,6 +310,7 @@
     <tr
       mat-row
       (click)="openDevice(row)"
+      [attr.data-device-row]="row.id"
       class="clickable-row"
       *matRowDef="let row; columns: displayedColumns"
     ></tr>
@@ -319,3 +320,20 @@
     <mat-spinner class="list-loading-spinner mt-3"></mat-spinner>
   }
 </div>
+
+<div
+  #contextMenuAnchor
+  style="visibility: hidden; position: fixed"
+  [matMenuTriggerFor]="deviceContextMenu"
+></div>
+
+<mat-menu #deviceContextMenu="matMenu">
+  <button mat-menu-item (click)="duplicateDevice(contextMenuDevice!)">
+    <mat-icon>content_copy</mat-icon>
+    <span>Duplikálás</span>
+  </button>
+  <button mat-menu-item class="delete-menu-item" (click)="deleteDevice(contextMenuDevice!)">
+    <mat-icon>delete</mat-icon>
+    <span>Törlés</span>
+  </button>
+</mat-menu>

@@ -152,6 +152,15 @@ th.mat-mdc-header-cell {
   font-style: italic;
 }
 
+::ng-deep .delete-menu-item:hover {
+  background-color: rgba(239, 68, 68, 0.12) !important;
+  color: #f87171 !important;
+
+  .mat-icon {
+    color: #f87171;
+  }
+}
+
 .filter-panel-footer {
   display: flex;
   flex-direction: row;

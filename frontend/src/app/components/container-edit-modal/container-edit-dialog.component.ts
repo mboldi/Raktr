@@ -25,6 +25,14 @@ import { DeviceDetails } from '../../model/scannable/device/deviceDetails';
 import { HttpErrorResponse } from '@angular/common/http';
 import { filter } from 'rxjs';
 
+export interface ContainerDialogData {
+  /** Pass to open the dialog in edit mode for an existing container. */
+  container?: ContainerDetails;
+  /** Pass to open the dialog in create mode, pre-filled with another container's values
+   * (except its barcode, which is freshly generated). */
+  duplicateFrom?: ContainerDetails;
+}
+
 @Component({
   selector: 'app-container-edit-modal',
   imports: [MatButton, MatDialogActions, MatDialogContent, MatDialogTitle, ContainerFormComponent],
@@ -42,16 +50,18 @@ export class ContainerEditDialogComponent {
 
   protected isNew = true;
   protected containerData: ContainerDetails | null;
+  protected duplicateFrom: ContainerDetails | null;
   protected containerName: string | null = null;
 
   constructor() {
-    const containerData = inject<ContainerDetails>(MAT_DIALOG_DATA);
+    const dialogData = inject<ContainerDialogData | undefined>(MAT_DIALOG_DATA);
 
-    this.containerData = containerData ?? null;
+    this.containerData = dialogData?.container ?? null;
+    this.duplicateFrom = dialogData?.duplicateFrom ?? null;
 
-    if (containerData) {
+    if (this.containerData) {
       this.isNew = false;
-      this.containerName = containerData.name;
+      this.containerName = this.containerData.name;
     }
 
     // Report the latest item state (already saved via its own API calls) even when the
@@ -66,7 +76,7 @@ export class ContainerEditDialogComponent {
 
   protected get title(): string {
     if (this.isNew) {
-      return 'Új szállítóláda hozzáadása';
+      return this.duplicateFrom ? 'Szállítóláda duplikálása' : 'Új szállítóláda hozzáadása';
     }
 
     return this.containerName

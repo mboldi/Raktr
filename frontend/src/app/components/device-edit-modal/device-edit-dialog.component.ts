@@ -21,6 +21,9 @@ export interface DeviceDialogData {
   /** Pass when creating a new device from a barcode the user already searched for, so it's
    * locked in instead of auto-generating a fresh one. */
   presetBarcode?: string;
+  /** Pass to open the dialog in create mode, pre-filled with another device's values
+   * (except its barcode, which is freshly generated). */
+  duplicateFrom?: DeviceDetails;
 }
 
 @Component({
@@ -48,15 +51,19 @@ export class DeviceEditDialogComponent {
   protected title = 'Új eszköz hozzáadása';
   protected isNew = true;
   protected deviceData: DeviceDetails | null;
+  protected duplicateFrom: DeviceDetails | null;
 
   constructor() {
     const dialogData = this.dialogData;
 
     this.deviceData = dialogData?.device ?? null;
+    this.duplicateFrom = dialogData?.duplicateFrom ?? null;
 
     if (this.deviceData) {
       this.isNew = false;
       this.title = 'Eszköz szerkesztése';
+    } else if (this.duplicateFrom) {
+      this.title = 'Eszköz duplikálása';
     }
   }
 

@@ -123,6 +123,10 @@ export class ContainerFormComponent implements OnInit {
   /** Pass an existing container to pre-populate the form, or leave undefined for a blank create form. */
   containerData = input<ContainerDetails | null>(null);
 
+  /** Pass another container to pre-fill a new (blank) form with its values, except the
+   * barcode, which is still freshly auto-generated. */
+  duplicateFrom = input<ContainerDetails | null>(null);
+
   /** Emits the latest raw form value whenever the user makes a change. */
   formChanged = output<Partial<ContainerDetails>>();
 
@@ -193,8 +197,12 @@ export class ContainerFormComponent implements OnInit {
 
   ngOnInit(): void {
     const data = this.containerData();
+    const duplicateFrom = this.duplicateFrom();
     if (data !== null) {
       this.containerForm.patchValue(data);
+    } else if (duplicateFrom !== null) {
+      this.containerForm.patchValue(duplicateFrom);
+      this.generateBarcode();
     } else {
       this.generateBarcode();
     }
@@ -207,7 +215,7 @@ export class ContainerFormComponent implements OnInit {
     this.ownerService.getOwners().subscribe((owners) => {
       this.owners = owners;
 
-      if (data === null) {
+      if (data === null && duplicateFrom === null) {
         const defaultOwner = owners.find((owner) => owner.name === environment.defaultOwnerName);
         if (defaultOwner) {
           this.containerForm.get('owner')!.setValue(defaultOwner);

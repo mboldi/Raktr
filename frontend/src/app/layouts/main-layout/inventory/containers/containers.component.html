@@ -213,6 +213,7 @@
     <tr
       mat-row
       (click)="openContainer(row)"
+      [attr.data-container-row]="row.id"
       class="clickable-row"
       *matRowDef="let row; columns: displayedColumns"
     ></tr>
@@ -222,3 +223,20 @@
     <mat-spinner class="list-loading-spinner mt-3"></mat-spinner>
   }
 </div>
+
+<div
+  #contextMenuAnchor
+  style="visibility: hidden; position: fixed"
+  [matMenuTriggerFor]="containerContextMenu"
+></div>
+
+<mat-menu #containerContextMenu="matMenu">
+  <button mat-menu-item (click)="duplicateContainer(contextMenuContainer!)">
+    <mat-icon>content_copy</mat-icon>
+    <span>Duplikálás</span>
+  </button>
+  <button mat-menu-item class="delete-menu-item" (click)="deleteContainer(contextMenuContainer!)">
+    <mat-icon>delete</mat-icon>
+    <span>Törlés</span>
+  </button>
+</mat-menu>

@@ -197,6 +197,7 @@ export class RentFormComponent implements OnInit {
   protected devices: DeviceDetails[] = [];
   protected containers: ContainerDetails[] = [];
   protected devicesById = new Map<number, DeviceDetails>();
+  protected containersById = new Map<number, ContainerDetails>();
   protected filteredNewScannableOptions: Observable<ScannableDetailsDto[]>;
 
   protected itemSearchControl = new FormControl('');
@@ -323,6 +324,7 @@ export class RentFormComponent implements OnInit {
 
     this.containerService.getContainers().subscribe((containers) => {
       this.containers = containers;
+      this.containersById = new Map(containers.map((container) => [container.id, container]));
       this.addScannableFormControl.updateValueAndValidity();
     });
   }
@@ -330,7 +332,7 @@ export class RentFormComponent implements OnInit {
   private computeItemColumns(rent: RentDetails | null): string[] {
     const isMobile = this.windowService.windowWidth() < MOBILE_WIDTH_THRESHOLD;
 
-    const columns = ['name', 'assetTag', 'quantity'];
+    const columns = ['type', 'name', 'assetTag', 'quantity'];
 
     if (!isMobile) {
       columns.push('addedBy', 'weight');
@@ -411,6 +413,45 @@ export class RentFormComponent implements OnInit {
   private isStackable(scannableId: number): boolean {
     const device = this.devicesById.get(scannableId);
     return !!device && device.quantity > 1;
+  }
+
+  protected isDevice(scannableId: number): boolean {
+    return this.devicesById.has(scannableId);
+  }
+
+  private containerContentsTooltip(scannableId: number): string | null {
+    const container = this.containersById.get(scannableId);
+    if (!container) {
+      return null;
+    }
+
+    if (container.items.length === 0) {
+      return 'Üres láda';
+    }
+
+    const contents = container.items
+      .map((item) => `    ${item.device.name} - ${item.device.model} - ${item.device.assetTag}`)
+      .join('\n');
+
+    return `Tartalmazott eszközök:\n${contents}`;
+  }
+
+  protected hoveredContainerTooltip: string | null = null;
+  protected containerTooltipPosition = { x: 0, y: 0 };
+
+  protected onItemRowMouseEnter(item: RentItemDetailsDto, event: MouseEvent) {
+    this.hoveredContainerTooltip = this.isDevice(item.scannable.id)
+      ? null
+      : this.containerContentsTooltip(item.scannable.id);
+    this.onItemRowMouseMove(event);
+  }
+
+  protected onItemRowMouseMove(event: MouseEvent) {
+    this.containerTooltipPosition = { x: event.clientX + 16, y: event.clientY + 16 };
+  }
+
+  protected onItemRowMouseLeave() {
+    this.hoveredContainerTooltip = null;
   }
 
   private findExistingItem(scannableId: number): RentItemDetailsDto | undefined {

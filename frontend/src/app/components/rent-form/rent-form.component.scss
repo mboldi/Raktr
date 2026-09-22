@@ -56,6 +56,41 @@
   color: light-dark(#d50000, #c62828);
 }
 
+.type-column {
+  width: 35px;
+  padding-left: 8px !important;
+  padding-right: 0 !important;
+  text-align: right;
+}
+
+.item-type-icon {
+  vertical-align: middle;
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+  padding-right: 0;
+
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.container-contents-tooltip {
+  position: fixed;
+  z-index: 1000;
+  pointer-events: none;
+
+  width: max-content;
+  white-space: pre;
+  text-align: left;
+
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  line-height: 1.5;
+
+  background: rgba(97, 97, 97, 0.9);
+  color: #fff;
+}
+
 .quantity-input {
   width: 60px;
   text-align: right;

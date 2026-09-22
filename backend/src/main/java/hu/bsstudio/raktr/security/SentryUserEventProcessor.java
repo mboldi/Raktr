@@ -4,6 +4,7 @@ import io.sentry.EventProcessor;
 import io.sentry.Hint;
 import io.sentry.SentryEvent;
 import io.sentry.protocol.User;
+import org.jspecify.annotations.NonNull;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
@@ -13,7 +14,7 @@ import org.springframework.stereotype.Component;
 public class SentryUserEventProcessor implements EventProcessor {
 
     @Override
-    public SentryEvent process(SentryEvent event, Hint hint) {
+    public SentryEvent process(@NonNull SentryEvent event, @NonNull Hint hint) {
         var authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication instanceof JwtAuthenticationToken jwtAuth) {
             var jwt = (Jwt) jwtAuth.getPrincipal();

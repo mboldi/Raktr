@@ -10,6 +10,7 @@ import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
+import org.jspecify.annotations.NullMarked;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -50,6 +51,7 @@ public class User implements UserDetails {
     private Set<String> groups;
 
     @Override
+    @NullMarked
     public Collection<GrantedAuthority> getAuthorities() {
         if (groups == null) {
             return Collections.emptySet();

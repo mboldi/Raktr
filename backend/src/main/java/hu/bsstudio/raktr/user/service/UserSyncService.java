@@ -25,7 +25,7 @@ public class UserSyncService {
     @Cacheable(value = "usersByUuid", key = "#jwt.getClaimAsString('sub')", sync = true)
     @Transactional
     public User syncUserFromJwt(Jwt jwt) {
-        final UUID uuid = UUID.fromString(jwt.getClaimAsString("sub"));
+        final UUID uuid = UUID.fromString(Objects.requireNonNull(jwt.getClaimAsString("sub")));
         final String username = jwt.getClaimAsString("preferred_username");
         final String familyName = jwt.getClaimAsString("family_name");
         final String givenName = jwt.getClaimAsString("given_name");

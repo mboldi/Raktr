@@ -1,0 +1,70 @@
+#!/bin/sh
+# Runs the cheap half of CI (.github/workflows/{backend,frontend}-ci.yml) over the part of the
+# tree being committed: formatting and lint, no tests. Around 3s for backend changes, 3s for
+# frontend ones, nothing at all when neither is touched.
+#
+# The checks read the working tree, not the staged content, so a partially staged file is
+# judged by what is on disk. Bypass with `git commit --no-verify`.
+#
+# Enable once per clone: git config core.hooksPath .githooks
+
+repo_root=$(git rev-parse --show-toplevel)
+staged=$(git diff --cached --name-only --diff-filter=ACMR)
+
+backend_staged=$(printf '%s\n' "$staged" | grep -E '^backend/.*\.(java|kts)$')
+frontend_staged=$(printf '%s\n' "$staged" | grep -E '^frontend/')
+
+failed=0
+
+report() {
+    # report <output> <fix command>
+    echo 'FAILED'
+    printf '%s\n' "$1" | sed 's/^/          /'
+    echo "          fix: $2"
+    failed=1
+}
+
+if [ -n "$backend_staged" ]; then
+    if command -v java > /dev/null 2>&1; then
+        printf 'backend:  spotlessCheck ... '
+        if output=$(cd "$repo_root/backend" && ./gradlew spotlessCheck --quiet --console=plain 2>&1); then
+            echo 'ok'
+        else
+            # keep the violations, drop Gradle's "* Try: run with --stacktrace" boilerplate
+            report "$(printf '%s
+' "$output" | sed '/^\* Try:/,$d')" '(cd backend && ./gradlew spotlessApply)'
+        fi
+    else
+        echo 'backend:  SKIPPED, java is not on PATH'
+    fi
+fi
+
+if [ -n "$frontend_staged" ]; then
+    if command -v pnpm > /dev/null 2>&1; then
+        # prettier checks the staged files themselves; it skips what .prettierignore covers
+        set --
+        while IFS= read -r file; do
+            [ -n "$file" ] && set -- "$@" "${file#frontend/}"
+        done <<STAGED
+$frontend_staged
+STAGED
+
+        printf 'frontend: prettier ... '
+        if output=$(cd "$repo_root/frontend" && pnpm exec prettier --check --log-level warn -- "$@" 2>&1); then
+            echo 'ok'
+        else
+            report "$output" '(cd frontend && pnpm format)'
+        fi
+
+        printf 'frontend: eslint ... '
+        if output=$(cd "$repo_root/frontend" && pnpm lint 2>&1); then
+            echo 'ok'
+        else
+            report "$output" '(cd frontend && pnpm lint)'
+        fi
+    else
+        echo 'frontend: SKIPPED, pnpm is not on PATH'
+    fi
+fi
+
+exit $failed

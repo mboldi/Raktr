@@ -27,6 +27,21 @@ docker compose up --build
 
 For local development without Docker, run the backend and frontend separately — see [`backend/README.md`](backend/README.md) and [`frontend/README.md`](frontend/README.md).
 
+### Git hooks
+
+The repo ships a pre-commit hook in [`.githooks/`](.githooks) that runs the formatting and lint
+checks CI would run, but only for the side of the tree you touched — `spotlessCheck` for staged
+Java, Prettier and ESLint for staged frontend files. It takes a few seconds and runs no tests.
+
+Enable it once per clone:
+
+```bash
+git config core.hooksPath .githooks
+```
+
+It skips a side whose toolchain is missing (`java` or `pnpm` not on `PATH`) and says so. To
+commit past it, use `git commit --no-verify`.
+
 ## CI/CD
 
 Images are published to `ghcr.io/mboldi/raktr/backend` and `ghcr.io/mboldi/raktr/frontend`.

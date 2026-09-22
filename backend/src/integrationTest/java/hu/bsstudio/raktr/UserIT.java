@@ -181,6 +181,30 @@ public class UserIT extends RaktrIT {
     }
 
     @Test
+    void testUpdateOwnUserClearFields() {
+        var response = givenAuthenticatedAdmin()
+                .body(loadFileContent("/user/update-clear-request.json"))
+                .when()
+                .put("/v1/users/admin_user")
+                .then()
+                .statusCode(HttpStatus.OK.value())
+                .extract()
+                .asString();
+
+        assertJson(response).equalTo(loadFileContent("/user/update-clear-response.json"));
+    }
+
+    @Test
+    void testUpdateOwnUserEmptyFieldsRejected() {
+        givenAuthenticatedAdmin()
+                .body(loadFileContent("/user/update-empty-request.json"))
+                .when()
+                .put("/v1/users/admin_user")
+                .then()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @Test
     void testUpdateOtherUserAsAdmin() {
         var response = givenAuthenticatedAdmin()
                 .body(loadFileContent("/user/update-request.json"))

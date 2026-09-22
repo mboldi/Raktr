@@ -14,6 +14,10 @@ import { ConfigUpdateDto } from '../../../model/config/configUpdateDto';
 import { environment } from '../../../../environments/environment';
 import { MatBadge } from '@angular/material/badge';
 
+function blankToNull(value: string | null): string | null {
+  return value?.trim() || null;
+}
+
 @Component({
   selector: 'app-settings',
   imports: [
@@ -71,7 +75,10 @@ export class SettingsComponent implements OnInit {
     this.userService
       .updateUser(
         this.currentUsername,
-        new UserUpdateDto(this.nickNameFormControl.value, this.personalIdFormControl.value),
+        new UserUpdateDto(
+          blankToNull(this.nickNameFormControl.value),
+          blankToNull(this.personalIdFormControl.value),
+        ),
       )
       .subscribe((user) => {
         this.adminAccessService.setCurrentUser(user);

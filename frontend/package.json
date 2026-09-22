@@ -9,7 +9,8 @@
     "test": "ng test",
     "lint": "ng lint",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "sentry:sourcemaps": "sentry-cli sourcemaps inject dist/frontend/browser && sentry-cli sourcemaps upload dist/frontend/browser"
   },
   "private": true,
   "packageManager": "pnpm@12.4.1",
@@ -25,6 +26,7 @@
     "@angular/material": "22.1.7",
     "@angular/platform-browser": "22.1.7",
     "@angular/router": "22.1.7",
+    "@sentry/angular": "10.75.2",
     "angular-auth-oidc-client": "22.0.0",
     "bootstrap": "5.3.8",
     "read-excel-file": "9.3.10",
@@ -39,6 +41,7 @@
     "@angular/cli": "22.1.8",
     "@angular/compiler-cli": "22.1.7",
     "@eslint/js": "10.0.1",
+    "@sentry/cli": "3.8.0",
     "angular-eslint": "22.5.0",
     "eslint": "10.11.0",
     "eslint-config-prettier": "10.1.8",

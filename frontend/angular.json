@@ -39,10 +39,14 @@
           },
           "configurations": {
             "production": {
+              "define": {
+                "__SENTRY_DEBUG__": "false",
+                "__SENTRY_TRACING__": "false"
+              },
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "950kB",
+                  "maximumWarning": "1MB",
                   "maximumError": "1.2MB"
                 },
                 {
@@ -51,7 +55,13 @@
                   "maximumError": "8kB"
                 }
               ],
-              "outputHashing": "all"
+              "outputHashing": "all",
+              "sourceMap": {
+                "scripts": true,
+                "styles": false,
+                "vendor": true,
+                "hidden": true
+              }
             },
             "development": {
               "optimization": false,

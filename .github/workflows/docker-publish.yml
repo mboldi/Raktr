@@ -81,7 +81,7 @@ jobs:
         with:
           context: ${{ matrix.context }}
           build-args: VERSION=${{ steps.version.outputs.value }}
-          secrets: ${{ matrix.component == 'backend' && format('SENTRY_AUTH_TOKEN={0}', secrets.SENTRY_AUTH_TOKEN) || '' }}
+          secrets: SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}

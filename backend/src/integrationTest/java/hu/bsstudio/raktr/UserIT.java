@@ -6,11 +6,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.test.context.jdbc.Sql;
 
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.stream.IntStream;
 
 import static hu.bsstudio.raktr.support.AuthenticationHelper.givenAuthenticatedAdmin;
 import static hu.bsstudio.raktr.support.AuthenticationHelper.givenAuthenticatedCandidate;
 import static hu.bsstudio.raktr.support.JsonAssert.assertJson;
 import static hu.bsstudio.raktr.support.TestResourceHelper.loadFileContent;
+import static org.assertj.core.api.Assertions.assertThat;
 import static io.restassured.RestAssured.given;
 
 @Sql("/user/test-data.sql")
@@ -114,6 +119,42 @@ public class UserIT extends RaktrIT {
                 .asString();
 
         assertJson(response).equalTo(loadFileContent("/user/get-me-first-login-response.json"));
+    }
+
+    @Test
+    void testGetCurrentUserOnFirstLoginWithConcurrentRequests() throws Exception {
+        var token = SsoProviderMock.generateJwt(
+                "00000000-0000-0000-0000-000000000005",
+                "new_user",
+                "New",
+                "User",
+                List.of("Stúdiós")
+        );
+        var requestCount = 10;
+        var start = new CountDownLatch(1);
+
+        try (var executor = Executors.newFixedThreadPool(requestCount)) {
+            List<Future<Integer>> statusCodes = IntStream.range(0, requestCount)
+                    .mapToObj(i -> executor.submit(() -> {
+                        start.await();
+                        return given()
+                                .header("Authorization", "Bearer " + token)
+                                .when()
+                                .get("/v1/users/me")
+                                .statusCode();
+                    }))
+                    .toList();
+
+            start.countDown();
+
+            for (var statusCode : statusCodes) {
+                assertThat(statusCode.get()).isEqualTo(HttpStatus.OK.value());
+            }
+        }
+
+        databaseQueryHelper.queryDatabase("SELECT count(*) FROM users WHERE uuid = '00000000-0000-0000-0000-000000000005'")
+                .assertRowCount()
+                .isEqualTo(1);
     }
 
     @Test

@@ -7,6 +7,7 @@ import {
   ChangeDetectionStrategy,
   inject,
 } from '@angular/core';
+import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
 import {
   MatCell,
   MatCellDef,
@@ -29,7 +30,11 @@ import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatIcon } from '@angular/material/icon';
 import { MatButton, MatFabButton, MatIconButton } from '@angular/material/button';
 import { MatCard } from '@angular/material/card';
-import { DeviceEditDialogComponent } from '../../../../components/device-edit-modal/device-edit-dialog.component';
+import {
+  DeviceDialogData,
+  DeviceEditDialogComponent,
+} from '../../../../components/device-edit-modal/device-edit-dialog.component';
+import { YesnoModalComponent } from '../../../../components/yesno-modal/yesno-modal.component';
 import { MatDialog } from '@angular/material/dialog';
 import { LocalStorageService } from '../../../../services/localStorage.service';
 import { environment } from '../../../../../environments/environment';
@@ -100,10 +105,14 @@ const REDUCED_COLUMNS: string[] = ['name', 'assetTag', 'maker', 'model'];
     MatChipSet,
     MatTooltip,
     NgTemplateOutlet,
+    MatMenu,
+    MatMenuItem,
+    MatMenuTrigger,
   ],
   templateUrl: './devices.component.html',
   host: {
     '(document:keydown.escape)': 'closeFilterPanel()',
+    '(document:contextmenu)': 'onDocumentContextMenu($event)',
   },
   changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './devices.component.scss',
@@ -125,6 +134,10 @@ export class DevicesComponent implements OnInit {
   protected canCreate = false;
   @ViewChild(MatTable) table!: MatTable<DeviceDetails>;
   @ViewChild('optionSearchInput') optionSearchInput?: ElementRef<HTMLInputElement>;
+  @ViewChild(MatMenuTrigger) contextMenuTrigger!: MatMenuTrigger;
+  @ViewChild('contextMenuAnchor') contextMenuAnchor!: ElementRef<HTMLElement>;
+
+  protected contextMenuDevice: DeviceDetails | null = null;
 
   protected deviceSearchFormControl = new FormControl();
   private searchFilter = '';
@@ -295,6 +308,108 @@ export class DevicesComponent implements OnInit {
 
         snackBarRef.onAction().subscribe(() => this.openDevice(result));
       }
+    });
+  }
+
+  protected onDocumentContextMenu(event: MouseEvent) {
+    if (!this.canCreate) {
+      return;
+    }
+
+    // A right-click's target is whatever was hit-tested first, which while our menu is open is
+    // its CDK overlay backdrop (covering the whole viewport to catch left-clicks that close the
+    // menu) rather than the row underneath - elementFromPoint re-does that hit-test on demand,
+    // so the backdrop is made click-through just long enough to ask it what's really there.
+    const backdrops = Array.from(document.querySelectorAll<HTMLElement>('.cdk-overlay-backdrop'));
+    backdrops.forEach((backdrop) => (backdrop.style.pointerEvents = 'none'));
+    const target = document.elementFromPoint(event.clientX, event.clientY);
+    backdrops.forEach((backdrop) => (backdrop.style.pointerEvents = ''));
+
+    const row =
+      target instanceof HTMLElement ? target.closest<HTMLElement>('tr[data-device-row]') : null;
+    if (!row) {
+      return;
+    }
+
+    const device = this.pagedDevices.find((d) => d.id === Number(row.dataset['deviceRow']));
+    if (!device) {
+      return;
+    }
+
+    event.preventDefault();
+
+    const reopen = () => {
+      this.contextMenuAnchor.nativeElement.style.left = `${event.clientX}px`;
+      this.contextMenuAnchor.nativeElement.style.top = `${event.clientY}px`;
+      this.contextMenuDevice = device;
+      this.contextMenuTrigger.openMenu();
+    };
+
+    if (this.contextMenuTrigger.menuOpen) {
+      this.contextMenuTrigger.closeMenu();
+      // MatMenu's close animation (or its built-in 200ms no-animation fallback, see
+      // MatMenuTrigger._setIsOpen in @angular/material/menu) defers the actual overlay detach,
+      // so reopening has to wait at least that long or it reuses the not-yet-detached overlay
+      // and keeps showing at the previous position.
+      setTimeout(reopen, 200);
+    } else {
+      reopen();
+    }
+  }
+
+  protected duplicateDevice(device: DeviceDetails) {
+    const editDeviceDialog = this.dialog.open(DeviceEditDialogComponent, {
+      width: '60vw',
+      maxWidth: '100vw',
+      data: { duplicateFrom: device } as DeviceDialogData,
+    });
+
+    editDeviceDialog.afterClosed().subscribe((result) => {
+      if (result) {
+        this.devices.push(result);
+        this.updateMakersAndModels();
+        this.filterSortDevices();
+
+        const snackBarRef = this.snackBar.open(`${result.name} létrehozva!`, 'Megnyitás', {
+          duration: 3000,
+          horizontalPosition: 'right',
+          verticalPosition: 'top',
+          panelClass: ['success-snackbar'],
+        });
+
+        snackBarRef.onAction().subscribe(() => this.openDevice(result));
+      }
+    });
+  }
+
+  protected deleteDevice(device: DeviceDetails) {
+    const confirmDialog = this.dialog.open(YesnoModalComponent, {
+      width: '20vw',
+      minWidth: '350px',
+      data: `Biztosan törölni szeretnéd a(z) "${device.name}" eszközt?`,
+    });
+
+    confirmDialog.afterClosed().subscribe((confirmed) => {
+      if (!confirmed) {
+        return;
+      }
+
+      this.deviceService.deleteDevice(device.id).subscribe((success) => {
+        if (!success) {
+          return;
+        }
+
+        this.devices = this.devices.filter((d) => d.id !== device.id);
+        this.updateMakersAndModels();
+        this.filterSortDevices();
+
+        this.snackBar.open(`${device.name} törölve!`, 'Értem', {
+          duration: 3000,
+          horizontalPosition: 'right',
+          verticalPosition: 'top',
+          panelClass: ['success-snackbar'],
+        });
+      });
     });
   }
 

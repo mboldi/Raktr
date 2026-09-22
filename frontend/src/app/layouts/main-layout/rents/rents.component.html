@@ -146,6 +146,7 @@
       <th mat-header-cell *matHeaderCellDef>
         <span
           class="filter-anchor"
+          aria-hidden="true"
           [class.filter-anchor-open]="openFilterColumn === 'issuer'"
           (click)="$event.stopPropagation()"
         >
@@ -179,6 +180,7 @@
       <th mat-header-cell *matHeaderCellDef>
         <span
           class="filter-anchor"
+          aria-hidden="true"
           [class.filter-anchor-open]="openFilterColumn === 'renter'"
           (click)="$event.stopPropagation()"
         >

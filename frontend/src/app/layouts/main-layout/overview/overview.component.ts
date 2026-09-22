@@ -37,6 +37,10 @@ import {
   DeviceEditDialogComponent,
 } from '../../../components/device-edit-modal/device-edit-dialog.component';
 import {
+  ContainerDialogData,
+  ContainerEditDialogComponent,
+} from '../../../components/container-edit-modal/container-edit-dialog.component';
+import {
   TicketDialogResult,
   TicketEditDialogComponent,
 } from '../../../components/ticket-edit-modal/ticket-edit-dialog.component';
@@ -177,12 +181,15 @@ export class OverviewComponent implements OnInit {
     const deviceMatches = this.devices.filter(
       (device) =>
         device.name.toLowerCase().includes(filter) ||
+        device.assetTag.toLowerCase().includes(filter) ||
         (device.manufacturer ?? '').toLowerCase().includes(filter) ||
         (device.model ?? '').toLowerCase().includes(filter),
     );
 
-    const containerMatches = this.containers.filter((container) =>
-      container.name.toLowerCase().includes(filter),
+    const containerMatches = this.containers.filter(
+      (container) =>
+        container.name.toLowerCase().includes(filter) ||
+        container.assetTag.toLowerCase().includes(filter),
     );
 
     return [...deviceMatches, ...containerMatches].slice(0, 5);
@@ -216,17 +223,80 @@ export class OverviewComponent implements OnInit {
     const matched = findByBarcode(this.scannables, (scannable) => scannable.barcode, barcode);
 
     if (matched) {
-      this.dialog.open(TabbedEditModalComponent, {
-        width: '60vw',
-        maxWidth: '100vw',
-        position: { top: '40px' },
-        data: { kind: 'scannable', item: matched } as TabbedEditModalData,
-      });
+      this.openScannable(matched as DeviceDetails | ContainerDetails);
     } else if (this.canCreate) {
       this.offerCreateDevice(barcode);
     }
 
     this.deviceSearchFormControl.setValue('');
+  }
+
+  private openScannable(matched: DeviceDetails | ContainerDetails) {
+    const isDevice = matched instanceof DeviceDetails;
+
+    const viewDialog = this.dialog.open(TabbedEditModalComponent, {
+      width: '60vw',
+      maxWidth: '100vw',
+      position: { top: '40px' },
+      data: { kind: isDevice ? 'device' : 'container', item: matched } as TabbedEditModalData,
+    });
+
+    viewDialog.afterClosed().subscribe((result) => {
+      if (result !== 'edit') {
+        return;
+      }
+
+      if (isDevice) {
+        this.editDevice(matched as DeviceDetails);
+      } else {
+        this.editContainer(matched as ContainerDetails);
+      }
+    });
+  }
+
+  private editDevice(device: DeviceDetails) {
+    const editDialog = this.dialog.open(DeviceEditDialogComponent, {
+      width: '60vw',
+      maxWidth: '100vw',
+      position: { top: '40px' },
+      data: { device } as DeviceDialogData,
+    });
+
+    editDialog.afterClosed().subscribe((updated) => {
+      if (updated) {
+        this.replaceById(this.devices, updated);
+
+        this.snackBar.open(`${updated.name} frissítve!`, 'Remek!', {
+          duration: 3000,
+          horizontalPosition: 'right',
+          verticalPosition: 'top',
+          panelClass: ['success-snackbar'],
+        });
+      }
+    });
+  }
+
+  private editContainer(container: ContainerDetails) {
+    const editDialog = this.dialog.open(ContainerEditDialogComponent, {
+      width: '50vw',
+      maxWidth: '100vw',
+      maxHeight: '95vh',
+      position: { top: '20px' },
+      data: { container } as ContainerDialogData,
+    });
+
+    editDialog.afterClosed().subscribe((updated) => {
+      if (updated) {
+        this.replaceById(this.containers, updated);
+      }
+    });
+  }
+
+  private replaceById<T extends { id: number }>(array: T[], newObject: T): void {
+    const index = array.findIndex((item) => item.id === newObject.id);
+    if (index !== -1) {
+      array[index] = newObject;
+    }
   }
 
   private offerCreateDevice(barcode: string) {

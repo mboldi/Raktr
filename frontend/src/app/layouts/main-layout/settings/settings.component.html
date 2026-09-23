@@ -40,7 +40,14 @@
             </div>
 
             <div class="full-width" style="display: flex; justify-content: end">
-              <button matButton="filled" color="primary" (click)="updateUser()">Mentés</button>
+              <button
+                matButton="filled"
+                color="primary"
+                [disabled]="!userLoaded"
+                (click)="updateUser()"
+              >
+                Mentés
+              </button>
             </div>
           </div>
         </mat-card-content>

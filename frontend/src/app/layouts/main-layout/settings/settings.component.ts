@@ -51,7 +51,11 @@ export class SettingsComponent implements OnInit {
 
   protected ean8Forced = false;
 
-  private currentUsername = '';
+  private currentUsername: string | null = null;
+
+  protected get userLoaded(): boolean {
+    return this.currentUsername !== null;
+  }
 
   ngOnInit() {
     this.adminAccessService.getCurrentUser().subscribe((user) => this.populateUserForm(user));
@@ -72,6 +76,10 @@ export class SettingsComponent implements OnInit {
   }
 
   protected updateUser() {
+    if (this.currentUsername === null) {
+      return;
+    }
+
     this.userService
       .updateUser(
         this.currentUsername,

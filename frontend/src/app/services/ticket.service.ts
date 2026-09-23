@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { map, Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { TicketDetails } from '../model/ticket/ticketDetails';
+import { TicketStatus } from '../model/ticket/ticketStatus';
 import { TicketCreateDto } from '../model/ticket/ticketCreateDto';
 import { TicketUpdateDto } from '../model/ticket/ticketUpdateDto.ty';
 import { CommentCreateDto } from '../model/comment/commentCreateDto';
@@ -14,10 +15,10 @@ import { CommentDetailsDto } from '../model/comment/commentDetailsDto';
 export class TicketService {
   private http = inject(HttpClient);
 
-  getTicketCount(): Observable<number> {
+  getOpenTicketCount(): Observable<number> {
     return this.http.get<Record<string, unknown>[]>(`${environment.apiUrl}/v1/tickets`).pipe(
       map((tickets) => {
-        return tickets.length;
+        return tickets.filter((ticket) => ticket['status'] !== TicketStatus.CLOSED).length;
       }),
     );
   }

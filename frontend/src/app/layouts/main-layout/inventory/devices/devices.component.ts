@@ -57,6 +57,7 @@ import { MatChip, MatChipRemove, MatChipSet } from '@angular/material/chips';
 import { MatTooltip } from '@angular/material/tooltip';
 import { Location, NgTemplateOutlet } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
+import { Title } from '@angular/platform-browser';
 
 const ALL_COLUMNS: string[] = [
   'name',
@@ -129,6 +130,7 @@ export class DevicesComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private location = inject(Location);
   private adminAccessService = inject(AdminAccessService);
+  private titleService = inject(Title);
 
   protected loading = true;
   protected canCreate = false;
@@ -177,6 +179,8 @@ export class DevicesComponent implements OnInit {
   protected selectedModels = new Set<string>();
 
   constructor() {
+    this.titleService.setTitle('Raktr - Eszközök');
+
     effect(() => {
       const width = this.windowService.windowWidth();
       this.displayedColumns = width >= 1200 ? ALL_COLUMNS : REDUCED_COLUMNS;

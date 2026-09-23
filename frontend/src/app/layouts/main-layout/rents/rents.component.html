@@ -243,7 +243,9 @@
 
     <ng-container matColumnDef="totalWeight">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Össztömeg</th>
-      <td mat-cell *matCellDef="let rent">{{ rent.getSumWeight() / 1000 | number: '1.0-2' }} kg</td>
+      <td mat-cell *matCellDef="let rent">
+        {{ rent.getSumWeight(containersById) / 1000 | number: '1.0-2' }} kg
+      </td>
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

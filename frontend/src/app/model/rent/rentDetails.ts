@@ -2,6 +2,7 @@ import { UserDetails } from '../user/userDetails';
 import { RentType } from './rentType';
 import { RentItemDetailsDto } from './rentItem/rentItemDetails';
 import { CommentDetailsDto } from '../comment/commentDetailsDto';
+import { ContainerDetails } from '../scannable/container/containerDetails';
 
 export class RentDetails {
   id: number;
@@ -61,14 +62,24 @@ export class RentDetails {
     return this.rentItems.reduce((sum, item) => sum + item.quantity, 0);
   }
 
-  public getSumWeight(): number {
-    let sumWeight = 0;
+  // A container's own `weight` is just its tare weight - its true weight while rented out has
+  // to include whatever is packed inside, which `rentItem.scannable` doesn't carry on its own,
+  // so the caller passes in the separately loaded container list to look that up.
+  public static getItemWeight(
+    rentItem: RentItemDetailsDto,
+    containersById?: Map<number, ContainerDetails>,
+  ): number {
+    const container = containersById?.get(rentItem.scannable.id);
+    const unitWeight = container ? container.totalWeight : rentItem.scannable.weight;
 
-    this.rentItems.forEach((rentItem) => {
-      sumWeight += rentItem.scannable.weight * rentItem.quantity;
-    });
+    return unitWeight * rentItem.quantity;
+  }
 
-    return sumWeight;
+  public getSumWeight(containersById?: Map<number, ContainerDetails>): number {
+    return this.rentItems.reduce(
+      (sum, rentItem) => sum + RentDetails.getItemWeight(rentItem, containersById),
+      0,
+    );
   }
 
   static fromJson(json: Record<string, unknown>): RentDetails {

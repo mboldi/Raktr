@@ -436,6 +436,14 @@ export class RentFormComponent implements OnInit {
     return `Tartalmazott eszközök:\n${contents}`;
   }
 
+  protected itemWeight(item: RentItemDetailsDto): number {
+    return RentDetails.getItemWeight(item, this.containersById);
+  }
+
+  protected rentSumWeight(rent: RentDetails): number {
+    return rent.getSumWeight(this.containersById);
+  }
+
   protected hoveredContainerTooltip: string | null = null;
   protected containerTooltipPosition = { x: 0, y: 0 };
 

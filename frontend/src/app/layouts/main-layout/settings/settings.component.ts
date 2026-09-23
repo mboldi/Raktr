@@ -13,6 +13,7 @@ import { UserUpdateDto } from '../../../model/user/userUpdateDto';
 import { ConfigUpdateDto } from '../../../model/config/configUpdateDto';
 import { environment } from '../../../../environments/environment';
 import { MatBadge } from '@angular/material/badge';
+import { Title } from '@angular/platform-browser';
 
 function blankToNull(value: string | null): string | null {
   return value?.trim() || null;
@@ -41,6 +42,7 @@ export class SettingsComponent implements OnInit {
   private adminAccessService = inject(AdminAccessService);
   private configService = inject(ConfigService);
   private snackBar = inject(MatSnackBar);
+  private titleService = inject(Title);
 
   protected admin = false;
 
@@ -58,6 +60,8 @@ export class SettingsComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.titleService.setTitle('Raktr - Beállítások');
+
     this.adminAccessService.getCurrentUser().subscribe((user) => this.populateUserForm(user));
     this.adminAccessService.isAdmin().subscribe((admin) => (this.admin = admin));
 

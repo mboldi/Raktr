@@ -4,6 +4,7 @@ import hu.bsstudio.raktr.dal.entity.User;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.extern.slf4j.Slf4j;
+import org.jspecify.annotations.NullMarked;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -20,6 +21,7 @@ public class UserAuditorProvider implements AuditorAware<User> {
     private EntityManager entityManager;
 
     @Override
+    @NullMarked
     public Optional<User> getCurrentAuditor() {
         var authentication = SecurityContextHolder.getContext().getAuthentication();
 

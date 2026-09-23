@@ -29,7 +29,7 @@ public class JsonAssert {
     @SneakyThrows
     public void equalTo(String expected) {
         var customizations = excludedFields.stream()
-                .map(field -> new Customization(field, (o1, o2) -> true))
+                .map(field -> new Customization(field, (_, _) -> true))
                 .toArray(Customization[]::new);
 
         JSONAssert.assertEquals(expected, actual, new CustomComparator(JSONCompareMode.STRICT, customizations));

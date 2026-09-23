@@ -3,8 +3,8 @@ export class UserDetails {
   username: string;
   familyName: string;
   givenName: string;
-  nickname: string;
-  personalId: string;
+  nickname: string | null;
+  personalId: string | null;
   groups: string[];
 
   constructor(
@@ -12,8 +12,8 @@ export class UserDetails {
     userName: string,
     familyName: string,
     givenName: string,
-    nickName: string,
-    personalId: string,
+    nickName: string | null,
+    personalId: string | null,
     groups: string[],
   ) {
     this.uuid = uuid;
@@ -35,8 +35,8 @@ export class UserDetails {
       json['username'] as string,
       json['familyName'] as string,
       json['givenName'] as string,
-      json['nickname'] as string,
-      json['personalId'] as string,
+      json['nickname'] as string | null,
+      json['personalId'] as string | null,
       Array.isArray(json['groups']) ? (json['groups'] as string[]) : [],
     );
   }

@@ -68,6 +68,33 @@ else to the frontend is the deployment's job; under Docker Compose that is
 Both strip the `/api` prefix, since the backend serves its routes at `/v1/...`. If the backend
 ever moves under `/api` itself, drop the prefix rewrite from all three places instead.
 
+### Error reporting (Sentry)
+
+The app reports unhandled errors to Sentry — errors only, no tracing, profiling or session
+replay. Reporting is off unless a DSN is configured, so it stays quiet during local
+development.
+
+The DSN is read at runtime, not baked into the bundle: `config.js` is regenerated from the
+container's environment on every start by
+[`nginx/40-sentry-config.sh`](nginx/40-sentry-config.sh), and nginx serves it with
+`Cache-Control: no-store`. One image therefore works in every environment.
+
+| Variable             | Default         | Description                                 |
+| -------------------- | --------------- | ------------------------------------------- |
+| `SENTRY_DSN`         | `""` (disabled) | Sentry DSN for the `raktr-frontend` project |
+| `SENTRY_ENVIRONMENT` | `production`    | Environment tag on reported events          |
+
+The release is fixed at image build time as `frontend@$VERSION` and reported alongside each
+event. Failed requests the backend answered with a 4xx, and cancelled or offline requests
+(status 0), are dropped before sending: neither indicates a frontend bug, and the backend
+reports its own 5xx failures. The signed-in user is attached from the OIDC claims, the same
+way the backend's `SentryUserEventProcessor` does it.
+
+Source maps are generated hidden during the production build, uploaded by `sentry-cli`
+(configured in [`.sentryclirc`](.sentryclirc)) and then deleted, so stack traces are readable
+in Sentry without shipping the maps. The upload only runs when the build gets a
+`SENTRY_AUTH_TOKEN` secret, which CI passes on pushes to `main` and on tags.
+
 ### Production
 
 The Docker image builds the app with the `production` configuration and serves the static files with nginx on port `8080` (see [`Dockerfile`](Dockerfile) and [`nginx/default.conf`](nginx/default.conf)).

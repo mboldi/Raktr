@@ -11,6 +11,7 @@ import {
 } from 'angular-auth-oidc-client';
 import { LocalStorageService } from './services/localStorage.service';
 import { provideNativeDateAdapter } from '@angular/material/core';
+import { provideSentry } from './sentry';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -32,6 +33,7 @@ export const appConfig: ApplicationConfig = {
       },
     }),
     { provide: AbstractSecurityStorage, useClass: LocalStorageService },
+    ...provideSentry(),
     provideNativeDateAdapter(),
   ],
 };

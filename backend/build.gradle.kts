@@ -116,7 +116,7 @@ envOrProperty("SENTRY_AUTH_TOKEN", "sentryAuthToken")?.let { token ->
     sentry {
         includeSourceContext.set(true)
         org.set("budavari-schonherz-studio")
-        projectName.set("raktr-backend-prod")
+        projectName.set("raktr-backend")
         authToken.set(token)
     }
 }

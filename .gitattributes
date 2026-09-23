@@ -1,0 +1,2 @@
+# The hooks are run by sh, so CRLF would break them on Linux and macOS clones.
+.githooks/** text eol=lf

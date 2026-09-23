@@ -7,11 +7,17 @@
             <div class="header">
               <div class="heading">
                 <h3 class="title">{{ preset.name }}</h3>
-                <p class="subtitle">{{ preset.assetTag }}</p>
+                <p class="subtitle">{{ preset.barcode }} - {{ preset.assetTag }}</p>
               </div>
             </div>
             <mat-card-content>
               <div class="field-grid">
+                @if (presetSerialNumber(preset); as serialNumber) {
+                  <div class="field">
+                    <span class="label">Sorozatszám</span>
+                    <span class="value">{{ serialNumber }}</span>
+                  </div>
+                }
                 <div class="field">
                   <span class="label">Kategória</span>
                   <span class="value">{{ preset.category }}</span>
@@ -58,7 +64,7 @@
             <div class="header">
               <div class="heading">
                 <h3 class="title">{{ selectedDevice.name }}</h3>
-                <p class="subtitle">{{ selectedDevice.assetTag }}</p>
+                <p class="subtitle">{{ selectedDevice.barcode }} - {{ selectedDevice.assetTag }}</p>
               </div>
               <button mat-button type="button" (click)="clearSelectedDevice()">Módosítás</button>
             </div>

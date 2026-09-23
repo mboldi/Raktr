@@ -23,6 +23,7 @@ import { DeviceUpdateDto } from '../../../../model/scannable/device/deviceUpdate
 import { DeviceStatus } from '../../../../model/scannable/device/deviceStatus';
 import { OwnerCreateDto } from '../../../../model/owner/ownerCreateDto';
 import { environment } from '../../../../../environments/environment';
+import { Title } from '@angular/platform-browser';
 
 interface ImportProgress {
   current: number;
@@ -172,6 +173,11 @@ export class ExportImportComponent {
   private ownerService = inject(OwnerService);
   private scannableService = inject(ScannableService);
   private snackBar = inject(MatSnackBar);
+  private titleService = inject(Title);
+
+  constructor() {
+    this.titleService.setTitle('Raktr - Export/Import');
+  }
 
   protected exportingDevices = false;
   protected exportingContainers = false;

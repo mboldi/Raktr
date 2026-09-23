@@ -52,6 +52,7 @@ import { YesnoModalComponent } from '../../../components/yesno-modal/yesno-modal
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { map, Observable, startWith } from 'rxjs';
 import { Router } from '@angular/router';
+import { Title } from '@angular/platform-browser';
 
 const ALL_COLUMNS: string[] = [
   'destination',
@@ -118,6 +119,7 @@ export class OverviewComponent implements OnInit {
   private snackBar = inject(MatSnackBar);
   private router = inject(Router);
   private adminAccessService = inject(AdminAccessService);
+  private titleService = inject(Title);
 
   protected canCreate = false;
 
@@ -135,6 +137,8 @@ export class OverviewComponent implements OnInit {
   private containers: ContainerDetails[] = [];
 
   constructor() {
+    this.titleService.setTitle('Raktr');
+
     effect(() => {
       const width = this.windowService.windowWidth();
       this.displayedColumns = width >= 1200 ? ALL_COLUMNS : REDUCED_COLUMNS;

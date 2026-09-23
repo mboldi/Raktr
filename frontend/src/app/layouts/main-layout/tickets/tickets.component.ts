@@ -53,6 +53,7 @@ import {
 } from '../../../components/ticket-edit-modal/ticket-edit-dialog.component';
 import { Location } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
+import { Title } from '@angular/platform-browser';
 
 const ALL_COLUMNS: string[] = [
   'severity',
@@ -117,6 +118,7 @@ export class TicketsComponent implements OnInit {
   private snackBar = inject(MatSnackBar);
   private route = inject(ActivatedRoute);
   private location = inject(Location);
+  private titleService = inject(Title);
 
   protected loading = true;
   @ViewChild('optionSearchInput') optionSearchInput?: ElementRef<HTMLInputElement>;
@@ -166,6 +168,8 @@ export class TicketsComponent implements OnInit {
   }
 
   constructor() {
+    this.titleService.setTitle('Raktr - Hibajegyek');
+
     effect(() => {
       const width = this.windowService.windowWidth();
       this.displayedColumns = width >= 1200 ? ALL_COLUMNS : REDUCED_COLUMNS;

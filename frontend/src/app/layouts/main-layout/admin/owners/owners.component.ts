@@ -28,6 +28,7 @@ import { OwnerUpdateDto } from '../../../../model/owner/ownerUpdateDto';
 import { forkJoin } from 'rxjs';
 import { DeviceService } from '../../../../services/device.service';
 import { ContainerService } from '../../../../services/container.service';
+import { Title } from '@angular/platform-browser';
 
 const COLUMNS: string[] = [
   'name',
@@ -74,6 +75,7 @@ export class OwnersComponent implements OnInit {
   private containerService = inject(ContainerService);
   private dialog = inject(MatDialog);
   private snackBar = inject(MatSnackBar);
+  private titleService = inject(Title);
 
   private assignedScannableCounts = new Map<number, number>();
 
@@ -88,6 +90,8 @@ export class OwnersComponent implements OnInit {
   protected filteredOwners: OwnerDetailsDto[] = [];
 
   ngOnInit(): void {
+    this.titleService.setTitle('Raktr - Tulajdonosok');
+
     this.getCategories();
     this.loadAssignedScannableCounts();
   }

@@ -31,6 +31,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { forkJoin } from 'rxjs';
 import { DeviceService } from '../../../../services/device.service';
 import { ContainerService } from '../../../../services/container.service';
+import { Title } from '@angular/platform-browser';
 
 const COLUMNS: string[] = ['name', 'assignedScannables', 'createdAt', 'createdBy', 'delete'];
 
@@ -71,6 +72,7 @@ export class CategoriesComponent implements OnInit {
   private containerService = inject(ContainerService);
   private dialog = inject(MatDialog);
   private snackBar = inject(MatSnackBar);
+  private titleService = inject(Title);
 
   private assignedScannableCounts = new Map<string, number>();
 
@@ -85,6 +87,8 @@ export class CategoriesComponent implements OnInit {
   protected columns = COLUMNS;
 
   ngOnInit(): void {
+    this.titleService.setTitle('Raktr - Kategóriák');
+
     this.getCategories();
     this.loadAssignedScannableCounts();
   }

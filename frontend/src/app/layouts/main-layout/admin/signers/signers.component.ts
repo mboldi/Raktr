@@ -9,6 +9,7 @@ import { ConfigDetailsDto } from '../../../../model/config/configDetailsDto';
 import { environment } from '../../../../../environments/environment';
 import { ConfigUpdateDto } from '../../../../model/config/configUpdateDto';
 import { forkJoin } from 'rxjs';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-signers',
@@ -30,6 +31,7 @@ import { forkJoin } from 'rxjs';
 export class SignersComponent implements OnInit {
   private configService = inject(ConfigService);
   private snackBar = inject(MatSnackBar);
+  private titleService = inject(Title);
 
   protected groupLeaderNameFormControl: FormControl = new FormControl();
   protected groupNameFormControl: FormControl = new FormControl();
@@ -39,6 +41,8 @@ export class SignersComponent implements OnInit {
   protected secondSignerTitleFormControl: FormControl = new FormControl();
 
   ngOnInit() {
+    this.titleService.setTitle('Raktr - Aláírók');
+
     this.configService.getConfigs().subscribe((configs) => {
       this.groupNameFormControl.setValue(
         this.getConfigValue(configs, environment.rentTeamNameKey)?.value,

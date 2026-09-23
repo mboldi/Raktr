@@ -39,6 +39,7 @@ import { MatChip, MatChipRemove, MatChipSet } from '@angular/material/chips';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatSlideToggle } from '@angular/material/slide-toggle';
 import { Router } from '@angular/router';
+import { Title } from '@angular/platform-browser';
 
 const ALL_COLUMNS: string[] = [
   'status',
@@ -103,6 +104,7 @@ export class RentsComponent implements OnInit {
   private rentService = inject(RentService);
   private router = inject(Router);
   private adminAccessService = inject(AdminAccessService);
+  private titleService = inject(Title);
 
   protected loading = true;
   protected canCreate = false;
@@ -140,6 +142,8 @@ export class RentsComponent implements OnInit {
   protected showClosedRents = false;
 
   constructor() {
+    this.titleService.setTitle('Raktr - Kivitelek');
+
     effect(() => {
       const width = this.windowService.windowWidth();
       this.displayedColumns = width >= 1200 ? ALL_COLUMNS : REDUCED_COLUMNS;

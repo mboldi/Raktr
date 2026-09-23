@@ -22,6 +22,7 @@ public class UserSyncService {
 
     private final UserRepository userRepository;
 
+    // The cache must wrap the transaction; RaktrApplication's @EnableCaching pins that order.
     @Cacheable(value = "usersByUuid", key = "#jwt.getClaimAsString('sub')", sync = true)
     @Transactional
     public User syncUserFromJwt(Jwt jwt) {

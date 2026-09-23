@@ -115,6 +115,16 @@ public class DeviceIT extends RaktrIT {
     }
 
     @Test
+    void testCreateDeviceWithoutQuantityRejected() {
+        givenAuthenticatedAdmin()
+                .body(loadFileContent("/device/create-without-quantity-request.json"))
+                .when()
+                .post("/v1/devices")
+                .then()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @Test
     void testCreateDeviceAssetTagAlreadyExists() {
         var response = givenAuthenticatedAdmin()
                 .body(loadFileContent("/device/create-asset-tag-exists-request.json"))

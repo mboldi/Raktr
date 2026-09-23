@@ -8,10 +8,10 @@
     (addDevice)="onAddDevice($event)"
     (deviceNotFound)="onDeviceNotFound()"
     (removeDevice)="onRemoveDevice($event)"
+    (save)="save()"
   />
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
   <button mat-button (click)="close()">Vissza</button>
-  <button mat-raised-button color="primary" (click)="save()">Mentés</button>
 </mat-dialog-actions>

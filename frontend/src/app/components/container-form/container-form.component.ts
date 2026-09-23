@@ -42,7 +42,7 @@ import { DeviceDetails } from '../../model/scannable/device/deviceDetails';
 import { DeviceService } from '../../services/device.service';
 import { findByBarcode } from '../../util/ean8';
 import { ScannableService } from '../../services/scannable.service';
-import { MatIconButton } from '@angular/material/button';
+import { MatButton, MatIconButton } from '@angular/material/button';
 import {
   MatExpansionPanel,
   MatExpansionPanelHeader,
@@ -91,6 +91,7 @@ export interface AddDeviceEvent {
     MatIconModule,
     MatIcon,
     MatIconButton,
+    MatButton,
     MatSuffix,
     MatExpansionPanel,
     MatExpansionPanelHeader,
@@ -137,6 +138,8 @@ export class ContainerFormComponent implements OnInit {
   deviceNotFound = output<void>();
   /** Emits the device to remove from the container. */
   removeDevice = output<DeviceDetails>();
+  /** Emitted when the user clicks Save, next to the base data fields it actually saves. */
+  save = output<void>();
 
   containerForm: UntypedFormGroup;
 

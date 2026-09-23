@@ -41,7 +41,9 @@ fi
 
 if [ -n "$frontend_staged" ]; then
     if command -v pnpm > /dev/null 2>&1; then
-        # prettier checks the staged files themselves; it skips what .prettierignore covers
+        # prettier checks the staged files themselves; it skips what .prettierignore covers.
+        # A named file it has no parser for (Dockerfile, *.conf) is an error rather than a
+        # skip, hence --ignore-unknown; `prettier .` only gets away without it by globbing.
         set --
         while IFS= read -r file; do
             [ -n "$file" ] && set -- "$@" "${file#frontend/}"
@@ -50,7 +52,7 @@ $frontend_staged
 STAGED
 
         printf 'frontend: prettier ... '
-        if output=$(cd "$repo_root/frontend" && pnpm exec prettier --check --log-level warn -- "$@" 2>&1); then
+        if output=$(cd "$repo_root/frontend" && pnpm exec prettier --check --ignore-unknown --log-level warn -- "$@" 2>&1); then
             echo 'ok'
         else
             report "$output" '(cd frontend && pnpm format)'

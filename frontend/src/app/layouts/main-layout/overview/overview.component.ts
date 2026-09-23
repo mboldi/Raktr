@@ -135,6 +135,7 @@ export class OverviewComponent implements OnInit {
 
   private devices: DeviceDetails[] = [];
   private containers: ContainerDetails[] = [];
+  protected containersById = new Map<number, ContainerDetails>();
 
   constructor() {
     this.titleService.setTitle('Raktr');
@@ -158,7 +159,10 @@ export class OverviewComponent implements OnInit {
     this.getScannables();
 
     this.deviceService.getDevices().subscribe((devices) => (this.devices = devices));
-    this.containerService.getContainers().subscribe((containers) => (this.containers = containers));
+    this.containerService.getContainers().subscribe((containers) => {
+      this.containers = containers;
+      this.containersById = new Map(containers.map((container) => [container.id, container]));
+    });
 
     this.rentService.getRents().subscribe((rents) => {
       this.activeRents = rents

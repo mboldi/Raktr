@@ -22,7 +22,9 @@ import {
 import { MatFormField, MatInput, MatLabel, MatSuffix } from '@angular/material/input';
 import { RentService } from '../../../services/rent.service';
 import { AdminAccessService } from '../../../services/adminAccess.service';
+import { ContainerService } from '../../../services/container.service';
 import { RentDetails } from '../../../model/rent/rentDetails';
+import { ContainerDetails } from '../../../model/scannable/container/containerDetails';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { DatePipe, DecimalPipe, NgTemplateOutlet } from '@angular/common';
 import { MatSortModule, Sort } from '@angular/material/sort';
@@ -102,12 +104,14 @@ export class RentsComponent implements OnInit {
   private windowService = inject(WindowWidthService);
   private localStorageService = inject(LocalStorageService);
   private rentService = inject(RentService);
+  private containerService = inject(ContainerService);
   private router = inject(Router);
   private adminAccessService = inject(AdminAccessService);
   private titleService = inject(Title);
 
   protected loading = true;
   protected canCreate = false;
+  protected containersById = new Map<number, ContainerDetails>();
   @ViewChild(MatTable) table!: MatTable<RentDetails>;
   @ViewChild('optionSearchInput') optionSearchInput?: ElementRef<HTMLInputElement>;
 
@@ -159,6 +163,10 @@ export class RentsComponent implements OnInit {
     if (readPageSize) {
       this.pageSize = parseInt(readPageSize);
     }
+
+    this.containerService.getContainers().subscribe((containers) => {
+      this.containersById = new Map(containers.map((container) => [container.id, container]));
+    });
 
     this.rentService.getRents().subscribe((rents) => {
       this.rents = rents;
@@ -252,7 +260,7 @@ export class RentsComponent implements OnInit {
       case 'itemCount':
         return (a, b) => a.rentItems.length - b.rentItems.length;
       case 'totalWeight':
-        return (a, b) => a.getSumWeight() - b.getSumWeight();
+        return (a, b) => a.getSumWeight(this.containersById) - b.getSumWeight(this.containersById);
       default:
         return null;
     }

@@ -35,7 +35,9 @@ ENV RAKTR_RELEASE=frontend@${VERSION}
 # remove default nginx config
 RUN rm /etc/nginx/conf.d/default.conf
 
-# copy custom nginx config and built app
+# copy custom nginx config and built app. The header snippet stays out of conf.d/, which
+# nginx.conf includes wholesale at the http level.
+COPY nginx/security-headers.conf /etc/nginx/
 COPY nginx/default.conf /etc/nginx/conf.d/
 COPY --chmod=755 nginx/40-sentry-config.sh /docker-entrypoint.d/40-sentry-config.sh
 COPY --from=build /home/node/app/dist/frontend/browser /usr/share/nginx/html

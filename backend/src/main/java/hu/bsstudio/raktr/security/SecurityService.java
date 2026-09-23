@@ -12,10 +12,6 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class SecurityService {
 
-    public String getCurrentSubject() {
-        return getAuthentication().getName();
-    }
-
     public UUID getCurrentUserUuid() {
         try {
             return UUID.fromString(getCurrentSubject());
@@ -41,6 +37,10 @@ public class SecurityService {
             throw new AccessDeniedException("No authentication found!");
         }
         return authentication;
+    }
+
+    private String getCurrentSubject() {
+        return getAuthentication().getName();
     }
 
 }

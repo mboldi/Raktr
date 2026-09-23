@@ -38,6 +38,8 @@ public class ContainerService {
 
     @Transactional
     public ContainerDetailsDto createContainer(ContainerCreateDto createDto) {
+        lookupService.checkIdentifiersAvailable(createDto.getAssetTag(), createDto.getBarcode(), null);
+
         var container = containerMapper.createDtoToEntity(createDto);
 
         var category = lookupService.getCategory(createDto.getCategoryName());
@@ -64,6 +66,8 @@ public class ContainerService {
     @Transactional
     public ContainerDetailsDto updateContainer(Long containerId, ContainerUpdateDto updateDto) {
         var container = lookupService.getContainer(containerId);
+
+        lookupService.checkIdentifiersAvailable(updateDto.getAssetTag(), updateDto.getBarcode(), containerId);
 
         containerMapper.updateDtoToEntity(container, updateDto);
 

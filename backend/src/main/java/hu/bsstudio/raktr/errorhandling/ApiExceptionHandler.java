@@ -5,6 +5,7 @@ import hu.bsstudio.raktr.exception.EntityException;
 import hu.bsstudio.raktr.exception.EntityInUseException;
 import hu.bsstudio.raktr.exception.PdfGenerationException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -37,6 +38,13 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         log.debug("Invalid argument: {}", ex.getMessage());
         var response = new ErrorResponse("INVALID_VALUE", ex.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<ErrorResponse> handleDataIntegrityViolation(DataIntegrityViolationException ex) {
+        log.warn("Database constraint violated", ex);
+        var response = new ErrorResponse("CONSTRAINT_VIOLATION", "The request conflicts with existing data.");
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
     }
 
     @ExceptionHandler(PdfGenerationException.class)

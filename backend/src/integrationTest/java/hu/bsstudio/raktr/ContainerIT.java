@@ -171,6 +171,37 @@ public class ContainerIT extends RaktrIT {
     }
 
     @Test
+    void testCreateContainerAssetTagAlreadyExists() {
+        var response = givenAuthenticatedAdmin()
+                .body(loadFileContent("/container/create-asset-tag-exists-request.json"))
+                .when()
+                .post("/v1/containers")
+                .then()
+                .statusCode(HttpStatus.CONFLICT.value())
+                .extract()
+                .asString();
+
+        assertJson(response).equalTo(loadFileContent("/container/create-asset-tag-exists-response.json"));
+    }
+
+    @Test
+    void testUpdateContainerKeepingOwnIdentifiers() {
+        givenAuthenticatedAdmin()
+                .body(loadFileContent("/container/update-same-identifiers-request.json"))
+                .when()
+                .put("/v1/containers/100")
+                .then()
+                .statusCode(HttpStatus.OK.value());
+
+        databaseQueryHelper.queryDatabase("""
+                        SELECT count(*) FROM scannables
+                        WHERE id = 100 AND asset_tag = 'CONTAINER-001' AND name = 'Test Container Renamed'
+                        """)
+                .assertRowCount()
+                .isEqualTo(1);
+    }
+
+    @Test
     void testUpdateContainerCategoryNotFound() {
         var response = givenAuthenticatedAdmin()
                 .body(loadFileContent("/container/update-category-not-found-request.json"))

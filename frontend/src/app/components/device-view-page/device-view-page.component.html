@@ -101,10 +101,12 @@
           <span class="label">Érték</span>
           <span class="value">{{ device.estimatedValue }}&nbsp;Ft</span>
         </div>
-        <div class="field">
-          <span class="label">Mennyiség egy vonalkód alatt</span>
-          <span class="value">{{ device.quantity }}&nbsp;db</span>
-        </div>
+        @if (device.quantity > 1) {
+          <div class="field">
+            <span class="label">Mennyiség egy vonalkód alatt</span>
+            <span class="value">{{ device.quantity }}&nbsp;db</span>
+          </div>
+        }
       </div>
     </section>
 

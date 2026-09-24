@@ -179,7 +179,7 @@ public class RentService {
 
         log.info("Updated RentItem [{}] to Rent [{}]", rentItem.getId(), rentId);
 
-        closeRentIfAllReturned(rent, null);
+        refreshRentClosedState(rent, null);
 
         return rentItemMapper.entityToDetailsDto(rentItem);
     }
@@ -193,7 +193,7 @@ public class RentService {
 
         log.info("Deleted RentItem [{}] from Rent [{}]", rentItemId, rentId);
 
-        closeRentIfAllReturned(rent, rentItemId);
+        refreshRentClosedState(rent, rentItemId);
     }
 
     @Transactional(readOnly = true)
@@ -294,16 +294,22 @@ public class RentService {
                 .orElseThrow(() -> new EntityNotFoundException(User.class, issuerId));
     }
 
-    private void closeRentIfAllReturned(Rent rent, Long excludeRentItemId) {
-        var allReturned = rent.getRentItems().stream()
+    private void refreshRentClosedState(Rent rent, Long excludeRentItemId) {
+        var remainingItems = rent.getRentItems().stream()
                 .filter(item -> !item.getId().equals(excludeRentItemId))
-                .allMatch(item -> item.getStatus() == BackStatus.RETURNED);
+                .toList();
 
-        if (allReturned) {
-            rent.setClosed(true);
-            rentRepository.saveAndFlush(rent);
-            log.info("All items returned, closed Rent [{}]", rent.getId());
+        var closed = !remainingItems.isEmpty()
+                && remainingItems.stream().allMatch(item -> item.getStatus() == BackStatus.RETURNED);
+
+        if (closed == rent.isClosed()) {
+            return;
         }
+
+        rent.setClosed(closed);
+        rentRepository.saveAndFlush(rent);
+
+        log.info("Set closed to [{}] on Rent [{}]", closed, rent.getId());
     }
 
 }

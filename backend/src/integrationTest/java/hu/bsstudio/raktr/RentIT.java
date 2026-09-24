@@ -453,6 +453,40 @@ public class RentIT extends RaktrIT {
     }
 
     @Test
+    @Sql("/rent/reopen-rent-setup.sql")
+    void testUpdateRentItemReopensRent() {
+        givenAuthenticatedAdmin()
+                .body(loadFileContent("/rent/update-item-reopen-request.json"))
+                .when()
+                .put("/v1/rents/100/items/101")
+                .then()
+                .statusCode(HttpStatus.OK.value());
+
+        databaseQueryHelper.queryDatabase("SELECT count(*) FROM rents WHERE id = 100 AND closed = false")
+                .assertRowCount()
+                .isEqualTo(1);
+    }
+
+    @Test
+    void testDeletingLastRentItemDoesNotCloseRent() {
+        givenAuthenticatedAdmin()
+                .when()
+                .delete("/v1/rents/100/items/100")
+                .then()
+                .statusCode(HttpStatus.NO_CONTENT.value());
+
+        givenAuthenticatedAdmin()
+                .when()
+                .delete("/v1/rents/100/items/101")
+                .then()
+                .statusCode(HttpStatus.NO_CONTENT.value());
+
+        databaseQueryHelper.queryDatabase("SELECT count(*) FROM rents WHERE id = 100 AND closed = false")
+                .assertRowCount()
+                .isEqualTo(1);
+    }
+
+    @Test
     void testDeleteRentItem() {
         givenAuthenticatedAdmin()
                 .when()

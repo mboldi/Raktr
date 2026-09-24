@@ -1,5 +1,8 @@
 package hu.bsstudio.raktr.dto.appconfig;
 
+import hu.bsstudio.raktr.dal.value.ConfigDataType;
+import hu.bsstudio.raktr.dal.value.ConfigKey;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,10 +12,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ConfigDetailsDto {
 
-    private String key;
+    private ConfigKey key;
 
     private String value;
 
-    private String dataType;
+    private ConfigDataType dataType;
 
 }

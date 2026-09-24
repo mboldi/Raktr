@@ -43,6 +43,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Slf4j
+@Transactional(readOnly = true)
 @Service
 @RequiredArgsConstructor
 public class RentService {
@@ -67,13 +68,11 @@ public class RentService {
 
     private final CommentMapper commentMapper;
 
-    @Transactional(readOnly = true)
     public List<RentDetailsDto> listRents(boolean deleted) {
         var rents = rentRepository.findAllByDeleted(deleted);
         return rents.stream().map(rentMapper::entityToDetailsDto).toList();
     }
 
-    @Transactional(readOnly = true)
     public List<RentDetailsDto> getRentsByScannableId(Long scannableId) {
         var rents = rentRepository.findAllByRentItemsScannableId(scannableId);
         return rents.stream().map(rentMapper::entityToDetailsDto).toList();
@@ -93,7 +92,6 @@ public class RentService {
         return rentMapper.entityToDetailsDto(rent);
     }
 
-    @Transactional(readOnly = true)
     public RentDetailsDto getRentById(Long rentId) {
         var rent = getRent(rentId);
         return rentMapper.entityToDetailsDto(rent);
@@ -196,7 +194,6 @@ public class RentService {
         refreshRentClosedState(rent, rentItemId);
     }
 
-    @Transactional(readOnly = true)
     public List<RentValidationIssueDto> validateRent(Long rentId) {
         var rent = getRent(rentId);
 
@@ -253,7 +250,6 @@ public class RentService {
         return issues;
     }
 
-    @Transactional(readOnly = true)
     public byte[] getRentPdf(Long rentId, RentPdfCreateDto createDto) {
         var rent = getRent(rentId);
 

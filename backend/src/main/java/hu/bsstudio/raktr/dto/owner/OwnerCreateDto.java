@@ -15,6 +15,6 @@ public class OwnerCreateDto {
     private String name;
 
     @NotNull
-    private boolean inSchInventory;
+    private Boolean inSchInventory;
 
 }

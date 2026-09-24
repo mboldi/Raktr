@@ -12,13 +12,16 @@ RUN ./gradlew --no-daemon --version
 
 COPY src ./src
 
-RUN --mount=type=secret,id=SENTRY_AUTH_TOKEN \
+# Only caches/ is mounted: the wrapper distribution stays in the layer above, which CI's
+# layer cache keeps. The mount itself only persists on local builders.
+RUN --mount=type=cache,target=/root/.gradle/caches \
+    --mount=type=secret,id=SENTRY_AUTH_TOKEN \
     SENTRY_AUTH_TOKEN=$(cat /run/secrets/SENTRY_AUTH_TOKEN 2>/dev/null || true) \
     ./gradlew assemble --parallel --no-daemon -Pversion=$VERSION
 
 RUN java -Djarmode=tools -jar build/libs/*.jar extract --destination build/extracted
 
-FROM gcr.io/distroless/java25-debian13 AS runtime
+FROM gcr.io/distroless/java25-debian13:nonroot AS runtime
 
 WORKDIR /app
 

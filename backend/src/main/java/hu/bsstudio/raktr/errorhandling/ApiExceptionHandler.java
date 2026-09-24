@@ -3,6 +3,7 @@ package hu.bsstudio.raktr.errorhandling;
 import hu.bsstudio.raktr.exception.AccessDeniedException;
 import hu.bsstudio.raktr.exception.EntityException;
 import hu.bsstudio.raktr.exception.EntityInUseException;
+import hu.bsstudio.raktr.exception.InvalidValueException;
 import hu.bsstudio.raktr.exception.PdfGenerationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -33,9 +34,9 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
     }
 
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<ErrorResponse> handleIllegalArgument(IllegalArgumentException ex) {
-        log.debug("Invalid argument: {}", ex.getMessage());
+    @ExceptionHandler(InvalidValueException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidValue(InvalidValueException ex) {
+        log.debug("Invalid value: {}", ex.getMessage());
         var response = new ErrorResponse("INVALID_VALUE", ex.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }

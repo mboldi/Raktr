@@ -272,6 +272,24 @@ public class ContainerIT extends RaktrIT {
     }
 
     @Test
+    void testAddDevicesToContainerSameDeviceTwiceInOneRequest() {
+        var response = givenAuthenticatedAdmin()
+                .body(loadFileContent("/container/add-devices-duplicate-request.json"))
+                .when()
+                .post("/v1/containers/100/devices")
+                .then()
+                .statusCode(HttpStatus.CONFLICT.value())
+                .extract()
+                .asString();
+
+        assertJson(response).equalTo(loadFileContent("/container/add-devices-duplicate-response.json"));
+
+        databaseQueryHelper.queryDatabase("SELECT count(*) FROM container_devices WHERE container_id = 100")
+                .assertRowCount()
+                .isEmpty();
+    }
+
+    @Test
     void testAddDevicesToContainerNotFound() {
         var response = givenAuthenticatedAdmin()
                 .body(loadFileContent("/container/add-devices-request.json"))

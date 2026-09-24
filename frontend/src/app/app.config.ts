@@ -11,6 +11,7 @@ import {
 } from 'angular-auth-oidc-client';
 import { LocalStorageService } from './services/localStorage.service';
 import { provideNativeDateAdapter } from '@angular/material/core';
+import { MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
 import { provideSentry } from './sentry';
 
 export const appConfig: ApplicationConfig = {
@@ -35,5 +36,8 @@ export const appConfig: ApplicationConfig = {
     { provide: AbstractSecurityStorage, useClass: LocalStorageService },
     ...provideSentry(),
     provideNativeDateAdapter(),
+    // Dialogs opened without their own maxHeight would otherwise grow past the viewport with
+    // no way to scroll to the rest - this bounds every dialog so it can always be scrolled.
+    { provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: { maxHeight: '90vh' } },
   ],
 };

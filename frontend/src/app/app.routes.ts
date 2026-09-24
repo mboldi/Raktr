@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { LoginComponent } from './login/login.component';
 import { MainLayoutComponent } from './layouts/main-layout/main-layout.component';
 import { autoLoginPartialRoutesGuard } from 'angular-auth-oidc-client';
+import { saveReturnUrlGuard } from './guards/save-return-url.guard';
 
 export const routes: Routes = [
   {
@@ -23,6 +24,6 @@ export const routes: Routes = [
           import('./layouts/main-layout/main-layout.routes').then((m) => m.MAIN_LAYOUT_ROUTES),
       },
     ],
-    canActivate: [autoLoginPartialRoutesGuard],
+    canActivate: [saveReturnUrlGuard, autoLoginPartialRoutesGuard],
   },
 ];

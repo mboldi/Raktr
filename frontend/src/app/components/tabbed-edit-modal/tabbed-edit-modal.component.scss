@@ -2,3 +2,35 @@
   background-color: light-dark(#43a047, #2e7d32);
   color: #eaf1ff;
 }
+
+// The dialog surface itself is bounded (see MAT_DIALOG_DEFAULT_OPTIONS) and scrolls by default,
+// which scrolls the title/actions along with the content - this chain instead keeps the title
+// and actions fixed in place and only lets the active tab's body scroll internally.
+:host {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  max-height: inherit;
+  overflow: hidden;
+}
+
+.dialog-body {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.tab-group {
+  flex: 1 1 auto;
+  min-height: 0;
+
+  ::ng-deep .mat-mdc-tab-body-wrapper {
+    flex: 1 1 auto;
+    min-height: 0;
+  }
+
+  ::ng-deep .mat-mdc-tab-body-content {
+    overflow-y: auto;
+  }
+}

@@ -214,6 +214,12 @@ export class TicketFormComponent implements OnInit {
     });
   }
 
+  /** presetScannable is only typed as the generic base since it can be a device or a container,
+   * but only a device actually carries a serial number. */
+  protected presetSerialNumber(preset: ScannableDetailsDto): string | null {
+    return preset instanceof DeviceDetails ? preset.serialNumber : null;
+  }
+
   public getSelectedScannableId(): number | null {
     return this.presetScannable()?.id ?? this.selectedDevice?.id ?? null;
   }

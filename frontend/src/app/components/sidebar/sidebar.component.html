@@ -1,9 +1,9 @@
-<div style="height: 100%; display: flex; flex-direction: column; justify-content: space-between">
-  <div>
-    <h2 class="title">Raktr</h2>
+<div class="sidebar-root">
+  <h2 class="title">Raktr</h2>
 
-    <mat-divider></mat-divider>
+  <mat-divider></mat-divider>
 
+  <div class="nav-scroll">
     <mat-nav-list>
       @for (menuItem of menuItems; track menuItem.path) {
         @if (menuItem.inMenuBar && (menuItem.path !== '/admin' || admin)) {

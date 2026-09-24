@@ -111,6 +111,10 @@
       </div>
     </div>
   </form>
+
+  <div class="action-row mb-2">
+    <button mat-raised-button type="button" color="primary" (click)="save.emit()">Mentés</button>
+  </div>
 </mat-expansion-panel>
 
 @if (containerData()?.id) {

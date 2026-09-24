@@ -4,6 +4,7 @@ import { OidcSecurityService } from 'angular-auth-oidc-client';
 import { Router } from '@angular/router';
 import { MatButton } from '@angular/material/button';
 import { MatCard, MatCardContent, MatCardHeader } from '@angular/material/card';
+import { LocalStorageService } from '../services/localStorage.service';
 
 @Component({
   selector: 'app-login',
@@ -16,6 +17,7 @@ export class LoginComponent implements OnInit {
   private router = inject(Router);
   private titleService = inject(Title);
   private oidcSecurityService = inject(OidcSecurityService);
+  private localStorageService = inject(LocalStorageService);
 
   constructor() {
     this.titleService.setTitle('Raktr - Bejelentkezés');
@@ -24,7 +26,9 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {
     this.oidcSecurityService.isAuthenticated$.subscribe(({ isAuthenticated }) => {
       if (isAuthenticated) {
-        this.router.navigateByUrl('/overview');
+        const returnUrl = this.localStorageService.read('returnUrl');
+        this.localStorageService.remove('returnUrl');
+        this.router.navigateByUrl(returnUrl || '/overview');
       }
     });
   }

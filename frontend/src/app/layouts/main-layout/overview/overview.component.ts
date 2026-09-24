@@ -172,7 +172,7 @@ export class OverviewComponent implements OnInit {
     });
 
     this.ticketService
-      .getTicketCount()
+      .getOpenTicketCount()
       .subscribe((ticketCount) => (this.ticketCount = ticketCount));
   }
 
@@ -367,7 +367,7 @@ export class OverviewComponent implements OnInit {
         });
 
         this.ticketService
-          .getTicketCount()
+          .getOpenTicketCount()
           .subscribe((ticketCount) => (this.ticketCount = ticketCount));
       }
     });

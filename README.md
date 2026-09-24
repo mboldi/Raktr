@@ -14,8 +14,12 @@ Each has its own README with setup, build, and configuration details.
 Run the full stack (frontend, backend, and database) with Docker Compose:
 
 ```bash
-docker compose up --build
+docker compose up -d
 ```
+
+This runs the published `main` images from `ghcr.io`, not your local code. To run local
+backend changes, use [`backend/docker-compose.yml`](backend/docker-compose.yml), which builds
+the image from source.
 
 - Everything: `http://localhost:80` — a proxy container routes `/api` to the backend and the
   rest to the frontend, so the stack is served under one host like it is in production.

@@ -2,4 +2,6 @@
 
 .github/ @KOliver94 @mboldi
 backend/ @KOliver94 @mboldi
-docker-compose*.yml @KOliver94 @mboldi
+docker-compose.* @KOliver94 @mboldi
+deploy/ @KOliver94 @mboldi
+.githooks/ @KOliver94 @mboldi

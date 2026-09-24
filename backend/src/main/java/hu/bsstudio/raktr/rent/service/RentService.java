@@ -163,6 +163,8 @@ public class RentService {
 
         log.info("Added RentItem [{}] to Rent [{}]", rentItem.getId(), rentId);
 
+        refreshRentClosedState(rent, null);
+
         return rentItemMapper.entityToDetailsDto(rentItem);
     }
 

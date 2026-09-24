@@ -468,6 +468,21 @@ public class RentIT extends RaktrIT {
     }
 
     @Test
+    @Sql("/rent/reopen-rent-setup.sql")
+    void testAddRentItemReopensRent() {
+        givenAuthenticatedAdmin()
+                .body(loadFileContent("/rent/add-item-request.json"))
+                .when()
+                .post("/v1/rents/100/items")
+                .then()
+                .statusCode(HttpStatus.CREATED.value());
+
+        databaseQueryHelper.queryDatabase("SELECT count(*) FROM rents WHERE id = 100 AND closed = false")
+                .assertRowCount()
+                .isEqualTo(1);
+    }
+
+    @Test
     void testDeletingLastRentItemDoesNotCloseRent() {
         givenAuthenticatedAdmin()
                 .when()

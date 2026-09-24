@@ -24,8 +24,8 @@ import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.time.Instant;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -79,7 +79,7 @@ public class Rent {
 
     @CreatedDate
     @Column(updatable = false)
-    private LocalDateTime createdAt;
+    private Instant createdAt;
 
     @CreatedBy
     @ManyToOne
@@ -87,7 +87,7 @@ public class Rent {
     private User createdBy;
 
     @LastModifiedDate
-    private LocalDateTime updatedAt;
+    private Instant updatedAt;
 
     @LastModifiedBy
     @ManyToOne

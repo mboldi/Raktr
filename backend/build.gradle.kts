@@ -70,6 +70,7 @@ testSets.create("integrationTest")
 tasks {
     withType<Test> {
         useJUnitPlatform()
+        systemProperty("user.timezone", "Europe/Budapest")
         finalizedBy(jacocoTestReport)
     }
     jar {

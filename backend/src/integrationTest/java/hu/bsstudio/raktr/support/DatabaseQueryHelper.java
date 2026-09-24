@@ -74,7 +74,7 @@ public class DatabaseQueryHelper {
         @Override
         @SneakyThrows
         public void serialize(Timestamp value, JsonGenerator generator, SerializerProvider provider) {
-            var offsetDateTime = value.toLocalDateTime().atZone(ZoneOffset.UTC).toOffsetDateTime();
+            var offsetDateTime = value.toInstant().atOffset(ZoneOffset.UTC);
             generator.writeString(offsetDateTime.format(DateTimeFormatter.ISO_DATE_TIME));
         }
     }

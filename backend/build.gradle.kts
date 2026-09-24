@@ -79,14 +79,13 @@ tasks {
     val integrationTest = getByName<Test>("integrationTest") {
         maxHeapSize = "1G"
         shouldRunAfter(test)
-        finalizedBy(jacocoTestReport)
     }
     check {
         dependsOn(integrationTest)
     }
     jacocoTestReport {
         executionData(integrationTest)
-        dependsOn(integrationTest)
+        mustRunAfter(test, integrationTest)
         reports {
             xml.required.set(true)
         }

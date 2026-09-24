@@ -1,6 +1,6 @@
 package hu.bsstudio.raktr.dto.location;
 
-import hu.bsstudio.raktr.dto.user.UserAuditDetailsDto;
+import hu.bsstudio.raktr.dto.user.UserSummaryDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,10 +16,10 @@ public class LocationDetailsDto {
 
     private OffsetDateTime createdAt;
 
-    private UserAuditDetailsDto createdBy;
+    private UserSummaryDto createdBy;
 
     private OffsetDateTime updatedAt;
 
-    private UserAuditDetailsDto updatedBy;
+    private UserSummaryDto updatedBy;
 
 }

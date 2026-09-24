@@ -7,11 +7,7 @@
     "username": "member_user_100",
     "familyName": "Member",
     "givenName": "User",
-    "nickname": "Member",
-    "personalId": "ID-100",
-    "groups": [
-      "Stúdiós"
-    ]
+    "nickname": "Member"
   },
   "renterName": "Kovács László",
   "outDate": "2025-06-01",

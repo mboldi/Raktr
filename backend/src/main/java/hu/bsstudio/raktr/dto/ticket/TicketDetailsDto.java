@@ -4,7 +4,7 @@ import hu.bsstudio.raktr.dal.value.ProblemSeverity;
 import hu.bsstudio.raktr.dal.value.TicketStatus;
 import hu.bsstudio.raktr.dto.comment.CommentDetailsDto;
 import hu.bsstudio.raktr.dto.scannable.ScannableDetailsDto;
-import hu.bsstudio.raktr.dto.user.UserAuditDetailsDto;
+import hu.bsstudio.raktr.dto.user.UserSummaryDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -32,11 +32,11 @@ public class TicketDetailsDto {
 
     private OffsetDateTime createdAt;
 
-    private UserAuditDetailsDto createdBy;
+    private UserSummaryDto createdBy;
 
     private OffsetDateTime updatedAt;
 
-    private UserAuditDetailsDto updatedBy;
+    private UserSummaryDto updatedBy;
 
     @Data
     public static class Scannable {

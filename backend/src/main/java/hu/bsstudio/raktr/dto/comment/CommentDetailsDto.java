@@ -1,6 +1,6 @@
 package hu.bsstudio.raktr.dto.comment;
 
-import hu.bsstudio.raktr.dto.user.UserAuditDetailsDto;
+import hu.bsstudio.raktr.dto.user.UserSummaryDto;
 import lombok.Data;
 
 import java.time.OffsetDateTime;
@@ -14,10 +14,10 @@ public class CommentDetailsDto {
 
     private OffsetDateTime createdAt;
 
-    private UserAuditDetailsDto createdBy;
+    private UserSummaryDto createdBy;
 
     private OffsetDateTime updatedAt;
 
-    private UserAuditDetailsDto updatedBy;
+    private UserSummaryDto updatedBy;
 
 }

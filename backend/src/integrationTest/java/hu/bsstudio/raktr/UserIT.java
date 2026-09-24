@@ -96,7 +96,7 @@ public class UserIT extends RaktrIT {
                 .extract()
                 .asString();
 
-        assertJson(response).equalTo(loadFileContent("/user/get-response.json"));
+        assertJson(response).equalTo(loadFileContent("/user/get-me-response.json"));
     }
 
     @Test

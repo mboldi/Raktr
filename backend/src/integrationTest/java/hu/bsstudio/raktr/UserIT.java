@@ -189,6 +189,25 @@ public class UserIT extends RaktrIT {
     }
 
     @Test
+    void testGetCurrentUserWithForeignIssuer() {
+        var token = SsoProviderMock.generateJwt(
+                "00000000-0000-0000-0000-000000000003",
+                "candidate_user",
+                "Candidate",
+                "User",
+                List.of("Stúdiós jelölt"),
+                "https://login.bsstudio.hu/application/o/other-app/"
+        );
+
+        given()
+                .header("Authorization", "Bearer " + token)
+                .when()
+                .get("/v1/users/me")
+                .then()
+                .statusCode(HttpStatus.UNAUTHORIZED.value());
+    }
+
+    @Test
     void testUpdateOwnUser() {
         var response = givenAuthenticatedAdmin()
                 .body(loadFileContent("/user/update-request.json"))

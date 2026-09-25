@@ -53,6 +53,7 @@ public class DeviceCreateDto {
     private DeviceStatus status;
 
     @Min(1)
+    @NotNull
     private Integer quantity;
 
     private String acquisitionSource;

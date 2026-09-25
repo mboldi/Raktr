@@ -16,7 +16,11 @@ public interface ScannableRepository extends JpaRepository<Scannable, Long> {
 
     boolean existsByAssetTag(String assetTag);
 
+    boolean existsByAssetTagAndIdNot(String assetTag, Long id);
+
     boolean existsByBarcode(String barcode);
+
+    boolean existsByBarcodeAndIdNot(String barcode, Long id);
 
     boolean existsByCategory(Category category);
 

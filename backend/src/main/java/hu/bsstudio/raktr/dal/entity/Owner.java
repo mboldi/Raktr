@@ -19,7 +19,7 @@ import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
@@ -36,14 +36,13 @@ public class Owner {
     private Long id;
 
     @ToString.Include
-    @EqualsAndHashCode.Include
     private String name;
 
     private boolean inSchInventory;
 
     @CreatedDate
     @Column(updatable = false)
-    private LocalDateTime createdAt;
+    private Instant createdAt;
 
     @CreatedBy
     @ManyToOne
@@ -51,7 +50,7 @@ public class Owner {
     private User createdBy;
 
     @LastModifiedDate
-    private LocalDateTime updatedAt;
+    private Instant updatedAt;
 
     @LastModifiedBy
     @ManyToOne

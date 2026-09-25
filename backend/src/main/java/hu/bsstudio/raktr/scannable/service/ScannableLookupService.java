@@ -12,10 +12,13 @@ import hu.bsstudio.raktr.dal.repository.DeviceRepository;
 import hu.bsstudio.raktr.dal.repository.LocationRepository;
 import hu.bsstudio.raktr.dal.repository.OwnerRepository;
 import hu.bsstudio.raktr.dal.repository.ScannableRepository;
+import hu.bsstudio.raktr.exception.EntityAlreadyExistsException;
 import hu.bsstudio.raktr.exception.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional(readOnly = true)
 @Service
 @RequiredArgsConstructor
 public class ScannableLookupService {
@@ -60,6 +63,31 @@ public class ScannableLookupService {
     public Scannable getScannable(Long scannableId) {
         return scannableRepository.findById(scannableId)
                 .orElseThrow(() -> new EntityNotFoundException(Scannable.class, scannableId));
+    }
+
+    public <T extends Scannable> T getScannable(Class<T> type, Long scannableId) {
+        return scannableRepository.findById(scannableId)
+                .filter(type::isInstance)
+                .map(type::cast)
+                .orElseThrow(() -> new EntityNotFoundException(type, scannableId));
+    }
+
+    public void checkIdentifiersAvailable(String assetTag, String barcode, Long excludedId) {
+        var assetTagTaken = excludedId == null
+                ? scannableRepository.existsByAssetTag(assetTag)
+                : scannableRepository.existsByAssetTagAndIdNot(assetTag, excludedId);
+
+        if (assetTagTaken) {
+            throw new EntityAlreadyExistsException(Scannable.class, assetTag);
+        }
+
+        var barcodeTaken = excludedId == null
+                ? scannableRepository.existsByBarcode(barcode)
+                : scannableRepository.existsByBarcodeAndIdNot(barcode, excludedId);
+
+        if (barcodeTaken) {
+            throw new EntityAlreadyExistsException(Scannable.class, barcode);
+        }
     }
 
 }

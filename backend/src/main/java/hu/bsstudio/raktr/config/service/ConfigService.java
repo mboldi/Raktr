@@ -14,9 +14,11 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Comparator;
 import java.util.List;
 
 @Slf4j
+@Transactional(readOnly = true)
 @Service
 @RequiredArgsConstructor
 public class ConfigService {
@@ -28,7 +30,10 @@ public class ConfigService {
     @Cacheable(value = "configs")
     public List<ConfigDetailsDto> listConfigs() {
         var configs = configRepository.findAll();
-        return configs.stream().map(configMapper::entityToDetailsDto).toList();
+        return configs.stream()
+                .sorted(Comparator.comparing(Config::getKey))
+                .map(configMapper::entityToDetailsDto)
+                .toList();
     }
 
     @CacheEvict(value = "configs", allEntries = true)
@@ -37,7 +42,7 @@ public class ConfigService {
         var key = parseConfigKey(configKey);
         var config = getConfig(key);
 
-        config.getDataType().validate(updateDto.getValue());
+        key.getDataType().validate(updateDto.getValue());
 
         config.setValue(updateDto.getValue());
         config = configRepository.saveAndFlush(config);

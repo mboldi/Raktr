@@ -1,6 +1,7 @@
 package hu.bsstudio.raktr.user.controller;
 
 import hu.bsstudio.raktr.dto.user.UserDetailsDto;
+import hu.bsstudio.raktr.dto.user.UserSummaryDto;
 import hu.bsstudio.raktr.dto.user.UserUpdateDto;
 import hu.bsstudio.raktr.user.service.UserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -25,7 +26,7 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping
-    public List<UserDetailsDto> getUsers(@RequestParam(required = false) Boolean canIssueRent) {
+    public List<UserSummaryDto> getUsers(@RequestParam(required = false) Boolean canIssueRent) {
         if (canIssueRent != null) {
             return userService.getUsers(canIssueRent);
         }
@@ -38,7 +39,7 @@ public class UserController {
     }
 
     @GetMapping("/{username}")
-    public UserDetailsDto getUserByUsername(@PathVariable String username) {
+    public UserSummaryDto getUserByUsername(@PathVariable String username) {
         return userService.getUserByUsername(username);
     }
 

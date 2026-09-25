@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.test.context.jdbc.Sql;
 
 import static hu.bsstudio.raktr.support.AuthenticationHelper.givenAuthenticatedAdmin;
+import static hu.bsstudio.raktr.support.AuthenticationHelper.givenAuthenticatedCandidate;
 import static hu.bsstudio.raktr.support.JsonAssert.assertJson;
 import static hu.bsstudio.raktr.support.TestResourceHelper.loadFileContent;
 
@@ -21,6 +22,29 @@ public class ConfigIT extends RaktrIT {
                 .asString();
 
         assertJson(response).equalTo(loadFileContent("/config/list-response.json"));
+    }
+
+    @Test
+    void testListConfigsAsCandidate() {
+        givenAuthenticatedCandidate()
+                .when()
+                .get("/v1/configs")
+                .then()
+                .statusCode(HttpStatus.OK.value());
+    }
+
+    @Test
+    void testUpdateEntryAsCandidateForbidden() {
+        givenAuthenticatedCandidate()
+                .body(loadFileContent("/config/update-string-request.json"))
+                .when()
+                .put("/v1/configs/RENT_TEAM_NAME")
+                .then()
+                .statusCode(HttpStatus.FORBIDDEN.value());
+
+        databaseQueryHelper.queryDatabase("SELECT count(*) FROM configs WHERE key = 'RENT_TEAM_NAME' AND value = ''")
+                .assertRowCount()
+                .isEqualTo(1);
     }
 
     @Test

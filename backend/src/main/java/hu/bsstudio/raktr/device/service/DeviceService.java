@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Slf4j
+@Transactional(readOnly = true)
 @Service
 @RequiredArgsConstructor
 public class DeviceService {
@@ -31,6 +32,8 @@ public class DeviceService {
 
     @Transactional
     public DeviceDetailsDto createDevice(DeviceCreateDto createDto) {
+        lookupService.checkIdentifiersAvailable(createDto.getAssetTag(), createDto.getBarcode(), null);
+
         var device = deviceMapper.createDtoToEntity(createDto);
 
         var category = lookupService.getCategory(createDto.getCategoryName());
@@ -56,6 +59,8 @@ public class DeviceService {
     @Transactional
     public DeviceDetailsDto updateDevice(Long deviceId, DeviceUpdateDto updateDto) {
         var device = lookupService.getDevice(deviceId);
+
+        lookupService.checkIdentifiersAvailable(updateDto.getAssetTag(), updateDto.getBarcode(), deviceId);
 
         deviceMapper.updateDtoToEntity(device, updateDto);
 

@@ -9,5 +9,6 @@
   "ownerId": 100,
   "manufacturer": "Sony",
   "model": "A7III",
-  "status": "GOOD"
+  "status": "GOOD",
+  "quantity": 1
 }

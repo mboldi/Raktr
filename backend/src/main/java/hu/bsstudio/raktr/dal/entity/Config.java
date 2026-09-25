@@ -1,6 +1,5 @@
 package hu.bsstudio.raktr.dal.entity;
 
-import hu.bsstudio.raktr.dal.value.ConfigDataType;
 import hu.bsstudio.raktr.dal.value.ConfigKey;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -21,8 +20,5 @@ public class Config {
     private ConfigKey key;
 
     private String value;
-
-    @Enumerated(EnumType.STRING)
-    private ConfigDataType dataType;
 
 }

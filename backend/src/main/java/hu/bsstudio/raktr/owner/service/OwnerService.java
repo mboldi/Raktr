@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Slf4j
+@Transactional(readOnly = true)
 @Service
 @RequiredArgsConstructor
 public class OwnerService {
@@ -55,12 +56,14 @@ public class OwnerService {
     @Transactional
     public OwnerDetailsDto updateOwner(Long ownerId, OwnerUpdateDto updateDto) {
         var owner = getOwner(ownerId);
+        var trimmedName = updateDto.getName().trim();
 
-        if (ownerRepository.existsByNameAndIdNot(updateDto.getName(), ownerId)) {
-            throw new EntityAlreadyExistsException(Owner.class, updateDto.getName());
+        if (ownerRepository.existsByNameAndIdNot(trimmedName, ownerId)) {
+            throw new EntityAlreadyExistsException(Owner.class, trimmedName);
         }
 
         ownerMapper.updateDtoToEntity(owner, updateDto);
+        owner.setName(trimmedName);
         ownerRepository.saveAndFlush(owner);
 
         log.info("Updated Owner with ID [{}]", ownerId);

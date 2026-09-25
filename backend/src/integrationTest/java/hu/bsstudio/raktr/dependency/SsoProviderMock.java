@@ -49,7 +49,6 @@ public class SsoProviderMock {
         return wireMockServer.baseUrl() + "/application/o/raktr/jwks/";
     }
 
-    @SneakyThrows
     public static String generateJwt(
             String uuid,
             String username,
@@ -57,11 +56,23 @@ public class SsoProviderMock {
             String givenName,
             List<String> groups
     ) {
+        return generateJwt(uuid, username, familyName, givenName, groups, getBaseUrl());
+    }
+
+    @SneakyThrows
+    public static String generateJwt(
+            String uuid,
+            String username,
+            String familyName,
+            String givenName,
+            List<String> groups,
+            String issuer
+    ) {
         var signer = new RSASSASigner(rsaKey);
 
         var claimsSet = new JWTClaimsSet.Builder()
                 .subject(uuid)
-                .issuer(getBaseUrl())
+                .issuer(issuer)
                 .claim("preferred_username", username)
                 .claim("groups", groups)
                 .claim("name", givenName + " " + familyName)

@@ -9,5 +9,6 @@
   "ownerId": 999,
   "manufacturer": "Panasonic",
   "model": "GH6",
-  "status": "GOOD"
+  "status": "GOOD",
+  "quantity": 1
 }

@@ -90,6 +90,20 @@ public class RentIT extends RaktrIT {
     }
 
     @Test
+    void testCreateRentReturnBeforeOut() {
+        var response = givenAuthenticatedAdmin()
+                .body(loadFileContent("/rent/create-invalid-dates-request.json"))
+                .when()
+                .post("/v1/rents")
+                .then()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .extract()
+                .asString();
+
+        assertJson(response).equalTo(loadFileContent("/rent/invalid-dates-response.json"));
+    }
+
+    @Test
     void testCreateRentForbidden() {
         givenAuthenticatedCandidate()
                 .body(loadFileContent("/rent/create-request.json"))
@@ -143,6 +157,22 @@ public class RentIT extends RaktrIT {
     }
 
     @Test
+    void testUpdateRentWithActualReturnDate() {
+        var response = givenAuthenticatedAdmin()
+                .body(loadFileContent("/rent/update-with-actual-return-date-request.json"))
+                .when()
+                .put("/v1/rents/100")
+                .then()
+                .statusCode(HttpStatus.OK.value())
+                .extract()
+                .asString();
+
+        assertJson(response)
+                .excluding("updatedAt")
+                .equalTo(loadFileContent("/rent/update-with-actual-return-date-response.json"));
+    }
+
+    @Test
     void testUpdateRentNotFound() {
         var response = givenAuthenticatedAdmin()
                 .body(loadFileContent("/rent/update-request.json"))
@@ -168,6 +198,34 @@ public class RentIT extends RaktrIT {
                 .asString();
 
         assertJson(response).equalTo(loadFileContent("/rent/issuer-not-found-response.json"));
+    }
+
+    @Test
+    void testUpdateRentExpectedReturnBeforeOut() {
+        var response = givenAuthenticatedAdmin()
+                .body(loadFileContent("/rent/update-invalid-expected-return-date-request.json"))
+                .when()
+                .put("/v1/rents/100")
+                .then()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .extract()
+                .asString();
+
+        assertJson(response).equalTo(loadFileContent("/rent/invalid-dates-response.json"));
+    }
+
+    @Test
+    void testUpdateRentActualReturnBeforeOut() {
+        var response = givenAuthenticatedAdmin()
+                .body(loadFileContent("/rent/update-invalid-actual-return-date-request.json"))
+                .when()
+                .put("/v1/rents/100")
+                .then()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .extract()
+                .asString();
+
+        assertJson(response).equalTo(loadFileContent("/rent/invalid-dates-response.json"));
     }
 
     @Test
@@ -453,6 +511,55 @@ public class RentIT extends RaktrIT {
     }
 
     @Test
+    @Sql("/rent/reopen-rent-setup.sql")
+    void testUpdateRentItemReopensRent() {
+        givenAuthenticatedAdmin()
+                .body(loadFileContent("/rent/update-item-reopen-request.json"))
+                .when()
+                .put("/v1/rents/100/items/101")
+                .then()
+                .statusCode(HttpStatus.OK.value());
+
+        databaseQueryHelper.queryDatabase("SELECT count(*) FROM rents WHERE id = 100 AND closed = false")
+                .assertRowCount()
+                .isEqualTo(1);
+    }
+
+    @Test
+    @Sql("/rent/reopen-rent-setup.sql")
+    void testAddRentItemReopensRent() {
+        givenAuthenticatedAdmin()
+                .body(loadFileContent("/rent/add-item-request.json"))
+                .when()
+                .post("/v1/rents/100/items")
+                .then()
+                .statusCode(HttpStatus.CREATED.value());
+
+        databaseQueryHelper.queryDatabase("SELECT count(*) FROM rents WHERE id = 100 AND closed = false")
+                .assertRowCount()
+                .isEqualTo(1);
+    }
+
+    @Test
+    void testDeletingLastRentItemDoesNotCloseRent() {
+        givenAuthenticatedAdmin()
+                .when()
+                .delete("/v1/rents/100/items/100")
+                .then()
+                .statusCode(HttpStatus.NO_CONTENT.value());
+
+        givenAuthenticatedAdmin()
+                .when()
+                .delete("/v1/rents/100/items/101")
+                .then()
+                .statusCode(HttpStatus.NO_CONTENT.value());
+
+        databaseQueryHelper.queryDatabase("SELECT count(*) FROM rents WHERE id = 100 AND closed = false")
+                .assertRowCount()
+                .isEqualTo(1);
+    }
+
+    @Test
     void testDeleteRentItem() {
         givenAuthenticatedAdmin()
                 .when()
@@ -557,6 +664,20 @@ public class RentIT extends RaktrIT {
                 .asString();
 
         assertJson(response).equalTo(loadFileContent("/rent/validate-container-issues-response.json"));
+    }
+
+    @Test
+    @Sql("/rent/validate-cross-rent-container-data.sql")
+    void testValidateRentCountsContainersBookedByOtherRents() {
+        var response = givenAuthenticatedAdmin()
+                .when()
+                .get("/v1/rents/100/validate")
+                .then()
+                .statusCode(HttpStatus.OK.value())
+                .extract()
+                .asString();
+
+        assertJson(response).equalTo(loadFileContent("/rent/validate-cross-rent-container-response.json"));
     }
 
     @Test

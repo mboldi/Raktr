@@ -115,6 +115,44 @@ public class DeviceIT extends RaktrIT {
     }
 
     @Test
+    void testCreateDeviceWithoutQuantityRejected() {
+        givenAuthenticatedAdmin()
+                .body(loadFileContent("/device/create-without-quantity-request.json"))
+                .when()
+                .post("/v1/devices")
+                .then()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @Test
+    void testCreateDeviceAssetTagAlreadyExists() {
+        var response = givenAuthenticatedAdmin()
+                .body(loadFileContent("/device/create-asset-tag-exists-request.json"))
+                .when()
+                .post("/v1/devices")
+                .then()
+                .statusCode(HttpStatus.CONFLICT.value())
+                .extract()
+                .asString();
+
+        assertJson(response).equalTo(loadFileContent("/device/create-asset-tag-exists-response.json"));
+    }
+
+    @Test
+    void testCreateDeviceBarcodeAlreadyExists() {
+        var response = givenAuthenticatedAdmin()
+                .body(loadFileContent("/device/create-barcode-exists-request.json"))
+                .when()
+                .post("/v1/devices")
+                .then()
+                .statusCode(HttpStatus.CONFLICT.value())
+                .extract()
+                .asString();
+
+        assertJson(response).equalTo(loadFileContent("/device/create-barcode-exists-response.json"));
+    }
+
+    @Test
     void testGetDeviceById() {
         var response = givenAuthenticatedAdmin()
                 .when()
@@ -168,6 +206,37 @@ public class DeviceIT extends RaktrIT {
                 .asString();
 
         assertJson(response).equalTo(loadFileContent("/device/update-not-found-response.json"));
+    }
+
+    @Test
+    void testUpdateDeviceAssetTagAlreadyExists() {
+        var response = givenAuthenticatedAdmin()
+                .body(loadFileContent("/device/update-asset-tag-exists-request.json"))
+                .when()
+                .put("/v1/devices/100")
+                .then()
+                .statusCode(HttpStatus.CONFLICT.value())
+                .extract()
+                .asString();
+
+        assertJson(response).equalTo(loadFileContent("/device/update-asset-tag-exists-response.json"));
+    }
+
+    @Test
+    void testUpdateDeviceKeepingOwnIdentifiers() {
+        givenAuthenticatedAdmin()
+                .body(loadFileContent("/device/update-same-identifiers-request.json"))
+                .when()
+                .put("/v1/devices/100")
+                .then()
+                .statusCode(HttpStatus.OK.value());
+
+        databaseQueryHelper.queryDatabase("""
+                        SELECT count(*) FROM scannables
+                        WHERE id = 100 AND asset_tag = 'DEVICE-001' AND name = 'Test Camera Renamed'
+                        """)
+                .assertRowCount()
+                .isEqualTo(1);
     }
 
     @Test
@@ -322,6 +391,19 @@ public class DeviceIT extends RaktrIT {
                 .asString();
 
         assertJson(response).equalTo("[]");
+    }
+
+    @Test
+    void testGetRentsForDeviceNotFound() {
+        var response = givenAuthenticatedAdmin()
+                .when()
+                .get("/v1/devices/999/rents")
+                .then()
+                .statusCode(HttpStatus.NOT_FOUND.value())
+                .extract()
+                .asString();
+
+        assertJson(response).equalTo(loadFileContent("/device/get-rents-not-found-response.json"));
     }
 
     @Test

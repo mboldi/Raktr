@@ -1,0 +1,6 @@
+{
+  "error": "ENTITY_ALREADY_EXISTS",
+  "resourceName": "Scannable",
+  "resourceKey": "CONTAINER-001",
+  "message": "Resource [Scannable] already exists with key [CONTAINER-001]"
+}

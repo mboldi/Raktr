@@ -3,6 +3,7 @@ package hu.bsstudio.raktr.security;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 
@@ -28,7 +29,7 @@ public class RoleConstants {
     );
 
     public static Optional<String> fromSso(String ssoRole) {
-        return Optional.ofNullable(SSO_TO_APP_ROLE.get(ssoRole.toUpperCase()));
+        return Optional.ofNullable(SSO_TO_APP_ROLE.get(ssoRole.toUpperCase(Locale.ROOT)));
     }
 
 }

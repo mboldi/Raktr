@@ -2,6 +2,7 @@ package hu.bsstudio.raktr.user.mapper;
 
 import hu.bsstudio.raktr.dal.entity.User;
 import hu.bsstudio.raktr.dto.user.UserDetailsDto;
+import hu.bsstudio.raktr.dto.user.UserSummaryDto;
 import hu.bsstudio.raktr.dto.user.UserUpdateDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -11,6 +12,8 @@ import org.mapstruct.MappingTarget;
 public interface UserMapper {
 
     UserDetailsDto entityToDetailsDto(User user);
+
+    UserSummaryDto entityToSummaryDto(User user);
 
     @Mapping(target = "uuid", ignore = true)
     @Mapping(target = "username", ignore = true)

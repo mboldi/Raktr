@@ -4,7 +4,6 @@ build/
 .idea
 .vscode
 out/
-pdf/*.pdf
 Dockerfile
 docker-compose.yml
 

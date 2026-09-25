@@ -14,6 +14,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.security.oauth2.jwt.JwtValidators;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.web.SecurityFilterChain;
@@ -69,14 +70,18 @@ public class WebSecurityConfig {
     @Bean
     // TODO: Revisit this later. In local env JWKS URL times out without this.
     public JwtDecoder jwtDecoder(
-            @Value("${spring.security.oauth2.resourceserver.jwt.jwk-set-uri}") String jwkSetUri) {
+            @Value("${spring.security.oauth2.resourceserver.jwt.jwk-set-uri}") String jwkSetUri,
+            @Value("${spring.security.oauth2.resourceserver.jwt.issuer-uri}") String issuerUri
+    ) {
         SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
         requestFactory.setConnectTimeout(Duration.ofSeconds(30));
         requestFactory.setReadTimeout(Duration.ofSeconds(30));
         RestTemplate restTemplate = new RestTemplate(requestFactory);
-        return NimbusJwtDecoder.withJwkSetUri(jwkSetUri)
+        var jwtDecoder = NimbusJwtDecoder.withJwkSetUri(jwkSetUri)
                 .restOperations(restTemplate)
                 .build();
+        jwtDecoder.setJwtValidator(JwtValidators.createDefaultWithIssuer(issuerUri));
+        return jwtDecoder;
     }
 
 }

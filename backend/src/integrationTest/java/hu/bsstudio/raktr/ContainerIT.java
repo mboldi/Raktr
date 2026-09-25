@@ -171,6 +171,37 @@ public class ContainerIT extends RaktrIT {
     }
 
     @Test
+    void testCreateContainerAssetTagAlreadyExists() {
+        var response = givenAuthenticatedAdmin()
+                .body(loadFileContent("/container/create-asset-tag-exists-request.json"))
+                .when()
+                .post("/v1/containers")
+                .then()
+                .statusCode(HttpStatus.CONFLICT.value())
+                .extract()
+                .asString();
+
+        assertJson(response).equalTo(loadFileContent("/container/create-asset-tag-exists-response.json"));
+    }
+
+    @Test
+    void testUpdateContainerKeepingOwnIdentifiers() {
+        givenAuthenticatedAdmin()
+                .body(loadFileContent("/container/update-same-identifiers-request.json"))
+                .when()
+                .put("/v1/containers/100")
+                .then()
+                .statusCode(HttpStatus.OK.value());
+
+        databaseQueryHelper.queryDatabase("""
+                        SELECT count(*) FROM scannables
+                        WHERE id = 100 AND asset_tag = 'CONTAINER-001' AND name = 'Test Container Renamed'
+                        """)
+                .assertRowCount()
+                .isEqualTo(1);
+    }
+
+    @Test
     void testUpdateContainerCategoryNotFound() {
         var response = givenAuthenticatedAdmin()
                 .body(loadFileContent("/container/update-category-not-found-request.json"))
@@ -238,6 +269,24 @@ public class ContainerIT extends RaktrIT {
                 .asString();
 
         assertJson(response).equalTo(loadFileContent("/container/add-devices-append-response.json"));
+    }
+
+    @Test
+    void testAddDevicesToContainerSameDeviceTwiceInOneRequest() {
+        var response = givenAuthenticatedAdmin()
+                .body(loadFileContent("/container/add-devices-duplicate-request.json"))
+                .when()
+                .post("/v1/containers/100/devices")
+                .then()
+                .statusCode(HttpStatus.CONFLICT.value())
+                .extract()
+                .asString();
+
+        assertJson(response).equalTo(loadFileContent("/container/add-devices-duplicate-response.json"));
+
+        databaseQueryHelper.queryDatabase("SELECT count(*) FROM container_devices WHERE container_id = 100")
+                .assertRowCount()
+                .isEmpty();
     }
 
     @Test
@@ -391,6 +440,19 @@ public class ContainerIT extends RaktrIT {
     }
 
     @Test
+    void testDeleteContainerWithDeviceId() {
+        var response = givenAuthenticatedAdmin()
+                .when()
+                .delete("/v1/containers/200")
+                .then()
+                .statusCode(HttpStatus.NOT_FOUND.value())
+                .extract()
+                .asString();
+
+        assertJson(response).equalTo(loadFileContent("/container/delete-device-id-response.json"));
+    }
+
+    @Test
     void testDeleteContainerForbidden() {
         givenAuthenticatedCandidate()
                 .when()
@@ -463,6 +525,19 @@ public class ContainerIT extends RaktrIT {
     }
 
     @Test
+    void testGetRentsForContainerNotFound() {
+        var response = givenAuthenticatedAdmin()
+                .when()
+                .get("/v1/containers/999/rents")
+                .then()
+                .statusCode(HttpStatus.NOT_FOUND.value())
+                .extract()
+                .asString();
+
+        assertJson(response).equalTo(loadFileContent("/container/get-rents-not-found-response.json"));
+    }
+
+    @Test
     void testGetTicketsForContainer() {
         var response = givenAuthenticatedAdmin()
                 .when()
@@ -486,6 +561,32 @@ public class ContainerIT extends RaktrIT {
                 .asString();
 
         assertJson(response).equalTo(loadFileContent("/container/get-tickets-not-found-response.json"));
+    }
+
+    @Test
+    void testGetRentsForContainerWithDeviceId() {
+        var response = givenAuthenticatedAdmin()
+                .when()
+                .get("/v1/containers/200/rents")
+                .then()
+                .statusCode(HttpStatus.NOT_FOUND.value())
+                .extract()
+                .asString();
+
+        assertJson(response).equalTo(loadFileContent("/container/delete-device-id-response.json"));
+    }
+
+    @Test
+    void testGetTicketsForContainerWithDeviceId() {
+        var response = givenAuthenticatedAdmin()
+                .when()
+                .get("/v1/containers/200/tickets")
+                .then()
+                .statusCode(HttpStatus.NOT_FOUND.value())
+                .extract()
+                .asString();
+
+        assertJson(response).equalTo(loadFileContent("/container/delete-device-id-response.json"));
     }
 
 }

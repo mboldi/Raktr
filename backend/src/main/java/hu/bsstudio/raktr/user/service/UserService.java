@@ -3,6 +3,7 @@ package hu.bsstudio.raktr.user.service;
 import hu.bsstudio.raktr.dal.entity.User;
 import hu.bsstudio.raktr.dal.repository.UserRepository;
 import hu.bsstudio.raktr.dto.user.UserDetailsDto;
+import hu.bsstudio.raktr.dto.user.UserSummaryDto;
 import hu.bsstudio.raktr.dto.user.UserUpdateDto;
 import hu.bsstudio.raktr.exception.EntityNotFoundException;
 import hu.bsstudio.raktr.security.RoleConstants;
@@ -16,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Slf4j
+@Transactional(readOnly = true)
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -32,22 +34,22 @@ public class UserService {
 
     private final SecurityService securityService;
 
-    public List<UserDetailsDto> getUsers() {
+    public List<UserSummaryDto> getUsers() {
         var users = userRepository.findAll();
-        return users.stream().map(userMapper::entityToDetailsDto).toList();
+        return users.stream().map(userMapper::entityToSummaryDto).toList();
     }
 
-    public List<UserDetailsDto> getUsers(boolean canIssueRent) {
+    public List<UserSummaryDto> getUsers(boolean canIssueRent) {
         var users = userRepository.findAll();
         return users.stream()
                 .filter(user -> user.hasAnyAuthority(ROLES_ALLOWED_TO_ISSUE_RENT) == canIssueRent)
-                .map(userMapper::entityToDetailsDto)
+                .map(userMapper::entityToSummaryDto)
                 .toList();
     }
 
-    public UserDetailsDto getUserByUsername(String username) {
+    public UserSummaryDto getUserByUsername(String username) {
         var user = getUser(username);
-        return userMapper.entityToDetailsDto(user);
+        return userMapper.entityToSummaryDto(user);
     }
 
     public UserDetailsDto getCurrentUser() {

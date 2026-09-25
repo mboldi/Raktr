@@ -1,6 +1,7 @@
 package hu.bsstudio.raktr.container.controller;
 
 import hu.bsstudio.raktr.container.service.ContainerService;
+import hu.bsstudio.raktr.dal.entity.Container;
 import hu.bsstudio.raktr.dto.container.ContainerAddDevicesDto;
 import hu.bsstudio.raktr.dto.container.ContainerCreateDto;
 import hu.bsstudio.raktr.dto.container.ContainerDetailsDto;
@@ -73,13 +74,13 @@ public class ContainerController {
     @Secured(RoleConstants.MEMBER)
     @DeleteMapping("/{containerId}")
     public void deleteContainer(@PathVariable Long containerId) {
-        scannableService.deleteScannable(containerId);
+        scannableService.deleteScannable(Container.class, containerId);
     }
 
     @Secured(RoleConstants.ADMIN)
     @PostMapping("/{containerId}/restore")
     public void restoreContainer(@PathVariable Long containerId) {
-        scannableService.restoreScannable(containerId);
+        scannableService.restoreScannable(Container.class, containerId);
     }
 
     @PostMapping("/{containerId}/devices")
@@ -109,12 +110,12 @@ public class ContainerController {
 
     @GetMapping("/{containerId}/rents")
     public List<RentDetailsDto> getRentsForContainer(@PathVariable Long containerId) {
-        return rentService.getRentsByScannableId(containerId);
+        return rentService.getRentsByScannableId(Container.class, containerId);
     }
 
     @GetMapping("/{containerId}/tickets")
     public List<TicketDetailsDto> getTicketsForContainer(@PathVariable Long containerId) {
-        return ticketService.getTicketsByScannableId(containerId);
+        return ticketService.getTicketsByScannableId(Container.class, containerId);
     }
 
 }

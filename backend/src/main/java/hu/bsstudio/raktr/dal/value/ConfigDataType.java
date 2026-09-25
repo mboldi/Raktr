@@ -1,5 +1,7 @@
 package hu.bsstudio.raktr.dal.value;
 
+import hu.bsstudio.raktr.exception.InvalidValueException;
+
 public enum ConfigDataType {
 
     STRING {
@@ -13,7 +15,7 @@ public enum ConfigDataType {
         @Override
         public void validate(String value) {
             if (!"true".equals(value) && !"false".equals(value)) {
-                throw new IllegalArgumentException("Invalid BOOLEAN value: " + value);
+                throw new InvalidValueException("Invalid BOOLEAN value: " + value);
             }
         }
     };

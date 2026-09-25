@@ -6,6 +6,7 @@ import hu.bsstudio.raktr.dal.entity.Container;
 import hu.bsstudio.raktr.dal.entity.Device;
 import hu.bsstudio.raktr.dal.entity.Rent;
 import hu.bsstudio.raktr.dal.entity.RentItem;
+import hu.bsstudio.raktr.dal.entity.Scannable;
 import hu.bsstudio.raktr.dal.entity.User;
 import hu.bsstudio.raktr.dal.repository.CommentRepository;
 import hu.bsstudio.raktr.dal.repository.RentItemRepository;
@@ -27,6 +28,7 @@ import hu.bsstudio.raktr.dto.rentitem.RentItemDetailsDto;
 import hu.bsstudio.raktr.dto.rentitem.RentItemUpdateDto;
 import hu.bsstudio.raktr.exception.EntityAlreadyExistsException;
 import hu.bsstudio.raktr.exception.EntityNotFoundException;
+import hu.bsstudio.raktr.exception.InvalidValueException;
 import hu.bsstudio.raktr.pdf.RentPdfRequest;
 import hu.bsstudio.raktr.pdf.RentPdfService;
 import hu.bsstudio.raktr.rent.mapper.RentItemMapper;
@@ -37,12 +39,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.UUID;
 
 @Slf4j
+@Transactional(readOnly = true)
 @Service
 @RequiredArgsConstructor
 public class RentService {
@@ -67,20 +71,21 @@ public class RentService {
 
     private final CommentMapper commentMapper;
 
-    @Transactional(readOnly = true)
     public List<RentDetailsDto> listRents(boolean deleted) {
         var rents = rentRepository.findAllByDeleted(deleted);
         return rents.stream().map(rentMapper::entityToDetailsDto).toList();
     }
 
-    @Transactional(readOnly = true)
-    public List<RentDetailsDto> getRentsByScannableId(Long scannableId) {
-        var rents = rentRepository.findAllByRentItemsScannableId(scannableId);
+    public List<RentDetailsDto> getRentsByScannableId(Class<? extends Scannable> type, Long scannableId) {
+        var scannable = lookupService.getScannable(type, scannableId);
+        var rents = rentRepository.findAllByRentItemsScannable(scannable);
         return rents.stream().map(rentMapper::entityToDetailsDto).toList();
     }
 
     @Transactional
     public RentDetailsDto createRent(RentCreateDto createDto) {
+        checkDates(createDto.getOutDate(), createDto.getExpectedReturnDate(), null);
+
         var rent = rentMapper.createDtoToEntity(createDto);
 
         var issuer = getIssuer(createDto.getIssuerId());
@@ -93,7 +98,6 @@ public class RentService {
         return rentMapper.entityToDetailsDto(rent);
     }
 
-    @Transactional(readOnly = true)
     public RentDetailsDto getRentById(Long rentId) {
         var rent = getRent(rentId);
         return rentMapper.entityToDetailsDto(rent);
@@ -101,6 +105,8 @@ public class RentService {
 
     @Transactional
     public RentDetailsDto updateRent(Long rentId, RentUpdateDto updateDto) {
+        checkDates(updateDto.getOutDate(), updateDto.getExpectedReturnDate(), updateDto.getActualReturnDate());
+
         var rent = getRent(rentId);
 
         rentMapper.updateDtoToEntity(rent, updateDto);
@@ -165,6 +171,8 @@ public class RentService {
 
         log.info("Added RentItem [{}] to Rent [{}]", rentItem.getId(), rentId);
 
+        refreshRentClosedState(rent);
+
         return rentItemMapper.entityToDetailsDto(rentItem);
     }
 
@@ -179,7 +187,7 @@ public class RentService {
 
         log.info("Updated RentItem [{}] to Rent [{}]", rentItem.getId(), rentId);
 
-        closeRentIfAllReturned(rent, null);
+        refreshRentClosedState(rent);
 
         return rentItemMapper.entityToDetailsDto(rentItem);
     }
@@ -189,14 +197,14 @@ public class RentService {
         var rent = getRent(rentId);
         var rentItem = getRentItem(rentItemId, rent);
 
+        rent.getRentItems().remove(rentItem);
         rentItemRepository.delete(rentItem);
 
         log.info("Deleted RentItem [{}] from Rent [{}]", rentItemId, rentId);
 
-        closeRentIfAllReturned(rent, rentItemId);
+        refreshRentClosedState(rent);
     }
 
-    @Transactional(readOnly = true)
     public List<RentValidationIssueDto> validateRent(Long rentId) {
         var rent = getRent(rentId);
 
@@ -253,7 +261,6 @@ public class RentService {
         return issues;
     }
 
-    @Transactional(readOnly = true)
     public byte[] getRentPdf(Long rentId, RentPdfCreateDto createDto) {
         var rent = getRent(rentId);
 
@@ -294,16 +301,24 @@ public class RentService {
                 .orElseThrow(() -> new EntityNotFoundException(User.class, issuerId));
     }
 
-    private void closeRentIfAllReturned(Rent rent, Long excludeRentItemId) {
-        var allReturned = rent.getRentItems().stream()
-                .filter(item -> !item.getId().equals(excludeRentItemId))
-                .allMatch(item -> item.getStatus() == BackStatus.RETURNED);
-
-        if (allReturned) {
-            rent.setClosed(true);
-            rentRepository.saveAndFlush(rent);
-            log.info("All items returned, closed Rent [{}]", rent.getId());
+    private void checkDates(LocalDate outDate, LocalDate expectedReturnDate, LocalDate actualReturnDate) {
+        if (expectedReturnDate.isBefore(outDate) || (actualReturnDate != null && actualReturnDate.isBefore(outDate))) {
+            throw new InvalidValueException("Return date cannot be before out date");
         }
+    }
+
+    private void refreshRentClosedState(Rent rent) {
+        var items = rent.getRentItems();
+        var closed = !items.isEmpty() && items.stream().allMatch(item -> item.getStatus() == BackStatus.RETURNED);
+
+        if (closed == rent.isClosed()) {
+            return;
+        }
+
+        rent.setClosed(closed);
+        rentRepository.saveAndFlush(rent);
+
+        log.info("Set closed to [{}] on Rent [{}]", closed, rent.getId());
     }
 
 }

@@ -3,9 +3,11 @@ package hu.bsstudio.raktr.config.controller;
 import hu.bsstudio.raktr.config.service.ConfigService;
 import hu.bsstudio.raktr.dto.appconfig.ConfigDetailsDto;
 import hu.bsstudio.raktr.dto.appconfig.ConfigUpdateDto;
+import hu.bsstudio.raktr.security.RoleConstants;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -28,6 +30,7 @@ public class ConfigController {
         return configService.listConfigs();
     }
 
+    @Secured(RoleConstants.ADMIN)
     @PutMapping("/{configKey}")
     public ConfigDetailsDto updateConfig(
             @PathVariable String configKey,

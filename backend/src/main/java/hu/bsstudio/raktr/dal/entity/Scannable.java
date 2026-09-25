@@ -23,7 +23,7 @@ import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
@@ -42,11 +42,9 @@ public abstract class Scannable {
     private Long id;
 
     @ToString.Include
-    @EqualsAndHashCode.Include
     private String assetTag;
 
     @ToString.Include
-    @EqualsAndHashCode.Include
     private String barcode;
 
     @ToString.Include
@@ -59,20 +57,20 @@ public abstract class Scannable {
     private boolean deleted = false;
 
     @ManyToOne
-    @JoinColumn(name = "category_name")
+    @JoinColumn(name = "category_name", nullable = false)
     private Category category;
 
     @ManyToOne
-    @JoinColumn(name = "location_name")
+    @JoinColumn(name = "location_name", nullable = false)
     private Location location;
 
     @ManyToOne
-    @JoinColumn(name = "owner_id")
+    @JoinColumn(name = "owner_id", nullable = false)
     private Owner owner;
 
     @CreatedDate
     @Column(updatable = false)
-    private LocalDateTime createdAt;
+    private Instant createdAt;
 
     @CreatedBy
     @ManyToOne
@@ -80,7 +78,7 @@ public abstract class Scannable {
     private User createdBy;
 
     @LastModifiedDate
-    private LocalDateTime updatedAt;
+    private Instant updatedAt;
 
     @LastModifiedBy
     @ManyToOne

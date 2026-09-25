@@ -13,6 +13,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -24,8 +25,8 @@ import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.time.Instant;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -67,6 +68,7 @@ public class Rent {
     private boolean deleted = false;
 
     @OneToMany(mappedBy = "rent")
+    @OrderBy("id")
     private List<RentItem> rentItems = new ArrayList<>();
 
     @OneToMany
@@ -75,11 +77,12 @@ public class Rent {
             joinColumns = @JoinColumn(name = "rent_id"),
             inverseJoinColumns = @JoinColumn(name = "comment_id")
     )
+    @OrderBy("id")
     private List<Comment> comments = new ArrayList<>();
 
     @CreatedDate
     @Column(updatable = false)
-    private LocalDateTime createdAt;
+    private Instant createdAt;
 
     @CreatedBy
     @ManyToOne
@@ -87,7 +90,7 @@ public class Rent {
     private User createdBy;
 
     @LastModifiedDate
-    private LocalDateTime updatedAt;
+    private Instant updatedAt;
 
     @LastModifiedBy
     @ManyToOne

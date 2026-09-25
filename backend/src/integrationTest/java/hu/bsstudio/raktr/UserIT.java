@@ -96,7 +96,7 @@ public class UserIT extends RaktrIT {
                 .extract()
                 .asString();
 
-        assertJson(response).equalTo(loadFileContent("/user/get-response.json"));
+        assertJson(response).equalTo(loadFileContent("/user/get-me-response.json"));
     }
 
     @Test
@@ -119,6 +119,28 @@ public class UserIT extends RaktrIT {
                 .asString();
 
         assertJson(response).equalTo(loadFileContent("/user/get-me-first-login-response.json"));
+    }
+
+    @Test
+    void testGetCurrentUserAfterUsernameChange() {
+        var token = SsoProviderMock.generateJwt(
+                "00000000-0000-0000-0000-000000000003",
+                "renamed_user",
+                "Candidate",
+                "User",
+                List.of("Stúdiós jelölt")
+        );
+
+        var response = given()
+                .header("Authorization", "Bearer " + token)
+                .when()
+                .get("/v1/users/me")
+                .then()
+                .statusCode(HttpStatus.OK.value())
+                .extract()
+                .asString();
+
+        assertJson(response).equalTo(loadFileContent("/user/get-me-renamed-response.json"));
     }
 
     @Test
@@ -160,6 +182,25 @@ public class UserIT extends RaktrIT {
     @Test
     void testGetCurrentUserUnauthenticated() {
         given()
+                .when()
+                .get("/v1/users/me")
+                .then()
+                .statusCode(HttpStatus.UNAUTHORIZED.value());
+    }
+
+    @Test
+    void testGetCurrentUserWithForeignIssuer() {
+        var token = SsoProviderMock.generateJwt(
+                "00000000-0000-0000-0000-000000000003",
+                "candidate_user",
+                "Candidate",
+                "User",
+                List.of("Stúdiós jelölt"),
+                "https://login.bsstudio.hu/application/o/other-app/"
+        );
+
+        given()
+                .header("Authorization", "Bearer " + token)
                 .when()
                 .get("/v1/users/me")
                 .then()

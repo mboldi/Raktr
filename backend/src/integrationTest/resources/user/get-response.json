@@ -3,9 +3,5 @@
   "username": "candidate_user",
   "familyName": "Candidate",
   "givenName": "User",
-  "nickname": "Candidate",
-  "personalId": "ID-003",
-  "groups": [
-    "Stúdiós jelölt"
-  ]
+  "nickname": "Candidate"
 }

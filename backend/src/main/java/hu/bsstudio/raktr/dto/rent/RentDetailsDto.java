@@ -3,8 +3,7 @@ package hu.bsstudio.raktr.dto.rent;
 import hu.bsstudio.raktr.dal.value.RentType;
 import hu.bsstudio.raktr.dto.comment.CommentDetailsDto;
 import hu.bsstudio.raktr.dto.rentitem.RentItemDetailsDto;
-import hu.bsstudio.raktr.dto.user.UserAuditDetailsDto;
-import hu.bsstudio.raktr.dto.user.UserDetailsDto;
+import hu.bsstudio.raktr.dto.user.UserSummaryDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -24,7 +23,7 @@ public class RentDetailsDto {
 
     private String destination;
 
-    private UserDetailsDto issuer;
+    private UserSummaryDto issuer;
 
     private String renterName;
 
@@ -44,10 +43,10 @@ public class RentDetailsDto {
 
     private OffsetDateTime createdAt;
 
-    private UserAuditDetailsDto createdBy;
+    private UserSummaryDto createdBy;
 
     private OffsetDateTime updatedAt;
 
-    private UserAuditDetailsDto updatedBy;
+    private UserSummaryDto updatedBy;
 
 }

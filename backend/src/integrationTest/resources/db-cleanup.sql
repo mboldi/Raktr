@@ -7,11 +7,11 @@ TRUNCATE TABLE scannables CASCADE;
 TRUNCATE TABLE users CASCADE;
 
 DELETE FROM configs;
-INSERT INTO configs (key, value, data_type) VALUES
-    ('RENT_TEAM_NAME', '', 'STRING'),
-    ('RENT_TEAM_LEADER_NAME', '', 'STRING'),
-    ('RENT_FIRST_SIGNER_NAME', '', 'STRING'),
-    ('RENT_FIRST_SIGNER_TITLE', '', 'STRING'),
-    ('RENT_SECOND_SIGNER_NAME', '', 'STRING'),
-    ('RENT_SECOND_SIGNER_TITLE', '', 'STRING'),
-    ('FORCE_EAN8', 'false', 'BOOLEAN');
+INSERT INTO configs (key, value) VALUES
+    ('RENT_TEAM_NAME', ''),
+    ('RENT_TEAM_LEADER_NAME', ''),
+    ('RENT_FIRST_SIGNER_NAME', ''),
+    ('RENT_FIRST_SIGNER_TITLE', ''),
+    ('RENT_SECOND_SIGNER_NAME', ''),
+    ('RENT_SECOND_SIGNER_TITLE', ''),
+    ('FORCE_EAN8', 'false');

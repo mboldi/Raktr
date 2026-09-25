@@ -3,13 +3,17 @@ package hu.bsstudio.raktr.errorhandling;
 import hu.bsstudio.raktr.exception.AccessDeniedException;
 import hu.bsstudio.raktr.exception.EntityException;
 import hu.bsstudio.raktr.exception.EntityInUseException;
+import hu.bsstudio.raktr.exception.InvalidValueException;
 import hu.bsstudio.raktr.exception.PdfGenerationException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+
+import java.util.Locale;
 
 @Slf4j
 @RestControllerAdvice
@@ -32,11 +36,18 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
     }
 
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<ErrorResponse> handleIllegalArgument(IllegalArgumentException ex) {
-        log.debug("Invalid argument: {}", ex.getMessage());
+    @ExceptionHandler(InvalidValueException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidValue(InvalidValueException ex) {
+        log.debug("Invalid value: {}", ex.getMessage());
         var response = new ErrorResponse("INVALID_VALUE", ex.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<ErrorResponse> handleDataIntegrityViolation(DataIntegrityViolationException ex) {
+        log.warn("Database constraint violated", ex);
+        var response = new ErrorResponse("CONSTRAINT_VIOLATION", "The request conflicts with existing data.");
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
     }
 
     @ExceptionHandler(PdfGenerationException.class)
@@ -50,7 +61,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         return exceptionClass.getSimpleName()
                 .replaceAll("Exception$", "")
                 .replaceAll("([a-z])([A-Z])", "$1_$2")
-                .toUpperCase();
+                .toUpperCase(Locale.ROOT);
     }
 
 }

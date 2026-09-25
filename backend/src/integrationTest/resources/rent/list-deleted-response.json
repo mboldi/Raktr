@@ -8,11 +8,7 @@
       "username": "member_user_100",
       "familyName": "Member",
       "givenName": "User",
-      "nickname": "Member",
-      "personalId": "ID-100",
-      "groups": [
-        "Stúdiós"
-      ]
+      "nickname": "Member"
     },
     "renterName": "Kiss Anna",
     "outDate": "2025-04-01",

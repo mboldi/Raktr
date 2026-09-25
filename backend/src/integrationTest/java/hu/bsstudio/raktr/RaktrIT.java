@@ -61,10 +61,12 @@ public abstract class RaktrIT {
 
     @BeforeEach
     void initialize() {
-        RestAssured.filters(new RequestLoggingFilter(), new ResponseLoggingFilter());
+        RestAssured.reset();
         RestAssured.requestSpecification = new RequestSpecBuilder()
                 .setContentType(ContentType.JSON)
                 .setAccept(ContentType.JSON)
+                .addFilter(new RequestLoggingFilter())
+                .addFilter(new ResponseLoggingFilter())
                 .build();
 
         RestAssured.requestSpecification.port(port);

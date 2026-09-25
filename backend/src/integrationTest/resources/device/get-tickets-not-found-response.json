@@ -1,6 +1,6 @@
 {
   "error": "ENTITY_NOT_FOUND",
-  "resourceName": "Scannable",
+  "resourceName": "Device",
   "resourceKey": "999",
-  "message": "Resource [Scannable] not found with key [999]"
+  "message": "Resource [Device] not found with key [999]"
 }

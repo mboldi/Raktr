@@ -1,5 +1,6 @@
 package hu.bsstudio.raktr.device.controller;
 
+import hu.bsstudio.raktr.dal.entity.Device;
 import hu.bsstudio.raktr.device.service.DeviceService;
 import hu.bsstudio.raktr.dto.device.DeviceCreateDto;
 import hu.bsstudio.raktr.dto.device.DeviceDetailsDto;
@@ -71,23 +72,23 @@ public class DeviceController {
     @Secured(RoleConstants.MEMBER)
     @DeleteMapping("/{deviceId}")
     public void deleteDevice(@PathVariable Long deviceId) {
-        scannableService.deleteScannable(deviceId);
+        scannableService.deleteScannable(Device.class, deviceId);
     }
 
     @Secured(RoleConstants.ADMIN)
     @PostMapping("/{deviceId}/restore")
     public void restoreDevice(@PathVariable Long deviceId) {
-        scannableService.restoreScannable(deviceId);
+        scannableService.restoreScannable(Device.class, deviceId);
     }
 
     @GetMapping("/{deviceId}/rents")
     public List<RentDetailsDto> getRentsForDevice(@PathVariable Long deviceId) {
-        return rentService.getRentsByScannableId(deviceId);
+        return rentService.getRentsByScannableId(Device.class, deviceId);
     }
 
     @GetMapping("/{deviceId}/tickets")
     public List<TicketDetailsDto> getTicketsForDevice(@PathVariable Long deviceId) {
-        return ticketService.getTicketsByScannableId(deviceId);
+        return ticketService.getTicketsByScannableId(Device.class, deviceId);
     }
 
     @GetMapping("/manufacturers")

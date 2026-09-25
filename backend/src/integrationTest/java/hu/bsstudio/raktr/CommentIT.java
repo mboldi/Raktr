@@ -39,6 +39,40 @@ public class CommentIT extends RaktrIT {
     }
 
     @Test
+    void testDeleteCommentAttachedToRent() {
+        givenAuthenticatedAdmin()
+                .when()
+                .delete("/v1/comments/3")
+                .then()
+                .statusCode(HttpStatus.NO_CONTENT.value());
+
+        databaseQueryHelper.queryDatabase("SELECT count(*) FROM comments WHERE id = 3")
+                .assertRowCount()
+                .isEmpty();
+
+        databaseQueryHelper.queryDatabase("SELECT count(*) FROM rent_comments WHERE comment_id = 3")
+                .assertRowCount()
+                .isEmpty();
+    }
+
+    @Test
+    void testDeleteCommentAttachedToTicket() {
+        givenAuthenticatedAdmin()
+                .when()
+                .delete("/v1/comments/4")
+                .then()
+                .statusCode(HttpStatus.NO_CONTENT.value());
+
+        databaseQueryHelper.queryDatabase("SELECT count(*) FROM comments WHERE id = 4")
+                .assertRowCount()
+                .isEmpty();
+
+        databaseQueryHelper.queryDatabase("SELECT count(*) FROM ticket_comments WHERE comment_id = 4")
+                .assertRowCount()
+                .isEmpty();
+    }
+
+    @Test
     void testDeleteCommentNotFound() {
         var response = givenAuthenticatedAdmin()
                 .when()

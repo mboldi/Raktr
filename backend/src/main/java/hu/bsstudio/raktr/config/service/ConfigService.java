@@ -42,7 +42,7 @@ public class ConfigService {
         var key = parseConfigKey(configKey);
         var config = getConfig(key);
 
-        config.getDataType().validate(updateDto.getValue());
+        key.getDataType().validate(updateDto.getValue());
 
         config.setValue(updateDto.getValue());
         config = configRepository.saveAndFlush(config);

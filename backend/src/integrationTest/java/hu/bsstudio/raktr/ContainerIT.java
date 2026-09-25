@@ -563,4 +563,30 @@ public class ContainerIT extends RaktrIT {
         assertJson(response).equalTo(loadFileContent("/container/get-tickets-not-found-response.json"));
     }
 
+    @Test
+    void testGetRentsForContainerWithDeviceId() {
+        var response = givenAuthenticatedAdmin()
+                .when()
+                .get("/v1/containers/200/rents")
+                .then()
+                .statusCode(HttpStatus.NOT_FOUND.value())
+                .extract()
+                .asString();
+
+        assertJson(response).equalTo(loadFileContent("/container/delete-device-id-response.json"));
+    }
+
+    @Test
+    void testGetTicketsForContainerWithDeviceId() {
+        var response = givenAuthenticatedAdmin()
+                .when()
+                .get("/v1/containers/200/tickets")
+                .then()
+                .statusCode(HttpStatus.NOT_FOUND.value())
+                .extract()
+                .asString();
+
+        assertJson(response).equalTo(loadFileContent("/container/delete-device-id-response.json"));
+    }
+
 }

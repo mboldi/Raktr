@@ -1,6 +1,7 @@
 package hu.bsstudio.raktr.ticket.service;
 
 import hu.bsstudio.raktr.comment.mapper.CommentMapper;
+import hu.bsstudio.raktr.dal.entity.Scannable;
 import hu.bsstudio.raktr.dal.entity.Ticket;
 import hu.bsstudio.raktr.dal.repository.CommentRepository;
 import hu.bsstudio.raktr.dal.repository.TicketRepository;
@@ -88,8 +89,8 @@ public class TicketService {
         return commentMapper.entityToDetailsDto(comment);
     }
 
-    public List<TicketDetailsDto> getTicketsByScannableId(Long scannableId) {
-        var scannable = lookupService.getScannable(scannableId);
+    public List<TicketDetailsDto> getTicketsByScannableId(Class<? extends Scannable> type, Long scannableId) {
+        var scannable = lookupService.getScannable(type, scannableId);
         var tickets = ticketRepository.findByScannable(scannable);
         return tickets.stream().map(ticketMapper::entityToDetailsDto).toList();
     }

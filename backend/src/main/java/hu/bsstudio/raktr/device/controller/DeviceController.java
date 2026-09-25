@@ -83,12 +83,12 @@ public class DeviceController {
 
     @GetMapping("/{deviceId}/rents")
     public List<RentDetailsDto> getRentsForDevice(@PathVariable Long deviceId) {
-        return rentService.getRentsByScannableId(deviceId);
+        return rentService.getRentsByScannableId(Device.class, deviceId);
     }
 
     @GetMapping("/{deviceId}/tickets")
     public List<TicketDetailsDto> getTicketsForDevice(@PathVariable Long deviceId) {
-        return ticketService.getTicketsByScannableId(deviceId);
+        return ticketService.getTicketsByScannableId(Device.class, deviceId);
     }
 
     @GetMapping("/manufacturers")

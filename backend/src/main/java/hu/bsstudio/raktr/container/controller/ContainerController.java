@@ -110,12 +110,12 @@ public class ContainerController {
 
     @GetMapping("/{containerId}/rents")
     public List<RentDetailsDto> getRentsForContainer(@PathVariable Long containerId) {
-        return rentService.getRentsByScannableId(containerId);
+        return rentService.getRentsByScannableId(Container.class, containerId);
     }
 
     @GetMapping("/{containerId}/tickets")
     public List<TicketDetailsDto> getTicketsForContainer(@PathVariable Long containerId) {
-        return ticketService.getTicketsByScannableId(containerId);
+        return ticketService.getTicketsByScannableId(Container.class, containerId);
     }
 
 }

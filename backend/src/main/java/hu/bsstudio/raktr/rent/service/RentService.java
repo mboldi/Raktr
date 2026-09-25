@@ -6,6 +6,7 @@ import hu.bsstudio.raktr.dal.entity.Container;
 import hu.bsstudio.raktr.dal.entity.Device;
 import hu.bsstudio.raktr.dal.entity.Rent;
 import hu.bsstudio.raktr.dal.entity.RentItem;
+import hu.bsstudio.raktr.dal.entity.Scannable;
 import hu.bsstudio.raktr.dal.entity.User;
 import hu.bsstudio.raktr.dal.repository.CommentRepository;
 import hu.bsstudio.raktr.dal.repository.RentItemRepository;
@@ -75,8 +76,8 @@ public class RentService {
         return rents.stream().map(rentMapper::entityToDetailsDto).toList();
     }
 
-    public List<RentDetailsDto> getRentsByScannableId(Long scannableId) {
-        var scannable = lookupService.getScannable(scannableId);
+    public List<RentDetailsDto> getRentsByScannableId(Class<? extends Scannable> type, Long scannableId) {
+        var scannable = lookupService.getScannable(type, scannableId);
         var rents = rentRepository.findAllByRentItemsScannable(scannable);
         return rents.stream().map(rentMapper::entityToDetailsDto).toList();
     }

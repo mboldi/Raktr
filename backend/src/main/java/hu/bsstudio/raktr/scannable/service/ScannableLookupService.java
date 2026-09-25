@@ -65,6 +65,13 @@ public class ScannableLookupService {
                 .orElseThrow(() -> new EntityNotFoundException(Scannable.class, scannableId));
     }
 
+    public <T extends Scannable> T getScannable(Class<T> type, Long scannableId) {
+        return scannableRepository.findById(scannableId)
+                .filter(type::isInstance)
+                .map(type::cast)
+                .orElseThrow(() -> new EntityNotFoundException(type, scannableId));
+    }
+
     public void checkIdentifiersAvailable(String assetTag, String barcode, Long excludedId) {
         var assetTagTaken = excludedId == null
                 ? scannableRepository.existsByAssetTag(assetTag)

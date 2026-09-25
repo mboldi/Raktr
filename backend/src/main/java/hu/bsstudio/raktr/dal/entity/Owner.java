@@ -36,7 +36,6 @@ public class Owner {
     private Long id;
 
     @ToString.Include
-    @EqualsAndHashCode.Include
     private String name;
 
     private boolean inSchInventory;

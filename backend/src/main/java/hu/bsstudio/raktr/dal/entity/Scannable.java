@@ -42,11 +42,9 @@ public abstract class Scannable {
     private Long id;
 
     @ToString.Include
-    @EqualsAndHashCode.Include
     private String assetTag;
 
     @ToString.Include
-    @EqualsAndHashCode.Include
     private String barcode;
 
     @ToString.Include

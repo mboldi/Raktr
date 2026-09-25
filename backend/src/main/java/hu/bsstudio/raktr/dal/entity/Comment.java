@@ -36,7 +36,6 @@ public class Comment {
     private Long id;
 
     @ToString.Include
-    @EqualsAndHashCode.Include
     private String body;
 
     @CreatedDate

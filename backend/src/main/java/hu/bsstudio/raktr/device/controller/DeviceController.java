@@ -1,7 +1,9 @@
 package hu.bsstudio.raktr.device.controller;
 
+import hu.bsstudio.raktr.container.service.ContainerService;
 import hu.bsstudio.raktr.dal.entity.Device;
 import hu.bsstudio.raktr.device.service.DeviceService;
+import hu.bsstudio.raktr.dto.container.ContainerDetailsDto;
 import hu.bsstudio.raktr.dto.device.DeviceCreateDto;
 import hu.bsstudio.raktr.dto.device.DeviceDetailsDto;
 import hu.bsstudio.raktr.dto.device.DeviceUpdateDto;
@@ -36,6 +38,8 @@ import java.util.List;
 public class DeviceController {
 
     private final DeviceService deviceService;
+
+    private final ContainerService containerService;
 
     private final ScannableService scannableService;
 
@@ -79,6 +83,11 @@ public class DeviceController {
     @PostMapping("/{deviceId}/restore")
     public void restoreDevice(@PathVariable Long deviceId) {
         scannableService.restoreScannable(Device.class, deviceId);
+    }
+
+    @GetMapping("/{deviceId}/containers")
+    public List<ContainerDetailsDto> getContainersForDevice(@PathVariable Long deviceId) {
+        return containerService.getContainersByDeviceId(deviceId);
     }
 
     @GetMapping("/{deviceId}/rents")

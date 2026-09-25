@@ -367,6 +367,61 @@ public class DeviceIT extends RaktrIT {
     }
 
     @Test
+    @Sql("/device/container-data.sql")
+    void testGetContainersForDevice() {
+        var response = givenAuthenticatedAdmin()
+                .when()
+                .get("/v1/devices/100/containers")
+                .then()
+                .statusCode(HttpStatus.OK.value())
+                .extract()
+                .asString();
+
+        assertJson(response).equalTo(loadFileContent("/device/get-containers-response.json"));
+    }
+
+    @Test
+    @Sql("/device/container-data.sql")
+    void testGetContainersForDeviceEmpty() {
+        var response = givenAuthenticatedAdmin()
+                .when()
+                .get("/v1/devices/101/containers")
+                .then()
+                .statusCode(HttpStatus.OK.value())
+                .extract()
+                .asString();
+
+        assertJson(response).equalTo("[]");
+    }
+
+    @Test
+    void testGetContainersForDeviceNotFound() {
+        var response = givenAuthenticatedAdmin()
+                .when()
+                .get("/v1/devices/999/containers")
+                .then()
+                .statusCode(HttpStatus.NOT_FOUND.value())
+                .extract()
+                .asString();
+
+        assertJson(response).equalTo(loadFileContent("/device/get-containers-not-found-response.json"));
+    }
+
+    @Test
+    @Sql("/device/container-data.sql")
+    void testGetContainersForDeviceWithContainerId() {
+        var response = givenAuthenticatedAdmin()
+                .when()
+                .get("/v1/devices/200/containers")
+                .then()
+                .statusCode(HttpStatus.NOT_FOUND.value())
+                .extract()
+                .asString();
+
+        assertJson(response).equalTo(loadFileContent("/device/get-containers-container-id-response.json"));
+    }
+
+    @Test
     @Sql("/device/rent-data.sql")
     void testGetRentsForDevice() {
         var response = givenAuthenticatedAdmin()

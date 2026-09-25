@@ -157,6 +157,22 @@ public class RentIT extends RaktrIT {
     }
 
     @Test
+    void testUpdateRentWithActualReturnDate() {
+        var response = givenAuthenticatedAdmin()
+                .body(loadFileContent("/rent/update-with-actual-return-date-request.json"))
+                .when()
+                .put("/v1/rents/100")
+                .then()
+                .statusCode(HttpStatus.OK.value())
+                .extract()
+                .asString();
+
+        assertJson(response)
+                .excluding("updatedAt")
+                .equalTo(loadFileContent("/rent/update-with-actual-return-date-response.json"));
+    }
+
+    @Test
     void testUpdateRentNotFound() {
         var response = givenAuthenticatedAdmin()
                 .body(loadFileContent("/rent/update-request.json"))

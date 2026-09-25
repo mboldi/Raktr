@@ -1,0 +1,8 @@
+{
+  "destination": "Updated Event",
+  "issuerId": "00000000-0000-0000-0000-000000000100",
+  "renterName": "Updated Renter",
+  "outDate": "2025-03-02",
+  "expectedReturnDate": "2025-03-08",
+  "actualReturnDate": "2025-03-01"
+}

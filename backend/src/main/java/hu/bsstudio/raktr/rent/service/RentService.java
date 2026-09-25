@@ -27,6 +27,7 @@ import hu.bsstudio.raktr.dto.rentitem.RentItemDetailsDto;
 import hu.bsstudio.raktr.dto.rentitem.RentItemUpdateDto;
 import hu.bsstudio.raktr.exception.EntityAlreadyExistsException;
 import hu.bsstudio.raktr.exception.EntityNotFoundException;
+import hu.bsstudio.raktr.exception.InvalidValueException;
 import hu.bsstudio.raktr.pdf.RentPdfRequest;
 import hu.bsstudio.raktr.pdf.RentPdfService;
 import hu.bsstudio.raktr.rent.mapper.RentItemMapper;
@@ -37,6 +38,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -81,6 +83,8 @@ public class RentService {
 
     @Transactional
     public RentDetailsDto createRent(RentCreateDto createDto) {
+        checkDates(createDto.getOutDate(), createDto.getExpectedReturnDate(), null);
+
         var rent = rentMapper.createDtoToEntity(createDto);
 
         var issuer = getIssuer(createDto.getIssuerId());
@@ -100,6 +104,8 @@ public class RentService {
 
     @Transactional
     public RentDetailsDto updateRent(Long rentId, RentUpdateDto updateDto) {
+        checkDates(updateDto.getOutDate(), updateDto.getExpectedReturnDate(), updateDto.getActualReturnDate());
+
         var rent = getRent(rentId);
 
         rentMapper.updateDtoToEntity(rent, updateDto);
@@ -292,6 +298,12 @@ public class RentService {
     private User getIssuer(UUID issuerId) {
         return userRepository.findById(issuerId)
                 .orElseThrow(() -> new EntityNotFoundException(User.class, issuerId));
+    }
+
+    private void checkDates(LocalDate outDate, LocalDate expectedReturnDate, LocalDate actualReturnDate) {
+        if (expectedReturnDate.isBefore(outDate) || (actualReturnDate != null && actualReturnDate.isBefore(outDate))) {
+            throw new InvalidValueException("Return date cannot be before out date");
+        }
     }
 
     private void refreshRentClosedState(Rent rent) {

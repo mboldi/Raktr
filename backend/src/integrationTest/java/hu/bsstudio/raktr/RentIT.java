@@ -90,6 +90,20 @@ public class RentIT extends RaktrIT {
     }
 
     @Test
+    void testCreateRentReturnBeforeOut() {
+        var response = givenAuthenticatedAdmin()
+                .body(loadFileContent("/rent/create-invalid-dates-request.json"))
+                .when()
+                .post("/v1/rents")
+                .then()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .extract()
+                .asString();
+
+        assertJson(response).equalTo(loadFileContent("/rent/invalid-dates-response.json"));
+    }
+
+    @Test
     void testCreateRentForbidden() {
         givenAuthenticatedCandidate()
                 .body(loadFileContent("/rent/create-request.json"))
@@ -168,6 +182,34 @@ public class RentIT extends RaktrIT {
                 .asString();
 
         assertJson(response).equalTo(loadFileContent("/rent/issuer-not-found-response.json"));
+    }
+
+    @Test
+    void testUpdateRentExpectedReturnBeforeOut() {
+        var response = givenAuthenticatedAdmin()
+                .body(loadFileContent("/rent/update-invalid-expected-return-date-request.json"))
+                .when()
+                .put("/v1/rents/100")
+                .then()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .extract()
+                .asString();
+
+        assertJson(response).equalTo(loadFileContent("/rent/invalid-dates-response.json"));
+    }
+
+    @Test
+    void testUpdateRentActualReturnBeforeOut() {
+        var response = givenAuthenticatedAdmin()
+                .body(loadFileContent("/rent/update-invalid-actual-return-date-request.json"))
+                .when()
+                .put("/v1/rents/100")
+                .then()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .extract()
+                .asString();
+
+        assertJson(response).equalTo(loadFileContent("/rent/invalid-dates-response.json"));
     }
 
     @Test

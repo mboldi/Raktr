@@ -1,0 +1,202 @@
+[
+  {
+    "id": 200,
+    "assetTag": "CONTAINER-001",
+    "barcode": "CONTAINER-BARCODE-001",
+    "name": "Camera Kit",
+    "weight": 500,
+    "publicRentable": true,
+    "deleted": false,
+    "category": "test-category-for-device",
+    "location": "test-location-for-device",
+    "owner": {
+      "id": 100,
+      "name": "test-owner-for-device"
+    },
+    "createdAt": "2025-01-08T15:00:00Z",
+    "createdBy": {
+      "uuid": "00000000-0000-0000-0000-000000000100",
+      "username": "member_user_100",
+      "familyName": "Member",
+      "givenName": "User",
+      "nickname": "Member"
+    },
+    "updatedAt": "2025-01-08T15:00:00Z",
+    "updatedBy": {
+      "uuid": "00000000-0000-0000-0000-000000000100",
+      "username": "member_user_100",
+      "familyName": "Member",
+      "givenName": "User",
+      "nickname": "Member"
+    },
+    "totalWeight": 2400,
+    "items": [
+      {
+        "device": {
+          "id": 100,
+          "assetTag": "DEVICE-001",
+          "barcode": "DEVICE-BARCODE-001",
+          "name": "Test Camera",
+          "weight": 1500,
+          "publicRentable": true,
+          "deleted": false,
+          "category": "test-category-for-device",
+          "location": "test-location-for-device",
+          "owner": {
+            "id": 100,
+            "name": "test-owner-for-device"
+          },
+          "createdAt": "2025-01-08T10:00:00Z",
+          "createdBy": {
+            "uuid": "00000000-0000-0000-0000-000000000100",
+            "username": "member_user_100",
+            "familyName": "Member",
+            "givenName": "User",
+            "nickname": "Member"
+          },
+          "updatedAt": "2025-01-08T10:00:00Z",
+          "updatedBy": {
+            "uuid": "00000000-0000-0000-0000-000000000100",
+            "username": "member_user_100",
+            "familyName": "Member",
+            "givenName": "User",
+            "nickname": "Member"
+          },
+          "manufacturer": "Sony",
+          "model": "A7III",
+          "serialNumber": "SN-001",
+          "estimatedValue": 250000,
+          "status": "GOOD",
+          "quantity": 1,
+          "acquisitionSource": "Purchase",
+          "acquisitionDate": "2024-01-15",
+          "warrantyEndDate": "2026-01-15",
+          "notes": "Main camera for studio"
+        },
+        "quantity": 1
+      },
+      {
+        "device": {
+          "id": 102,
+          "assetTag": "DEVICE-003",
+          "barcode": "DEVICE-BARCODE-003",
+          "name": "Test Microphone",
+          "weight": 200,
+          "publicRentable": false,
+          "deleted": false,
+          "category": "test-category-for-device",
+          "location": "test-location-for-device",
+          "owner": {
+            "id": 100,
+            "name": "test-owner-for-device"
+          },
+          "createdAt": "2025-01-08T12:00:00Z",
+          "createdBy": {
+            "uuid": "00000000-0000-0000-0000-000000000100",
+            "username": "member_user_100",
+            "familyName": "Member",
+            "givenName": "User",
+            "nickname": "Member"
+          },
+          "updatedAt": "2025-01-08T12:00:00Z",
+          "updatedBy": {
+            "uuid": "00000000-0000-0000-0000-000000000100",
+            "username": "member_user_100",
+            "familyName": "Member",
+            "givenName": "User",
+            "nickname": "Member"
+          },
+          "manufacturer": "Sony",
+          "model": "ECM-B1M",
+          "serialNumber": "SN-003",
+          "estimatedValue": 80000,
+          "status": "GOOD",
+          "quantity": 2,
+          "acquisitionSource": "Purchase",
+          "acquisitionDate": "2024-03-10",
+          "warrantyEndDate": "2026-03-10",
+          "notes": "Wireless microphone set"
+        },
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "id": 201,
+    "assetTag": "CONTAINER-002",
+    "barcode": "CONTAINER-BARCODE-002",
+    "name": "Old Camera Kit",
+    "weight": 300,
+    "publicRentable": false,
+    "deleted": true,
+    "category": "test-category-for-device",
+    "location": "test-location-for-device",
+    "owner": {
+      "id": 100,
+      "name": "test-owner-for-device"
+    },
+    "createdAt": "2025-01-08T16:00:00Z",
+    "createdBy": {
+      "uuid": "00000000-0000-0000-0000-000000000100",
+      "username": "member_user_100",
+      "familyName": "Member",
+      "givenName": "User",
+      "nickname": "Member"
+    },
+    "updatedAt": "2025-01-08T16:00:00Z",
+    "updatedBy": {
+      "uuid": "00000000-0000-0000-0000-000000000100",
+      "username": "member_user_100",
+      "familyName": "Member",
+      "givenName": "User",
+      "nickname": "Member"
+    },
+    "totalWeight": 1800,
+    "items": [
+      {
+        "device": {
+          "id": 100,
+          "assetTag": "DEVICE-001",
+          "barcode": "DEVICE-BARCODE-001",
+          "name": "Test Camera",
+          "weight": 1500,
+          "publicRentable": true,
+          "deleted": false,
+          "category": "test-category-for-device",
+          "location": "test-location-for-device",
+          "owner": {
+            "id": 100,
+            "name": "test-owner-for-device"
+          },
+          "createdAt": "2025-01-08T10:00:00Z",
+          "createdBy": {
+            "uuid": "00000000-0000-0000-0000-000000000100",
+            "username": "member_user_100",
+            "familyName": "Member",
+            "givenName": "User",
+            "nickname": "Member"
+          },
+          "updatedAt": "2025-01-08T10:00:00Z",
+          "updatedBy": {
+            "uuid": "00000000-0000-0000-0000-000000000100",
+            "username": "member_user_100",
+            "familyName": "Member",
+            "givenName": "User",
+            "nickname": "Member"
+          },
+          "manufacturer": "Sony",
+          "model": "A7III",
+          "serialNumber": "SN-001",
+          "estimatedValue": 250000,
+          "status": "GOOD",
+          "quantity": 1,
+          "acquisitionSource": "Purchase",
+          "acquisitionDate": "2024-01-15",
+          "warrantyEndDate": "2026-01-15",
+          "notes": "Main camera for studio"
+        },
+        "quantity": 1
+      }
+    ]
+  }
+]

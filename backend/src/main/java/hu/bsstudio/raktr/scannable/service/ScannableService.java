@@ -21,16 +21,16 @@ public class ScannableService {
     private final ScannableMapper scannableMapper;
 
     @Transactional
-    public void deleteScannable(Long scannableId) {
-        var scannable = getScannable(scannableId);
+    public void deleteScannable(Class<? extends Scannable> type, Long scannableId) {
+        var scannable = getScannable(type, scannableId);
         scannable.setDeleted(true);
         scannableRepository.saveAndFlush(scannable);
         log.info("Deleted Scannable with ID [{}]", scannableId);
     }
 
     @Transactional
-    public void restoreScannable(Long scannableId) {
-        var scannable = getScannable(scannableId);
+    public void restoreScannable(Class<? extends Scannable> type, Long scannableId) {
+        var scannable = getScannable(type, scannableId);
         scannable.setDeleted(false);
         scannableRepository.saveAndFlush(scannable);
         log.info("Restored Scannable with ID [{}]", scannableId);
@@ -64,9 +64,10 @@ public class ScannableService {
         }
     }
 
-    private Scannable getScannable(Long scannableId) {
+    private Scannable getScannable(Class<? extends Scannable> type, Long scannableId) {
         return scannableRepository.findById(scannableId)
-                .orElseThrow(() -> new EntityNotFoundException(Scannable.class, scannableId));
+                .filter(type::isInstance)
+                .orElseThrow(() -> new EntityNotFoundException(type, scannableId));
     }
 
 }

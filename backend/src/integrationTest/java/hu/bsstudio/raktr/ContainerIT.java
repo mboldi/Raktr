@@ -440,6 +440,19 @@ public class ContainerIT extends RaktrIT {
     }
 
     @Test
+    void testDeleteContainerWithDeviceId() {
+        var response = givenAuthenticatedAdmin()
+                .when()
+                .delete("/v1/containers/200")
+                .then()
+                .statusCode(HttpStatus.NOT_FOUND.value())
+                .extract()
+                .asString();
+
+        assertJson(response).equalTo(loadFileContent("/container/delete-device-id-response.json"));
+    }
+
+    @Test
     void testDeleteContainerForbidden() {
         givenAuthenticatedCandidate()
                 .when()

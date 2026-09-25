@@ -122,6 +122,28 @@ public class UserIT extends RaktrIT {
     }
 
     @Test
+    void testGetCurrentUserAfterUsernameChange() {
+        var token = SsoProviderMock.generateJwt(
+                "00000000-0000-0000-0000-000000000003",
+                "renamed_user",
+                "Candidate",
+                "User",
+                List.of("Stúdiós jelölt")
+        );
+
+        var response = given()
+                .header("Authorization", "Bearer " + token)
+                .when()
+                .get("/v1/users/me")
+                .then()
+                .statusCode(HttpStatus.OK.value())
+                .extract()
+                .asString();
+
+        assertJson(response).equalTo(loadFileContent("/user/get-me-renamed-response.json"));
+    }
+
+    @Test
     void testGetCurrentUserOnFirstLoginWithConcurrentRequests() throws Exception {
         var token = SsoProviderMock.generateJwt(
                 "00000000-0000-0000-0000-000000000005",

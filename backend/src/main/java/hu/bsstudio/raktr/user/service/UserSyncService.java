@@ -38,6 +38,7 @@ public class UserSyncService {
 
         User user = userRepository.findById(uuid).orElseThrow();
 
+        user.setUsername(username);
         user.setFamilyName(familyName);
         user.setGivenName(givenName);
 

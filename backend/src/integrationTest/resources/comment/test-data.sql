@@ -17,9 +17,19 @@ VALUES (1, 'SIMPLE', 'Test Event', '00000000-0000-0000-0000-000000000001', 'Nagy
 INSERT INTO rent_comments (rent_id, comment_id)
 VALUES (1, 3);
 
-INSERT INTO scannables (id, type, asset_tag, barcode, name, weight, public_rentable, deleted, quantity, status, created_at, created_by, updated_at, updated_by)
+INSERT INTO categories (name, created_at, created_by, updated_at, updated_by)
+VALUES ('test-category', '2026-01-01T09:00:00Z', '00000000-0000-0000-0000-000000000001', '2026-01-01T09:00:00Z', '00000000-0000-0000-0000-000000000001');
+
+INSERT INTO locations (name, created_at, created_by, updated_at, updated_by)
+VALUES ('test-location', '2026-01-01T09:00:00Z', '00000000-0000-0000-0000-000000000001', '2026-01-01T09:00:00Z', '00000000-0000-0000-0000-000000000001');
+
+INSERT INTO owners (id, name, in_sch_inventory, created_at, created_by, updated_at, updated_by)
 OVERRIDING SYSTEM VALUE
-VALUES (1, 'DEVICE', 'COMMENT-DEVICE-001', 'COMMENT-BARCODE-001', 'Test Device', 500, true, false, 1, 'GOOD', '2026-01-01T13:00:00Z', '00000000-0000-0000-0000-000000000001', '2026-01-01T13:00:00Z', '00000000-0000-0000-0000-000000000001');
+VALUES (1, 'test-owner', true, '2026-01-01T09:00:00Z', '00000000-0000-0000-0000-000000000001', '2026-01-01T09:00:00Z', '00000000-0000-0000-0000-000000000001');
+
+INSERT INTO scannables (id, type, asset_tag, barcode, name, weight, public_rentable, deleted, category_name, location_name, owner_id, quantity, status, created_at, created_by, updated_at, updated_by)
+OVERRIDING SYSTEM VALUE
+VALUES (1, 'DEVICE', 'COMMENT-DEVICE-001', 'COMMENT-BARCODE-001', 'Test Device', 500, true, false, 'test-category', 'test-location', 1, 1, 'GOOD', '2026-01-01T13:00:00Z', '00000000-0000-0000-0000-000000000001', '2026-01-01T13:00:00Z', '00000000-0000-0000-0000-000000000001');
 
 INSERT INTO tickets (id, description, status, severity, scannable_id, created_at, created_by, updated_at, updated_by)
 OVERRIDING SYSTEM VALUE

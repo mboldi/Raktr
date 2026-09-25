@@ -57,15 +57,15 @@ public abstract class Scannable {
     private boolean deleted = false;
 
     @ManyToOne
-    @JoinColumn(name = "category_name")
+    @JoinColumn(name = "category_name", nullable = false)
     private Category category;
 
     @ManyToOne
-    @JoinColumn(name = "location_name")
+    @JoinColumn(name = "location_name", nullable = false)
     private Location location;
 
     @ManyToOne
-    @JoinColumn(name = "owner_id")
+    @JoinColumn(name = "owner_id", nullable = false)
     private Owner owner;
 
     @CreatedDate

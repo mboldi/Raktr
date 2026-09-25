@@ -25,11 +25,13 @@ backend at `http://localhost:8080` by [`proxy.conf.json`](proxy.conf.json), whic
 
 ### Docker Compose
 
-To run the full stack (frontend, backend, and database):
+To run the full stack (frontend, backend, and database) from the repository root:
 
 ```bash
-docker compose up --build
+docker compose up -d
 ```
+
+This runs the published `main` images from `ghcr.io`, not your local code.
 
 ## Build
 

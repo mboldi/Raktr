@@ -394,6 +394,19 @@ public class DeviceIT extends RaktrIT {
     }
 
     @Test
+    void testGetRentsForDeviceNotFound() {
+        var response = givenAuthenticatedAdmin()
+                .when()
+                .get("/v1/devices/999/rents")
+                .then()
+                .statusCode(HttpStatus.NOT_FOUND.value())
+                .extract()
+                .asString();
+
+        assertJson(response).equalTo(loadFileContent("/device/get-rents-not-found-response.json"));
+    }
+
+    @Test
     void testGetTicketsForDevice() {
         var response = givenAuthenticatedAdmin()
                 .when()

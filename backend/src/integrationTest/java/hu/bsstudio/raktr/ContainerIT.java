@@ -512,6 +512,19 @@ public class ContainerIT extends RaktrIT {
     }
 
     @Test
+    void testGetRentsForContainerNotFound() {
+        var response = givenAuthenticatedAdmin()
+                .when()
+                .get("/v1/containers/999/rents")
+                .then()
+                .statusCode(HttpStatus.NOT_FOUND.value())
+                .extract()
+                .asString();
+
+        assertJson(response).equalTo(loadFileContent("/container/get-rents-not-found-response.json"));
+    }
+
+    @Test
     void testGetTicketsForContainer() {
         var response = givenAuthenticatedAdmin()
                 .when()

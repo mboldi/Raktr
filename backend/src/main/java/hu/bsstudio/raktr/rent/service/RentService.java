@@ -74,7 +74,8 @@ public class RentService {
     }
 
     public List<RentDetailsDto> getRentsByScannableId(Long scannableId) {
-        var rents = rentRepository.findAllByRentItemsScannableId(scannableId);
+        var scannable = lookupService.getScannable(scannableId);
+        var rents = rentRepository.findAllByRentItemsScannable(scannable);
         return rents.stream().map(rentMapper::entityToDetailsDto).toList();
     }
 

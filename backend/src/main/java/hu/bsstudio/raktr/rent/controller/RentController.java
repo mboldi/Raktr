@@ -117,10 +117,10 @@ public class RentController {
         return rentService.validateRent(rentId);
     }
 
-    @PostMapping("/{rentId}/pdf")
     @Secured(RoleConstants.MEMBER_CANDIDATE)
+    @PostMapping("/{rentId}/pdf")
     public ResponseEntity<byte[]> getRentPdf(
-            @PathVariable final Long rentId,
+            @PathVariable Long rentId,
             @RequestBody @Valid RentPdfCreateDto createDto
     ) {
         var pdfBytes = rentService.getRentPdf(rentId, createDto);

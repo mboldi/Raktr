@@ -13,6 +13,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -67,6 +68,7 @@ public class Rent {
     private boolean deleted = false;
 
     @OneToMany(mappedBy = "rent")
+    @OrderBy("id")
     private List<RentItem> rentItems = new ArrayList<>();
 
     @OneToMany
@@ -75,6 +77,7 @@ public class Rent {
             joinColumns = @JoinColumn(name = "rent_id"),
             inverseJoinColumns = @JoinColumn(name = "comment_id")
     )
+    @OrderBy("id")
     private List<Comment> comments = new ArrayList<>();
 
     @CreatedDate

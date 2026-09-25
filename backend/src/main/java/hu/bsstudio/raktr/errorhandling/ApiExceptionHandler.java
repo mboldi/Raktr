@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import java.util.Locale;
+
 @Slf4j
 @RestControllerAdvice
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
@@ -59,7 +61,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         return exceptionClass.getSimpleName()
                 .replaceAll("Exception$", "")
                 .replaceAll("([a-z])([A-Z])", "$1_$2")
-                .toUpperCase();
+                .toUpperCase(Locale.ROOT);
     }
 
 }

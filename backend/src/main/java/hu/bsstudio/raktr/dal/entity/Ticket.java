@@ -14,6 +14,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -55,7 +56,7 @@ public class Ticket {
     private ProblemSeverity severity;
 
     @ManyToOne
-    @JoinColumn(name = "scannable_id")
+    @JoinColumn(name = "scannable_id", nullable = false)
     private Scannable scannable;
 
     @OneToMany
@@ -64,6 +65,7 @@ public class Ticket {
             joinColumns = @JoinColumn(name = "ticket_id"),
             inverseJoinColumns = @JoinColumn(name = "comment_id")
     )
+    @OrderBy("id")
     private List<Comment> comments = new ArrayList<>();
 
     @CreatedDate

@@ -6,11 +6,11 @@
     "availableQuantity": 3,
     "sources": [
       {
-        "containerId": 202,
+        "containerId": null,
         "quantity": 2
       },
       {
-        "containerId": null,
+        "containerId": 202,
         "quantity": 2
       }
     ]

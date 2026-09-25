@@ -651,6 +651,20 @@ public class RentIT extends RaktrIT {
     }
 
     @Test
+    @Sql("/rent/validate-cross-rent-container-data.sql")
+    void testValidateRentCountsContainersBookedByOtherRents() {
+        var response = givenAuthenticatedAdmin()
+                .when()
+                .get("/v1/rents/100/validate")
+                .then()
+                .statusCode(HttpStatus.OK.value())
+                .extract()
+                .asString();
+
+        assertJson(response).equalTo(loadFileContent("/rent/validate-cross-rent-container-response.json"));
+    }
+
+    @Test
     @Sql("/rent/validate-combined-issues-data.sql")
     void testValidateRentWithCombinedDeviceAndContainerIssues() {
         var response = givenAuthenticatedAdmin()

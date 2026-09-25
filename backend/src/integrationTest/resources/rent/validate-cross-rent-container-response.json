@@ -1,0 +1,14 @@
+[
+  {
+    "deviceId": 204,
+    "deviceName": "Test Microphone",
+    "requestedQuantity": 2,
+    "availableQuantity": 1,
+    "sources": [
+      {
+        "containerId": null,
+        "quantity": 2
+      }
+    ]
+  }
+]

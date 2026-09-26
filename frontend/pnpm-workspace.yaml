@@ -4,11 +4,3 @@ allowBuilds:
   esbuild: true
   lmdb: true
   msgpackr-extract: true
-minimumReleaseAgeExclude:
-  - '@sentry/angular@10.75.2'
-  - '@sentry/browser-utils@10.75.2'
-  - '@sentry/browser@10.75.2'
-  - '@sentry/core@10.75.2'
-  - '@sentry/feedback@10.75.2'
-  - '@sentry/replay-canvas@10.75.2'
-  - '@sentry/replay@10.75.2'

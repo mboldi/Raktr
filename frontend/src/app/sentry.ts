@@ -25,7 +25,6 @@ export function initSentry(): void {
     dsn: sentryDsn,
     environment: sentryEnvironment,
     release,
-    sendDefaultPii: true,
     beforeSend: (event, hint) => (isRequestNoise(hint.originalException) ? null : event),
   });
 }

@@ -2,7 +2,7 @@ plugins {
     java
     jacoco
     id("com.diffplug.spotless") version "8.10.3"
-    id("io.freefair.lombok") version "9.7.0"
+    id("io.freefair.lombok") version "9.8.0"
     id("io.sentry.jvm.gradle") version "6.23.0"
     id("io.spring.dependency-management") version "1.1.7"
     id("org.springframework.boot") version "4.1.1"
@@ -30,7 +30,7 @@ repositories {
 
 dependencies {
     implementation("com.github.ben-manes.caffeine:caffeine:3.3.0")
-    implementation("com.itextpdf:itext-core:9.7.1")
+    implementation("com.itextpdf:itext-core:9.8.0")
     implementation("org.mapstruct:mapstruct:1.6.3")
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:3.1.1")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
@@ -44,7 +44,7 @@ dependencies {
 
     developmentOnly("org.springframework.boot:spring-boot-devtools")
 
-    runtimeOnly("org.flywaydb:flyway-database-postgresql:13.8.0")
+    runtimeOnly("org.flywaydb:flyway-database-postgresql:13.9.0")
     runtimeOnly("org.postgresql:postgresql:42.7.13")
 
     annotationProcessor("org.mapstruct:mapstruct-processor:1.6.3")

@@ -62,6 +62,12 @@ public class ContainerService {
         return containerMapper.entityToDetailsDto(container);
     }
 
+    public List<ContainerDetailsDto> getContainersByDeviceId(Long deviceId) {
+        var device = lookupService.getDevice(deviceId);
+        var containers = containerRepository.findAllByItemsDeviceOrderById(device);
+        return containers.stream().map(containerMapper::entityToDetailsDto).toList();
+    }
+
     @Transactional
     public ContainerDetailsDto updateContainer(Long containerId, ContainerUpdateDto updateDto) {
         var container = lookupService.getContainer(containerId);

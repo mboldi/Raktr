@@ -17,12 +17,12 @@ import com.itextpdf.layout.element.Table;
 import com.itextpdf.layout.properties.TabAlignment;
 import com.itextpdf.layout.properties.TextAlignment;
 import hu.bsstudio.raktr.exception.PdfGenerationException;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.UncheckedIOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -321,14 +321,13 @@ public class RentPdfService {
         return date != null ? date.format(DATE_FORMATTER) : "";
     }
 
+    @SneakyThrows
     private static byte[] loadFont(String fileName) {
         try (var stream = RentPdfService.class.getResourceAsStream("/fonts/" + fileName)) {
             if (stream == null) {
                 throw new IllegalStateException("Font resource not found: " + fileName);
             }
             return stream.readAllBytes();
-        } catch (IOException e) {
-            throw new UncheckedIOException("Failed to load font resource: " + fileName, e);
         }
     }
 

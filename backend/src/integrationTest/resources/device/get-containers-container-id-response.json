@@ -1,0 +1,6 @@
+{
+  "error": "ENTITY_NOT_FOUND",
+  "resourceName": "Device",
+  "resourceKey": "200",
+  "message": "Resource [Device] not found with key [200]"
+}

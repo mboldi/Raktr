@@ -16,6 +16,7 @@
     "group:recommended",
     "replacements:all",
     "schedule:weekends",
+    "security:minimumReleaseAgeNpm",
     "workarounds:all"
   ],
   "packageRules": [

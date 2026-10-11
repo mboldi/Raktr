@@ -5,3 +5,7 @@ backend/ @KOliver94 @mboldi
 docker-compose.* @KOliver94 @mboldi
 deploy/ @KOliver94 @mboldi
 .githooks/ @KOliver94 @mboldi
+
+# No owner: Renovate merges these once required checks pass.
+.github/workflows/
+frontend/pnpm-lock.yaml

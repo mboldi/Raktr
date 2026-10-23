@@ -29,7 +29,7 @@ public class AuthenticationHelper {
                 "candidate_user",
                 "Candidate",
                 "User",
-                List.of("Stúdiós jelölt")
+                List.of("Stúdiós-jelölt")
         );
         return given().header("Authorization", "Bearer " + token);
     }

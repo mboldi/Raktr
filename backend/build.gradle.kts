@@ -2,8 +2,8 @@ plugins {
     java
     jacoco
     id("com.diffplug.spotless") version "8.10.4"
-    id("io.freefair.lombok") version "9.8.0"
-    id("io.sentry.jvm.gradle") version "6.23.0"
+    id("io.freefair.lombok") version "9.8.2"
+    id("io.sentry.jvm.gradle") version "6.24.0"
     id("io.spring.dependency-management") version "1.1.7"
     id("org.springframework.boot") version "4.1.1"
     id("org.unbroken-dome.test-sets") version "4.1.0"
@@ -44,7 +44,7 @@ dependencies {
 
     developmentOnly("org.springframework.boot:spring-boot-devtools")
 
-    runtimeOnly("org.flywaydb:flyway-database-postgresql:13.10.0")
+    runtimeOnly("org.flywaydb:flyway-database-postgresql:13.10.3")
     runtimeOnly("org.postgresql:postgresql:42.7.14")
 
     annotationProcessor("org.mapstruct:mapstruct-processor:1.6.3")
@@ -54,7 +54,7 @@ dependencies {
     testImplementation("org.springframework.security:spring-security-test")
     testImplementation("org.testcontainers:testcontainers:2.0.5")
     testImplementation("org.testcontainers:testcontainers-postgresql:2.0.5")
-    testImplementation("io.rest-assured:rest-assured:6.1.0")
+    testImplementation("io.rest-assured:rest-assured:6.2.0")
     testImplementation("org.wiremock:wiremock-standalone:3.13.2")
     testImplementation("com.nimbusds:nimbus-jose-jwt:10.10")
 

@@ -128,7 +128,7 @@ public class UserIT extends RaktrIT {
                 "renamed_user",
                 "Candidate",
                 "User",
-                List.of("Stúdiós jelölt")
+                List.of("Stúdiós-jelölt")
         );
 
         var response = given()
@@ -195,7 +195,7 @@ public class UserIT extends RaktrIT {
                 "candidate_user",
                 "Candidate",
                 "User",
-                List.of("Stúdiós jelölt"),
+                List.of("Stúdiós-jelölt"),
                 "https://login.bsstudio.hu/application/o/other-app/"
         );
 

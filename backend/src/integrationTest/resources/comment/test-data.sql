@@ -1,6 +1,6 @@
 INSERT INTO users (uuid, username, family_name, given_name, nickname, personal_id, groups)
 VALUES ('00000000-0000-0000-0000-000000000001', 'admin_user', 'Admin', 'User', 'Admin', 'ID-001', '["Admin"]'),
-       ('00000000-0000-0000-0000-000000000003', 'candidate_user', 'Candidate', 'User', 'Candidate', 'ID-003', '["Stúdiós jelölt"]');
+       ('00000000-0000-0000-0000-000000000003', 'candidate_user', 'Candidate', 'User', 'Candidate', 'ID-003', '["Stúdiós-jelölt"]');
 
 -- Comments 1 and 2 are standalone, 3 is attached to a rent and 4 to a ticket
 INSERT INTO comments (id, body, created_at, created_by, updated_at, updated_by)

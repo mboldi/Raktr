@@ -1,0 +1,24 @@
+.options {
+  display: flex;
+  flex-direction: column;
+}
+
+.detail {
+  display: block;
+  font-size: 0.85rem;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.id-field {
+  width: 100%;
+  margin-top: 8px;
+}
+
+// The radio buttons' touch targets stick out past the content box, which made Material's
+// default overflow:auto show a scrollbar for a dialog this short - the dialog surface itself
+// still scrolls if the window is ever too small for it.
+.pdf-content {
+  max-height: none;
+  overflow: visible;
+  padding-bottom: 8px;
+}

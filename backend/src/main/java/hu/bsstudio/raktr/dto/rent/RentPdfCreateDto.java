@@ -11,6 +11,9 @@ import lombok.NoArgsConstructor;
 public class RentPdfCreateDto {
 
     @NotBlank
+    private String renterName;
+
+    @NotBlank
     private String renterId;
 
 }

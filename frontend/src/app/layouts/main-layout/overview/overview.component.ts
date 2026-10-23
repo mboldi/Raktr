@@ -15,7 +15,7 @@ import { RentDetails } from '../../../model/rent/rentDetails';
 import { ScannableDetailsDto } from '../../../model/scannable/scannableDetailsDto';
 import { DeviceDetails } from '../../../model/scannable/device/deviceDetails';
 import { ContainerDetails } from '../../../model/scannable/container/containerDetails';
-import { findByBarcode } from '../../../util/ean8';
+import { findByBarcode } from '../../../util/barcodeHandler';
 import {
   MatCell,
   MatCellDef,

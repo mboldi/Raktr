@@ -19,6 +19,13 @@ export function barcodeLookupCandidates(scannedValue: string): string[] {
     return [scannedValue.slice(0, 7), scannedValue];
   }
 
+  // Some labels carry a letter prefix in front of the number (e.g. SCH0006761) - the number
+  // alone is what's stored, so it's tried after the value exactly as scanned.
+  const withoutPrefix = scannedValue.replace(/^[A-Za-z]+(?=\d+$)/, '');
+  if (withoutPrefix !== scannedValue) {
+    return [scannedValue, ...barcodeLookupCandidates(withoutPrefix)];
+  }
+
   return [scannedValue];
 }
 

@@ -68,7 +68,7 @@ import { LocalStorageService } from '../../services/localStorage.service';
 import { environment } from '../../../environments/environment';
 import { UserDetails } from '../../model/user/userDetails';
 import { UserService } from '../../services/user.service';
-import { findByBarcode } from '../../util/ean8';
+import { findByBarcode } from '../../util/barcodeHandler';
 import {
   QuantityInputDialogData,
   QuantityInputModalComponent,

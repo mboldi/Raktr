@@ -30,7 +30,7 @@ import { Scannable } from '../../model/scannable/scannable';
 import { ScannableDetailsDto } from '../../model/scannable/scannableDetailsDto';
 import { DeviceDetails } from '../../model/scannable/device/deviceDetails';
 import { DeviceService } from '../../services/device.service';
-import { findByBarcode } from '../../util/ean8';
+import { findByBarcode } from '../../util/barcodeHandler';
 
 @Component({
   selector: 'app-ticket-form',

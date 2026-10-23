@@ -40,7 +40,7 @@ import { OwnerService } from '../../services/owner.service';
 import { ContainerDetails } from '../../model/scannable/container/containerDetails';
 import { DeviceDetails } from '../../model/scannable/device/deviceDetails';
 import { DeviceService } from '../../services/device.service';
-import { findByBarcode } from '../../util/ean8';
+import { findByBarcode } from '../../util/barcodeHandler';
 import { ScannableService } from '../../services/scannable.service';
 import { MatButton, MatIconButton } from '@angular/material/button';
 import {

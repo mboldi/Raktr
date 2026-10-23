@@ -203,7 +203,7 @@ export class OverviewComponent implements OnInit {
         container.barcode.toLowerCase().includes(filter),
     );
 
-    return [...deviceMatches, ...containerMatches].slice(0, 5);
+    return [...deviceMatches, ...containerMatches];
   }
 
   // MatAutocomplete's Enter-to-select handling runs on keydown and fires (optionSelected),

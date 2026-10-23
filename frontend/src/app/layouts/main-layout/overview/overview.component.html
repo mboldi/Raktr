@@ -27,6 +27,7 @@
 
             <mat-autocomplete
               #autoOverviewSearch="matAutocomplete"
+              class="scannable-autocomplete-panel"
               (optionSelected)="onScannableOptionSelected()"
             >
               @for (option of filteredSearchOptions | async; track option.id) {

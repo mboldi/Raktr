@@ -67,3 +67,8 @@
     filter: brightness(1.15);
   }
 }
+
+::ng-deep .scannable-autocomplete-panel {
+  max-height: 240px !important;
+  overflow-y: auto !important;
+}

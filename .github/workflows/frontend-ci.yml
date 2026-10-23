@@ -9,24 +9,28 @@ on:
   pull_request:
     branches: [main]
 
+permissions:
+  contents: read
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 defaults:
   run:
+    shell: bash
     working-directory: frontend
 
 jobs:
   check:
     name: Lint and build
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-
+    timeout-minutes: 5
     steps:
       - name: Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       - name: Set up pnpm and Node
         uses: pnpm/setup@a0881977cd8ea73b1ed212236c99ca10dcc80cf4 # v3.1.1

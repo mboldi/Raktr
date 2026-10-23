@@ -3,14 +3,21 @@ name: Docker Publish
 on:
   push:
     branches: [main]
-    tags: ['v*.*.*']
+    tags: ["v*.*.*"]
   pull_request:
     branches: [main]
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+defaults:
+  run:
+    shell: bash
 
 env:
   REGISTRY: ghcr.io
@@ -19,6 +26,8 @@ jobs:
   build-and-push:
     name: Build and push (${{ matrix.component }})
     runs-on: ubuntu-latest
+    timeout-minutes: 15
+    # Pull requests build without logging in or pushing, so the write scope is never used there.
     permissions:
       contents: read
       packages: write
@@ -30,12 +39,12 @@ jobs:
             context: backend
           - component: frontend
             context: frontend
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
+          persist-credentials: false
 
       - name: Resolve version
         id: version
@@ -85,7 +94,8 @@ jobs:
         with:
           context: ${{ matrix.context }}
           build-args: VERSION=${{ steps.version.outputs.value }}
-          secrets: SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}
+          # Pull request builds skip the Sentry upload: their code is not reviewed yet.
+          secrets: ${{ github.event_name != 'pull_request' && format('SENTRY_AUTH_TOKEN={0}', secrets.SENTRY_AUTH_TOKEN) || '' }}
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}

@@ -187,6 +187,14 @@ th.mat-mdc-header-cell {
   align-items: center;
 }
 
-.date-range-field {
+.tools-row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  column-gap: 16px;
+}
+
+.date-range-field,
+.status-field {
   width: 350px;
 }

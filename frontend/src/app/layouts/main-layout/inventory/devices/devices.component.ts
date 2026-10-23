@@ -28,6 +28,12 @@ import { DecimalPipe } from '@angular/common';
 import { MatSortModule, Sort } from '@angular/material/sort';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatSelect } from '@angular/material/select';
+import { MatOption } from '@angular/material/core';
+import {
+  DeviceStatus,
+  DEVICE_STATUS_LABELS,
+} from '../../../../model/scannable/device/deviceStatus';
 import {
   MatExpansionPanel,
   MatExpansionPanelHeader,
@@ -119,6 +125,8 @@ const REDUCED_COLUMNS: string[] = ['name', 'assetTag', 'maker', 'model'];
     MatExpansionPanel,
     MatExpansionPanelHeader,
     MatExpansionPanelTitle,
+    MatSelect,
+    MatOption,
   ],
   templateUrl: './devices.component.html',
   host: {
@@ -152,6 +160,9 @@ export class DevicesComponent implements OnInit {
   protected contextMenuDevice: DeviceDetails | null = null;
 
   protected deviceSearchFormControl = new FormControl();
+  protected readonly statuses = Object.values(DeviceStatus);
+  protected readonly statusLabels = DEVICE_STATUS_LABELS;
+  protected statusControl = new FormControl<DeviceStatus[]>([], { nonNullable: true });
   protected editedRange = new FormGroup({
     start: new FormControl<Date | null>(null),
     end: new FormControl<Date | null>(null),
@@ -207,6 +218,7 @@ export class DevicesComponent implements OnInit {
       .subscribe((canCreate) => (this.canCreate = canCreate));
 
     this.editedRange.valueChanges.subscribe(() => this.filterSortDevices());
+    this.statusControl.valueChanges.subscribe(() => this.filterSortDevices());
 
     const readPageSize = this.localStorageService.read(environment.pageSizeKeys.devices);
     if (readPageSize) {
@@ -455,6 +467,7 @@ export class DevicesComponent implements OnInit {
       (device) =>
         this.matchesSearch(device) &&
         this.matchesEditedRange(device) &&
+        this.matchesStatus(device) &&
         (this.selectedCategories.size === 0 || this.selectedCategories.has(device.category)) &&
         (this.selectedLocations.size === 0 || this.selectedLocations.has(device.location)) &&
         (this.selectedOwners.size === 0 || this.selectedOwners.has(device.owner?.name ?? '')) &&
@@ -524,6 +537,11 @@ export class DevicesComponent implements OnInit {
     return true;
   }
 
+  private matchesStatus(device: DeviceDetails): boolean {
+    const selected = this.statusControl.value;
+    return selected.length === 0 || selected.includes(device.status);
+  }
+
   private formatRangeDate(date: Date | null | undefined): string {
     return date ? date.toLocaleDateString('hu-HU') : '…';
   }
@@ -545,6 +563,7 @@ export class DevicesComponent implements OnInit {
       (device) =>
         this.matchesSearch(device) &&
         this.matchesEditedRange(device) &&
+        this.matchesStatus(device) &&
         (excludedFacet === 'category' ||
           this.selectedCategories.size === 0 ||
           this.selectedCategories.has(device.category)) &&
@@ -683,6 +702,13 @@ export class DevicesComponent implements OnInit {
         remove: () => this.editedRange.reset(),
       });
     }
+    for (const status of this.statusControl.value) {
+      chips.push({
+        label: `Állapot: ${this.statusLabels[status]}`,
+        remove: () =>
+          this.statusControl.setValue(this.statusControl.value.filter((s) => s !== status)),
+      });
+    }
     for (const maker of this.selectedMakers) {
       chips.push({
         label: `Gyártó: ${maker}`,
@@ -725,6 +751,7 @@ export class DevicesComponent implements OnInit {
       this.selectedMakers.size > 0 ||
       this.selectedModels.size > 0 ||
       !!this.searchFilter ||
+      this.statusControl.value.length > 0 ||
       !!this.editedRange.value.start ||
       !!this.editedRange.value.end
     );
@@ -737,6 +764,7 @@ export class DevicesComponent implements OnInit {
     this.selectedMakers.clear();
     this.selectedModels.clear();
     this.editedRange.reset();
+    this.statusControl.reset([]);
     this.resetFilter();
   }
 }

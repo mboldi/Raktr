@@ -272,7 +272,7 @@ public class RentService {
         var request = RentPdfRequest.builder()
                 .teamName(configService.getString(ConfigKey.RENT_TEAM_NAME))
                 .teamLeaderName(configService.getString(ConfigKey.RENT_TEAM_LEADER_NAME))
-                .renterName(rent.getRenterName())
+                .renterName(createDto.getRenterName())
                 .renterId(createDto.getRenterId())
                 .firstSignerName(configService.getString(ConfigKey.RENT_FIRST_SIGNER_NAME))
                 .firstSignerTitle(configService.getString(ConfigKey.RENT_FIRST_SIGNER_TITLE))

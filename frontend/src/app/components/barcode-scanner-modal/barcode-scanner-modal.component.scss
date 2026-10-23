@@ -1,0 +1,18 @@
+.scanner-video {
+  display: block;
+  width: 100%;
+  max-height: 60vh;
+  border-radius: 8px;
+  background: #000;
+  object-fit: cover;
+}
+
+.scanner-hint,
+.scanner-error {
+  margin: 12px 0 0;
+  text-align: center;
+}
+
+.scanner-error {
+  color: var(--mat-sys-error);
+}

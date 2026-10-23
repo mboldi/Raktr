@@ -195,6 +195,18 @@
             }
           </mat-autocomplete>
 
+          @if (isMobile()) {
+            <button
+              mat-icon-button
+              matSuffix
+              type="button"
+              aria-label="Vonalkód beolvasása kamerával"
+              (click)="scanBarcode()"
+            >
+              <mat-icon>photo_camera</mat-icon>
+            </button>
+          }
+
           @if (addScannableFormControl.value) {
             <button mat-icon-button matSuffix type="button" (click)="resolveAndAddScannable()">
               <mat-icon>add</mat-icon>

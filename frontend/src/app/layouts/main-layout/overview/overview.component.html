@@ -37,6 +37,18 @@
               }
             </mat-autocomplete>
 
+            @if (isMobile()) {
+              <button
+                mat-icon-button
+                matSuffix
+                type="button"
+                aria-label="Vonalkód beolvasása kamerával"
+                (click)="scanBarcode()"
+              >
+                <mat-icon>photo_camera</mat-icon>
+              </button>
+            }
+
             @if (deviceSearchFormControl.value) {
               <button mat-icon-button matSuffix aria-label="Search" (click)="searchDevice()">
                 <mat-icon matSuffix>search</mat-icon>

@@ -49,6 +49,7 @@ import {
   TabbedEditModalData,
 } from '../../../components/tabbed-edit-modal/tabbed-edit-modal.component';
 import { YesnoModalComponent } from '../../../components/yesno-modal/yesno-modal.component';
+import { BarcodeScannerModalComponent } from '../../../components/barcode-scanner-modal/barcode-scanner-modal.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { map, Observable, startWith } from 'rxjs';
 import { Router, RouterLink } from '@angular/router';
@@ -123,6 +124,7 @@ export class OverviewComponent implements OnInit {
   private titleService = inject(Title);
 
   protected canCreate = false;
+  protected isMobile = this.windowService.isMobile;
 
   protected deviceSearchFormControl: FormControl = new FormControl();
   protected filteredSearchOptions: Observable<ScannableDetailsDto[]>;
@@ -223,6 +225,18 @@ export class OverviewComponent implements OnInit {
     }
 
     this.searchDevice();
+  }
+
+  protected scanBarcode() {
+    this.dialog
+      .open(BarcodeScannerModalComponent, { width: '90vw', maxWidth: '480px' })
+      .afterClosed()
+      .subscribe((scanned?: string) => {
+        if (scanned) {
+          this.deviceSearchFormControl.setValue(scanned);
+          this.searchDevice();
+        }
+      });
   }
 
   protected searchDevice() {

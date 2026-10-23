@@ -42,6 +42,7 @@ import {
 } from '@angular/material/expansion';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatDialog } from '@angular/material/dialog';
+import { BarcodeScannerModalComponent } from '../barcode-scanner-modal/barcode-scanner-modal.component';
 import {
   MatCell,
   MatCellDef,
@@ -149,6 +150,7 @@ export class RentFormComponent implements OnInit {
   private localStorageService = inject(LocalStorageService);
   private dialog = inject(MatDialog);
   private windowService = inject(WindowWidthService);
+  protected isMobile = this.windowService.isMobile;
 
   @ViewChild(MatTable) itemsTable?: MatTable<unknown>;
 
@@ -493,6 +495,18 @@ export class RentFormComponent implements OnInit {
     }
 
     this.resolveAndAddScannable();
+  }
+
+  protected scanBarcode() {
+    this.dialog
+      .open(BarcodeScannerModalComponent, { width: '90vw', maxWidth: '480px' })
+      .afterClosed()
+      .subscribe((scanned?: string) => {
+        if (scanned) {
+          this.addScannableFormControl.setValue(scanned);
+          this.resolveAndAddScannable();
+        }
+      });
   }
 
   protected resolveAndAddScannable() {

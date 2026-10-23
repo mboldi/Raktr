@@ -49,7 +49,9 @@
     <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12">
       <mat-card class="card-with-icon overview-card">
         <mat-card-header>
-          <mat-icon class="card-icon bg-green">content_paste</mat-icon>
+          <a class="card-icon-link" routerLink="/rents" aria-label="Kivitelek">
+            <mat-icon class="card-icon bg-green">content_paste</mat-icon>
+          </a>
           <h4>Aktív kivitelek</h4>
         </mat-card-header>
         <mat-card-content>
@@ -68,7 +70,9 @@
     <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12">
       <mat-card class="card-with-icon overview-card">
         <mat-card-header>
-          <mat-icon class="card-icon bg-orange">sd_storage</mat-icon>
+          <a class="card-icon-link" routerLink="/inventory/devices" aria-label="Eszközök">
+            <mat-icon class="card-icon bg-orange">sd_storage</mat-icon>
+          </a>
           <h4>Kezelt tételek</h4>
         </mat-card-header>
         <mat-card-content>
@@ -87,7 +91,9 @@
     <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12">
       <mat-card class="card-with-icon overview-card">
         <mat-card-header>
-          <mat-icon class="card-icon bg-red">bug_report</mat-icon>
+          <a class="card-icon-link" routerLink="/tickets" aria-label="Hibajegyek">
+            <mat-icon class="card-icon bg-red">bug_report</mat-icon>
+          </a>
           <h4>Aktív hibajegyek</h4>
         </mat-card-header>
         <mat-card-content>

@@ -51,7 +51,7 @@ import {
 import { YesnoModalComponent } from '../../../components/yesno-modal/yesno-modal.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { map, Observable, startWith } from 'rxjs';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 
 const ALL_COLUMNS: string[] = [
@@ -103,6 +103,7 @@ const REDUCED_COLUMNS: string[] = [
     MatAutocomplete,
     MatAutocompleteTrigger,
     MatOption,
+    RouterLink,
   ],
   templateUrl: './overview.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,

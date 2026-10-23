@@ -64,6 +64,8 @@ import { DeviceDetails } from '../../model/scannable/device/deviceDetails';
 import { ContainerDetails } from '../../model/scannable/container/containerDetails';
 import { DeviceService } from '../../services/device.service';
 import { ContainerService } from '../../services/container.service';
+import { LocalStorageService } from '../../services/localStorage.service';
+import { environment } from '../../../environments/environment';
 import { UserDetails } from '../../model/user/userDetails';
 import { UserService } from '../../services/user.service';
 import { findByBarcode } from '../../util/ean8';
@@ -144,6 +146,7 @@ export class RentFormComponent implements OnInit {
   private userService = inject(UserService);
   private deviceService = inject(DeviceService);
   private containerService = inject(ContainerService);
+  private localStorageService = inject(LocalStorageService);
   private dialog = inject(MatDialog);
   private windowService = inject(WindowWidthService);
 
@@ -203,7 +206,7 @@ export class RentFormComponent implements OnInit {
   protected itemSearchControl = new FormControl('');
   protected filteredItems: RentItemDetailsDto[] = [];
   protected pagedItems: RentItemDetailsDto[] = [];
-  protected itemsPageSize = 5;
+  protected itemsPageSize = environment.defaultPageSize;
   private itemsPageIndex = 0;
   private itemsSort: Sort = { active: 'addedBy', direction: 'desc' };
 
@@ -285,6 +288,11 @@ export class RentFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    const readPageSize = this.localStorageService.read(environment.pageSizeKeys.rentItems);
+    if (readPageSize) {
+      this.itemsPageSize = parseInt(readPageSize);
+    }
+
     const data = this.rentData();
     if (data !== null) {
       this.rentForm.patchValue({
@@ -606,6 +614,7 @@ export class RentFormComponent implements OnInit {
   protected onItemsPage(event: PageEvent) {
     this.itemsPageIndex = event.pageIndex;
     this.itemsPageSize = event.pageSize;
+    this.localStorageService.write(environment.pageSizeKeys.rentItems, event.pageSize.toString());
     this.pageItems();
   }
 

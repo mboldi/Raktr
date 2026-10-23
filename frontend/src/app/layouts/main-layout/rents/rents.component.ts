@@ -125,7 +125,7 @@ export class RentsComponent implements OnInit {
   protected pagedRents: RentDetails[] = [];
 
   private lastPageSetting: PageEvent | undefined;
-  protected pageSize = 5;
+  protected pageSize = environment.defaultPageSize;
 
   private lastSort: Sort = { active: 'outDate', direction: 'desc' };
 
@@ -159,7 +159,7 @@ export class RentsComponent implements OnInit {
       .canCreateContent()
       .subscribe((canCreate) => (this.canCreate = canCreate));
 
-    const readPageSize = this.localStorageService.read(`${environment.defaultPageSizeKey}`);
+    const readPageSize = this.localStorageService.read(environment.pageSizeKeys.rents);
     if (readPageSize) {
       this.pageSize = parseInt(readPageSize);
     }
@@ -400,10 +400,7 @@ export class RentsComponent implements OnInit {
   protected pageRents(pageEvent: PageEvent) {
     this.lastPageSetting = pageEvent;
     this.pageSize = pageEvent.pageSize;
-    this.localStorageService.write(
-      `${environment.defaultPageSizeKey}`,
-      pageEvent.pageSize.toString(),
-    );
+    this.localStorageService.write(environment.pageSizeKeys.rents, pageEvent.pageSize.toString());
 
     const startId = pageEvent.pageIndex * pageEvent.pageSize;
     const endId = startId + pageEvent.pageSize;

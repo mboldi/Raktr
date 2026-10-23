@@ -145,7 +145,7 @@ export class ContainersComponent implements OnInit {
   protected pagedContainers: ContainerDetails[] = [];
 
   private lastPageSetting: PageEvent | undefined;
-  protected pageSize = 5;
+  protected pageSize = environment.defaultPageSize;
 
   private lastSort: Sort = { active: 'name', direction: 'asc' };
 
@@ -177,7 +177,7 @@ export class ContainersComponent implements OnInit {
       .canCreateContent()
       .subscribe((canCreate) => (this.canCreate = canCreate));
 
-    const readPageSize = this.localStorageService.read(`${environment.defaultPageSizeKey}`);
+    const readPageSize = this.localStorageService.read(environment.pageSizeKeys.containers);
     if (readPageSize) {
       this.pageSize = parseInt(readPageSize);
     }
@@ -492,7 +492,7 @@ export class ContainersComponent implements OnInit {
     this.lastPageSetting = pageEvent;
     this.pageSize = pageEvent.pageSize;
     this.localStorageService.write(
-      `${environment.defaultPageSizeKey}`,
+      environment.pageSizeKeys.containers,
       pageEvent.pageSize.toString(),
     );
 

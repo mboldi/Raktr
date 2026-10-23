@@ -133,7 +133,7 @@ export class TicketsComponent implements OnInit {
   protected pagedTickets: TicketDetails[] = [];
 
   private lastPageSetting: PageEvent | undefined;
-  protected pageSize = 5;
+  protected pageSize = environment.defaultPageSize;
 
   private lastSort: Sort = { active: 'createdAt', direction: 'desc' };
 
@@ -177,7 +177,7 @@ export class TicketsComponent implements OnInit {
   }
 
   ngOnInit() {
-    const readPageSize = this.localStorageService.read(`${environment.defaultPageSizeKey}`);
+    const readPageSize = this.localStorageService.read(environment.pageSizeKeys.tickets);
     if (readPageSize) {
       this.pageSize = parseInt(readPageSize);
     }
@@ -403,10 +403,7 @@ export class TicketsComponent implements OnInit {
   protected pageTickets(pageEvent: PageEvent) {
     this.lastPageSetting = pageEvent;
     this.pageSize = pageEvent.pageSize;
-    this.localStorageService.write(
-      `${environment.defaultPageSizeKey}`,
-      pageEvent.pageSize.toString(),
-    );
+    this.localStorageService.write(environment.pageSizeKeys.tickets, pageEvent.pageSize.toString());
 
     const startId = pageEvent.pageIndex * pageEvent.pageSize;
     const endId = startId + pageEvent.pageSize;

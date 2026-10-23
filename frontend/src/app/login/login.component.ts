@@ -1,4 +1,6 @@
-import { Component, ChangeDetectionStrategy, inject, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, DestroyRef, inject, OnInit } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { filter, take } from 'rxjs';
 import { Title } from '@angular/platform-browser';
 import { OidcSecurityService } from 'angular-auth-oidc-client';
 import { Router } from '@angular/router';
@@ -18,19 +20,27 @@ export class LoginComponent implements OnInit {
   private titleService = inject(Title);
   private oidcSecurityService = inject(OidcSecurityService);
   private localStorageService = inject(LocalStorageService);
+  private destroyRef = inject(DestroyRef);
 
   constructor() {
     this.titleService.setTitle('Raktr - Bejelentkezés');
   }
 
   ngOnInit(): void {
-    this.oidcSecurityService.isAuthenticated$.subscribe(({ isAuthenticated }) => {
-      if (isAuthenticated) {
+    // isAuthenticated$ emits again on every silent token refresh (about every 5 minutes), so this
+    // must only react once and stop with the component - otherwise it stays subscribed after the
+    // user has left the login page and throws them back to the overview on every refresh.
+    this.oidcSecurityService.isAuthenticated$
+      .pipe(
+        filter(({ isAuthenticated }) => isAuthenticated),
+        take(1),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe(() => {
         const returnUrl = this.localStorageService.read('returnUrl');
         this.localStorageService.remove('returnUrl');
         this.router.navigateByUrl(returnUrl || '/overview');
-      }
-    });
+      });
   }
 
   login(): void {

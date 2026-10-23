@@ -1,5 +1,5 @@
 import { Component, Type, ChangeDetectionStrategy, inject } from '@angular/core';
-import { NgComponentOutlet } from '@angular/common';
+import { DatePipe, NgComponentOutlet } from '@angular/common';
 import { MatButton, MatFabButton } from '@angular/material/button';
 import {
   MAT_DIALOG_DATA,
@@ -11,6 +11,7 @@ import {
 } from '@angular/material/dialog';
 import { MatTab, MatTabGroup, MatTabLabel } from '@angular/material/tabs';
 import { MatBadge } from '@angular/material/badge';
+import { MatTooltip } from '@angular/material/tooltip';
 import { DeviceDetails } from '../../model/scannable/device/deviceDetails';
 import { ScannableDetailsDto } from '../../model/scannable/scannableDetailsDto';
 import { MatIcon } from '@angular/material/icon';
@@ -90,9 +91,11 @@ const VIEW_DEFINITIONS: Record<TabbedEditModalKind, TabbedEditModalViewDefinitio
     MatIcon,
     MatFabButton,
     NgComponentOutlet,
+    DatePipe,
     TicketMiniListComponent,
     RentMiniListComponent,
     MatBadge,
+    MatTooltip,
   ],
   templateUrl: './tabbed-edit-modal.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,

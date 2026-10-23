@@ -1,3 +1,11 @@
+.audit-tag {
+  margin: 4px 0 0;
+  font-size: 0.75rem;
+  text-align: left;
+  color: var(--mat-sys-on-surface-variant);
+  opacity: 0.8;
+}
+
 .active-rents-badge ::ng-deep .mat-badge-content {
   background-color: light-dark(#43a047, #2e7d32);
   color: #eaf1ff;

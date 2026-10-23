@@ -11,6 +11,14 @@
       </ng-template>
       <div class="m-3 mb-0">
         <ng-container *ngComponentOutlet="view.component; inputs: viewInputs"></ng-container>
+        @if (data.kind !== 'scannable') {
+          <p class="audit-tag">
+            Létrehozta: {{ data.item.createdBy.displayName }},
+            {{ data.item.createdAt | date: 'yyyy. MM. dd. HH:mm' }} · Utoljára szerkesztette:
+            {{ data.item.updatedBy.displayName }},
+            {{ data.item.updatedAt | date: 'yyyy. MM. dd. HH:mm' }}
+          </p>
+        }
       </div>
     </mat-tab>
 
@@ -58,6 +66,7 @@
         class="bg-orange"
         style="margin-right: 8px"
         aria-label="Új hibajegy"
+        matTooltip="Hibajegy létrehozása"
         (click)="addTicket()"
       >
         <mat-icon>bug_report</mat-icon>

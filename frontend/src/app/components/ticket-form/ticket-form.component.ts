@@ -30,7 +30,7 @@ import { Scannable } from '../../model/scannable/scannable';
 import { ScannableDetailsDto } from '../../model/scannable/scannableDetailsDto';
 import { DeviceDetails } from '../../model/scannable/device/deviceDetails';
 import { DeviceService } from '../../services/device.service';
-import { findByBarcode } from '../../util/ean8';
+import { findByBarcode } from '../../util/barcodeHandler';
 
 @Component({
   selector: 'app-ticket-form',
@@ -148,14 +148,13 @@ export class TicketFormComponent implements OnInit {
       return [];
     }
 
-    return this.devices
-      .filter(
-        (device) =>
-          device.name.toLowerCase().includes(filter) ||
-          (device.model ?? '').toLowerCase().includes(filter) ||
-          (device.manufacturer ?? '').toLowerCase().includes(filter),
-      )
-      .slice(0, 5);
+    return this.devices.filter(
+      (device) =>
+        device.name.toLowerCase().includes(filter) ||
+        device.barcode.toLowerCase().includes(filter) ||
+        (device.model ?? '').toLowerCase().includes(filter) ||
+        (device.manufacturer ?? '').toLowerCase().includes(filter),
+    );
   }
 
   // MatAutocomplete's Enter-to-select handling runs on keydown and fires (optionSelected),

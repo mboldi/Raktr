@@ -7,6 +7,7 @@ import { DeviceUpdateDto } from '../model/scannable/device/deviceUpdateDto';
 import { DeviceCreateDto } from '../model/scannable/device/deviceCreateDto';
 import { TicketDetails } from '../model/ticket/ticketDetails';
 import { RentDetails } from '../model/rent/rentDetails';
+import { ContainerDetails } from '../model/scannable/container/containerDetails';
 
 @Injectable({
   providedIn: 'root',
@@ -121,6 +122,14 @@ export class DeviceService {
 
           return rents_typed;
         }),
+      );
+  }
+
+  getContainersOfDevice(deviceId: number): Observable<ContainerDetails[]> {
+    return this.http
+      .get<Record<string, unknown>[]>(`${environment.apiUrl}/v1/devices/${deviceId}/containers`)
+      .pipe(
+        map((containers) => containers.map((container) => ContainerDetails.fromJson(container))),
       );
   }
 

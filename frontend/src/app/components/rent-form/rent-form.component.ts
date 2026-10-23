@@ -209,7 +209,12 @@ export class RentFormComponent implements OnInit {
   protected filteredItems: RentItemDetailsDto[] = [];
   protected pagedItems: RentItemDetailsDto[] = [];
   protected itemsPageSize = environment.defaultPageSize;
-  private itemsPageIndex = 0;
+  protected itemsPageIndex = 0;
+  // The order the backend first returned each item in, so the list doesn't reshuffle when an
+  // update makes the backend return the same items in a different order (matters when unsorted).
+  private itemPositions = new Map<number, number>();
+  // The last sort the user actually picked - kept in effect when the header sort is cleared (no
+  // arrow shown), so the list keeps its order instead of falling back to whatever the data holds.
   private itemsSort: Sort = { active: 'addedBy', direction: 'desc' };
 
   /** Recomputed reactively off both the rent (type/closed) and the viewport width. */
@@ -258,7 +263,7 @@ export class RentFormComponent implements OnInit {
     // doesn't always notice on its own, so force it to redraw and refilter every time.
     effect(() => {
       this.rentData();
-      this.refilterItems();
+      this.refilterItems(false);
       this.itemsTable?.renderRows();
     });
 
@@ -575,9 +580,9 @@ export class RentFormComponent implements OnInit {
     this.addScannableFormControl.reset();
   }
 
-  private refilterItems() {
+  private refilterItems(resetPage = true) {
     const search = (this.itemSearchControl.value ?? '').toLowerCase();
-    const items = this.rentData()?.rentItems ?? [];
+    const items = this.inStableOrder(this.rentData()?.rentItems ?? []);
 
     this.filteredItems = items.filter(
       (item) =>
@@ -589,12 +594,36 @@ export class RentFormComponent implements OnInit {
     );
 
     this.sortItems();
-    this.itemsPageIndex = 0;
+    if (resetPage) {
+      this.itemsPageIndex = 0;
+    } else {
+      const lastPage = Math.max(0, Math.ceil(this.filteredItems.length / this.itemsPageSize) - 1);
+      this.itemsPageIndex = Math.min(this.itemsPageIndex, lastPage);
+    }
     this.pageItems();
   }
 
+  // Every refresh swaps in brand new item objects - tracking rows by id lets the table update the
+  // existing rows in place instead of tearing them all down and rebuilding them (which shifts the
+  // page's scroll position and looks like the row jumped).
+  protected trackItem = (_index: number, item: RentItemDetailsDto) => item.id;
+
+  private inStableOrder(items: RentItemDetailsDto[]): RentItemDetailsDto[] {
+    for (const item of items) {
+      if (!this.itemPositions.has(item.id)) {
+        this.itemPositions.set(item.id, this.itemPositions.size);
+      }
+    }
+
+    return items
+      .slice()
+      .sort((a, b) => this.itemPositions.get(a.id)! - this.itemPositions.get(b.id)!);
+  }
+
   protected onItemsSortChange(sort: Sort) {
-    this.itemsSort = sort;
+    if (sort.direction) {
+      this.itemsSort = sort;
+    }
     this.sortItems();
     this.itemsPageIndex = 0;
     this.pageItems();

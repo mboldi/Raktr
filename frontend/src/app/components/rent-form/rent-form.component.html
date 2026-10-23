@@ -231,6 +231,7 @@
       [pageSizeOptions]="[5, 10, 25, 50]"
       [length]="filteredItems.length"
       [pageSize]="itemsPageSize"
+      [pageIndex]="itemsPageIndex"
       (page)="onItemsPage($event)"
       showFirstLastButtons
       aria-label="Oldalváltás"
@@ -244,6 +245,7 @@
       matSortDirection="desc"
       (matSortChange)="onItemsSortChange($event)"
       [dataSource]="pagedItems"
+      [trackBy]="trackItem"
       class="mat-elevation-z8 full-width"
     >
       <ng-container matColumnDef="type">

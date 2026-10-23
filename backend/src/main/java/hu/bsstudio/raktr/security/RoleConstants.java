@@ -24,8 +24,8 @@ public class RoleConstants {
             "ADMIN", ADMIN,
             "ÖREGTAG", ALUMNI,
             "STÚDIÓS", MEMBER,
-            "STÚDIÓS JELÖLT", MEMBER_CANDIDATE,
-            "STÚDIÓS JELÖLT-JELÖLT", MEMBER_CANDIDATE_CANDIDATE
+            "STÚDIÓS-JELÖLT", MEMBER_CANDIDATE,
+            "STÚDIÓS-JELÖLT JELÖLT", MEMBER_CANDIDATE_CANDIDATE
     );
 
     public static Optional<String> fromSso(String ssoRole) {

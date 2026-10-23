@@ -175,7 +175,9 @@ mat-card-title,
     margin-left: 16px;
   }
 
+  // Stays on the right next to the title/search, and on the right edge of its own line when it wraps.
   .add-button {
+    margin-left: auto;
   }
 
   .search-box {
@@ -183,4 +185,10 @@ mat-card-title,
     max-width: 70vw;
     justify-self: flex-end;
   }
+}
+
+// Autocomplete dropdowns for picking a device/container: tall result lists scroll instead of being cut off.
+.scannable-autocomplete-panel {
+  max-height: 240px !important;
+  overflow-y: auto !important;
 }

@@ -1,0 +1,17 @@
+<h2 mat-dialog-title>Vonalkód beolvasása</h2>
+
+<mat-dialog-content>
+  <video #video class="scanner-video" muted playsinline>
+    <track kind="captions" />
+  </video>
+
+  @if (error(); as message) {
+    <p class="scanner-error">{{ message }}</p>
+  } @else {
+    <p class="scanner-hint">Tartsd a vonalkódot a kamera elé!</p>
+  }
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button [mat-dialog-close]="undefined">Mégse</button>
+</mat-dialog-actions>

@@ -8,6 +8,7 @@ import {
   authInterceptor,
   LogLevel,
   provideAuth,
+  withAppInitializerAuthCheck,
 } from 'angular-auth-oidc-client';
 import { LocalStorageService } from './services/localStorage.service';
 import { provideNativeDateAdapter } from '@angular/material/core';
@@ -19,20 +20,25 @@ export const appConfig: ApplicationConfig = {
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
     provideHttpClient(withInterceptors([authInterceptor()])),
-    provideAuth({
-      config: {
-        authority: 'https://login.bsstudio.hu/application/o/raktr',
-        redirectUrl: window.location.origin,
-        postLogoutRedirectUri: window.location.origin + '/overview',
-        clientId: '2wD6qaqGsYefuYv271cwjUYUDeL2HXJFhj2Omfbg',
-        scope: 'openid profile offline_access',
-        responseType: 'code',
-        silentRenew: true,
-        useRefreshToken: true,
-        logLevel: isDevMode() ? LogLevel.Debug : LogLevel.Warn,
-        secureRoutes: ['/api'],
+    // The initializer finishes the login check (including refreshing an expired token) before
+    // routing starts, so the route guard never sees a half-refreshed session and re-logs in.
+    provideAuth(
+      {
+        config: {
+          authority: 'https://login.bsstudio.hu/application/o/raktr',
+          redirectUrl: window.location.origin,
+          postLogoutRedirectUri: window.location.origin + '/overview',
+          clientId: '2wD6qaqGsYefuYv271cwjUYUDeL2HXJFhj2Omfbg',
+          scope: 'openid profile offline_access',
+          responseType: 'code',
+          silentRenew: true,
+          useRefreshToken: true,
+          logLevel: isDevMode() ? LogLevel.Debug : LogLevel.Warn,
+          secureRoutes: ['/api'],
+        },
       },
-    }),
+      withAppInitializerAuthCheck(),
+    ),
     { provide: AbstractSecurityStorage, useClass: LocalStorageService },
     ...provideSentry(),
     provideNativeDateAdapter(),

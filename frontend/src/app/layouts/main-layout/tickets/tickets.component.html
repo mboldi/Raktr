@@ -3,13 +3,15 @@
     <div class="header-title-group">
       <h2>Hibajegyek kezelése</h2>
 
-      <mat-slide-toggle
-        class="show-closed-toggle"
-        [checked]="showClosedTickets"
-        (change)="toggleShowClosedTickets($event.checked)"
-      >
-        Lezárt jegyek mutatása
-      </mat-slide-toggle>
+      @if (!isMobile()) {
+        <mat-slide-toggle
+          class="show-closed-toggle"
+          [checked]="showClosedTickets"
+          (change)="toggleShowClosedTickets($event.checked)"
+        >
+          Lezárt jegyek mutatása
+        </mat-slide-toggle>
+      }
     </div>
 
     <button matFab extended class="add-button" (click)="newTicket()">
@@ -137,34 +139,36 @@
   >
     <ng-container matColumnDef="severity">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>
-        <span
-          class="filter-anchor"
-          aria-hidden="true"
-          [class.filter-anchor-open]="openFilterColumn === 'severity'"
-          (click)="$event.stopPropagation()"
-        >
-          <button
-            mat-icon-button
-            class="th-filter-button"
-            [class.filter-button-active]="selectedSeverities.size > 0"
-            (click)="toggleColumnFilter('severity', $event)"
+        @if (!isMobile()) {
+          <span
+            class="filter-anchor"
+            aria-hidden="true"
+            [class.filter-anchor-open]="openFilterColumn === 'severity'"
+            (click)="$event.stopPropagation()"
           >
-            <mat-icon>filter_alt</mat-icon>
-          </button>
-          @if (openFilterColumn === 'severity') {
-            <ng-container
-              *ngTemplateOutlet="
-                checkboxFilterPopover;
-                context: {
-                  label: 'Súlyosság szűrése',
-                  options: visibleSeverities,
-                  selected: selectedSeverities,
-                  labelMap: severityLabels,
-                }
-              "
-            ></ng-container>
-          }
-        </span>
+            <button
+              mat-icon-button
+              class="th-filter-button"
+              [class.filter-button-active]="selectedSeverities.size > 0"
+              (click)="toggleColumnFilter('severity', $event)"
+            >
+              <mat-icon>filter_alt</mat-icon>
+            </button>
+            @if (openFilterColumn === 'severity') {
+              <ng-container
+                *ngTemplateOutlet="
+                  checkboxFilterPopover;
+                  context: {
+                    label: 'Súlyosság szűrése',
+                    options: visibleSeverities,
+                    selected: selectedSeverities,
+                    labelMap: severityLabels,
+                  }
+                "
+              ></ng-container>
+            }
+          </span>
+        }
       </th>
       <td
         mat-cell
@@ -188,34 +192,36 @@
 
     <ng-container matColumnDef="status">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>
-        <span
-          class="filter-anchor"
-          aria-hidden="true"
-          [class.filter-anchor-open]="openFilterColumn === 'status'"
-          (click)="$event.stopPropagation()"
-        >
-          <button
-            mat-icon-button
-            class="th-filter-button"
-            [class.filter-button-active]="selectedStatuses.size > 0"
-            (click)="toggleColumnFilter('status', $event)"
+        @if (!isMobile()) {
+          <span
+            class="filter-anchor"
+            aria-hidden="true"
+            [class.filter-anchor-open]="openFilterColumn === 'status'"
+            (click)="$event.stopPropagation()"
           >
-            <mat-icon>filter_alt</mat-icon>
-          </button>
-          @if (openFilterColumn === 'status') {
-            <ng-container
-              *ngTemplateOutlet="
-                checkboxFilterPopover;
-                context: {
-                  label: 'Állapot szűrése',
-                  options: visibleStatuses,
-                  selected: selectedStatuses,
-                  labelMap: statusLabels,
-                }
-              "
-            ></ng-container>
-          }
-        </span>
+            <button
+              mat-icon-button
+              class="th-filter-button"
+              [class.filter-button-active]="selectedStatuses.size > 0"
+              (click)="toggleColumnFilter('status', $event)"
+            >
+              <mat-icon>filter_alt</mat-icon>
+            </button>
+            @if (openFilterColumn === 'status') {
+              <ng-container
+                *ngTemplateOutlet="
+                  checkboxFilterPopover;
+                  context: {
+                    label: 'Állapot szűrése',
+                    options: visibleStatuses,
+                    selected: selectedStatuses,
+                    labelMap: statusLabels,
+                  }
+                "
+              ></ng-container>
+            }
+          </span>
+        }
       </th>
       <td
         mat-cell
@@ -251,33 +257,35 @@
 
     <ng-container matColumnDef="createdBy">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>
-        <span
-          class="filter-anchor"
-          aria-hidden="true"
-          [class.filter-anchor-open]="openFilterColumn === 'createdBy'"
-          (click)="$event.stopPropagation()"
-        >
-          <button
-            mat-icon-button
-            class="th-filter-button"
-            [class.filter-button-active]="selectedCreators.size > 0"
-            (click)="toggleColumnFilter('createdBy', $event)"
+        @if (!isMobile()) {
+          <span
+            class="filter-anchor"
+            aria-hidden="true"
+            [class.filter-anchor-open]="openFilterColumn === 'createdBy'"
+            (click)="$event.stopPropagation()"
           >
-            <mat-icon>filter_alt</mat-icon>
-          </button>
-          @if (openFilterColumn === 'createdBy') {
-            <ng-container
-              *ngTemplateOutlet="
-                checkboxFilterPopover;
-                context: {
-                  label: 'Létrehozó szűrése',
-                  options: visibleCreators,
-                  selected: selectedCreators,
-                }
-              "
-            ></ng-container>
-          }
-        </span>
+            <button
+              mat-icon-button
+              class="th-filter-button"
+              [class.filter-button-active]="selectedCreators.size > 0"
+              (click)="toggleColumnFilter('createdBy', $event)"
+            >
+              <mat-icon>filter_alt</mat-icon>
+            </button>
+            @if (openFilterColumn === 'createdBy') {
+              <ng-container
+                *ngTemplateOutlet="
+                  checkboxFilterPopover;
+                  context: {
+                    label: 'Létrehozó szűrése',
+                    options: visibleCreators,
+                    selected: selectedCreators,
+                  }
+                "
+              ></ng-container>
+            }
+          </span>
+        }
         <span class="th-label">Létrehozó</span>
       </th>
       <td mat-cell *matCellDef="let ticket">{{ ticket.createdBy?.displayName }}</td>

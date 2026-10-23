@@ -195,6 +195,18 @@
             }
           </mat-autocomplete>
 
+          @if (isMobile()) {
+            <button
+              mat-icon-button
+              matSuffix
+              type="button"
+              aria-label="Vonalkód beolvasása kamerával"
+              (click)="scanBarcode()"
+            >
+              <mat-icon>photo_camera</mat-icon>
+            </button>
+          }
+
           @if (addScannableFormControl.value) {
             <button mat-icon-button matSuffix type="button" (click)="resolveAndAddScannable()">
               <mat-icon>add</mat-icon>
@@ -219,6 +231,7 @@
       [pageSizeOptions]="[5, 10, 25, 50]"
       [length]="filteredItems.length"
       [pageSize]="itemsPageSize"
+      [pageIndex]="itemsPageIndex"
       (page)="onItemsPage($event)"
       showFirstLastButtons
       aria-label="Oldalváltás"
@@ -232,6 +245,7 @@
       matSortDirection="desc"
       (matSortChange)="onItemsSortChange($event)"
       [dataSource]="pagedItems"
+      [trackBy]="trackItem"
       class="mat-elevation-z8 full-width"
     >
       <ng-container matColumnDef="type">
@@ -251,6 +265,11 @@
       <ng-container matColumnDef="assetTag">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Azonosító</th>
         <td mat-cell *matCellDef="let item">{{ item.scannable.assetTag }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="location">
+        <th mat-header-cell *matHeaderCellDef>Tárolási hely</th>
+        <td mat-cell *matCellDef="let item">{{ item.scannable.location }}</td>
       </ng-container>
 
       <ng-container matColumnDef="quantity">

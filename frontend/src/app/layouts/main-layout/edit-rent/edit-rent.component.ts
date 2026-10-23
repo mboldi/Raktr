@@ -33,6 +33,7 @@ import { RentPdfCreateDto } from '../../../model/rent/rentPdfCreateDto';
 import { UserDetails } from '../../../model/user/userDetails';
 import { RentService } from '../../../services/rent.service';
 import { AdminAccessService } from '../../../services/adminAccess.service';
+import { WindowWidthService } from '../../../services/windowWidth.service';
 import {
   AddScannableEvent,
   ItemQuantityChangedEvent,
@@ -72,6 +73,8 @@ export class EditRentComponent implements OnInit {
   private dialog = inject(MatDialog);
   private snackBar = inject(MatSnackBar);
   private cdr = inject(ChangeDetectorRef);
+  private windowService = inject(WindowWidthService);
+  protected isMobile = this.windowService.isMobile;
 
   @ViewChild(RentFormComponent) rentFormComponent!: RentFormComponent;
 
@@ -357,6 +360,20 @@ export class EditRentComponent implements OnInit {
     });
   }
 
+  /** {destination}-YYYYMMDD-kiviteli.pdf, with the destination made safe to use in a file name. */
+  private pdfFileName(rent: RentDetails): string {
+    const destination = rent.destination
+      .replace(/[\\/:*?"<>|]/g, '')
+      .trim()
+      .replace(/\s+/g, '-');
+    const out = rent.outDate;
+    const yyyymmdd = [out.getFullYear(), out.getMonth() + 1, out.getDate()]
+      .map((part) => String(part).padStart(2, '0'))
+      .join('');
+
+    return `${destination}-${yyyymmdd}-kiviteli.pdf`;
+  }
+
   protected downloadPdf() {
     if (!this.rent) {
       return;
@@ -381,7 +398,7 @@ export class EditRentComponent implements OnInit {
         const url = URL.createObjectURL(pdf);
         const link = document.createElement('a');
         link.href = url;
-        link.download = `kivitel-${this.rent!.id}.pdf`;
+        link.download = this.pdfFileName(this.rent!);
         link.click();
         URL.revokeObjectURL(url);
       },

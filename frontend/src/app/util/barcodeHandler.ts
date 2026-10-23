@@ -19,6 +19,13 @@ export function barcodeLookupCandidates(scannedValue: string): string[] {
     return [scannedValue.slice(0, 7), scannedValue];
   }
 
+  // Some labels carry a letter prefix in front of the number (e.g. SCH0006761) - the number
+  // alone is what's stored, so it's tried after the value exactly as scanned.
+  const withoutPrefix = scannedValue.replace(/^[A-Za-z]+(?=\d+$)/, '');
+  if (withoutPrefix !== scannedValue) {
+    return [scannedValue, ...barcodeLookupCandidates(withoutPrefix)];
+  }
+
   return [scannedValue];
 }
 
@@ -35,4 +42,17 @@ export function findByBarcode<T>(
   }
 
   return undefined;
+}
+
+/** CSV (header + one row per item) of the barcode and asset tag content, ready to paste into label printing software. */
+export function buildBarcodeCsv(items: { barcode: string; assetTag: string }[]): string {
+  const escape = (value: string | null | undefined) => {
+    const text = value ?? '';
+    return /[",\r\n]/.test(text) ? `"${text.replace(/"/g, '""')}"` : text;
+  };
+
+  return [
+    'barcode,assetTag',
+    ...items.map((item) => `${escape(item.barcode)},${escape(item.assetTag)}`),
+  ].join('\n');
 }

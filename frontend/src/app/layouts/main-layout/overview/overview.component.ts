@@ -15,7 +15,7 @@ import { RentDetails } from '../../../model/rent/rentDetails';
 import { ScannableDetailsDto } from '../../../model/scannable/scannableDetailsDto';
 import { DeviceDetails } from '../../../model/scannable/device/deviceDetails';
 import { ContainerDetails } from '../../../model/scannable/container/containerDetails';
-import { findByBarcode } from '../../../util/ean8';
+import { findByBarcode } from '../../../util/barcodeHandler';
 import {
   MatCell,
   MatCellDef,
@@ -49,9 +49,10 @@ import {
   TabbedEditModalData,
 } from '../../../components/tabbed-edit-modal/tabbed-edit-modal.component';
 import { YesnoModalComponent } from '../../../components/yesno-modal/yesno-modal.component';
+import { BarcodeScannerModalComponent } from '../../../components/barcode-scanner-modal/barcode-scanner-modal.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { map, Observable, startWith } from 'rxjs';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 
 const ALL_COLUMNS: string[] = [
@@ -70,6 +71,8 @@ const REDUCED_COLUMNS: string[] = [
   'outDate',
   'expectedReturnDate',
 ];
+
+const MOBILE_COLUMNS: string[] = ['destination', 'renter', 'outDate'];
 
 @Component({
   selector: 'app-overview',
@@ -103,6 +106,7 @@ const REDUCED_COLUMNS: string[] = [
     MatAutocomplete,
     MatAutocompleteTrigger,
     MatOption,
+    RouterLink,
   ],
   templateUrl: './overview.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,
@@ -122,6 +126,7 @@ export class OverviewComponent implements OnInit {
   private titleService = inject(Title);
 
   protected canCreate = false;
+  protected isMobile = this.windowService.isMobile;
 
   protected deviceSearchFormControl: FormControl = new FormControl();
   protected filteredSearchOptions: Observable<ScannableDetailsDto[]>;
@@ -142,7 +147,11 @@ export class OverviewComponent implements OnInit {
 
     effect(() => {
       const width = this.windowService.windowWidth();
-      this.displayedColumns = width >= 1200 ? ALL_COLUMNS : REDUCED_COLUMNS;
+      if (this.windowService.isMobile()) {
+        this.displayedColumns = MOBILE_COLUMNS;
+      } else {
+        this.displayedColumns = width >= 1200 ? ALL_COLUMNS : REDUCED_COLUMNS;
+      }
     });
 
     this.filteredSearchOptions = this.deviceSearchFormControl.valueChanges.pipe(
@@ -190,6 +199,7 @@ export class OverviewComponent implements OnInit {
       (device) =>
         device.name.toLowerCase().includes(filter) ||
         device.assetTag.toLowerCase().includes(filter) ||
+        device.barcode.toLowerCase().includes(filter) ||
         (device.manufacturer ?? '').toLowerCase().includes(filter) ||
         (device.model ?? '').toLowerCase().includes(filter),
     );
@@ -197,10 +207,11 @@ export class OverviewComponent implements OnInit {
     const containerMatches = this.containers.filter(
       (container) =>
         container.name.toLowerCase().includes(filter) ||
-        container.assetTag.toLowerCase().includes(filter),
+        container.assetTag.toLowerCase().includes(filter) ||
+        container.barcode.toLowerCase().includes(filter),
     );
 
-    return [...deviceMatches, ...containerMatches].slice(0, 5);
+    return [...deviceMatches, ...containerMatches];
   }
 
   // MatAutocomplete's Enter-to-select handling runs on keydown and fires (optionSelected),
@@ -222,6 +233,18 @@ export class OverviewComponent implements OnInit {
     this.searchDevice();
   }
 
+  protected scanBarcode() {
+    this.dialog
+      .open(BarcodeScannerModalComponent, { width: '90vw', maxWidth: '480px' })
+      .afterClosed()
+      .subscribe((scanned?: string) => {
+        if (scanned) {
+          this.deviceSearchFormControl.setValue(scanned);
+          this.searchDevice();
+        }
+      });
+  }
+
   protected searchDevice() {
     const barcode = this.deviceSearchFormControl.value;
     if (!barcode) {
@@ -232,7 +255,9 @@ export class OverviewComponent implements OnInit {
 
     if (matched) {
       this.openScannable(matched as DeviceDetails | ContainerDetails);
-    } else if (this.canCreate) {
+    } else if (this.canCreate && /^\d+$/.test(barcode)) {
+      // Only an all-digit value can be a barcode worth creating a device for - anything else was
+      // most likely a text search that just didn't match.
       this.offerCreateDevice(barcode);
     }
 

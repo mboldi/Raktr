@@ -42,6 +42,7 @@ import {
 } from '@angular/material/expansion';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatDialog } from '@angular/material/dialog';
+import { BarcodeScannerModalComponent } from '../barcode-scanner-modal/barcode-scanner-modal.component';
 import {
   MatCell,
   MatCellDef,
@@ -64,9 +65,11 @@ import { DeviceDetails } from '../../model/scannable/device/deviceDetails';
 import { ContainerDetails } from '../../model/scannable/container/containerDetails';
 import { DeviceService } from '../../services/device.service';
 import { ContainerService } from '../../services/container.service';
+import { LocalStorageService } from '../../services/localStorage.service';
+import { environment } from '../../../environments/environment';
 import { UserDetails } from '../../model/user/userDetails';
 import { UserService } from '../../services/user.service';
-import { findByBarcode } from '../../util/ean8';
+import { findByBarcode } from '../../util/barcodeHandler';
 import {
   QuantityInputDialogData,
   QuantityInputModalComponent,
@@ -144,8 +147,10 @@ export class RentFormComponent implements OnInit {
   private userService = inject(UserService);
   private deviceService = inject(DeviceService);
   private containerService = inject(ContainerService);
+  private localStorageService = inject(LocalStorageService);
   private dialog = inject(MatDialog);
   private windowService = inject(WindowWidthService);
+  protected isMobile = this.windowService.isMobile;
 
   @ViewChild(MatTable) itemsTable?: MatTable<unknown>;
 
@@ -203,8 +208,13 @@ export class RentFormComponent implements OnInit {
   protected itemSearchControl = new FormControl('');
   protected filteredItems: RentItemDetailsDto[] = [];
   protected pagedItems: RentItemDetailsDto[] = [];
-  protected itemsPageSize = 5;
-  private itemsPageIndex = 0;
+  protected itemsPageSize = environment.defaultPageSize;
+  protected itemsPageIndex = 0;
+  // The order the backend first returned each item in, so the list doesn't reshuffle when an
+  // update makes the backend return the same items in a different order (matters when unsorted).
+  private itemPositions = new Map<number, number>();
+  // The last sort the user actually picked - kept in effect when the header sort is cleared (no
+  // arrow shown), so the list keeps its order instead of falling back to whatever the data holds.
   private itemsSort: Sort = { active: 'addedBy', direction: 'desc' };
 
   /** Recomputed reactively off both the rent (type/closed) and the viewport width. */
@@ -253,7 +263,7 @@ export class RentFormComponent implements OnInit {
     // doesn't always notice on its own, so force it to redraw and refilter every time.
     effect(() => {
       this.rentData();
-      this.refilterItems();
+      this.refilterItems(false);
       this.itemsTable?.renderRows();
     });
 
@@ -285,6 +295,11 @@ export class RentFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    const readPageSize = this.localStorageService.read(environment.pageSizeKeys.rentItems);
+    if (readPageSize) {
+      this.itemsPageSize = parseInt(readPageSize);
+    }
+
     const data = this.rentData();
     if (data !== null) {
       this.rentForm.patchValue({
@@ -335,6 +350,7 @@ export class RentFormComponent implements OnInit {
     const columns = ['type', 'name', 'assetTag', 'quantity'];
 
     if (!isMobile) {
+      columns.splice(3, 0, 'location');
       columns.push('addedBy', 'weight');
     }
 
@@ -380,6 +396,7 @@ export class RentFormComponent implements OnInit {
           (scannable) =>
             scannable.name.toLowerCase().includes(filter) ||
             scannable.assetTag.toLowerCase().includes(filter) ||
+            scannable.barcode.toLowerCase().includes(filter) ||
             (scannable instanceof DeviceDetails && scannable.model.toLowerCase().includes(filter)),
         )
         .slice(0, 50);
@@ -396,6 +413,7 @@ export class RentFormComponent implements OnInit {
           !scannable.deleted &&
           (scannable.name.toLowerCase().includes(filter) ||
             scannable.assetTag.toLowerCase().includes(filter) ||
+            scannable.barcode.toLowerCase().includes(filter) ||
             (scannable instanceof DeviceDetails && scannable.model.toLowerCase().includes(filter))),
       )
       .slice(0, 50);
@@ -485,6 +503,18 @@ export class RentFormComponent implements OnInit {
     this.resolveAndAddScannable();
   }
 
+  protected scanBarcode() {
+    this.dialog
+      .open(BarcodeScannerModalComponent, { width: '90vw', maxWidth: '480px' })
+      .afterClosed()
+      .subscribe((scanned?: string) => {
+        if (scanned) {
+          this.addScannableFormControl.setValue(scanned);
+          this.resolveAndAddScannable();
+        }
+      });
+  }
+
   protected resolveAndAddScannable() {
     const enteredValue: string = this.addScannableFormControl.value ?? '';
     if (!enteredValue) {
@@ -550,9 +580,9 @@ export class RentFormComponent implements OnInit {
     this.addScannableFormControl.reset();
   }
 
-  private refilterItems() {
+  private refilterItems(resetPage = true) {
     const search = (this.itemSearchControl.value ?? '').toLowerCase();
-    const items = this.rentData()?.rentItems ?? [];
+    const items = this.inStableOrder(this.rentData()?.rentItems ?? []);
 
     this.filteredItems = items.filter(
       (item) =>
@@ -564,12 +594,36 @@ export class RentFormComponent implements OnInit {
     );
 
     this.sortItems();
-    this.itemsPageIndex = 0;
+    if (resetPage) {
+      this.itemsPageIndex = 0;
+    } else {
+      const lastPage = Math.max(0, Math.ceil(this.filteredItems.length / this.itemsPageSize) - 1);
+      this.itemsPageIndex = Math.min(this.itemsPageIndex, lastPage);
+    }
     this.pageItems();
   }
 
+  // Every refresh swaps in brand new item objects - tracking rows by id lets the table update the
+  // existing rows in place instead of tearing them all down and rebuilding them (which shifts the
+  // page's scroll position and looks like the row jumped).
+  protected trackItem = (_index: number, item: RentItemDetailsDto) => item.id;
+
+  private inStableOrder(items: RentItemDetailsDto[]): RentItemDetailsDto[] {
+    for (const item of items) {
+      if (!this.itemPositions.has(item.id)) {
+        this.itemPositions.set(item.id, this.itemPositions.size);
+      }
+    }
+
+    return items
+      .slice()
+      .sort((a, b) => this.itemPositions.get(a.id)! - this.itemPositions.get(b.id)!);
+  }
+
   protected onItemsSortChange(sort: Sort) {
-    this.itemsSort = sort;
+    if (sort.direction) {
+      this.itemsSort = sort;
+    }
     this.sortItems();
     this.itemsPageIndex = 0;
     this.pageItems();
@@ -606,6 +660,7 @@ export class RentFormComponent implements OnInit {
   protected onItemsPage(event: PageEvent) {
     this.itemsPageIndex = event.pageIndex;
     this.itemsPageSize = event.pageSize;
+    this.localStorageService.write(environment.pageSizeKeys.rentItems, event.pageSize.toString());
     this.pageItems();
   }
 

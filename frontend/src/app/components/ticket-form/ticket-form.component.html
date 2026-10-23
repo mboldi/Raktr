@@ -44,11 +44,13 @@
 
             <mat-autocomplete
               #autoTicketDevice="matAutocomplete"
+              class="scannable-autocomplete-panel"
               (optionSelected)="onDeviceOptionSelected()"
             >
               @for (option of filteredDeviceOptions | async; track option.id) {
                 <mat-option [value]="option.barcode">
-                  {{ option.name }} - {{ option.manufacturer }} {{ option.model }}
+                  {{ option.name }} - {{ option.manufacturer }} {{ option.model }} -
+                  {{ option.assetTag }}
                 </mat-option>
               }
             </mat-autocomplete>

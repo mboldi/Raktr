@@ -1,6 +1,13 @@
 export const environment = {
   apiUrl: '/api',
-  defaultPageSizeKey: 'DEFAULT_PAGE_SIZE',
+  defaultPageSize: 50,
+  pageSizeKeys: {
+    devices: 'PAGE_SIZE_DEVICES',
+    containers: 'PAGE_SIZE_CONTAINERS',
+    rents: 'PAGE_SIZE_RENTS',
+    tickets: 'PAGE_SIZE_TICKETS',
+    rentItems: 'PAGE_SIZE_RENT_ITEMS',
+  },
 
   rentTeamNameKey: 'RENT_TEAM_NAME',
   rentTeamLeaderKey: 'RENT_TEAM_LEADER_NAME',
@@ -12,7 +19,7 @@ export const environment = {
 
   forceEan8Key: 'FORCE_EAN8',
 
-  adminGroupName: 'Admin',
+  adminGroupNames: ['Admin', 'Vezetőség', 'Főszerkesztő'],
   fullAccessGroupNames: ['Stúdiós', 'Vezetőség'],
 
   defaultOwnerName: 'SVIE',

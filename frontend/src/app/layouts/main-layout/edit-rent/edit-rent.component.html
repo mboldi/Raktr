@@ -28,7 +28,7 @@
                   }
                 </div>
                 <div class="col-auto pdf-actions">
-                  @if (!isNew && rent && !rent.closed) {
+                  @if (!isNew && rent && !rent.closed && !isMobile()) {
                     <button
                       matFab
                       extended

@@ -139,7 +139,8 @@
       >
         @for (option of filteredNewDeviceOptions | async; track option.id) {
           <mat-option [value]="option.barcode">
-            {{ option.name }} - {{ option.manufacturer }} {{ option.model }}
+            {{ option.name }} - {{ option.manufacturer }} {{ option.model }} -
+            {{ option.assetTag }}
           </mat-option>
         }
       </mat-autocomplete>

@@ -19,7 +19,6 @@
 
   <mat-card-content>
     <section class="device-section">
-      <h3 class="device-section__title">Azonosítás</h3>
       <div class="field-grid">
         @if (device.assetTag) {
           <div class="field">
@@ -51,21 +50,26 @@
             <span class="value">{{ device.location }}</span>
           </div>
         }
-        @if (device.owner.name) {
-          <div class="field">
-            <span class="label">Tulajdonos</span>
-            <span class="value">{{ device.owner.name }}</span>
-          </div>
-        }
       </div>
     </section>
 
     <mat-divider></mat-divider>
 
-    @if (device.acquisitionSource || device.acquisitionDate || device.warrantyEndDate) {
+    @if (
+      device.owner.name ||
+      device.acquisitionSource ||
+      device.acquisitionDate ||
+      device.warrantyEndDate
+    ) {
       <section class="device-section">
         <h3 class="device-section__title">Beszerzés</h3>
         <div class="field-grid">
+          @if (device.owner.name) {
+            <div class="field">
+              <span class="label">Tulajdonos</span>
+              <span class="value">{{ device.owner.name }}</span>
+            </div>
+          }
           @if (device.acquisitionSource) {
             <div class="field">
               <span class="label">Forrás</span>
@@ -116,6 +120,27 @@
       <section class="device-section">
         <h3 class="device-section__title">Megjegyzés</h3>
         <p class="device-notes">{{ device.notes }}</p>
+      </section>
+    }
+    @if (containers.length) {
+      <mat-divider></mat-divider>
+
+      <section class="device-section">
+        <h3 class="device-section__title">Ládában</h3>
+        @for (container of containers; track container.id) {
+          <div class="field-grid container-row">
+            <div class="field">
+              <span class="label">{{ container.assetTag }}</span>
+              <span class="value">{{ container.name }}</span>
+            </div>
+            @if (container.location) {
+              <div class="field">
+                <span class="label">Tárolási hely</span>
+                <span class="value">{{ container.location }}</span>
+              </div>
+            }
+          </div>
+        }
       </section>
     }
   </mat-card-content>

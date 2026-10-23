@@ -43,3 +43,16 @@ export function findByBarcode<T>(
 
   return undefined;
 }
+
+/** CSV (header + one row per item) of the barcode and asset tag content, ready to paste into label printing software. */
+export function buildBarcodeCsv(items: { barcode: string; assetTag: string }[]): string {
+  const escape = (value: string | null | undefined) => {
+    const text = value ?? '';
+    return /[",\r\n]/.test(text) ? `"${text.replace(/"/g, '""')}"` : text;
+  };
+
+  return [
+    'barcode,assetTag',
+    ...items.map((item) => `${escape(item.barcode)},${escape(item.assetTag)}`),
+  ].join('\n');
+}

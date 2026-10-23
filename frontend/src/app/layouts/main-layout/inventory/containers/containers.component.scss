@@ -181,6 +181,18 @@ th.mat-mdc-header-cell {
   }
 }
 
+.tools-row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  column-gap: 16px;
+}
+
+.copy-barcodes-button {
+  margin-left: auto;
+  align-self: center;
+}
+
 .date-range-row {
   display: flex;
   flex-direction: row;

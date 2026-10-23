@@ -28,6 +28,7 @@ import { DecimalPipe } from '@angular/common';
 import { MatSortModule, Sort } from '@angular/material/sort';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { buildBarcodeCsv } from '../../../../util/barcodeHandler';
 import {
   MatExpansionPanel,
   MatExpansionPanelHeader,
@@ -483,6 +484,29 @@ export class ContainersComponent implements OnInit {
     }
 
     return true;
+  }
+
+  protected copyBarcodesToClipboard() {
+    navigator.clipboard.writeText(buildBarcodeCsv(this.filteredContainers)).then(
+      () =>
+        this.snackBar.open(
+          `${this.filteredContainers.length} tétel vonalkódja a vágólapra másolva!`,
+          'Rendben',
+          {
+            duration: 3000,
+            horizontalPosition: 'right',
+            verticalPosition: 'top',
+            panelClass: ['success-snackbar'],
+          },
+        ),
+      () =>
+        this.snackBar.open('Nem sikerült a vágólapra másolni!', 'Értem', {
+          duration: 4000,
+          horizontalPosition: 'right',
+          verticalPosition: 'top',
+          panelClass: ['error-snackbar'],
+        }),
+    );
   }
 
   private formatRangeDate(date: Date | null | undefined): string {

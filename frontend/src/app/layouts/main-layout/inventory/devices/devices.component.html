@@ -61,6 +61,15 @@
   </mat-expansion-panel-header>
 
   <div class="tools-row">
+    <mat-form-field class="status-field">
+      <mat-label>Állapot</mat-label>
+      <mat-select [formControl]="statusControl" multiple>
+        @for (status of statuses; track status) {
+          <mat-option [value]="status">{{ statusLabels[status] }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
     <div class="date-range-row">
       <mat-form-field class="date-range-field">
         <mat-label>Utoljára szerkesztve</mat-label>
@@ -84,14 +93,15 @@
       </button>
     </div>
 
-    <mat-form-field class="status-field">
-      <mat-label>Állapot</mat-label>
-      <mat-select [formControl]="statusControl" multiple>
-        @for (status of statuses; track status) {
-          <mat-option [value]="status">{{ statusLabels[status] }}</mat-option>
-        }
-      </mat-select>
-    </mat-form-field>
+    <button
+      mat-stroked-button
+      type="button"
+      class="copy-barcodes-button mb-4"
+      (click)="copyBarcodesToClipboard()"
+    >
+      <mat-icon>content_copy</mat-icon>
+      Vonalkódok másolása
+    </button>
   </div>
 </mat-expansion-panel>
 

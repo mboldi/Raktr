@@ -60,28 +60,40 @@
     <mat-panel-title>Admin eszközök</mat-panel-title>
   </mat-expansion-panel-header>
 
-  <div class="date-range-row">
-    <mat-form-field class="date-range-field">
-      <mat-label>Utoljára szerkesztve</mat-label>
-      <mat-date-range-input [formGroup]="editedRange" [rangePicker]="editedPicker">
-        <input matStartDate formControlName="start" placeholder="Tól" />
-        <input matEndDate formControlName="end" placeholder="Ig" />
-      </mat-date-range-input>
-      <mat-datepicker-toggle matIconSuffix [for]="editedPicker"></mat-datepicker-toggle>
-      <mat-date-range-picker #editedPicker></mat-date-range-picker>
-    </mat-form-field>
-    @if (editedRange.value.start || editedRange.value.end) {
-      <button
-        mat-icon-button
-        type="button"
-        class="mb-4"
-        aria-label="Dátumszűrő törlése"
-        matTooltip="Dátumszűrő törlése"
-        (click)="editedRange.reset()"
-      >
-        <mat-icon>close</mat-icon>
-      </button>
-    }
+  <div class="tools-row">
+    <div class="date-range-row">
+      <mat-form-field class="date-range-field">
+        <mat-label>Utoljára szerkesztve</mat-label>
+        <mat-date-range-input [formGroup]="editedRange" [rangePicker]="editedPicker">
+          <input matStartDate formControlName="start" placeholder="Tól" />
+          <input matEndDate formControlName="end" placeholder="Ig" />
+        </mat-date-range-input>
+        <mat-datepicker-toggle matIconSuffix [for]="editedPicker"></mat-datepicker-toggle>
+        <mat-date-range-picker #editedPicker></mat-date-range-picker>
+      </mat-form-field>
+      @if (editedRange.value.start || editedRange.value.end) {
+        <button
+          mat-icon-button
+          type="button"
+          class="mb-4"
+          aria-label="Dátumszűrő törlése"
+          matTooltip="Dátumszűrő törlése"
+          (click)="editedRange.reset()"
+        >
+          <mat-icon>close</mat-icon>
+        </button>
+      }
+    </div>
+
+    <button
+      mat-stroked-button
+      type="button"
+      class="copy-barcodes-button mb-4"
+      (click)="copyBarcodesToClipboard()"
+    >
+      <mat-icon>content_copy</mat-icon>
+      Vonalkódok másolása
+    </button>
   </div>
 </mat-expansion-panel>
 

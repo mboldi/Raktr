@@ -175,7 +175,9 @@ mat-card-title,
     margin-left: 16px;
   }
 
+  // Stays on the right next to the title/search, and on the right edge of its own line when it wraps.
   .add-button {
+    margin-left: auto;
   }
 
   .search-box {

@@ -40,7 +40,7 @@
       }
     </div>
 
-    @if (hasActiveFilters()) {
+    @if (hasActiveFilters() && !isMobile()) {
       <mat-chip-set class="active-filters-row" aria-label="Aktív szűrők">
         @for (chip of activeFilterChips(); track chip.label) {
           <mat-chip [removable]="true" (removed)="chip.remove()">
@@ -55,55 +55,59 @@
   </div>
 </mat-card>
 
-<mat-expansion-panel class="admin-tools-panel">
-  <mat-expansion-panel-header>
-    <mat-panel-title>Admin eszközök</mat-panel-title>
-  </mat-expansion-panel-header>
+@if (!isMobile()) {
+  <mat-expansion-panel class="admin-tools-panel">
+    <mat-expansion-panel-header>
+      <mat-panel-title>Admin eszközök</mat-panel-title>
+    </mat-expansion-panel-header>
 
-  <div class="tools-row">
-    <mat-form-field class="status-field">
-      <mat-label>Állapot</mat-label>
-      <mat-select [formControl]="statusControl" multiple>
-        @for (status of statuses; track status) {
-          <mat-option [value]="status">{{ statusLabels[status] }}</mat-option>
-        }
-      </mat-select>
-    </mat-form-field>
-
-    <div class="date-range-row">
-      <mat-form-field class="date-range-field">
-        <mat-label>Utoljára szerkesztve</mat-label>
-        <mat-date-range-input [formGroup]="editedRange" [rangePicker]="editedPicker">
-          <input matStartDate formControlName="start" placeholder="Tól" />
-          <input matEndDate formControlName="end" placeholder="Ig" />
-        </mat-date-range-input>
-        <mat-datepicker-toggle matIconSuffix [for]="editedPicker"></mat-datepicker-toggle>
-        <mat-date-range-picker #editedPicker></mat-date-range-picker>
+    <div class="tools-row">
+      <mat-form-field class="status-field">
+        <mat-label>Állapot</mat-label>
+        <mat-select [formControl]="statusControl" multiple>
+          @for (status of statuses; track status) {
+            <mat-option [value]="status">{{ statusLabels[status] }}</mat-option>
+          }
+        </mat-select>
       </mat-form-field>
+
+      <div class="date-range-row">
+        <mat-form-field class="date-range-field">
+          <mat-label>Utoljára szerkesztve</mat-label>
+          <mat-date-range-input [formGroup]="editedRange" [rangePicker]="editedPicker">
+            <input matStartDate formControlName="start" placeholder="Tól" />
+            <input matEndDate formControlName="end" placeholder="Ig" />
+          </mat-date-range-input>
+          <mat-datepicker-toggle matIconSuffix [for]="editedPicker"></mat-datepicker-toggle>
+          <mat-date-range-picker #editedPicker></mat-date-range-picker>
+        </mat-form-field>
+        <button
+          mat-icon-button
+          type="button"
+          class="mb-4"
+          aria-label="Dátumszűrő törlése"
+          matTooltip="Dátumszűrő törlése"
+          [style.visibility]="
+            editedRange.value.start || editedRange.value.end ? 'visible' : 'hidden'
+          "
+          (click)="editedRange.reset()"
+        >
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+
       <button
-        mat-icon-button
+        mat-stroked-button
         type="button"
-        class="mb-4"
-        aria-label="Dátumszűrő törlése"
-        matTooltip="Dátumszűrő törlése"
-        [style.visibility]="editedRange.value.start || editedRange.value.end ? 'visible' : 'hidden'"
-        (click)="editedRange.reset()"
+        class="copy-barcodes-button mb-4"
+        (click)="copyBarcodesToClipboard()"
       >
-        <mat-icon>close</mat-icon>
+        <mat-icon>content_copy</mat-icon>
+        Vonalkódok másolása
       </button>
     </div>
-
-    <button
-      mat-stroked-button
-      type="button"
-      class="copy-barcodes-button mb-4"
-      (click)="copyBarcodesToClipboard()"
-    >
-      <mat-icon>content_copy</mat-icon>
-      Vonalkódok másolása
-    </button>
-  </div>
-</mat-expansion-panel>
+  </mat-expansion-panel>
+}
 
 <ng-template #checkboxFilterPopover let-label="label" let-options="options" let-selected="selected">
   <div class="filter-backdrop" aria-hidden="true" (click)="closeFilterPanel()"></div>
@@ -169,7 +173,8 @@
     matSortDirection="asc"
     (matSortChange)="announceSortChange($event)"
     [dataSource]="pagedDevices"
-    class="mat-elevation-z8"
+    class="mat-elevation-z8 devices-table"
+    [class.mobile]="isMobile()"
   >
     <ng-container matColumnDef="name">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Név</th>
@@ -183,33 +188,35 @@
 
     <ng-container matColumnDef="maker">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>
-        <span
-          class="filter-anchor"
-          aria-hidden="true"
-          [class.filter-anchor-open]="openFilterColumn === 'maker'"
-          (click)="$event.stopPropagation()"
-        >
-          <button
-            mat-icon-button
-            class="th-filter-button"
-            [class.filter-button-active]="selectedMakers.size > 0"
-            (click)="toggleColumnFilter('maker', $event)"
+        @if (!isMobile()) {
+          <span
+            class="filter-anchor"
+            aria-hidden="true"
+            [class.filter-anchor-open]="openFilterColumn === 'maker'"
+            (click)="$event.stopPropagation()"
           >
-            <mat-icon>filter_alt</mat-icon>
-          </button>
-          @if (openFilterColumn === 'maker') {
-            <ng-container
-              *ngTemplateOutlet="
-                checkboxFilterPopover;
-                context: {
-                  label: 'Gyártó szűrése',
-                  options: visibleMakers,
-                  selected: selectedMakers,
-                }
-              "
-            ></ng-container>
-          }
-        </span>
+            <button
+              mat-icon-button
+              class="th-filter-button"
+              [class.filter-button-active]="selectedMakers.size > 0"
+              (click)="toggleColumnFilter('maker', $event)"
+            >
+              <mat-icon>filter_alt</mat-icon>
+            </button>
+            @if (openFilterColumn === 'maker') {
+              <ng-container
+                *ngTemplateOutlet="
+                  checkboxFilterPopover;
+                  context: {
+                    label: 'Gyártó szűrése',
+                    options: visibleMakers,
+                    selected: selectedMakers,
+                  }
+                "
+              ></ng-container>
+            }
+          </span>
+        }
         <span class="th-label">Gyártó</span>
       </th>
       <td mat-cell *matCellDef="let device">{{ device.manufacturer }}</td>
@@ -217,33 +224,35 @@
 
     <ng-container matColumnDef="model">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>
-        <span
-          class="filter-anchor"
-          aria-hidden="true"
-          [class.filter-anchor-open]="openFilterColumn === 'model'"
-          (click)="$event.stopPropagation()"
-        >
-          <button
-            mat-icon-button
-            class="th-filter-button"
-            [class.filter-button-active]="selectedModels.size > 0"
-            (click)="toggleColumnFilter('model', $event)"
+        @if (!isMobile()) {
+          <span
+            class="filter-anchor"
+            aria-hidden="true"
+            [class.filter-anchor-open]="openFilterColumn === 'model'"
+            (click)="$event.stopPropagation()"
           >
-            <mat-icon>filter_alt</mat-icon>
-          </button>
-          @if (openFilterColumn === 'model') {
-            <ng-container
-              *ngTemplateOutlet="
-                checkboxFilterPopover;
-                context: {
-                  label: 'Típus szűrése',
-                  options: visibleModels,
-                  selected: selectedModels,
-                }
-              "
-            ></ng-container>
-          }
-        </span>
+            <button
+              mat-icon-button
+              class="th-filter-button"
+              [class.filter-button-active]="selectedModels.size > 0"
+              (click)="toggleColumnFilter('model', $event)"
+            >
+              <mat-icon>filter_alt</mat-icon>
+            </button>
+            @if (openFilterColumn === 'model') {
+              <ng-container
+                *ngTemplateOutlet="
+                  checkboxFilterPopover;
+                  context: {
+                    label: 'Típus szűrése',
+                    options: visibleModels,
+                    selected: selectedModels,
+                  }
+                "
+              ></ng-container>
+            }
+          </span>
+        }
         <span class="th-label">Típus</span>
       </th>
       <td mat-cell *matCellDef="let device">{{ device.model }}</td>
@@ -256,33 +265,35 @@
 
     <ng-container matColumnDef="category">
       <th mat-header-cell *matHeaderCellDef>
-        <span
-          class="filter-anchor"
-          aria-hidden="true"
-          [class.filter-anchor-open]="openFilterColumn === 'category'"
-          (click)="$event.stopPropagation()"
-        >
-          <button
-            mat-icon-button
-            class="th-filter-button"
-            [class.filter-button-active]="selectedCategories.size > 0"
-            (click)="toggleColumnFilter('category', $event)"
+        @if (!isMobile()) {
+          <span
+            class="filter-anchor"
+            aria-hidden="true"
+            [class.filter-anchor-open]="openFilterColumn === 'category'"
+            (click)="$event.stopPropagation()"
           >
-            <mat-icon>filter_alt</mat-icon>
-          </button>
-          @if (openFilterColumn === 'category') {
-            <ng-container
-              *ngTemplateOutlet="
-                checkboxFilterPopover;
-                context: {
-                  label: 'Kategória szűrése',
-                  options: visibleCategories,
-                  selected: selectedCategories,
-                }
-              "
-            ></ng-container>
-          }
-        </span>
+            <button
+              mat-icon-button
+              class="th-filter-button"
+              [class.filter-button-active]="selectedCategories.size > 0"
+              (click)="toggleColumnFilter('category', $event)"
+            >
+              <mat-icon>filter_alt</mat-icon>
+            </button>
+            @if (openFilterColumn === 'category') {
+              <ng-container
+                *ngTemplateOutlet="
+                  checkboxFilterPopover;
+                  context: {
+                    label: 'Kategória szűrése',
+                    options: visibleCategories,
+                    selected: selectedCategories,
+                  }
+                "
+              ></ng-container>
+            }
+          </span>
+        }
         <span class="th-label">Kategória</span>
       </th>
       <td mat-cell *matCellDef="let device">{{ device.category }}</td>
@@ -290,33 +301,35 @@
 
     <ng-container matColumnDef="location">
       <th mat-header-cell *matHeaderCellDef>
-        <span
-          class="filter-anchor"
-          aria-hidden="true"
-          [class.filter-anchor-open]="openFilterColumn === 'location'"
-          (click)="$event.stopPropagation()"
-        >
-          <button
-            mat-icon-button
-            class="th-filter-button"
-            [class.filter-button-active]="selectedLocations.size > 0"
-            (click)="toggleColumnFilter('location', $event)"
+        @if (!isMobile()) {
+          <span
+            class="filter-anchor"
+            aria-hidden="true"
+            [class.filter-anchor-open]="openFilterColumn === 'location'"
+            (click)="$event.stopPropagation()"
           >
-            <mat-icon>filter_alt</mat-icon>
-          </button>
-          @if (openFilterColumn === 'location') {
-            <ng-container
-              *ngTemplateOutlet="
-                checkboxFilterPopover;
-                context: {
-                  label: 'Tárolási hely szűrése',
-                  options: visibleLocations,
-                  selected: selectedLocations,
-                }
-              "
-            ></ng-container>
-          }
-        </span>
+            <button
+              mat-icon-button
+              class="th-filter-button"
+              [class.filter-button-active]="selectedLocations.size > 0"
+              (click)="toggleColumnFilter('location', $event)"
+            >
+              <mat-icon>filter_alt</mat-icon>
+            </button>
+            @if (openFilterColumn === 'location') {
+              <ng-container
+                *ngTemplateOutlet="
+                  checkboxFilterPopover;
+                  context: {
+                    label: 'Tárolási hely szűrése',
+                    options: visibleLocations,
+                    selected: selectedLocations,
+                  }
+                "
+              ></ng-container>
+            }
+          </span>
+        }
         <span class="th-label">Tárolási hely</span>
       </th>
       <td mat-cell *matCellDef="let device">{{ device.location }}</td>
@@ -324,33 +337,35 @@
 
     <ng-container matColumnDef="owner">
       <th mat-header-cell *matHeaderCellDef>
-        <span
-          class="filter-anchor"
-          aria-hidden="true"
-          [class.filter-anchor-open]="openFilterColumn === 'owner'"
-          (click)="$event.stopPropagation()"
-        >
-          <button
-            mat-icon-button
-            class="th-filter-button"
-            [class.filter-button-active]="selectedOwners.size > 0"
-            (click)="toggleColumnFilter('owner', $event)"
+        @if (!isMobile()) {
+          <span
+            class="filter-anchor"
+            aria-hidden="true"
+            [class.filter-anchor-open]="openFilterColumn === 'owner'"
+            (click)="$event.stopPropagation()"
           >
-            <mat-icon>filter_alt</mat-icon>
-          </button>
-          @if (openFilterColumn === 'owner') {
-            <ng-container
-              *ngTemplateOutlet="
-                checkboxFilterPopover;
-                context: {
-                  label: 'Tulajdonos szűrése',
-                  options: visibleOwners,
-                  selected: selectedOwners,
-                }
-              "
-            ></ng-container>
-          }
-        </span>
+            <button
+              mat-icon-button
+              class="th-filter-button"
+              [class.filter-button-active]="selectedOwners.size > 0"
+              (click)="toggleColumnFilter('owner', $event)"
+            >
+              <mat-icon>filter_alt</mat-icon>
+            </button>
+            @if (openFilterColumn === 'owner') {
+              <ng-container
+                *ngTemplateOutlet="
+                  checkboxFilterPopover;
+                  context: {
+                    label: 'Tulajdonos szűrése',
+                    options: visibleOwners,
+                    selected: selectedOwners,
+                  }
+                "
+              ></ng-container>
+            }
+          </span>
+        }
         <span class="th-label">Tulajdonos</span>
       </th>
       <td mat-cell *matCellDef="let device">{{ device.owner?.name }}</td>

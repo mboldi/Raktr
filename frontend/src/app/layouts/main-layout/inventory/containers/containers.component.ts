@@ -73,6 +73,7 @@ const ALL_COLUMNS: string[] = [
   'totalWeight',
 ];
 const REDUCED_COLUMNS: string[] = ['name', 'assetTag', 'location', 'itemCount'];
+const MOBILE_COLUMNS: string[] = ['name', 'assetTag'];
 
 @Component({
   selector: 'app-containers',
@@ -126,6 +127,7 @@ const REDUCED_COLUMNS: string[] = ['name', 'assetTag', 'location', 'itemCount'];
 })
 export class ContainersComponent implements OnInit {
   private windowService = inject(WindowWidthService);
+  protected isMobile = this.windowService.isMobile;
   private dialog = inject(MatDialog);
   private localStorageService = inject(LocalStorageService);
   private containerService = inject(ContainerService);
@@ -183,7 +185,11 @@ export class ContainersComponent implements OnInit {
 
     effect(() => {
       const width = this.windowService.windowWidth();
-      this.displayedColumns = width >= 1200 ? ALL_COLUMNS : REDUCED_COLUMNS;
+      if (this.windowService.isMobile()) {
+        this.displayedColumns = MOBILE_COLUMNS;
+      } else {
+        this.displayedColumns = width >= 1200 ? ALL_COLUMNS : REDUCED_COLUMNS;
+      }
     });
   }
 

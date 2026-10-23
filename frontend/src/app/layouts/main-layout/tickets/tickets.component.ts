@@ -66,6 +66,7 @@ const ALL_COLUMNS: string[] = [
   'comments',
 ];
 const REDUCED_COLUMNS: string[] = ['severity', 'id', 'status', 'createdAt', 'device'];
+const MOBILE_COLUMNS: string[] = ['severity', 'status', 'device'];
 
 @Component({
   selector: 'app-tickets',
@@ -112,6 +113,7 @@ const REDUCED_COLUMNS: string[] = ['severity', 'id', 'status', 'createdAt', 'dev
 })
 export class TicketsComponent implements OnInit {
   private windowService = inject(WindowWidthService);
+  protected isMobile = this.windowService.isMobile;
   private localStorageService = inject(LocalStorageService);
   private ticketService = inject(TicketService);
   private dialog = inject(MatDialog);
@@ -172,7 +174,11 @@ export class TicketsComponent implements OnInit {
 
     effect(() => {
       const width = this.windowService.windowWidth();
-      this.displayedColumns = width >= 1200 ? ALL_COLUMNS : REDUCED_COLUMNS;
+      if (this.windowService.isMobile()) {
+        this.displayedColumns = MOBILE_COLUMNS;
+      } else {
+        this.displayedColumns = width >= 1200 ? ALL_COLUMNS : REDUCED_COLUMNS;
+      }
     });
   }
 

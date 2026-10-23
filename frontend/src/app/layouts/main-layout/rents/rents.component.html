@@ -3,13 +3,15 @@
     <div class="header-title-group">
       <h2>Kivitelek kezelése</h2>
 
-      <mat-slide-toggle
-        class="show-closed-toggle"
-        [checked]="showClosedRents"
-        (change)="toggleShowClosedRents($event.checked)"
-      >
-        Lezárt kivitelek mutatása
-      </mat-slide-toggle>
+      @if (!isMobile()) {
+        <mat-slide-toggle
+          class="show-closed-toggle"
+          [checked]="showClosedRents"
+          (change)="toggleShowClosedRents($event.checked)"
+        >
+          Lezárt kivitelek mutatása
+        </mat-slide-toggle>
+      }
     </div>
 
     @if (canCreate) {
@@ -129,7 +131,8 @@
     matSortDirection="desc"
     (matSortChange)="announceSortChange($event)"
     [dataSource]="pagedRents"
-    class="mat-elevation-z8"
+    class="mat-elevation-z8 rents-table"
+    [class.mobile]="isMobile()"
   >
     <ng-container matColumnDef="status">
       <th mat-header-cell *matHeaderCellDef></th>
@@ -144,33 +147,35 @@
 
     <ng-container matColumnDef="issuer">
       <th mat-header-cell *matHeaderCellDef>
-        <span
-          class="filter-anchor"
-          aria-hidden="true"
-          [class.filter-anchor-open]="openFilterColumn === 'issuer'"
-          (click)="$event.stopPropagation()"
-        >
-          <button
-            mat-icon-button
-            class="th-filter-button"
-            [class.filter-button-active]="selectedIssuers.size > 0"
-            (click)="toggleColumnFilter('issuer', $event)"
+        @if (!isMobile()) {
+          <span
+            class="filter-anchor"
+            aria-hidden="true"
+            [class.filter-anchor-open]="openFilterColumn === 'issuer'"
+            (click)="$event.stopPropagation()"
           >
-            <mat-icon>filter_alt</mat-icon>
-          </button>
-          @if (openFilterColumn === 'issuer') {
-            <ng-container
-              *ngTemplateOutlet="
-                checkboxFilterPopover;
-                context: {
-                  label: 'Kiadó szűrése',
-                  options: visibleIssuers,
-                  selected: selectedIssuers,
-                }
-              "
-            ></ng-container>
-          }
-        </span>
+            <button
+              mat-icon-button
+              class="th-filter-button"
+              [class.filter-button-active]="selectedIssuers.size > 0"
+              (click)="toggleColumnFilter('issuer', $event)"
+            >
+              <mat-icon>filter_alt</mat-icon>
+            </button>
+            @if (openFilterColumn === 'issuer') {
+              <ng-container
+                *ngTemplateOutlet="
+                  checkboxFilterPopover;
+                  context: {
+                    label: 'Kiadó szűrése',
+                    options: visibleIssuers,
+                    selected: selectedIssuers,
+                  }
+                "
+              ></ng-container>
+            }
+          </span>
+        }
         <span class="th-label">Kiadó</span>
       </th>
       <td mat-cell *matCellDef="let rent">{{ rent.issuer?.displayName }}</td>
@@ -178,33 +183,35 @@
 
     <ng-container matColumnDef="renter">
       <th mat-header-cell *matHeaderCellDef>
-        <span
-          class="filter-anchor"
-          aria-hidden="true"
-          [class.filter-anchor-open]="openFilterColumn === 'renter'"
-          (click)="$event.stopPropagation()"
-        >
-          <button
-            mat-icon-button
-            class="th-filter-button"
-            [class.filter-button-active]="selectedRenters.size > 0"
-            (click)="toggleColumnFilter('renter', $event)"
+        @if (!isMobile()) {
+          <span
+            class="filter-anchor"
+            aria-hidden="true"
+            [class.filter-anchor-open]="openFilterColumn === 'renter'"
+            (click)="$event.stopPropagation()"
           >
-            <mat-icon>filter_alt</mat-icon>
-          </button>
-          @if (openFilterColumn === 'renter') {
-            <ng-container
-              *ngTemplateOutlet="
-                checkboxFilterPopover;
-                context: {
-                  label: 'Felelősségvállaló szűrése',
-                  options: visibleRenters,
-                  selected: selectedRenters,
-                }
-              "
-            ></ng-container>
-          }
-        </span>
+            <button
+              mat-icon-button
+              class="th-filter-button"
+              [class.filter-button-active]="selectedRenters.size > 0"
+              (click)="toggleColumnFilter('renter', $event)"
+            >
+              <mat-icon>filter_alt</mat-icon>
+            </button>
+            @if (openFilterColumn === 'renter') {
+              <ng-container
+                *ngTemplateOutlet="
+                  checkboxFilterPopover;
+                  context: {
+                    label: 'Felelősségvállaló szűrése',
+                    options: visibleRenters,
+                    selected: selectedRenters,
+                  }
+                "
+              ></ng-container>
+            }
+          </span>
+        }
         <span class="th-label">Felelősségvállaló</span>
       </th>
       <td mat-cell *matCellDef="let rent">{{ rent.renterName }}</td>

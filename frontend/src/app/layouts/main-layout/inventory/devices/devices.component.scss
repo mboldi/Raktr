@@ -1,8 +1,10 @@
 .header-title-row {
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
+  gap: 8px 16px;
 }
 
 .list-header-actions-row {
@@ -202,4 +204,21 @@ th.mat-mdc-header-cell {
 .date-range-field,
 .status-field {
   width: 350px;
+}
+
+// On a phone the table has to fit the screen width: columns share it equally and long text wraps.
+.devices-table.mobile {
+  width: 100%;
+  table-layout: fixed;
+
+  th.mat-mdc-header-cell {
+    white-space: normal;
+  }
+
+  th,
+  td {
+    padding: 0 8px;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
 }

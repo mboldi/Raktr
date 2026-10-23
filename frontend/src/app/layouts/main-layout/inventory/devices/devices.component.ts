@@ -84,6 +84,7 @@ const ALL_COLUMNS: string[] = [
   'weight',
 ];
 const REDUCED_COLUMNS: string[] = ['name', 'assetTag', 'maker', 'model'];
+const MOBILE_COLUMNS: string[] = ['name', 'assetTag', 'model'];
 
 @Component({
   selector: 'app-devices',
@@ -139,6 +140,7 @@ const REDUCED_COLUMNS: string[] = ['name', 'assetTag', 'maker', 'model'];
 })
 export class DevicesComponent implements OnInit {
   private windowService = inject(WindowWidthService);
+  protected isMobile = this.windowService.isMobile;
   private dialog = inject(MatDialog);
   private localStorageService = inject(LocalStorageService);
   private snackBar = inject(MatSnackBar);
@@ -209,7 +211,11 @@ export class DevicesComponent implements OnInit {
 
     effect(() => {
       const width = this.windowService.windowWidth();
-      this.displayedColumns = width >= 1200 ? ALL_COLUMNS : REDUCED_COLUMNS;
+      if (this.windowService.isMobile()) {
+        this.displayedColumns = MOBILE_COLUMNS;
+      } else {
+        this.displayedColumns = width >= 1200 ? ALL_COLUMNS : REDUCED_COLUMNS;
+      }
     });
   }
 

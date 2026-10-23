@@ -55,6 +55,7 @@ const ALL_COLUMNS: string[] = [
   'totalWeight',
 ];
 const REDUCED_COLUMNS: string[] = ['status', 'issuer', 'renter', 'destination', 'outDate'];
+const MOBILE_COLUMNS: string[] = ['renter', 'destination', 'outDate'];
 
 @Component({
   selector: 'app-rents',
@@ -102,6 +103,7 @@ const REDUCED_COLUMNS: string[] = ['status', 'issuer', 'renter', 'destination', 
 })
 export class RentsComponent implements OnInit {
   private windowService = inject(WindowWidthService);
+  protected isMobile = this.windowService.isMobile;
   private localStorageService = inject(LocalStorageService);
   private rentService = inject(RentService);
   private containerService = inject(ContainerService);
@@ -150,7 +152,11 @@ export class RentsComponent implements OnInit {
 
     effect(() => {
       const width = this.windowService.windowWidth();
-      this.displayedColumns = width >= 1200 ? ALL_COLUMNS : REDUCED_COLUMNS;
+      if (this.windowService.isMobile()) {
+        this.displayedColumns = MOBILE_COLUMNS;
+      } else {
+        this.displayedColumns = width >= 1200 ? ALL_COLUMNS : REDUCED_COLUMNS;
+      }
     });
   }
 

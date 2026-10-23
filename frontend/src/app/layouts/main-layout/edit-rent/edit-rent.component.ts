@@ -33,6 +33,7 @@ import { RentPdfCreateDto } from '../../../model/rent/rentPdfCreateDto';
 import { UserDetails } from '../../../model/user/userDetails';
 import { RentService } from '../../../services/rent.service';
 import { AdminAccessService } from '../../../services/adminAccess.service';
+import { WindowWidthService } from '../../../services/windowWidth.service';
 import {
   AddScannableEvent,
   ItemQuantityChangedEvent,
@@ -72,6 +73,8 @@ export class EditRentComponent implements OnInit {
   private dialog = inject(MatDialog);
   private snackBar = inject(MatSnackBar);
   private cdr = inject(ChangeDetectorRef);
+  private windowService = inject(WindowWidthService);
+  protected isMobile = this.windowService.isMobile;
 
   @ViewChild(RentFormComponent) rentFormComponent!: RentFormComponent;
 

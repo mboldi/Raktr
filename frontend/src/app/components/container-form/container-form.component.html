@@ -134,6 +134,7 @@
 
       <mat-autocomplete
         #autoNewDevice="matAutocomplete"
+        class="scannable-autocomplete-panel"
         (optionSelected)="onDeviceOptionSelected()"
       >
         @for (option of filteredNewDeviceOptions | async; track option.id) {

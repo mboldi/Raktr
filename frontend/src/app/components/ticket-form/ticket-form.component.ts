@@ -148,15 +148,13 @@ export class TicketFormComponent implements OnInit {
       return [];
     }
 
-    return this.devices
-      .filter(
-        (device) =>
-          device.name.toLowerCase().includes(filter) ||
-          device.barcode.toLowerCase().includes(filter) ||
-          (device.model ?? '').toLowerCase().includes(filter) ||
-          (device.manufacturer ?? '').toLowerCase().includes(filter),
-      )
-      .slice(0, 5);
+    return this.devices.filter(
+      (device) =>
+        device.name.toLowerCase().includes(filter) ||
+        device.barcode.toLowerCase().includes(filter) ||
+        (device.model ?? '').toLowerCase().includes(filter) ||
+        (device.manufacturer ?? '').toLowerCase().includes(filter),
+    );
   }
 
   // MatAutocomplete's Enter-to-select handling runs on keydown and fires (optionSelected),

@@ -317,16 +317,14 @@ export class ContainerFormComponent implements OnInit {
       (this.containerData()?.items ?? []).map((item) => item.device.id),
     );
 
-    return this.devices
-      .filter(
-        (device) =>
-          !addedDeviceIds.has(device.id) &&
-          (device.name.toLowerCase().includes(filter) ||
-            device.barcode.toLowerCase().includes(filter) ||
-            (device.model ?? '').toLowerCase().includes(filter) ||
-            (device.manufacturer ?? '').toLowerCase().includes(filter)),
-      )
-      .slice(0, 5);
+    return this.devices.filter(
+      (device) =>
+        !addedDeviceIds.has(device.id) &&
+        (device.name.toLowerCase().includes(filter) ||
+          device.barcode.toLowerCase().includes(filter) ||
+          (device.model ?? '').toLowerCase().includes(filter) ||
+          (device.manufacturer ?? '').toLowerCase().includes(filter)),
+    );
   }
 
   protected displayOwner(owner: OwnerDetailsDto | string | null): string {

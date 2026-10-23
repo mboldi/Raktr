@@ -184,3 +184,9 @@ mat-card-title,
     justify-self: flex-end;
   }
 }
+
+// Autocomplete dropdowns for picking a device/container: tall result lists scroll instead of being cut off.
+.scannable-autocomplete-panel {
+  max-height: 240px !important;
+  overflow-y: auto !important;
+}

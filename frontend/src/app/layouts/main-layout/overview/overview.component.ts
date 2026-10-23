@@ -72,6 +72,8 @@ const REDUCED_COLUMNS: string[] = [
   'expectedReturnDate',
 ];
 
+const MOBILE_COLUMNS: string[] = ['destination', 'renter', 'outDate'];
+
 @Component({
   selector: 'app-overview',
   imports: [
@@ -145,7 +147,11 @@ export class OverviewComponent implements OnInit {
 
     effect(() => {
       const width = this.windowService.windowWidth();
-      this.displayedColumns = width >= 1200 ? ALL_COLUMNS : REDUCED_COLUMNS;
+      if (this.windowService.isMobile()) {
+        this.displayedColumns = MOBILE_COLUMNS;
+      } else {
+        this.displayedColumns = width >= 1200 ? ALL_COLUMNS : REDUCED_COLUMNS;
+      }
     });
 
     this.filteredSearchOptions = this.deviceSearchFormControl.valueChanges.pipe(

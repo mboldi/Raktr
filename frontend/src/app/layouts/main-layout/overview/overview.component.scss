@@ -67,3 +67,16 @@
     filter: brightness(1.15);
   }
 }
+
+// On a phone the table has to fit the screen width: long values wrap instead of pushing it off to the right.
+.rents-table.mobile {
+  width: 100%;
+  table-layout: fixed;
+
+  th,
+  td {
+    padding: 0 8px;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+}

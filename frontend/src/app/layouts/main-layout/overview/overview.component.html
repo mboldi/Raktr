@@ -132,7 +132,12 @@
               <p>Nincs aktív kivitel, mindenki nyugodtan pihenhet!</p>
             </div>
           } @else {
-            <table mat-table [dataSource]="activeRents">
+            <table
+              mat-table
+              class="rents-table"
+              [class.mobile]="isMobile()"
+              [dataSource]="activeRents"
+            >
               <ng-container matColumnDef="destination">
                 <th mat-header-cell *matHeaderCellDef>Kivitel célja</th>
                 <td mat-cell *matCellDef="let rent">{{ rent.destination }}</td>

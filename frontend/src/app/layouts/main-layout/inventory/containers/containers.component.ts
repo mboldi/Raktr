@@ -26,7 +26,13 @@ import { ContainerDetails } from '../../../../model/scannable/container/containe
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { DecimalPipe } from '@angular/common';
 import { MatSortModule, Sort } from '@angular/material/sort';
-import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import {
+  MatExpansionPanel,
+  MatExpansionPanelHeader,
+  MatExpansionPanelTitle,
+} from '@angular/material/expansion';
 import { MatIcon } from '@angular/material/icon';
 import { MatButton, MatFabButton, MatIconButton } from '@angular/material/button';
 import { MatCard } from '@angular/material/card';
@@ -104,6 +110,10 @@ const REDUCED_COLUMNS: string[] = ['name', 'assetTag', 'location', 'itemCount'];
     MatMenu,
     MatMenuItem,
     MatMenuTrigger,
+    MatDatepickerModule,
+    MatExpansionPanel,
+    MatExpansionPanelHeader,
+    MatExpansionPanelTitle,
   ],
   templateUrl: './containers.component.html',
   host: {
@@ -136,6 +146,10 @@ export class ContainersComponent implements OnInit {
   protected contextMenuContainer: ContainerDetails | null = null;
 
   protected containerSearchFormControl = new FormControl();
+  protected editedRange = new FormGroup({
+    start: new FormControl<Date | null>(null),
+    end: new FormControl<Date | null>(null),
+  });
   private searchFilter = '';
 
   protected displayedColumns = ALL_COLUMNS;
@@ -176,6 +190,8 @@ export class ContainersComponent implements OnInit {
     this.adminAccessService
       .canCreateContent()
       .subscribe((canCreate) => (this.canCreate = canCreate));
+
+    this.editedRange.valueChanges.subscribe(() => this.filterSortContainers());
 
     const readPageSize = this.localStorageService.read(environment.pageSizeKeys.containers);
     if (readPageSize) {
@@ -404,6 +420,7 @@ export class ContainersComponent implements OnInit {
     this.filteredContainers = this.containers.filter(
       (container) =>
         this.matchesSearch(container) &&
+        this.matchesEditedRange(container) &&
         (this.selectedCategories.size === 0 || this.selectedCategories.has(container.category)) &&
         (this.selectedLocations.size === 0 || this.selectedLocations.has(container.location)),
     );
@@ -451,6 +468,27 @@ export class ContainersComponent implements OnInit {
     return (a ?? '').localeCompare(b ?? '');
   }
 
+  private matchesEditedRange(container: ContainerDetails): boolean {
+    const { start, end } = this.editedRange.value;
+    const updatedAt = container.updatedAt.getTime();
+
+    if (start && updatedAt < start.getTime()) {
+      return false;
+    }
+    if (end) {
+      const endExclusive = new Date(end.getFullYear(), end.getMonth(), end.getDate() + 1);
+      if (updatedAt >= endExclusive.getTime()) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  private formatRangeDate(date: Date | null | undefined): string {
+    return date ? date.toLocaleDateString('hu-HU') : '…';
+  }
+
   private matchesSearch(container: ContainerDetails): boolean {
     const search = this.searchFilter.toLowerCase();
     return (
@@ -464,6 +502,7 @@ export class ContainersComponent implements OnInit {
     return this.containers.filter(
       (container) =>
         this.matchesSearch(container) &&
+        this.matchesEditedRange(container) &&
         (excludedFacet === 'category' ||
           this.selectedCategories.size === 0 ||
           this.selectedCategories.has(container.category)) &&
@@ -568,6 +607,13 @@ export class ContainersComponent implements OnInit {
     if (this.searchFilter) {
       chips.push({ label: `Keresés: ${this.searchFilter}`, remove: () => this.resetFilter() });
     }
+    const { start, end } = this.editedRange.value;
+    if (start || end) {
+      chips.push({
+        label: `Szerkesztve: ${this.formatRangeDate(start)} – ${this.formatRangeDate(end)}`,
+        remove: () => this.editedRange.reset(),
+      });
+    }
     for (const category of this.selectedCategories) {
       chips.push({
         label: `Kategória: ${category}`,
@@ -586,13 +632,18 @@ export class ContainersComponent implements OnInit {
 
   protected hasActiveFilters(): boolean {
     return (
-      this.selectedCategories.size > 0 || this.selectedLocations.size > 0 || !!this.searchFilter
+      this.selectedCategories.size > 0 ||
+      this.selectedLocations.size > 0 ||
+      !!this.searchFilter ||
+      !!this.editedRange.value.start ||
+      !!this.editedRange.value.end
     );
   }
 
   protected clearFilters() {
     this.selectedCategories.clear();
     this.selectedLocations.clear();
+    this.editedRange.reset();
     this.resetFilter();
   }
 }

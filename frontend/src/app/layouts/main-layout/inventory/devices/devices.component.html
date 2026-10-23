@@ -55,6 +55,36 @@
   </div>
 </mat-card>
 
+<mat-expansion-panel class="admin-tools-panel">
+  <mat-expansion-panel-header>
+    <mat-panel-title>Admin eszközök</mat-panel-title>
+  </mat-expansion-panel-header>
+
+  <div class="date-range-row">
+    <mat-form-field class="date-range-field">
+      <mat-label>Utoljára szerkesztve</mat-label>
+      <mat-date-range-input [formGroup]="editedRange" [rangePicker]="editedPicker">
+        <input matStartDate formControlName="start" placeholder="Tól" />
+        <input matEndDate formControlName="end" placeholder="Ig" />
+      </mat-date-range-input>
+      <mat-datepicker-toggle matIconSuffix [for]="editedPicker"></mat-datepicker-toggle>
+      <mat-date-range-picker #editedPicker></mat-date-range-picker>
+    </mat-form-field>
+    @if (editedRange.value.start || editedRange.value.end) {
+      <button
+        mat-icon-button
+        type="button"
+        class="mb-4"
+        aria-label="Dátumszűrő törlése"
+        matTooltip="Dátumszűrő törlése"
+        (click)="editedRange.reset()"
+      >
+        <mat-icon>close</mat-icon>
+      </button>
+    }
+  </div>
+</mat-expansion-panel>
+
 <ng-template #checkboxFilterPopover let-label="label" let-options="options" let-selected="selected">
   <div class="filter-backdrop" aria-hidden="true" (click)="closeFilterPanel()"></div>
   <mat-card class="filter-panel" [class.filter-panel-right]="panelAlignRight">

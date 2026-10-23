@@ -26,7 +26,13 @@ import { DeviceDetails } from '../../../../model/scannable/device/deviceDetails'
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { DecimalPipe } from '@angular/common';
 import { MatSortModule, Sort } from '@angular/material/sort';
-import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import {
+  MatExpansionPanel,
+  MatExpansionPanelHeader,
+  MatExpansionPanelTitle,
+} from '@angular/material/expansion';
 import { MatIcon } from '@angular/material/icon';
 import { MatButton, MatFabButton, MatIconButton } from '@angular/material/button';
 import { MatCard } from '@angular/material/card';
@@ -109,6 +115,10 @@ const REDUCED_COLUMNS: string[] = ['name', 'assetTag', 'maker', 'model'];
     MatMenu,
     MatMenuItem,
     MatMenuTrigger,
+    MatDatepickerModule,
+    MatExpansionPanel,
+    MatExpansionPanelHeader,
+    MatExpansionPanelTitle,
   ],
   templateUrl: './devices.component.html',
   host: {
@@ -142,6 +152,10 @@ export class DevicesComponent implements OnInit {
   protected contextMenuDevice: DeviceDetails | null = null;
 
   protected deviceSearchFormControl = new FormControl();
+  protected editedRange = new FormGroup({
+    start: new FormControl<Date | null>(null),
+    end: new FormControl<Date | null>(null),
+  });
   private searchFilter = '';
 
   protected displayedColumns = ALL_COLUMNS;
@@ -191,6 +205,8 @@ export class DevicesComponent implements OnInit {
     this.adminAccessService
       .canCreateContent()
       .subscribe((canCreate) => (this.canCreate = canCreate));
+
+    this.editedRange.valueChanges.subscribe(() => this.filterSortDevices());
 
     const readPageSize = this.localStorageService.read(environment.pageSizeKeys.devices);
     if (readPageSize) {
@@ -438,6 +454,7 @@ export class DevicesComponent implements OnInit {
     this.filteredDevices = this.devices.filter(
       (device) =>
         this.matchesSearch(device) &&
+        this.matchesEditedRange(device) &&
         (this.selectedCategories.size === 0 || this.selectedCategories.has(device.category)) &&
         (this.selectedLocations.size === 0 || this.selectedLocations.has(device.location)) &&
         (this.selectedOwners.size === 0 || this.selectedOwners.has(device.owner?.name ?? '')) &&
@@ -490,6 +507,27 @@ export class DevicesComponent implements OnInit {
     return (a ?? '').localeCompare(b ?? '');
   }
 
+  private matchesEditedRange(device: DeviceDetails): boolean {
+    const { start, end } = this.editedRange.value;
+    const updatedAt = device.updatedAt.getTime();
+
+    if (start && updatedAt < start.getTime()) {
+      return false;
+    }
+    if (end) {
+      const endExclusive = new Date(end.getFullYear(), end.getMonth(), end.getDate() + 1);
+      if (updatedAt >= endExclusive.getTime()) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  private formatRangeDate(date: Date | null | undefined): string {
+    return date ? date.toLocaleDateString('hu-HU') : '…';
+  }
+
   private matchesSearch(device: DeviceDetails): boolean {
     const search = this.searchFilter.toLowerCase();
     return (
@@ -506,6 +544,7 @@ export class DevicesComponent implements OnInit {
     return this.devices.filter(
       (device) =>
         this.matchesSearch(device) &&
+        this.matchesEditedRange(device) &&
         (excludedFacet === 'category' ||
           this.selectedCategories.size === 0 ||
           this.selectedCategories.has(device.category)) &&
@@ -637,6 +676,13 @@ export class DevicesComponent implements OnInit {
     if (this.searchFilter) {
       chips.push({ label: `Keresés: ${this.searchFilter}`, remove: () => this.resetFilter() });
     }
+    const { start, end } = this.editedRange.value;
+    if (start || end) {
+      chips.push({
+        label: `Szerkesztve: ${this.formatRangeDate(start)} – ${this.formatRangeDate(end)}`,
+        remove: () => this.editedRange.reset(),
+      });
+    }
     for (const maker of this.selectedMakers) {
       chips.push({
         label: `Gyártó: ${maker}`,
@@ -678,7 +724,9 @@ export class DevicesComponent implements OnInit {
       this.selectedOwners.size > 0 ||
       this.selectedMakers.size > 0 ||
       this.selectedModels.size > 0 ||
-      !!this.searchFilter
+      !!this.searchFilter ||
+      !!this.editedRange.value.start ||
+      !!this.editedRange.value.end
     );
   }
 
@@ -688,6 +736,7 @@ export class DevicesComponent implements OnInit {
     this.selectedOwners.clear();
     this.selectedMakers.clear();
     this.selectedModels.clear();
+    this.editedRange.reset();
     this.resetFilter();
   }
 }

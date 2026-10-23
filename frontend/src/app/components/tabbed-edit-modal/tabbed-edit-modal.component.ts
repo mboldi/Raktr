@@ -11,6 +11,7 @@ import {
 } from '@angular/material/dialog';
 import { MatTab, MatTabGroup, MatTabLabel } from '@angular/material/tabs';
 import { MatBadge } from '@angular/material/badge';
+import { MatTooltip } from '@angular/material/tooltip';
 import { DeviceDetails } from '../../model/scannable/device/deviceDetails';
 import { ScannableDetailsDto } from '../../model/scannable/scannableDetailsDto';
 import { MatIcon } from '@angular/material/icon';
@@ -94,6 +95,7 @@ const VIEW_DEFINITIONS: Record<TabbedEditModalKind, TabbedEditModalViewDefinitio
     TicketMiniListComponent,
     RentMiniListComponent,
     MatBadge,
+    MatTooltip,
   ],
   templateUrl: './tabbed-edit-modal.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,

@@ -27,7 +27,7 @@ export class AdminAccessService {
 
   isAdmin(): Observable<boolean> {
     return this.getCurrentUser().pipe(
-      map((user) => user.groups.includes(environment.adminGroupName)),
+      map((user) => user.groups.some((group) => environment.adminGroupNames.includes(group))),
     );
   }
 
@@ -43,7 +43,7 @@ export class AdminAccessService {
     return this.getCurrentUser().pipe(
       map(
         (user) =>
-          user.groups.includes(environment.adminGroupName) ||
+          user.groups.some((group) => environment.adminGroupNames.includes(group)) ||
           user.groups.some((group) => environment.fullAccessGroupNames.includes(group)),
       ),
     );

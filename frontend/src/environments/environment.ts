@@ -19,7 +19,7 @@ export const environment = {
 
   forceEan8Key: 'FORCE_EAN8',
 
-  adminGroupName: 'Admin',
+  adminGroupNames: ['Admin', 'Vezetőség', 'Főszerkesztő'],
   fullAccessGroupNames: ['Stúdiós', 'Vezetőség'],
 
   defaultOwnerName: 'SVIE',

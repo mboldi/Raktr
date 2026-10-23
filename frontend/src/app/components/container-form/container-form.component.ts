@@ -322,6 +322,7 @@ export class ContainerFormComponent implements OnInit {
         (device) =>
           !addedDeviceIds.has(device.id) &&
           (device.name.toLowerCase().includes(filter) ||
+            device.barcode.toLowerCase().includes(filter) ||
             (device.model ?? '').toLowerCase().includes(filter) ||
             (device.manufacturer ?? '').toLowerCase().includes(filter)),
       )

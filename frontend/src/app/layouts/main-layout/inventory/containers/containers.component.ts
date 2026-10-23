@@ -455,7 +455,8 @@ export class ContainersComponent implements OnInit {
     const search = this.searchFilter.toLowerCase();
     return (
       (container.name ?? '').toLowerCase().includes(search) ||
-      (container.assetTag ?? '').toLowerCase().includes(search)
+      (container.assetTag ?? '').toLowerCase().includes(search) ||
+      (container.barcode ?? '').toLowerCase().includes(search)
     );
   }
 

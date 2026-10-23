@@ -152,6 +152,7 @@ export class TicketFormComponent implements OnInit {
       .filter(
         (device) =>
           device.name.toLowerCase().includes(filter) ||
+          device.barcode.toLowerCase().includes(filter) ||
           (device.model ?? '').toLowerCase().includes(filter) ||
           (device.manufacturer ?? '').toLowerCase().includes(filter),
       )

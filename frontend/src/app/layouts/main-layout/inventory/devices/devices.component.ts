@@ -495,6 +495,7 @@ export class DevicesComponent implements OnInit {
     return (
       (device.name ?? '').toLowerCase().includes(search) ||
       (device.assetTag ?? '').toLowerCase().includes(search) ||
+      (device.barcode ?? '').toLowerCase().includes(search) ||
       (device.model ?? '').toLowerCase().includes(search)
     );
   }

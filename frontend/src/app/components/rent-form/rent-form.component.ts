@@ -388,6 +388,7 @@ export class RentFormComponent implements OnInit {
           (scannable) =>
             scannable.name.toLowerCase().includes(filter) ||
             scannable.assetTag.toLowerCase().includes(filter) ||
+            scannable.barcode.toLowerCase().includes(filter) ||
             (scannable instanceof DeviceDetails && scannable.model.toLowerCase().includes(filter)),
         )
         .slice(0, 50);
@@ -404,6 +405,7 @@ export class RentFormComponent implements OnInit {
           !scannable.deleted &&
           (scannable.name.toLowerCase().includes(filter) ||
             scannable.assetTag.toLowerCase().includes(filter) ||
+            scannable.barcode.toLowerCase().includes(filter) ||
             (scannable instanceof DeviceDetails && scannable.model.toLowerCase().includes(filter))),
       )
       .slice(0, 50);

@@ -255,7 +255,9 @@ export class OverviewComponent implements OnInit {
 
     if (matched) {
       this.openScannable(matched as DeviceDetails | ContainerDetails);
-    } else if (this.canCreate) {
+    } else if (this.canCreate && /^\d+$/.test(barcode)) {
+      // Only an all-digit value can be a barcode worth creating a device for - anything else was
+      // most likely a text search that just didn't match.
       this.offerCreateDevice(barcode);
     }
 

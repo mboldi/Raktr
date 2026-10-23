@@ -1,5 +1,5 @@
 import { Component, Type, ChangeDetectionStrategy, inject } from '@angular/core';
-import { NgComponentOutlet } from '@angular/common';
+import { DatePipe, NgComponentOutlet } from '@angular/common';
 import { MatButton, MatFabButton } from '@angular/material/button';
 import {
   MAT_DIALOG_DATA,
@@ -90,6 +90,7 @@ const VIEW_DEFINITIONS: Record<TabbedEditModalKind, TabbedEditModalViewDefinitio
     MatIcon,
     MatFabButton,
     NgComponentOutlet,
+    DatePipe,
     TicketMiniListComponent,
     RentMiniListComponent,
     MatBadge,

@@ -345,6 +345,7 @@ export class RentFormComponent implements OnInit {
     const columns = ['type', 'name', 'assetTag', 'quantity'];
 
     if (!isMobile) {
+      columns.splice(3, 0, 'location');
       columns.push('addedBy', 'weight');
     }
 

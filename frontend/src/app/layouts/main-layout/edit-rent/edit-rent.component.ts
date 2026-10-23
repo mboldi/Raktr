@@ -39,6 +39,11 @@ import {
   ItemStatusChangedEvent,
 } from '../../../components/rent-form/rent-form.component';
 import { YesnoModalComponent } from '../../../components/yesno-modal/yesno-modal.component';
+import {
+  RentPdfDialogData,
+  RentPdfDialogResult,
+  RentPdfModalComponent,
+} from '../../../components/rent-pdf-modal/rent-pdf-modal.component';
 
 @Component({
   selector: 'app-edit-rent',
@@ -362,18 +367,31 @@ export class EditRentComponent implements OnInit {
       return;
     }
 
-    const renterId = this.currentUser?.personalId;
-    if (!renterId) {
-      this.notify(
-        'Nincs beállítva személyi igazolvány szám a fiókodban - add meg a Beállítások oldalon!',
-        'error-snackbar',
-      );
-      return;
-    }
+    const user = this.currentUser;
+    const rent = this.rent;
 
+    this.dialog
+      .open(RentPdfModalComponent, {
+        width: '480px',
+        maxWidth: '95vw',
+        data: {
+          ownName: user ? `${user.familyName} ${user.givenName}` : '',
+          ownId: user?.personalId ?? null,
+          rentRenterName: rent.renterName,
+        } as RentPdfDialogData,
+      })
+      .afterClosed()
+      .subscribe((result?: RentPdfDialogResult) => {
+        if (result) {
+          this.requestPdf(rent, result);
+        }
+      });
+  }
+
+  private requestPdf(rent: RentDetails, { renterName, renterId }: RentPdfDialogResult) {
     this.exportingPdf = true;
 
-    this.rentService.getRentPdf(this.rent.id, new RentPdfCreateDto(renterId)).subscribe({
+    this.rentService.getRentPdf(rent.id, new RentPdfCreateDto(renterName, renterId)).subscribe({
       next: (pdf) => {
         this.exportingPdf = false;
         this.cdr.markForCheck();
@@ -381,7 +399,7 @@ export class EditRentComponent implements OnInit {
         const url = URL.createObjectURL(pdf);
         const link = document.createElement('a');
         link.href = url;
-        link.download = `kivitel-${this.rent!.id}.pdf`;
+        link.download = `kivitel-${rent.id}.pdf`;
         link.click();
         URL.revokeObjectURL(url);
       },

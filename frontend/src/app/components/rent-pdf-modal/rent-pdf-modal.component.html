@@ -1,0 +1,44 @@
+<h2 mat-dialog-title>PDF letöltése</h2>
+
+<mat-dialog-content class="pdf-content">
+  <p>Kinek az adataival készüljön a kiviteli PDF?</p>
+
+  <mat-radio-group [formControl]="source" class="options" aria-label="Felhasználandó adatok">
+    <mat-radio-button value="own" [disabled]="!data.ownId">
+      Saját adataim
+      <span class="detail">
+        @if (data.ownId) {
+          {{ data.ownName }} &ndash; {{ data.ownId }}
+        } @else {
+          Nincs beállítva személyi igazolvány szám a fiókodban (Beállítások oldal).
+        }
+      </span>
+    </mat-radio-button>
+
+    <mat-radio-button value="renter"> A kivitel felelősségvállalójának adatai </mat-radio-button>
+  </mat-radio-group>
+
+  @if (source.value === 'renter') {
+    <mat-form-field class="id-field">
+      <mat-label>Név</mat-label>
+      <input matInput [formControl]="renterNameControl" autocomplete="off" />
+    </mat-form-field>
+
+    <mat-form-field class="id-field">
+      <mat-label>Személyi igazolvány szám</mat-label>
+      <input
+        matInput
+        [formControl]="renterIdControl"
+        autocomplete="off"
+        (keyup.enter)="confirm()"
+      />
+    </mat-form-field>
+  }
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button [mat-dialog-close]="undefined">Mégse</button>
+  <button mat-raised-button color="primary" [disabled]="!canConfirm" (click)="confirm()">
+    Letöltés
+  </button>
+</mat-dialog-actions>

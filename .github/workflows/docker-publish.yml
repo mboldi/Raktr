@@ -58,17 +58,21 @@ jobs:
           fi
 
           # Mirrors backend/buildSrc/src/main/kotlin/VersionHelper.kt, which resolves local builds.
-          [[ $(git describe --tags --first-parent --long --abbrev=7) =~ ^v?(.+)-([0-9]+)-g([0-9a-f]+)$ ]]
+          describe=$(git describe --tags --first-parent --long --abbrev=7 --match 'v[0-9]*.[0-9]*.[0-9]*' --exclude '*-*')
+          [[ $describe =~ ^v([0-9]+\.[0-9]+\.[0-9]+)-([0-9]+)-g([0-9a-f]+)$ ]]
           tag=${BASH_REMATCH[1]}
           distance=${BASH_REMATCH[2]}
           hash=${BASH_REMATCH[3]}
           branch=${REF_NAME//[^0-9A-Za-z-]/-}
 
-          # Sentry sorts prereleases as plain text, so the commit distance goes in its numeric revision.
-          case "$branch" in
-            main) echo "value=$tag.$distance+$hash" >> "$GITHUB_OUTPUT" ;;
-            *)    echo "value=$tag.$distance+$branch.$hash" >> "$GITHUB_OUTPUT" ;;
-          esac
+          # Later commits must sort higher in Sentry, which compares the revision numerically and prereleases as text.
+          if [ "$distance" = 0 ]; then
+            echo "value=$tag" >> "$GITHUB_OUTPUT"
+          elif [ "$branch" = main ]; then
+            echo "value=$tag.$distance+$hash" >> "$GITHUB_OUTPUT"
+          else
+            echo "value=$tag.$distance+$branch.$hash" >> "$GITHUB_OUTPUT"
+          fi
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1

@@ -63,7 +63,7 @@ export class BarcodeScannerModalComponent implements AfterViewInit, OnDestroy {
       );
 
       if (this.destroyed) {
-        controls.stop();
+        stopScanner(controls);
       } else {
         this.controls = controls;
       }
@@ -76,6 +76,16 @@ export class BarcodeScannerModalComponent implements AfterViewInit, OnDestroy {
 
   ngOnDestroy() {
     this.destroyed = true;
-    this.controls?.stop();
+    if (this.controls) {
+      stopScanner(this.controls);
+    }
   }
+}
+
+/**
+ * On a camera with a torch, zxing's stop() returns a promise: it switches the torch off after
+ * stopping the tracks, and Chrome rejects that on a stopped track.
+ */
+function stopScanner(controls: IScannerControls): void {
+  Promise.resolve(controls.stop()).catch(() => undefined);
 }

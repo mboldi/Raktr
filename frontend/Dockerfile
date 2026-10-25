@@ -3,7 +3,7 @@ FROM node:24-alpine AS build
 ARG VERSION=local
 
 ENV COREPACK_ENABLE_DOWNLOAD_PROMPT=0
-ENV SENTRY_RELEASE=frontend@${VERSION}
+ENV SENTRY_RELEASE=raktr-frontend@${VERSION}
 RUN corepack enable pnpm
 
 USER node
@@ -30,7 +30,7 @@ FROM nginx:alpine-slim AS runtime
 ARG VERSION=local
 
 # the release the uploaded source maps were built for; handed to the browser by config.js
-ENV RAKTR_RELEASE=frontend@${VERSION}
+ENV RAKTR_RELEASE=raktr-frontend@${VERSION}
 
 # remove default nginx config
 RUN rm /etc/nginx/conf.d/default.conf

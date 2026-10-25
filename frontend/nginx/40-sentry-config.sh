@@ -7,6 +7,6 @@ cat > /usr/share/nginx/html/config.js <<CONFIG
 window.raktrConfig = {
   sentryDsn: '${SENTRY_DSN:-}',
   sentryEnvironment: '${SENTRY_ENVIRONMENT:-production}',
-  release: '${RAKTR_RELEASE:-frontend@unknown}',
+  release: '${RAKTR_RELEASE:-raktr-frontend@unknown}',
 };
 CONFIG

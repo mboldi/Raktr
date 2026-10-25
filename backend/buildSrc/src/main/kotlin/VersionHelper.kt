@@ -17,13 +17,14 @@ fun Project.resolveVersion(): String {
     val tag = details.lastTag.removePrefix("v")
 
     if (details.isCleanTag) {
-        return "v$tag"
+        return tag
     }
 
+    // Sentry sorts prereleases as plain text, so the commit distance goes in its numeric revision.
     val hash = details.gitHash.take(7)
-    return when (val branch = details.branchName?.replace("/", "-")) {
-        null, "main", "HEAD" -> "v$tag-$hash"
-        else -> "v$tag-$branch-$hash"
+    return when (val branch = details.branchName?.replace(Regex("[^0-9A-Za-z-]"), "-")) {
+        null, "main", "HEAD" -> "$tag.${details.commitDistance}+$hash"
+        else -> "$tag.${details.commitDistance}+$branch.$hash"
     }
 
 }

@@ -86,7 +86,7 @@ container's environment on every start by
 | `SENTRY_DSN`         | `""` (disabled) | Sentry DSN for the `raktr-frontend` project |
 | `SENTRY_ENVIRONMENT` | `production`    | Environment tag on reported events          |
 
-The release is fixed at image build time as `frontend@$VERSION` and reported alongside each
+The release is fixed at image build time as `raktr-frontend@$VERSION` and reported alongside each
 event. Failed requests the backend answered with a 4xx, and cancelled or offline requests
 (status 0), are dropped before sending: neither indicates a frontend bug, and the backend
 reports its own 5xx failures. The signed-in user is attached from the OIDC claims, the same

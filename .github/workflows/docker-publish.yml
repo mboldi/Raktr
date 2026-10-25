@@ -53,18 +53,21 @@ jobs:
           REF_NAME: ${{ github.ref_name }}
         run: |
           if [ "$REF_TYPE" = "tag" ]; then
-            echo "value=$REF_NAME" >> "$GITHUB_OUTPUT"
+            echo "value=${REF_NAME#v}" >> "$GITHUB_OUTPUT"
             exit 0
           fi
 
-          raw=$(git describe --tags --always --abbrev=0)
-          tag=${raw#v}
-          hash=$(git rev-parse --short HEAD)
-          branch=$(printf '%s' "$REF_NAME" | tr '/' '-')
+          # Mirrors backend/buildSrc/src/main/kotlin/VersionHelper.kt, which resolves local builds.
+          [[ $(git describe --tags --first-parent --long --abbrev=7) =~ ^v?(.+)-([0-9]+)-g([0-9a-f]+)$ ]]
+          tag=${BASH_REMATCH[1]}
+          distance=${BASH_REMATCH[2]}
+          hash=${BASH_REMATCH[3]}
+          branch=${REF_NAME//[^0-9A-Za-z-]/-}
 
+          # Sentry sorts prereleases as plain text, so the commit distance goes in its numeric revision.
           case "$branch" in
-            main) echo "value=v$tag-$hash" >> "$GITHUB_OUTPUT" ;;
-            *)    echo "value=v$tag-$branch-$hash" >> "$GITHUB_OUTPUT" ;;
+            main) echo "value=$tag.$distance+$hash" >> "$GITHUB_OUTPUT" ;;
+            *)    echo "value=$tag.$distance+$branch.$hash" >> "$GITHUB_OUTPUT" ;;
           esac
 
       - name: Set up Docker Buildx

@@ -1,25 +1,17 @@
 package hu.bsstudio.raktr.security;
 
-import io.sentry.EventProcessor;
-import io.sentry.Hint;
-import io.sentry.SentryEvent;
-import org.jspecify.annotations.NonNull;
+import io.sentry.Sentry;
+import io.sentry.SentryOptions;
 import org.springframework.boot.info.BuildProperties;
-import org.springframework.stereotype.Component;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
-@Component
-public class SentryReleaseConfig implements EventProcessor {
+@Configuration
+public class SentryReleaseConfig {
 
-    private final String release;
-
-    public SentryReleaseConfig(BuildProperties buildProperties) {
-        this.release = buildProperties.getName() + "@" + buildProperties.getVersion();
-    }
-
-    @Override
-    public SentryEvent process(SentryEvent event, @NonNull Hint hint) {
-        event.setRelease(release);
-        return event;
+    @Bean
+    public Sentry.OptionsConfiguration<SentryOptions> sentryRelease(BuildProperties buildProperties) {
+        return options -> options.setRelease("raktr-backend@" + buildProperties.getVersion());
     }
 
 }

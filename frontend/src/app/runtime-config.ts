@@ -14,7 +14,7 @@ declare global {
 const defaults: RuntimeConfig = {
   sentryDsn: '',
   sentryEnvironment: 'local',
-  release: 'frontend@local',
+  release: 'raktr-frontend@local',
 };
 
 /** Reads the config public/config.js puts on `window`, falling back to the defaults. */

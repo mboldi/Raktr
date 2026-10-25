@@ -6,7 +6,7 @@ import {
   provideZoneChangeDetection,
 } from '@angular/core';
 import { provideRouter } from '@angular/router';
-import { catchError } from 'rxjs';
+import { catchError, throwError } from 'rxjs';
 
 import { routes } from './app.routes';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
@@ -54,15 +54,18 @@ export const appConfig: ApplicationConfig = {
 };
 
 /**
- * The login check throws on a callback URL whose state this browser no longer holds, such as
- * one from an older login in another tab. Without that URL's query it finds the stored session,
- * if there is one.
+ * The app has to start even from a login callback whose state this browser no longer holds,
+ * such as one from an older login in another tab; the login check throws on it.
  */
 function checkAuth() {
   const oidcSecurityService = inject(OidcSecurityService);
 
   return oidcSecurityService.checkAuthMultiple().pipe(
-    catchError(() => {
+    catchError((error: unknown) => {
+      if (!new URLSearchParams(window.location.search).has('state')) {
+        return throwError(() => error);
+      }
+
       window.history.replaceState(null, '', window.location.pathname);
       return oidcSecurityService.checkAuthMultiple();
     }),

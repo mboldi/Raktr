@@ -1,10 +1,10 @@
-FROM node:24-alpine AS build
+FROM node:26-alpine AS build
 
 ARG VERSION=local
 
-ENV COREPACK_ENABLE_DOWNLOAD_PROMPT=0
 ENV SENTRY_RELEASE=raktr-frontend@${VERSION}
-RUN corepack enable pnpm
+RUN --mount=type=bind,source=package.json,target=/tmp/package.json \
+    npm install -g "$(node -p "require('/tmp/package.json').packageManager")"
 
 USER node
 WORKDIR /home/node/app

@@ -3,7 +3,7 @@ plugins {
     jacoco
     id("com.diffplug.spotless") version "8.11.0"
     id("io.freefair.lombok") version "9.8.3"
-    id("io.sentry.jvm.gradle") version "6.26.0"
+    id("io.sentry.jvm.gradle") version "6.27.0"
     id("io.spring.dependency-management") version "1.1.7"
     id("org.springframework.boot") version "4.1.2"
     id("org.unbroken-dome.test-sets") version "4.1.0"
@@ -30,7 +30,7 @@ repositories {
 
 dependencies {
     implementation("com.github.ben-manes.caffeine:caffeine")
-    implementation("com.itextpdf:itext-core:9.8.0")
+    implementation("com.itextpdf:itext-core:9.8.1")
     implementation("org.mapstruct:mapstruct:1.6.3")
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:3.2.0")
     implementation("org.springframework.boot:spring-boot-starter-actuator")

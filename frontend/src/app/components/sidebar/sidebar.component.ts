@@ -6,6 +6,8 @@ import { MatIcon } from '@angular/material/icon';
 import { MatSlideToggle, MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { ThemeService } from '../../services/theme.service';
 import { AdminAccessService } from '../../services/adminAccess.service';
+import { getRuntimeConfig } from '../../runtime-config';
+import { releaseLink } from '../../util/releaseLink';
 import {
   MatExpansionPanel,
   MatExpansionPanelHeader,
@@ -156,6 +158,7 @@ export class SidebarComponent implements OnInit {
   private adminAccessService = inject(AdminAccessService);
 
   protected readonly menuItems = ROUTES;
+  protected readonly release = releaseLink(getRuntimeConfig().release);
 
   isDark = false;
   protected admin = false;

@@ -4,5 +4,5 @@
 window.raktrConfig = {
   sentryDsn: '',
   sentryEnvironment: 'local',
-  release: 'raktr-frontend@local',
+  release: 'raktr-frontend@dev',
 };

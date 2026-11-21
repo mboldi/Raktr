@@ -5,6 +5,20 @@
   font-weight: lighter;
 }
 
+.version-link {
+  display: block;
+  margin: 4px 0 0 24px;
+
+  font-size: 0.7rem;
+  color: var(--mat-sys-on-surface-variant);
+  text-decoration: none;
+  opacity: 0.6;
+
+  &:hover {
+    opacity: 1;
+  }
+}
+
 :host {
   display: flex;
   flex-direction: column;

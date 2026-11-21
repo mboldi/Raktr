@@ -1,6 +1,6 @@
 FROM eclipse-temurin:25-jdk-noble AS build
 
-ARG VERSION=local
+ARG VERSION=dev
 
 WORKDIR /app
 

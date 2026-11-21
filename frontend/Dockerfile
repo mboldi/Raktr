@@ -1,6 +1,6 @@
 FROM node:26-alpine AS build
 
-ARG VERSION=local
+ARG VERSION=dev
 
 ENV SENTRY_RELEASE=raktr-frontend@${VERSION}
 RUN --mount=type=bind,source=package.json,target=/tmp/package.json \
@@ -27,7 +27,7 @@ RUN --mount=type=secret,id=SENTRY_AUTH_TOKEN,uid=1000 \
 
 FROM nginx:alpine-slim AS runtime
 
-ARG VERSION=local
+ARG VERSION=dev
 
 # the release the uploaded source maps were built for; handed to the browser by config.js
 ENV RAKTR_RELEASE=raktr-frontend@${VERSION}

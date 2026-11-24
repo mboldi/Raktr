@@ -8,32 +8,59 @@ import {
 } from '@angular/core';
 import * as Sentry from '@sentry/angular';
 import { OidcSecurityService } from 'angular-auth-oidc-client';
-import { getRuntimeConfig } from './runtime-config';
+import { getRuntimeConfig, RuntimeConfig } from './runtime-config';
 
-/**
- * Starts Sentry error reporting when a DSN is configured. Tracing, profiling and session
- * replay are deliberately left out: the frontend reports errors only.
- */
+const privateHeaders = {
+  deny: ['forwarded', '-ip', 'remote-', 'via', '-user'],
+};
+
+/** Starts Sentry error reporting and navigation tracing when a DSN is configured. */
 export function initSentry(): void {
-  const { sentryDsn, sentryEnvironment, release } = getRuntimeConfig();
+  const config = getRuntimeConfig();
 
-  if (!sentryDsn) {
+  if (!config.sentryDsn) {
     return;
   }
 
-  Sentry.init({
+  Sentry.init(sentryOptions(config));
+}
+
+export function sentryOptions({
+  sentryDsn,
+  sentryEnvironment,
+  release,
+}: RuntimeConfig): Sentry.BrowserOptions {
+  return {
     dsn: sentryDsn,
     environment: sentryEnvironment,
     release,
+    // The SDK collects every category by default; the same baseline as request-manager.
+    dataCollection: {
+      cookies: false,
+      databaseQueryData: false,
+      genAI: { inputs: false, outputs: false },
+      graphQL: { document: false, variables: false },
+      httpBodies: [],
+      httpHeaders: { request: privateHeaders, response: privateHeaders },
+      urlQueryParams: false,
+      userInfo: false,
+    },
+    // Same-origin /api calls carry the trace on to the backend by default.
+    integrations: [Sentry.browserTracingIntegration()],
+    tracesSampleRate: 0.3,
     beforeSend: (event, hint) => (isRequestNoise(hint.originalException) ? null : event),
-  });
+  };
 }
 
-/** Routes Angular's errors to Sentry and keeps the reported user in sync with the session. */
+/**
+ * Routes Angular's errors to Sentry, names navigation spans after the routes and keeps the
+ * reported user in sync with the session.
+ */
 export function provideSentry(): (Provider | EnvironmentProviders)[] {
   return [
     { provide: ErrorHandler, useValue: createErrorHandler() },
     provideEnvironmentInitializer(() => {
+      inject(Sentry.TraceService);
       inject(OidcSecurityService).userData$.subscribe(({ userData }) => {
         Sentry.setUser(
           userData ? { id: userData['sub'], username: userData['preferred_username'] } : null,

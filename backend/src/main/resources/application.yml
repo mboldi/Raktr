@@ -26,8 +26,15 @@ spring:
 
 sentry:
   dsn: ""
-  send-default-pii: true
-  traces-sample-rate: 0.2
+  send-default-pii: false
+  traces-sample-rate: 0.5
+  # The probes hit it every few seconds and it holds nothing to debug.
+  ignored-transactions:
+    - ".*/actuator/health.*"
+  logs:
+    enabled: true
+  logging:
+    minimum-level: info
 
 management:
   endpoints:

@@ -59,13 +59,15 @@ Integration tests use TestContainers to spin up a PostgreSQL instance automatica
 Key settings in `application.yml`:
 
 | Property                                                | Default                                                     |
-|---------------------------------------------------------|-------------------------------------------------------------|
+| ------------------------------------------------------- | ----------------------------------------------------------- |
 | `spring.datasource.url`                                 | `jdbc:postgresql://localhost:${POSTGRES_PORT:5584}/raktrdb` |
 | `spring.datasource.username`                            | `postgres`                                                  |
 | `spring.datasource.password`                            | `postgres`                                                  |
 | `spring.security.oauth2.resourceserver.jwt.jwk-set-uri` | Authentik OIDC JWK Set URI                                  |
 | `spring.security.oauth2.resourceserver.jwt.issuer-uri`  | Authentik OIDC Issuer                                       |
 | `sentry.dsn`                                            | `""` (disabled)                                             |
+| `sentry.traces-sample-rate`                             | `0.5`, health checks never traced                           |
+| `sentry.logs.enabled`                                   | `true`, INFO and above, redacted                            |
 
 ### Production Profile
 

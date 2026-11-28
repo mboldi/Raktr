@@ -72,9 +72,11 @@ ever moves under `/api` itself, drop the prefix rewrite from all three places in
 
 ### Error reporting (Sentry)
 
-The app reports unhandled errors to Sentry — errors only, no tracing, profiling or session
-replay. Reporting is off unless a DSN is configured, so it stays quiet during local
-development.
+The app reports unhandled errors to Sentry and traces 30% of page loads and navigations,
+named after the routes; requests to the backend's `/api` join the same trace. There is no
+profiling or session replay, and nothing personal is collected beyond the user's id and
+username: no cookies, request bodies, query strings or identifying headers. Reporting is off
+unless a DSN is configured, so it stays quiet during local development.
 
 The DSN is read at runtime, not baked into the bundle: `config.js` is regenerated from the
 container's environment on every start by

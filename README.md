@@ -31,7 +31,7 @@ the image from source.
   rest to the frontend, so the stack is served under one host like it is in production.
   See [`deploy/local-proxy.conf`](deploy/local-proxy.conf).
 - Backend directly: `http://localhost:8080` (Swagger UI at `/swagger-ui.html`)
-- PostgreSQL: `localhost:5432`
+- PostgreSQL: `localhost:5584`
 
 ## Development
 

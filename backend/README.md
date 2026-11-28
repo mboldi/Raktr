@@ -14,7 +14,7 @@ Inventory and rental management REST API for Budavári Schönherz Stúdió (BSS)
 Start a PostgreSQL instance:
 
 ```bash
-docker run -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=raktrdb -p 5432:5432 -d postgres:18-alpine
+docker compose up -d db   # from backend/; set POSTGRES_PORT to publish it elsewhere than 5584
 ```
 
 ### Run
@@ -58,14 +58,14 @@ Integration tests use TestContainers to spin up a PostgreSQL instance automatica
 
 Key settings in `application.yml`:
 
-| Property                                                | Default                                    |
-|---------------------------------------------------------|--------------------------------------------|
-| `spring.datasource.url`                                 | `jdbc:postgresql://localhost:5432/raktrdb` |
-| `spring.datasource.username`                            | `postgres`                                 |
-| `spring.datasource.password`                            | `postgres`                                 |
-| `spring.security.oauth2.resourceserver.jwt.jwk-set-uri` | Authentik OIDC JWK Set URI                 |
-| `spring.security.oauth2.resourceserver.jwt.issuer-uri`  | Authentik OIDC Issuer                      |
-| `sentry.dsn`                                            | `""` (disabled)                            |
+| Property                                                | Default                                                     |
+|---------------------------------------------------------|-------------------------------------------------------------|
+| `spring.datasource.url`                                 | `jdbc:postgresql://localhost:${POSTGRES_PORT:5584}/raktrdb` |
+| `spring.datasource.username`                            | `postgres`                                                  |
+| `spring.datasource.password`                            | `postgres`                                                  |
+| `spring.security.oauth2.resourceserver.jwt.jwk-set-uri` | Authentik OIDC JWK Set URI                                  |
+| `spring.security.oauth2.resourceserver.jwt.issuer-uri`  | Authentik OIDC Issuer                                       |
+| `sentry.dsn`                                            | `""` (disabled)                                             |
 
 ### Production Profile
 

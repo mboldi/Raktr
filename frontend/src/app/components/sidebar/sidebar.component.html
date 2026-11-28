@@ -59,5 +59,13 @@
     <mat-slide-toggle class="nav-item" [checked]="isDark" (change)="toggleDarkMode($event)">
       Dark mode
     </mat-slide-toggle>
+    <a
+      class="version-link"
+      [href]="release.url"
+      [attr.aria-label]="'Verzió: ' + release.label"
+      target="_blank"
+      rel="noopener noreferrer"
+      >{{ release.label }}</a
+    >
   </div>
 </div>

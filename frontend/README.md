@@ -95,7 +95,7 @@ way the backend's `SentryUserEventProcessor` does it.
 Source maps are generated hidden during the production build, uploaded by `sentry-cli`
 (configured in [`.sentryclirc`](.sentryclirc)) and then deleted, so stack traces are readable
 in Sentry without shipping the maps. The upload only runs when the build gets a
-`SENTRY_AUTH_TOKEN` secret, which CI passes on pushes to `main` and on tags.
+`SENTRY_AUTH_TOKEN` secret, which CI passes on tags only.
 
 ### Production
 

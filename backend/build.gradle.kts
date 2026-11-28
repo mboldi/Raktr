@@ -10,7 +10,8 @@ plugins {
 }
 
 group = "hu.bsstudio"
-version = resolveVersion()
+// -Pversion sets it; a build without one is dev.
+version = version.toString().takeUnless { it.isBlank() || it == Project.DEFAULT_VERSION } ?: "dev"
 
 java {
     toolchain {
@@ -112,7 +113,8 @@ tasks.compileJava {
     )
 }
 
-envOrProperty("SENTRY_AUTH_TOKEN", "sentryAuthToken")?.let { token ->
+// A dev build uploads nothing, even with a token.
+envOrProperty("SENTRY_AUTH_TOKEN", "sentryAuthToken")?.takeIf { version != "dev" }?.let { token ->
     sentry {
         includeSourceContext.set(true)
         org.set("budavari-schonherz-studio")
